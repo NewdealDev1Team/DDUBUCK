@@ -1,5 +1,6 @@
 package com.example.ddubuck.login
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,8 +13,12 @@ import com.kakao.sdk.auth.LoginClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.common.model.AuthErrorCause.*
+import com.nhn.android.naverlogin.OAuthLogin
 
-class MainActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
+    lateinit var mOAuthLoginInstance : OAuthLogin
+    lateinit var mContext: Context
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

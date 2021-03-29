@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import com.example.ddubuck.login.MainActivity
+import com.example.ddubuck.login.LoginActivity
 import com.kakao.sdk.user.UserApiClient
 
 class SecondActivity : AppCompatActivity() {
@@ -29,7 +29,7 @@ class SecondActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "로그아웃 성공", Toast.LENGTH_SHORT).show()
                 }
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP))
             }
         }
@@ -40,7 +40,7 @@ class SecondActivity : AppCompatActivity() {
                     Toast.makeText(this, "회원 탈퇴 실패 $error", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "회원 탈퇴 성공", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent.addFlags(FLAG_ACTIVITY_CLEAR_TOP))
                 }
             }
