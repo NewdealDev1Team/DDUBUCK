@@ -67,8 +67,9 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
         resetCourseButton.setOnClickListener{
             customPath.map = this.map
             //앱 제작 시 아래 firstRoute를
-            //유저가 지정한 루트로 변경
+            //유저가 선택한 루트로 변경
             customPath.coords = firstRoute
+            customPath.width = 3
         }
 
         //현재 지정된(기록된) 코스를 저장합니다
@@ -76,6 +77,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
         createCourseButton.setOnClickListener{
             val userPath = path.coords
             //앱 제작 시 저장대상을 서버로 변경
+            customPath.map = this.map
             customPath.coords = userPath
             //TODO 유저 경로 삭제 코드 강화할 것
             //path = PathOverlay()
@@ -116,8 +118,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = true
 
-        val customCourse = firstRoute
-        customPath.coords = customCourse
+        customPath.coords = firstRoute
         customPath.map = naverMap
         customPath.color = Color.CYAN
 
@@ -127,7 +128,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
                 val lng = locationSource.lastLocation?.longitude
                 if(lat!=null&&lng!=null) {
                     val point = LatLng(lat, lng)
-                    if(path.coords.isNotEmpty()) {
+                    if(path.coords.isNotEmpty() && path.map != null) {
                         val points = path.coords
                         if(points.isNotEmpty()) {
                             //안 비어있을때
@@ -137,13 +138,18 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
                             val lastPoint = path.coords.last()
                             if(!createBound(lastPoint).contains(point)) {
                                 points.add(point)
-                                if(customCourse.isNotEmpty()) {
-                                    if(createBound(customCourse.first()).contains(point)) {
-                                        customCourse.removeAt(0)
-                                        customPath.coords = customCourse
+                            }
+                            val currentCourse = customPath.coords
+                            if(currentCourse.isNotEmpty()) {
+                                if(currentCourse.size > 2) {
+                                    if(createBound(currentCourse.first()).contains(point)) {
+                                        currentCourse.removeAt(0)
+                                        customPath.coords = currentCourse
                                     }
+                                } else {
+                                    customPath.map = null
+                                    //코스완료
                                 }
-
                             }
                         } else {
                             points.add(point)
@@ -169,8 +175,8 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
     }
 
     private fun createBound(point:LatLng):LatLngBounds {
-        // 주어진 좌표에 좌측 상단의 경우 0.000050 +
-        // 우측 하단의 경우 0.000050 -
+        // 주어진 좌표에 좌측 상단의 경우 0.00005 +
+        // 우측 하단의 경우 0.00005 -
         val radius = 0.00005
         return LatLngBounds(
             LatLng(point.latitude-radius, point.longitude-radius),
