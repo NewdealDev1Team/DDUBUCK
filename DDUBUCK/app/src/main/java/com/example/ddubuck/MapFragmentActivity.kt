@@ -17,6 +17,18 @@ import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.widget.LocationButtonView
 
+
+//TODO 코드 최적화
+/*
+목표
+MapFragment 는 본인의 일만 충실히 이행해야함
+1. 유저 이동 경로 기록 시작/종료 여부에 따른 기록기능 (자유산책)
+2. 전달받은 경로를 지도상에 표시하고, 이 경로를 이용한 유저의 기록을 넘겨주는 기능 (코스산책)
+3. 기록한 유저 경로를 넘겨주는 기능 ( 자유산책 -> 경로 기록 )
+4. 산책중 쌓인 위치 데이터 및 기타 데이터를 넘겨주는 기능
+ */
+
+
 class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var map: NaverMap
@@ -67,13 +79,11 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
         val resetCourseButton : Button = findViewById(R.id.test_button_1)
         resetCourseButton.setOnClickListener{
             customPath.map = this.map
-            //앱 제작 시 아래 firstRoute를
-            //유저가 선택한 루트로 변경
-            customPath.coords = firstRoute
+            customPath.coords = firstRoute //TODO 넘겨받은 산책 경로로 변경
             customPath.width = 3
         }
 
-        //현재 지정된(기록된) 코스를 저장합니다
+        //현재 기록된 코스를 저장합니다
         val createCourseButton : Button = findViewById(R.id.test_button_2)
         createCourseButton.setOnClickListener{
             val userPath = path.coords
@@ -117,17 +127,12 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         this.map = naverMap
-
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
 
         val locationButtonView : LocationButtonView = findViewById(R.id.location)
         locationButtonView.map = this.map
-        /*
-        LocationButtonView locationButtonView = findViewById(R.id.location);
-        locationButtonView.setMap(mNaverMap);
-         */
 
         customPath.coords = firstRoute
         customPath.map = naverMap
@@ -137,45 +142,19 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
             if(isRecordStarted) {
                 val lat = locationSource.lastLocation?.latitude
                 val lng = locationSource.lastLocation?.longitude
+                val speed = locationSource.lastLocation?.speed
+                val alt = locationSource.lastLocation?.accuracy
                 if(lat!=null&&lng!=null) {
                     val point = LatLng(lat, lng)
                     if(path.coords.isNotEmpty() && path.map != null) {
-                        val points = path.coords
-                        if(points.isNotEmpty()) {
-                            //안 비어있을때
-                            //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
-                                //영역 관련 회의 필요.
-                            //현재 점이 포함되어있다면 추가하지 않음
-                            val lastPoint = path.coords.last()
-                            if(!createBound(lastPoint).contains(point)) {
-                                points.add(point)
-                            }
-                            val currentCourse = customPath.coords
-                            if(currentCourse.isNotEmpty()) {
-                                if(currentCourse.size > 2) {
-                                    if(createBound(currentCourse.first()).contains(point)) {
-                                        currentCourse.removeAt(0)
-                                        customPath.coords = currentCourse
-                                    }
-                                } else {
-                                    //코스완료
-                                    customPath.map = null
-                                }
-                            }
-                        } else {
-                            points.add(point)
-                        }
-                        //이렇게 합쳐주지 않으면 지도에 반영 안됩니다 ㅠ
-                        path.coords = points
+                        val lastPoint = path.coords.last()
+                        addUserPath(point, lastPoint, path.coords)
+                        checkCoursePointArrival(point, customPath.coords.first(), customPath.coords)
                     } else {
                         //초기 점이 비어있을 때
-                        val initRoute = mutableListOf(
-                            LatLng(lat,lng),
-                            LatLng(lat,lng)
-                        )
-                        path.coords = initRoute
-                        path.map = naverMap
+                        initUserPath(LatLng(lat,lng))
                     }
+
                 }
             }
         }
@@ -185,9 +164,43 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
         }
     }
 
+    //유저 경로 초기화
+    private fun initUserPath(currentPos : LatLng) {
+        val initRoute = mutableListOf(currentPos, currentPos,)
+        path.coords = initRoute
+        path.map = this.map
+    }
+
+    //유저 경로 추가
+    private fun addUserPath(currentPos: LatLng, lastPos: LatLng, currentPath : MutableList<LatLng>) {
+        //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
+        //현재 점이 포함되어있다면 추가하지 않음
+        if(!createBound(lastPos).contains(currentPos)) {
+            currentPath.add(currentPos)
+            path.coords = currentPath
+        }
+    }
+
+    //산책 경로 도달 시
+    private fun checkCoursePointArrival(currentPos : LatLng, lastPos : LatLng, course : MutableList<LatLng>) {
+        //현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
+        //현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리
+        if(course.size > 2) {
+            if(createBound(currentPos).contains(lastPos)) {
+                course.removeAt(0)
+                customPath.coords = course
+            }
+        } else {
+            //코스완료
+            customPath.map = null
+        }
+    }
+
+    //비교용 영역 만들기
     private fun createBound(point:LatLng):LatLngBounds {
-        // 주어진 좌표에 좌측 상단의 경우 0.00005 +
-        // 우측 하단의 경우 0.00005 -
+        // 주어진 좌표에 좌측 상단 0.00005 +
+        // 우측 하단 0.00005 -
+        // 두 점으로 사각형 구역을 만들어 반환
         val radius = 0.00005
         return LatLngBounds(
             LatLng(point.latitude-radius, point.longitude-radius),
