@@ -1,4 +1,4 @@
-package com.example.ddubuck
+package com.example.ddubuck.login
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
+import com.example.ddubuck.R
+import com.example.ddubuck.SecondActivity
 import com.kakao.sdk.auth.LoginClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.util.Utility
