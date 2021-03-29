@@ -20,12 +20,8 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var map: NaverMap
     private var isRecordStarted=false
-    private val path = PathOverlay()
+    private var path : PathOverlay = PathOverlay()
     private val customPath = PathOverlay()
-
-
-    //지도에 표기할 루트들을 모아놓은 리스트
-    private val routes = mutableListOf<PathOverlay>()
 
     //임의로 만든 첫 루트
     private val firstRoute = mutableListOf(
@@ -66,16 +62,31 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
             }
         }
 
+        //코스 프리셋 1번을 불러옵니다
         val resetCourseButton : Button = findViewById(R.id.test_button_1)
         resetCourseButton.setOnClickListener{
+            customPath.map = this.map
+            //앱 제작 시 아래 firstRoute를
+            //유저가 지정한 루트로 변경
             customPath.coords = firstRoute
         }
 
-        val createCourseButton : Button = findViewById(R.id.test_button_2)
-
         //현재 지정된(기록된) 코스를 저장합니다
+        val createCourseButton : Button = findViewById(R.id.test_button_2)
         createCourseButton.setOnClickListener{
+            val userPath = path.coords
+            //앱 제작 시 저장대상을 서버로 변경
+            customPath.coords = userPath
+            //TODO 유저 경로 삭제 코드 강화할 것
+            //path = PathOverlay()
+            path.map = null
+            isRecordStarted = false
+        }
 
+        //지정된 코스를 삭제합니다
+        val deleteCourseButton : Button = findViewById(R.id.test_button_3)
+        deleteCourseButton.setOnClickListener{
+            customPath.map = null
         }
 
         locationSource =
@@ -121,6 +132,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
                         if(points.isNotEmpty()) {
                             //안 비어있을때
                             //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
+                                //영역 관련 회의 필요.
                             //현재 점이 포함되어있다면 추가하지 않음
                             val lastPoint = path.coords.last()
                             if(!createBound(lastPoint).contains(point)) {
@@ -140,7 +152,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
                         path.coords = points
                     } else {
                         //초기 점이 비어있을 때
-                        val initRoute = mutableListOf<LatLng>(
+                        val initRoute = mutableListOf(
                             LatLng(lat,lng),
                             LatLng(lat,lng)
                         )
