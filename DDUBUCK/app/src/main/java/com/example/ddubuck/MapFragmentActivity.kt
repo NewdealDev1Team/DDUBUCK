@@ -15,6 +15,7 @@ import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.widget.LocationButtonView
 
 class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
     private lateinit var locationSource: FusedLocationSource
@@ -91,6 +92,11 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
             customPath.map = null
         }
 
+        val deleteMyPathButton : Button = findViewById(R.id.test_button_4)
+        deleteMyPathButton.setOnClickListener{
+            path.map = null
+        }
+
         locationSource =
             FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
@@ -106,8 +112,6 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
             return
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-
     }
 
     @UiThread
@@ -116,7 +120,14 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
 
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
-        map.uiSettings.isLocationButtonEnabled = true
+        map.uiSettings.isLocationButtonEnabled = false
+
+        val locationButtonView : LocationButtonView = findViewById(R.id.location)
+        locationButtonView.map = this.map
+        /*
+        LocationButtonView locationButtonView = findViewById(R.id.location);
+        locationButtonView.setMap(mNaverMap);
+         */
 
         customPath.coords = firstRoute
         customPath.map = naverMap
@@ -147,8 +158,8 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
                                         customPath.coords = currentCourse
                                     }
                                 } else {
-                                    customPath.map = null
                                     //코스완료
+                                    customPath.map = null
                                 }
                             }
                         } else {
