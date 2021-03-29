@@ -37,18 +37,20 @@ dependencies {
     implementation "com.kakao.sdk:v2-user:2.0.1"
 
     // 네이버 로그인
-    implementation ('com.naver.nid:naveridlogin-android-sdk:4.2.6')
 
-    implementation 'com.androidX.support:appcompat-v7:28.0.0'
-    implementation 'com.androidX.support:support-core-utils:28.0.0'
-    implementation 'com.androidX.support:customtabs:28.0.0'
-    implementation 'com.androidX.support:support-v4:28.0.0'
+    def android_x_version = "1.0.0"
+    implementation "androidx.appcompat:appcompat:$android_x_version"
+    implementation "androidx.legacy:legacy-support-core-utils:$android_x_version"
+    //noinspection GradleDependency
+    implementation "androidx.browser:browser:$android_x_version"
+    implementation "androidx.legacy:legacy-support-v4:$android_x_version"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation files('libs/naveridlogin_android_sdk_4.2.6.aar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
