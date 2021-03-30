@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -35,6 +36,8 @@ android {
 dependencies {
     // 카카오 로그인
     implementation "com.kakao.sdk:v2-user:2.0.1"
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.firebase:firebase-auth:20.0.3'
 
     // 네이버 로그인
 
@@ -44,6 +47,10 @@ dependencies {
     //noinspection GradleDependency
     implementation "androidx.browser:browser:$android_x_version"
     implementation "androidx.legacy:legacy-support-v4:$android_x_version"
+
+    // 구글 로그인
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
+
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
