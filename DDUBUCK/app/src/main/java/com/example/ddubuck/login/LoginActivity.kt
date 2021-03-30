@@ -6,11 +6,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.SecondActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.kakao.sdk.auth.LoginClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause.*
@@ -21,14 +28,31 @@ import com.nhn.android.naverlogin.ui.view.OAuthLoginButton
 
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var mOAuthLoginInstance : OAuthLogin
+    lateinit var mOAuthLoginInstance: OAuthLogin
     lateinit var mContext: Context
+
+    var auth: FirebaseAuth? = null
+    val GOOGLE_REQUEST_CODE = 99
+    val TAG = "googleLogin"
+    private lateinit var googleSignInClient: GoogleSignInClient
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val keyHash = Utility.getKeyHash(this)
         Log.d("Hash", keyHash)
+
+        auth = FirebaseAuth.getInstance()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.firebase_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+        val googleSignInBtn : Button = findViewById(R.id.googleSignInBtn)
+        googleSignInBtn.setOnClickListener {
+            signIn()
+        }
 
         val kakaoLogin: ImageButton = findViewById(R.id.kakao_login_button)
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
@@ -41,7 +65,8 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, "유효하지 않은 앱", Toast.LENGTH_SHORT).show()
                     }
                     error.toString() == InvalidGrant.toString() -> {
-                        Toast.makeText(this, "인증 수단이 유효하지 않아 인증할 수 없는 상태", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "인증 수단이 유효하지 않아 인증할 수 없는 상태", Toast.LENGTH_SHORT)
+                            .show()
                     }
                     error.toString() == InvalidRequest.toString() -> {
                         Toast.makeText(this, "요청 파라미터 오류", Toast.LENGTH_SHORT).show()
@@ -50,7 +75,8 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, "유효하지 않은 scope ID", Toast.LENGTH_SHORT).show()
                     }
                     error.toString() == Misconfigured.toString() -> {
-                        Toast.makeText(this, "설정이 올바르지 않음(android key hash)", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "설정이 올바르지 않음(android key hash)", Toast.LENGTH_SHORT)
+                            .show()
                     }
                     error.toString() == ServerError.toString() -> {
                         Toast.makeText(this, "서버 내부 에러", Toast.LENGTH_SHORT).show()
@@ -82,12 +108,59 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+    // For Google Login
+    private fun signIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, GOOGLE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == GOOGLE_REQUEST_CODE) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e)
+                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth?.signInWithCredential(credential)
+            ?.addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "로그인 성공")
+                    val user = auth!!.currentUser
+                    loginSuccess()
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                }
+            }
+    }
+
     // For naver login
     private fun initData() {
         //초기화
         mOAuthLoginInstance = OAuthLogin.getInstance()
-        mOAuthLoginInstance.init(mContext, getString(R.string.OAUTH_CLIENT_ID), getString(R.string.OAUTH_CLIENT_SECRET), getString(R.string.OAUTH_CLIENT_NAME))
-        val mOAuthLoginButton: OAuthLoginButton = findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
+        mOAuthLoginInstance.init(
+            mContext,
+            getString(R.string.OAUTH_CLIENT_ID),
+            getString(R.string.OAUTH_CLIENT_SECRET),
+            getString(R.string.OAUTH_CLIENT_NAME)
+        )
+        val mOAuthLoginButton: OAuthLoginButton =
+            findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
         mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler)
 
         //custom img 변경시 사용
@@ -111,20 +184,25 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(mContext, "success:$accessToken", Toast.LENGTH_SHORT).show()
 
                 //본인이 이동할 액티비티를 입력
-                redirectSignupActivity()
+                loginSuccess()
             } else {
                 val errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).code
                 val errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext)
-                Toast.makeText(mContext, "errorCode:" + errorCode
-                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    mContext, "errorCode:" + errorCode
+                            + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    fun redirectSignupActivity() {
+
+    private fun loginSuccess() {
         val intent = Intent(this, SecondActivity::class.java)
         startActivity(intent)
         finish()
     }
+
+
 
 }
