@@ -1,10 +1,20 @@
 package com.example.ddubuck
 
+import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PointF
+import android.hardware.*
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
+import android.widget.TextView
 import androidx.annotation.UiThread
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import com.naver.maps.geometry.LatLng
@@ -16,6 +26,9 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.widget.LocationButtonView
+import java.util.*
+import java.util.logging.Handler
+import kotlin.concurrent.timer
 
 
 //TODO 코드 최적화
@@ -29,11 +42,12 @@ MapFragment 는 본인의 일만 충실히 이행해야함
  */
 
 
-class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
+class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventListener {
     private lateinit var locationSource: FusedLocationSource
     private lateinit var map: NaverMap
     private var isRecordStarted=false
     private var path : PathOverlay = PathOverlay()
+    private var walkRecord : WalkRecord = WalkRecord()
     private val customPath = PathOverlay()
 
     //임의로 만든 첫 루트
@@ -53,22 +67,44 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.map_fragment_activity)
-
+        var timer : Timer = timer(period = 1000) {}
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
                 fm.beginTransaction().add(R.id.map, it).commit()
             }
-        mapFragment.getMapAsync (this)
+        mapFragment.getMapAsync(this)
 
         val startButton : Button = findViewById(R.id.start_button)
-        startButton.setOnClickListener{
+        startButton.setOnClickListener {
             isRecordStarted=!isRecordStarted
             if(!isRecordStarted) {
                 startButton.text="시작"
                 startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
                 startButton.setTextColor(Color.parseColor("#FFFFFF"))
+                path.map = null
+
+                val intent = Intent(this, MainActivity::class.java)
+                val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MapFragmentActivity,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+                dlg.setTitle("운동 완료") //제목
+                dlg.setMessage("고도 편차: ${walkRecord.altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
+                        "지점 갯수: ${walkRecord.path.size}\n" +
+                        "평균속도: ${walkRecord.speeds.average()}\n" +
+                        "발걸음 수: ${walkRecord.stepCount}\n" +
+                        "이동거리: ${walkRecord.distance}\n" +
+                        "경과시간: ${walkRecord.walkTime}초\n" +
+                        "소모 칼로리: ${walkRecord.getCalorie()}") // 메시지
+                dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+                    startActivity(intent)
+                    finish()
+                })
+                dlg.show()
+                timer.cancel()
+                walkRecord = WalkRecord()
             } else {
+                timer = timer(period = 1000) {
+                    walkRecord.walkTime++
+                }
                 startButton.text="중지"
                 startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
                 startButton.setTextColor(Color.parseColor("#000000"))
@@ -91,7 +127,6 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
             customPath.map = this.map
             customPath.coords = userPath
             //TODO 유저 경로 삭제 코드 강화할 것
-            //path = PathOverlay()
             path.map = null
             isRecordStarted = false
         }
@@ -102,20 +137,35 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
             customPath.map = null
         }
 
-        val deleteMyPathButton : Button = findViewById(R.id.test_button_4)
-        deleteMyPathButton.setOnClickListener{
-            path.map = null
-        }
-
         locationSource =
             FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+
     }
+
+    private val sensorManager by lazy {           // 지연된 초기화는 딱 한 번 실행됨
+        getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+
+    override fun onResume() {
+        super.onResume()
+        sensorManager.registerListener(this,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR), SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {  // 가속도 센서 값이 바뀔때마다 호출됨
+        if(isRecordStarted) {
+            walkRecord.stepCount++
+            val stepTextView:TextView = findViewById(R.id.stepCurrent)
+            stepTextView.text = walkRecord.stepCount.toString()
+        }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>,
                                             grantResults: IntArray) {
         if (locationSource.onRequestPermissionsResult(requestCode, permissions,
-                grantResults)) {
+                        grantResults)) {
             if (!locationSource.isActivated) { // 권한 거부됨
                 map.locationTrackingMode = LocationTrackingMode.None
             }
@@ -126,7 +176,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
 
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
-        this.map = naverMap
+        map = naverMap
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
@@ -148,45 +198,62 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
                     val point = LatLng(lat, lng)
                     if(path.coords.isNotEmpty() && path.map != null) {
                         val lastPoint = path.coords.last()
-                        addUserPath(point, lastPoint, path.coords)
+                        if(!isUserReachedToTarget(point, lastPoint)) {
+                            if(speed != null && alt != null) {
+                                addUserPath(point, lastPoint,path.coords, speed,alt)
+                            }
+                        }
                         checkCoursePointArrival(point, customPath.coords.first(), customPath.coords)
                     } else {
                         //초기 점이 비어있을 때
-                        initUserPath(LatLng(lat,lng))
+                        initUserPath(LatLng(lat, lng))
                     }
 
                 }
             }
         }
 
-        map.setOnMapClickListener{p: PointF, l: LatLng ->
+        map.setOnMapClickListener{ p: PointF, l: LatLng ->
             println(l)
         }
     }
 
     //유저 경로 초기화
-    private fun initUserPath(currentPos : LatLng) {
-        val initRoute = mutableListOf(currentPos, currentPos,)
+    private fun initUserPath(currentPos: LatLng) {
+        val initRoute = mutableListOf(currentPos, currentPos)
         path.coords = initRoute
         path.map = this.map
     }
 
-    //유저 경로 추가
-    private fun addUserPath(currentPos: LatLng, lastPos: LatLng, currentPath : MutableList<LatLng>) {
+    //목표 점에 도달했는가 (근접해있는가)
+    private fun isUserReachedToTarget(currentPos: LatLng, lastPos: LatLng) : Boolean {
+        return createBound(lastPos).contains(currentPos)
+    }
+
+    //유저 경로 추가하면서 생기는 활동들 총집합
+    private fun addUserPath(
+            currentPos: LatLng,
+            lastPos: LatLng,
+            currentPath: MutableList<LatLng>,
+            speed:Float,
+            alt:Float
+    ) {
         //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
         //현재 점이 포함되어있다면 추가하지 않음
-        if(!createBound(lastPos).contains(currentPos)) {
-            currentPath.add(currentPos)
-            path.coords = currentPath
-        }
+        currentPath.add(currentPos)
+        walkRecord.path = currentPath
+        walkRecord.speeds.add(speed)
+        walkRecord.altitudes.add(alt)
+        walkRecord.distance+=lastPos.distanceTo(currentPos)
+        path.coords = currentPath
     }
 
     //산책 경로 도달 시
-    private fun checkCoursePointArrival(currentPos : LatLng, lastPos : LatLng, course : MutableList<LatLng>) {
+    private fun checkCoursePointArrival(currentPos: LatLng, lastPos: LatLng, course: MutableList<LatLng>) {
         //현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
         //현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리
         if(course.size > 2) {
-            if(createBound(currentPos).contains(lastPos)) {
+            if(isUserReachedToTarget(currentPos, lastPos)) {
                 course.removeAt(0)
                 customPath.coords = course
             }
@@ -197,20 +264,19 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback  {
     }
 
     //비교용 영역 만들기
-    private fun createBound(point:LatLng):LatLngBounds {
+    private fun createBound(point: LatLng):LatLngBounds {
         // 주어진 좌표에 좌측 상단 0.00005 +
         // 우측 하단 0.00005 -
         // 두 점으로 사각형 구역을 만들어 반환
         val radius = 0.00005
         return LatLngBounds(
-            LatLng(point.latitude-radius, point.longitude-radius),
-            LatLng(point.latitude+radius, point.longitude+radius),
+                LatLng(point.latitude - radius, point.longitude - radius),
+                LatLng(point.latitude + radius, point.longitude + radius),
         )
     }
-
-
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
+
 }
