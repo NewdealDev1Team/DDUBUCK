@@ -49,7 +49,7 @@ class LoginActivity : AppCompatActivity() {
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-        val googleSignInBtn : Button = findViewById(R.id.googleSignInBtn)
+        val googleSignInBtn : ImageButton = findViewById(R.id.google_login_button)
         googleSignInBtn.setOnClickListener {
             signIn()
         }
@@ -161,6 +161,7 @@ class LoginActivity : AppCompatActivity() {
         )
         val mOAuthLoginButton: OAuthLoginButton =
             findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
+
         mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler)
 
         //custom img 변경시 사용

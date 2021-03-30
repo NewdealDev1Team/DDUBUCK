@@ -6,30 +6,72 @@
     android:layout_height="match_parent"
     tools:context=".login.LoginActivity">
 
+<!--    <ImageButton-->
+<!--        android:id="@+id/naver_login_button"-->
+<!--        android:layout_width="44dp"-->
+<!--        android:layout_height="44dp"-->
+<!--        android:layout_marginBottom="41dp"-->
+<!--        android:scaleType="centerCrop"-->
+<!--        android:background="@android:color/transparent"-->
+<!--        android:src="@drawable/naver_icon"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="@id/kakao_login_button" />-->
+
     <ImageButton
         android:id="@+id/kakao_login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginBottom="40dp"
         android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
         android:src="@drawable/kakao_login"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
-        android:id="@+id/buttonOAuthLoginImg"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        app:layout_constraintLeft_toRightOf="@id/googleSignInBtn"
-        tools:ignore="MissingConstraints" />
+    <ImageButton
+        android:id="@+id/google_login_button"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="40dp"
+        android:background="@android:color/transparent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/google_login"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/kakao_login_button"
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <Button
-        android:id="@+id/googleSignInBtn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="구글 로그인"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/buttonOAuthLoginImg" />
+
+
+   <FrameLayout
+       android:layout_width="45dp"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="10dp"
+       tools:ignore="MissingConstraints">
+       <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+           android:id="@+id/buttonOAuthLoginImg"
+           android:layout_width="45dp"
+           android:layout_height="45dp"
+           app:layout_constraintLeft_toRightOf="@id/google_login_button"
+
+           app:layout_constraintRight_toRightOf="@id/kakao_login_button"
+           tools:ignore="MissingConstraints" />
+
+       <ImageView
+           android:id="@+id/naver_login_image"
+           android:layout_width="45dp"
+           android:layout_height="45dp"
+           android:src="@drawable/naver_icon"/>
+
+
+
+   </FrameLayout>
+
+
+
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
