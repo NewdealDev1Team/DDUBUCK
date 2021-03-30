@@ -27,7 +27,16 @@
         app:layout_constraintRight_toRightOf="parent"
         />
 
-
+    <TextView
+        android:id="@+id/id2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="네이버 로그인 결과 : "
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/nickname"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 
     <Button
         android:id="@+id/kakao_logout_button"

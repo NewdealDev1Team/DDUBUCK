@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -25,12 +24,15 @@ import com.kakao.sdk.common.util.Utility
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class LoginActivity : AppCompatActivity() {
     lateinit var mOAuthLoginInstance: OAuthLogin
     lateinit var mContext: Context
-
     var auth: FirebaseAuth? = null
     val GOOGLE_REQUEST_CODE = 99
     val TAG = "googleLogin"
@@ -154,10 +156,10 @@ class LoginActivity : AppCompatActivity() {
         //초기화
         mOAuthLoginInstance = OAuthLogin.getInstance()
         mOAuthLoginInstance.init(
-            mContext,
-            getString(R.string.OAUTH_CLIENT_ID),
-            getString(R.string.OAUTH_CLIENT_SECRET),
-            getString(R.string.OAUTH_CLIENT_NAME)
+                mContext,
+                getString(R.string.OAUTH_CLIENT_ID),
+                getString(R.string.OAUTH_CLIENT_SECRET),
+                getString(R.string.OAUTH_CLIENT_NAME)
         )
         val mOAuthLoginButton: OAuthLoginButton =
             findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
@@ -170,19 +172,52 @@ class LoginActivity : AppCompatActivity() {
 
     private val mOAuthLoginHandler: OAuthLoginHandler = @SuppressLint("HandlerLeak")
     object : OAuthLoginHandler() {
+
         override fun run(success: Boolean) {
+
             if (success) {
 
                 val accessToken = mOAuthLoginInstance.getAccessToken(mContext)
                 val refreshToken = mOAuthLoginInstance.getRefreshToken(mContext)
                 val expiresAt = mOAuthLoginInstance.getExpiresAt(mContext)
                 val tokenType = mOAuthLoginInstance.getTokenType(mContext)
+
                 //                mOauthAT.setText(accessToken);
 //                mOauthRT.setText(refreshToken);
 //                mOauthExpires.setText(String.valueOf(expiresAt));
 //                mOauthTokenType.setText(tokenType);
 //                mOAuthState.setText(mOAuthLoginInstance.getState(mContext).toString());
                 Toast.makeText(mContext, "success:$accessToken", Toast.LENGTH_SHORT).show()
+                println("success:$accessToken")
+
+                var header = "Bearer $accessToken"
+                val baseURL = "https://openapi.naver.com/"
+
+                val retrofit = Retrofit.Builder()
+                        .baseUrl(baseURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+
+                val api = retrofit.create(NaverAPI::class.java)
+                val callGetUserInfo = api.getUserInfo(header)
+
+                callGetUserInfo.enqueue(object : retrofit2.Callback<UserInfo> {
+                    override fun onResponse(
+                            call: Call<UserInfo>,
+                            response: Response<UserInfo>
+                    ) {
+                        Log.d("결과", "성공 : ${response.raw()}")
+                        println("헤더 : " + response.headers())
+                        println("바디 : " + response.body()?.response)
+
+                    }
+
+                    override fun onFailure(call: Call<UserInfo>, t: Throwable) {
+                        Log.d("실패", "우엥")
+                    }
+
+
+                })
 
                 //본인이 이동할 액티비티를 입력
                 loginSuccess()
@@ -190,8 +225,8 @@ class LoginActivity : AppCompatActivity() {
                 val errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).code
                 val errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext)
                 Toast.makeText(
-                    mContext, "errorCode:" + errorCode
-                            + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
+                        mContext, "errorCode:" + errorCode
+                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
                 ).show()
             }
         }

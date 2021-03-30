@@ -9,6 +9,8 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.example.ddubuck.login.LoginActivity
+import com.example.ddubuck.login.NaverAPI
+import com.example.ddubuck.login.UserInfo
 import com.kakao.sdk.user.UserApiClient
 
 class SecondActivity : AppCompatActivity() {
@@ -17,11 +19,15 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
+        println("여기ㅣㅣㅣㅣ야야ㅏ아앙")
+        val a = intent.getStringExtra("name")
+        print(a)
 
         val logout : Button = findViewById(R.id.kakao_logout_button)
         val unlink : Button = findViewById(R.id.kakao_unlink_button)
         val id : TextView = findViewById(R.id.id)
         var nickname: TextView = findViewById(R.id.nickname)
+
         logout.setOnClickListener {
             UserApiClient.instance.logout { error ->
                 if (error != null) {
@@ -49,6 +55,9 @@ class SecondActivity : AppCompatActivity() {
         UserApiClient.instance.me { user, error ->
             id.text = "회원번호: ${user?.id}"
             nickname.text = "닉네임: ${user?.kakaoAccount?.profile?.nickname}"
+
         }
+
+
     }
 }
