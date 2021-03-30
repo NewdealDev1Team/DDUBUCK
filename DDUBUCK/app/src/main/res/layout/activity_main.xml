@@ -21,6 +21,15 @@
         android:id="@+id/buttonOAuthLoginImg"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
+        app:layout_constraintLeft_toRightOf="@id/googleSignInBtn"
         tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/googleSignInBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="구글 로그인"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/buttonOAuthLoginImg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
