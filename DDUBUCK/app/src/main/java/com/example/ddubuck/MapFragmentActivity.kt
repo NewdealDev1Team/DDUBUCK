@@ -1,20 +1,16 @@
 package com.example.ddubuck
 
-import android.Manifest
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.UiThread
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import com.naver.maps.geometry.LatLng
@@ -70,11 +66,15 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
             }
         mapFragment.getMapAsync(this)
 
+
+
+        //시작버튼
         val startButton : Button = findViewById(R.id.start_button)
         startButton.setOnClickListener {
             isRecordStarted=!isRecordStarted
             if(!isRecordStarted) {
                 walkRecord = stopRecording(startButton)
+                println(walkRecord.getJson())
                 showResultDialog(walkRecord)
             } else {
                 startRecording(startButton)
@@ -112,6 +112,18 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     }
 
+    //버튼 텍스트 바꾸고 산책시작
+    private fun startRecording(startButton:Button) {
+        startButton.text="중지"
+        startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
+        startButton.setTextColor(Color.parseColor("#000000"))
+        timer = timer(period = 1000) {
+            walkTime++
+        }
+    }
+
+
+    //산책을 종료하고 기록을 반환합니다
     private fun stopRecording(startButton: Button) : WalkRecord{
         startButton.text="시작"
         startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
@@ -128,15 +140,8 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         )
     }
 
-    private fun startRecording(startButton:Button) {
-        startButton.text="중지"
-        startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
-        startButton.setTextColor(Color.parseColor("#000000"))
-        timer = timer(period = 1000) {
-            walkTime++
-        }
-    }
 
+    //언젠가 사라질 다이알로그 띄우기
     private fun showResultDialog(walkRecord:WalkRecord) {
         val intent = Intent(this, MainActivity::class.java)
         val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MapFragmentActivity,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
@@ -293,6 +298,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 
+    //템플릿 루트
     private val firstRoute = mutableListOf(
             LatLng(37.56362279298406, 126.90926225749905),
             LatLng(37.56345663522066, 126.9091328029345),
