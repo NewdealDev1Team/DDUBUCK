@@ -74,7 +74,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
             isRecordStarted=!isRecordStarted
             if(!isRecordStarted) {
                 walkRecord = stopRecording(startButton)
-                println(walkRecord.getJson())
+                println(walkRecord.toJson())
                 showResultDialog(walkRecord)
             } else {
                 startRecording(startButton)
