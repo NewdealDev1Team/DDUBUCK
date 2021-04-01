@@ -27,7 +27,6 @@ import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.widget.LocationButtonView
 import java.util.*
-import java.util.logging.Handler
 import kotlin.concurrent.timer
 
 
@@ -46,28 +45,24 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     private lateinit var locationSource: FusedLocationSource
     private lateinit var map: NaverMap
     private var isRecordStarted=false
-    private var path : PathOverlay = PathOverlay()
-    private var walkRecord : WalkRecord = WalkRecord()
-    private val customPath = PathOverlay()
 
-    //임의로 만든 첫 루트
-    private val firstRoute = mutableListOf(
-            LatLng(37.56362279298406, 126.90926225749905),
-            LatLng(37.56345663522066, 126.9091328029345),
-            LatLng(37.56314632623486, 126.90784351195998),
-            LatLng(37.56396493508562, 126.90736905196479),
-            LatLng(37.56417998056722, 126.90825278385154),
-            LatLng(37.56375202367158, 126.90831947940694),
-            LatLng(37.56332059071951, 126.90851459284085),
-            LatLng(37.56346358071265, 126.909140550899),
-            LatLng(37.5637076839577, 126.9092733697774),
-    )
+    private var path : PathOverlay = PathOverlay()
+    private var altitudes : MutableList<Float> = mutableListOf()
+    private var speeds : MutableList<Float> = mutableListOf()
+    private var walkTime : Long = 0
+    private var stepCount : Int = 0
+    private var distance : Double = 0.0
+
+    private lateinit var timer : Timer
+
+    //목표경로
+    private var customPath = PathOverlay()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        var walkRecord: WalkRecord
         setContentView(R.layout.map_fragment_activity)
-        var timer : Timer = timer(period = 1000) {}
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -79,43 +74,18 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         startButton.setOnClickListener {
             isRecordStarted=!isRecordStarted
             if(!isRecordStarted) {
-                startButton.text="시작"
-                startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
-                startButton.setTextColor(Color.parseColor("#FFFFFF"))
-                path.map = null
-
-                val intent = Intent(this, MainActivity::class.java)
-                val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MapFragmentActivity,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
-                dlg.setTitle("운동 완료") //제목
-                dlg.setMessage("고도 편차: ${walkRecord.altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
-                        "지점 갯수: ${walkRecord.path.size}\n" +
-                        "평균속도: ${walkRecord.speeds.average()}\n" +
-                        "발걸음 수: ${walkRecord.stepCount}\n" +
-                        "이동거리: ${walkRecord.distance}\n" +
-                        "경과시간: ${walkRecord.walkTime}초\n" +
-                        "소모 칼로리: ${walkRecord.getCalorie()}") // 메시지
-                dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
-                    startActivity(intent)
-                    finish()
-                })
-                dlg.show()
-                timer.cancel()
-                walkRecord = WalkRecord()
+                walkRecord = stopRecording(startButton)
+                showResultDialog(walkRecord)
             } else {
-                timer = timer(period = 1000) {
-                    walkRecord.walkTime++
-                }
-                startButton.text="중지"
-                startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
-                startButton.setTextColor(Color.parseColor("#000000"))
+                startRecording(startButton)
             }
         }
 
         //코스 프리셋 1번을 불러옵니다
         val resetCourseButton : Button = findViewById(R.id.test_button_1)
         resetCourseButton.setOnClickListener{
-            customPath.map = this.map
             customPath.coords = firstRoute //TODO 넘겨받은 산책 경로로 변경
+            customPath.map = this.map
             customPath.width = 3
         }
 
@@ -142,7 +112,50 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     }
 
-    private val sensorManager by lazy {           // 지연된 초기화는 딱 한 번 실행됨
+    private fun stopRecording(startButton: Button) : WalkRecord{
+        startButton.text="시작"
+        startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
+        startButton.setTextColor(Color.parseColor("#FFFFFF"))
+        path.map = null
+        timer.cancel()
+        return WalkRecord(
+            path.coords,
+            altitudes,
+            speeds,
+            walkTime,
+            stepCount,
+            distance,
+        )
+    }
+
+    private fun startRecording(startButton:Button) {
+        startButton.text="중지"
+        startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
+        startButton.setTextColor(Color.parseColor("#000000"))
+        timer = timer(period = 1000) {
+            walkTime++
+        }
+    }
+
+    private fun showResultDialog(walkRecord:WalkRecord) {
+        val intent = Intent(this, MainActivity::class.java)
+        val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MapFragmentActivity,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+        dlg.setTitle("운동 완료") //제목
+        dlg.setMessage("고도 편차: ${altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
+                "지점 갯수: ${path.coords.size}\n" +
+                "평균속도: ${speeds.average()}\n" +
+                "발걸음 수: ${stepCount}\n" +
+                "이동거리: ${distance}\n" +
+                "경과시간: ${walkTime}초\n" +
+                "소모 칼로리: ${walkRecord.getCalorie()}") // 메시지
+        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
+            startActivity(intent)
+            finish()
+        })
+        dlg.show()
+    }
+
+    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
         getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
@@ -153,9 +166,9 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     override fun onSensorChanged(event: SensorEvent) {  // 가속도 센서 값이 바뀔때마다 호출됨
         if(isRecordStarted) {
-            walkRecord.stepCount++
+            stepCount++
             val stepTextView:TextView = findViewById(R.id.stepCurrent)
-            stepTextView.text = walkRecord.stepCount.toString()
+            stepTextView.text = stepCount.toString()
         }
     }
 
@@ -184,9 +197,9 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         val locationButtonView : LocationButtonView = findViewById(R.id.location)
         locationButtonView.map = this.map
 
-        customPath.coords = firstRoute
-        customPath.map = naverMap
         customPath.color = Color.CYAN
+
+        path = PathOverlay()
 
         map.addOnLocationChangeListener {
             if(isRecordStarted) {
@@ -203,7 +216,9 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
                                 addUserPath(point, lastPoint,path.coords, speed,alt)
                             }
                         }
-                        checkCoursePointArrival(point, customPath.coords.first(), customPath.coords)
+                        if(customPath.coords.isNotEmpty()) {
+                            checkCoursePointArrival(point, customPath.coords.first(), customPath.coords)
+                        }
                     } else {
                         //초기 점이 비어있을 때
                         initUserPath(LatLng(lat, lng))
@@ -241,10 +256,9 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
         //현재 점이 포함되어있다면 추가하지 않음
         currentPath.add(currentPos)
-        walkRecord.path = currentPath
-        walkRecord.speeds.add(speed)
-        walkRecord.altitudes.add(alt)
-        walkRecord.distance+=lastPos.distanceTo(currentPos)
+        speeds.add(speed)
+        altitudes.add(alt)
+        distance+=lastPos.distanceTo(currentPos)
         path.coords = currentPath
     }
 
@@ -278,5 +292,17 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
+
+    private val firstRoute = mutableListOf(
+            LatLng(37.56362279298406, 126.90926225749905),
+            LatLng(37.56345663522066, 126.9091328029345),
+            LatLng(37.56314632623486, 126.90784351195998),
+            LatLng(37.56396493508562, 126.90736905196479),
+            LatLng(37.56417998056722, 126.90825278385154),
+            LatLng(37.56375202367158, 126.90831947940694),
+            LatLng(37.56332059071951, 126.90851459284085),
+            LatLng(37.56346358071265, 126.909140550899),
+            LatLng(37.5637076839577, 126.9092733697774),
+    )
 
 }

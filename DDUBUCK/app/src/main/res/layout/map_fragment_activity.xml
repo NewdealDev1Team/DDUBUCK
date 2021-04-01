@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:background="@drawable/top_button_radius"
-            android:text="초기경로" />
+            android:text="불러오기" />
 
         <Button
             android:id="@+id/test_button_2"
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:background="@drawable/top_button_radius"
-            android:text="경로기록" />
+            android:text="저장하기" />
 
         <Button
             android:id="@+id/test_button_3"
@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="4dp"
             android:background="@drawable/top_button_radius"
-            android:text="경로삭제" />
+            android:text="삭제하기" />
 
     </LinearLayout>
 

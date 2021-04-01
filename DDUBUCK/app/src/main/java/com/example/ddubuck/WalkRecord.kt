@@ -3,17 +3,18 @@ package com.example.ddubuck
 import com.naver.maps.geometry.LatLng
 
 //var 로 바꿔놓은건 임시용이라서 그럼
+
 data class WalkRecord (
     //경로 정보 모음
-        var path : MutableList<LatLng> = mutableListOf(),
-        var altitudes : MutableList<Float> = mutableListOf(),
-        var speeds : MutableList<Float> = mutableListOf(),
+        val path : List<LatLng>,
+        val altitudes : List<Float>,
+        val speeds : List<Float>,
     //경과시간 (sec)
-        var walkTime : Long = 0,
+        val walkTime : Long,
     //발걸음 수
-        var stepCount : Long = 0,
+        val stepCount : Int,
     //거리 (m)
-        var distance : Double = 0.0,
+        val distance : Double,
 ) {
 
     fun getCalorie() : Double {
@@ -26,5 +27,4 @@ data class WalkRecord (
         }
         return (met * (3.5 * 65 * (walkTime /60))) * 0.001 * 5
     }
-
 }
