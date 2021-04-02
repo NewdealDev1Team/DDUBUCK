@@ -17,10 +17,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.auth.LoginClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause.*
 import com.kakao.sdk.common.util.Utility
+import com.kakao.sdk.user.UserApiClient
 import com.nhn.android.naverlogin.OAuthLogin
 import com.nhn.android.naverlogin.OAuthLoginHandler
 import com.nhn.android.naverlogin.ui.view.OAuthLoginButton
@@ -37,6 +41,8 @@ class LoginActivity : AppCompatActivity() {
     var auth: FirebaseAuth? = null
     val GOOGLE_REQUEST_CODE = 99
     val TAG = "googleLogin"
+
+    private var database: DatabaseReference = Firebase.database.reference
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
@@ -93,6 +99,21 @@ class LoginActivity : AppCompatActivity() {
                 }
             } else if (token != null) {
                 Toast.makeText(this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show()
+
+                UserApiClient.instance.me { user, error ->
+                    if (error != null) {
+                        Log.e(TAG, "사용자 정보 요청 실패", error)
+                    }
+                    else if (user != null) {
+
+                        database.child("users").child("Kakao")
+                        database.child("users").child("Kakao").child(user.id.toString())
+                        database.child("users").child("Kakao").child(user.id.toString()).child("이름").setValue(user.kakaoAccount?.profile?.nickname)
+                        database.child("users").child("Kakao").child(user.id.toString()).child("생년월일").setValue( user.kakaoAccount?.birthyear+ "-" + user.kakaoAccount?.birthday.toString().substring(0,2) + "-" + user.kakaoAccount?.birthday.toString().substring(2,4) )
+
+                    }
+                }
+
                 val intent = Intent(this, SecondActivity::class.java)
                 startActivity(intent)
             }
@@ -126,7 +147,15 @@ class LoginActivity : AppCompatActivity() {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)!!
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+//                Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
+//                println("Google ID")
+//                println(account.givenName + " " + account.familyName)
+
+                database.child("users").child("Google")
+                database.child("users").child("Google").child(account.id.toString())
+                database.child("users").child("Google").child(account.id.toString()).child("이름").setValue(account.familyName + account.givenName)
+                database.child("users").child("Google").child(account.id.toString()).child("생년월일").setValue("2000-01-01")
+
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
@@ -157,10 +186,10 @@ class LoginActivity : AppCompatActivity() {
         //초기화
         mOAuthLoginInstance = OAuthLogin.getInstance()
         mOAuthLoginInstance.init(
-            mContext,
-            getString(R.string.OAUTH_CLIENT_ID),
-            getString(R.string.OAUTH_CLIENT_SECRET),
-            getString(R.string.OAUTH_CLIENT_NAME)
+                mContext,
+                getString(R.string.OAUTH_CLIENT_ID),
+                getString(R.string.OAUTH_CLIENT_SECRET),
+                getString(R.string.OAUTH_CLIENT_NAME)
         )
         val mOAuthLoginButton: OAuthLoginButton =
             findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
@@ -205,12 +234,25 @@ class LoginActivity : AppCompatActivity() {
 
                 callGetUserInfo.enqueue(object : retrofit2.Callback<UserInfo> {
                     override fun onResponse(
-                        call: Call<UserInfo>,
-                        response: Response<UserInfo>
+                            call: Call<UserInfo>,
+                            response: Response<UserInfo>
                     ) {
                         Log.d("결과", "성공 : ${response.raw()}")
                         println("헤더 : " + response.headers())
                         println("바디 : " + response.body()?.response)
+
+                        val user = response.body()?.response
+                        val userInfo = emptyArray<String>()
+                        if (user != null) {
+                            // db 삽입
+
+                            database.child("users").child("Naver")
+                            database.child("users").child("Naver").child(user.id)
+                            database.child("users").child("Naver").child(user.id).child("생년월일").setValue(user.birthyear + "-" + user.birthday)
+                            database.child("users").child("Naver").child(user.id).child("이름").setValue(user.nickname)
+
+
+                        }
                     }
 
                     override fun onFailure(call: Call<UserInfo>, t: Throwable) {
@@ -220,13 +262,14 @@ class LoginActivity : AppCompatActivity() {
                 })
 
                 //본인이 이동할 액티비티를 입력
+                naverSuccess()
 
             } else {
                 val errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).code
                 val errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext)
                 Toast.makeText(
-                    mContext, "errorCode:" + errorCode
-                            + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
+                        mContext, "errorCode:" + errorCode
+                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -250,7 +293,4 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-
-
 }

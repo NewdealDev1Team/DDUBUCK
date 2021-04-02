@@ -2,6 +2,9 @@ package com.example.ddubuck.login
 
 import android.provider.ContactsContract
 
+
+// For naver login user info
+
 data class UserInfo(
         var resultCode: String,
         var message: String,
