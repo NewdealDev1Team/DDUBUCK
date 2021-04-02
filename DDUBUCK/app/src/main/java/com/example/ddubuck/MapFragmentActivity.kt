@@ -38,18 +38,22 @@ MapFragment 는 본인의 일만 충실히 이행해야함
 
 
 class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventListener {
+    //환경설정 변수
     private lateinit var locationSource: FusedLocationSource
     private lateinit var map: NaverMap
+    private lateinit var timer : Timer
+    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
+        getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
+    //산책 시작 여부
     private var isRecordStarted=false
-
-    private var path : PathOverlay = PathOverlay()
+    //측정 관련 변수
+    private lateinit var path : PathOverlay
     private var altitudes : MutableList<Float> = mutableListOf()
     private var speeds : MutableList<Float> = mutableListOf()
     private var walkTime : Long = 0
     private var stepCount : Int = 0
     private var distance : Double = 0.0
-
-    private lateinit var timer : Timer
 
     //목표경로
     private var customPath = PathOverlay()
@@ -66,45 +70,37 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
             }
         mapFragment.getMapAsync(this)
 
-
-
         //시작버튼
         val startButton : Button = findViewById(R.id.start_button)
         startButton.setOnClickListener {
             isRecordStarted=!isRecordStarted
             if(!isRecordStarted) {
                 walkRecord = stopRecording(startButton)
-                println(walkRecord.toJson())
+                RetrofitClient.getInstance(walkRecord)
                 showResultDialog(walkRecord)
             } else {
                 startRecording(startButton)
             }
         }
 
-        //코스 프리셋 1번을 불러옵니다
+        //코스 프리셋 1번을 불러옵니다 (임시버튼입니다)
         val resetCourseButton : Button = findViewById(R.id.test_button_1)
         resetCourseButton.setOnClickListener{
-            customPath.coords = firstRoute //TODO 넘겨받은 산책 경로로 변경
-            customPath.map = this.map
-            customPath.width = 3
+            addCoursePath(firstRoute)
         }
 
         //현재 기록된 코스를 저장합니다
         val createCourseButton : Button = findViewById(R.id.test_button_2)
         createCourseButton.setOnClickListener{
             val userPath = path.coords
-            //앱 제작 시 저장대상을 서버로 변경
-            customPath.map = this.map
-            customPath.coords = userPath
-            //TODO 유저 경로 삭제 코드 강화할 것
-            path.map = null
+            saveUserRoute(userPath)
             isRecordStarted = false
         }
 
         //지정된 코스를 삭제합니다
         val deleteCourseButton : Button = findViewById(R.id.test_button_3)
         deleteCourseButton.setOnClickListener{
-            customPath.map = null
+            clearCoursePath()
         }
 
         locationSource =
@@ -140,6 +136,21 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         )
     }
 
+    //사용자가 이동한 경로를 저장합니다
+    //TODO 유저 경로 저장
+    fun saveUserRoute(p:List<LatLng>) {
+        //임시코드 : 코스 경로로 저장합니다
+        //앱 제작 시 저장대상을 서버로 변경
+        addCoursePath(p)
+        deleteUserRoute()
+    }
+
+    //유저가 이동하며 기록한 경로를 삭제합니다
+    //TODO 유저 경로 삭제
+    private fun deleteUserRoute() {
+        path.map = null
+    }
+
 
     //언젠가 사라질 다이알로그 띄우기
     private fun showResultDialog(walkRecord:WalkRecord) {
@@ -160,9 +171,17 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         dlg.show()
     }
 
-    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
-        getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    //코스 경로 추가하기
+    private fun addCoursePath(p:List<LatLng>) {
+        customPath.coords = p
+        customPath.map = this.map
     }
+
+    //코스 경로 삭제하기
+    private fun clearCoursePath() {
+        customPath.map = null
+    }
+
 
     override fun onResume() {
         super.onResume()
@@ -296,19 +315,20 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+
+        //템플릿 루트
+        private val firstRoute = mutableListOf(
+                LatLng(37.56362279298406, 126.90926225749905),
+                LatLng(37.56345663522066, 126.9091328029345),
+                LatLng(37.56314632623486, 126.90784351195998),
+                LatLng(37.56396493508562, 126.90736905196479),
+                LatLng(37.56417998056722, 126.90825278385154),
+                LatLng(37.56375202367158, 126.90831947940694),
+                LatLng(37.56332059071951, 126.90851459284085),
+                LatLng(37.56346358071265, 126.909140550899),
+                LatLng(37.5637076839577, 126.9092733697774),
+        )
     }
 
-    //템플릿 루트
-    private val firstRoute = mutableListOf(
-            LatLng(37.56362279298406, 126.90926225749905),
-            LatLng(37.56345663522066, 126.9091328029345),
-            LatLng(37.56314632623486, 126.90784351195998),
-            LatLng(37.56396493508562, 126.90736905196479),
-            LatLng(37.56417998056722, 126.90825278385154),
-            LatLng(37.56375202367158, 126.90831947940694),
-            LatLng(37.56332059071951, 126.90851459284085),
-            LatLng(37.56346358071265, 126.909140550899),
-            LatLng(37.5637076839577, 126.9092733697774),
-    )
 
 }

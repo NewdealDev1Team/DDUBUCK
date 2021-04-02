@@ -1,33 +1,46 @@
 package com.example.ddubuck
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
-import retrofit2.Call
-import retrofit2.Retrofit
+import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
-//http://ptsv2.com/t/oowru-1617254707
-
+//임시 네트워크 파일
+//나중에 사용할 POST, GET을 테스트하기 위한 파일임
 
 object RetrofitClient {
-    private var instance: Retrofit? = null
+    private lateinit var instance: Retrofit
     private val gson = GsonBuilder().setLenient().create()
     // 서버 주소
-    private const val BASE_URL = "http://ptsv2.com/t/oowru-1617254707/"
+    private const val BASE_URL = "https://ptsv2.com/t/469y9-1617327164/"
 
     // SingleTon
-    fun getInstance(): Retrofit {
-        if (instance == null) {
-            instance = Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
-        }
+    fun getInstance(walkRecord: WalkRecord): Retrofit {
+        instance = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+        val api = instance.create(RetrofitService::class.java)
+        val callrequest = api.requestSingle("1", walkRecord)
+        callrequest.enqueue(object : Callback<WalkRecord> {
+            override fun onResponse(
+                    call: Call<WalkRecord>,
+                    response: Response<WalkRecord>
+            ) {
+                Log.d(TAG, "성공 : ${response.raw()}")
+            }
 
-        return instance!!
+            override fun onFailure(call: Call<WalkRecord>, t: Throwable) {
+                Log.d(TAG, "실패 : $t")
+            }
+        })
+        return instance
     }
 }
 
@@ -36,14 +49,10 @@ object RetrofitClient {
 interface RetrofitService {
 
     @FormUrlEncoded
-    @POST("WalkRecord/Single")
+    @POST("post")
     fun requestSingle(
-        @Field("path") path:List<LatLng>,
-        @Field("altitudes") altitudes:List<Float>,
-        @Field("speeds") speeds:List<Float>,
-        @Field("walkTime") walkTime:Long,
-        @Field("stepCount") stepCount:Int,
-        @Field("distance") distance:Double
+            @Field("key") key:String,
+            @Body rec:WalkRecord,
     ) : Call<WalkRecord>
 
 }
