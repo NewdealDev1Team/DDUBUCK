@@ -51,6 +51,10 @@ dependencies {
     // 구글 로그인
     implementation platform('com.google.firebase:firebase-bom:26.8.0')
 
+
+    implementation platform('com.google.firebase:firebase-bom:26.2.0')
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.squareup.retrofit2:retrofit:2.6.0'
 
