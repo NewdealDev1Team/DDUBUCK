@@ -108,8 +108,8 @@ class LoginActivity : AppCompatActivity() {
 
                         database.child("users").child("Kakao")
                         database.child("users").child("Kakao").child(user.id.toString())
-                        database.child("users").child("Kakao").child(user.id.toString()).child("이름").setValue(user.kakaoAccount?.profile?.nickname)
-                        database.child("users").child("Kakao").child(user.id.toString()).child("생년월일").setValue( user.kakaoAccount?.birthyear+ "-" + user.kakaoAccount?.birthday.toString().substring(0,2) + "-" + user.kakaoAccount?.birthday.toString().substring(2,4) )
+                        database.child("users").child("Kakao").child(user.id.toString()).child("username").setValue(user.kakaoAccount?.profile?.nickname)
+                        database.child("users").child("Kakao").child(user.id.toString()).child("birthday").setValue( user.kakaoAccount?.birthyear+ "-" + user.kakaoAccount?.birthday.toString().substring(0,2) + "-" + user.kakaoAccount?.birthday.toString().substring(2,4) )
 
                     }
                 }
@@ -153,8 +153,8 @@ class LoginActivity : AppCompatActivity() {
 
                 database.child("users").child("Google")
                 database.child("users").child("Google").child(account.id.toString())
-                database.child("users").child("Google").child(account.id.toString()).child("이름").setValue(account.familyName + account.givenName)
-                database.child("users").child("Google").child(account.id.toString()).child("생년월일").setValue("2000-01-01")
+                database.child("users").child("Google").child(account.id.toString()).child("username").setValue(account.familyName + account.givenName)
+                database.child("users").child("Google").child(account.id.toString()).child("birthday").setValue("2000-01-01")
 
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
@@ -248,8 +248,8 @@ class LoginActivity : AppCompatActivity() {
 
                             database.child("users").child("Naver")
                             database.child("users").child("Naver").child(user.id)
-                            database.child("users").child("Naver").child(user.id).child("생년월일").setValue(user.birthyear + "-" + user.birthday)
-                            database.child("users").child("Naver").child(user.id).child("이름").setValue(user.nickname)
+                            database.child("users").child("Naver").child(user.id).child("username").setValue(user.nickname)
+                            database.child("users").child("Naver").child(user.id).child("birthday").setValue(user.birthyear + "-" + user.birthday)
 
 
                         }
