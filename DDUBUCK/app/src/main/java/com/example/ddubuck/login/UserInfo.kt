@@ -3,9 +3,9 @@ package com.example.ddubuck.login
 import android.provider.ContactsContract
 
 data class UserInfo(
-        val resultCode: String,
+        var resultCode: String,
         var message: String,
-        val response: Response
+        var response: Response
 )
 
 data class Response(

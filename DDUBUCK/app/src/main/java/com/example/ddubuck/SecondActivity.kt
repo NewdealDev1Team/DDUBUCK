@@ -19,14 +19,14 @@ class SecondActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
-        println("여기ㅣㅣㅣㅣ야야ㅏ아앙")
-        val a = intent.getStringExtra("name")
-        print(a)
-
         val logout : Button = findViewById(R.id.kakao_logout_button)
         val unlink : Button = findViewById(R.id.kakao_unlink_button)
         val id : TextView = findViewById(R.id.id)
         var nickname: TextView = findViewById(R.id.nickname)
+        var intent = getIntent()
+        println("여 기 ")
+        println(intent.getStringExtra("a"))
+        println("여 기 ")
 
         logout.setOnClickListener {
             UserApiClient.instance.logout { error ->

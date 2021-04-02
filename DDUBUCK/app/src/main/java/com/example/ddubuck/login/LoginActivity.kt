@@ -31,13 +31,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class LoginActivity : AppCompatActivity() {
+    private val mAuth: FirebaseAuth? = null
     lateinit var mOAuthLoginInstance: OAuthLogin
     lateinit var mContext: Context
     var auth: FirebaseAuth? = null
     val GOOGLE_REQUEST_CODE = 99
     val TAG = "googleLogin"
-    private lateinit var googleSignInClient: GoogleSignInClient
 
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,10 +157,10 @@ class LoginActivity : AppCompatActivity() {
         //초기화
         mOAuthLoginInstance = OAuthLogin.getInstance()
         mOAuthLoginInstance.init(
-                mContext,
-                getString(R.string.OAUTH_CLIENT_ID),
-                getString(R.string.OAUTH_CLIENT_SECRET),
-                getString(R.string.OAUTH_CLIENT_NAME)
+            mContext,
+            getString(R.string.OAUTH_CLIENT_ID),
+            getString(R.string.OAUTH_CLIENT_SECRET),
+            getString(R.string.OAUTH_CLIENT_NAME)
         )
         val mOAuthLoginButton: OAuthLoginButton =
             findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
@@ -201,35 +202,46 @@ class LoginActivity : AppCompatActivity() {
                 val api = retrofit.create(NaverAPI::class.java)
                 val callGetUserInfo = api.getUserInfo(header)
 
+
                 callGetUserInfo.enqueue(object : retrofit2.Callback<UserInfo> {
                     override fun onResponse(
-                            call: Call<UserInfo>,
-                            response: Response<UserInfo>
+                        call: Call<UserInfo>,
+                        response: Response<UserInfo>
                     ) {
                         Log.d("결과", "성공 : ${response.raw()}")
                         println("헤더 : " + response.headers())
                         println("바디 : " + response.body()?.response)
-
                     }
 
                     override fun onFailure(call: Call<UserInfo>, t: Throwable) {
                         Log.d("실패", "우엥")
                     }
 
-
                 })
 
                 //본인이 이동할 액티비티를 입력
-                loginSuccess()
+
             } else {
                 val errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).code
                 val errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext)
                 Toast.makeText(
-                        mContext, "errorCode:" + errorCode
-                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
+                    mContext, "errorCode:" + errorCode
+                            + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
                 ).show()
             }
         }
+    }
+
+    private fun naverSuccess() {
+        val intent = Intent(this, SecondActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun kakaoSuccess() {
+        val intent = Intent(this, SecondActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
 
