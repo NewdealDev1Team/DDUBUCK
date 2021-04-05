@@ -84,7 +84,6 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
             if(!isRecordStarted) {
                 stopRecording(startButton)
                 walkRecord = getWalkResult()
-                RetrofitClient.getInstance(walkRecord)
                 showResultDialog(walkRecord)
             } else {
                 startRecording(startButton)
