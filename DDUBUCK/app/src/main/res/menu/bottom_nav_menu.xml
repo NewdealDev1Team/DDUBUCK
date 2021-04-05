@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--하단 탭 메뉴-->
+    <group />
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/icon_home"
+        android:title="@string/title_home"/>
+
+    <item
+        android:id="@+id/navigation_challenge"
+        android:icon="@drawable/icon_challenge"
+        android:title="@string/title_challenge" />
+
+    <item
+        android:id="@+id/navigation_badge"
+        android:icon="@drawable/icon_badge"
+        android:title="@string/title_badge" />
+
+    <item
+        android:id="@+id/navigation_mypage"
+        android:icon="@drawable/icon_mypage"
+        android:title="@string/title_mypage" />
+
+
+</menu>

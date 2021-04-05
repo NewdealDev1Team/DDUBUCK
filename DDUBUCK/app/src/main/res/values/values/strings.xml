@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">navigationComponent</string>
+    <string name="title_home">홈</string>
+    <string name="title_dashboard">챌린지</string>
+    <string name="title_notifications">뱃지</string>
+    <string name="title_mypage">마이페이지</string>
+</resources>
