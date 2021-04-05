@@ -29,11 +29,17 @@ import kotlin.concurrent.timer
 //TODO 코드 최적화
 /*
 목표
-MapFragment 는 본인의 일만 충실히 이행해야함
-1. 유저 이동 경로 기록 시작/종료 여부에 따른 기록기능 (자유산책)
-2. 전달받은 경로를 지도상에 표시하고, 이 경로를 이용한 유저의 기록을 넘겨주는 기능 (코스산책)
-3. 기록한 유저 경로를 넘겨주는 기능 ( 자유산책 -> 경로 기록 )
-4. 산책중 쌓인 위치 데이터 및 기타 데이터를 넘겨주는 기능
+1. CRUD 구현
+Create
+ - startRecording - stopRecording
+Read
+ - getWalkResult
+Update
+ - X
+Delete
+ - X
+2. 백그라운드 작동
+
  */
 
 
@@ -47,21 +53,22 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     }
     //산책 시작 여부
     private var isRecordStarted=false
+    private var isCourseSelected=false
     //측정 관련 변수
-    private lateinit var path : PathOverlay
+    private var userPath  = PathOverlay()
     private var altitudes : MutableList<Float> = mutableListOf()
     private var speeds : MutableList<Float> = mutableListOf()
     private var walkTime : Long = 0
     private var stepCount : Int = 0
     private var distance : Double = 0.0
 
-    //목표경로
-    private var customPath = PathOverlay()
+    //코스
+    private var course = PathOverlay()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var walkRecord: WalkRecord
+        var walkRecord : WalkRecord
         setContentView(R.layout.map_fragment_activity)
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
@@ -75,32 +82,13 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         startButton.setOnClickListener {
             isRecordStarted=!isRecordStarted
             if(!isRecordStarted) {
-                walkRecord = stopRecording(startButton)
+                stopRecording(startButton)
+                walkRecord = getWalkResult()
                 RetrofitClient.getInstance(walkRecord)
                 showResultDialog(walkRecord)
             } else {
                 startRecording(startButton)
             }
-        }
-
-        //코스 프리셋 1번을 불러옵니다 (임시버튼입니다)
-        val resetCourseButton : Button = findViewById(R.id.test_button_1)
-        resetCourseButton.setOnClickListener{
-            addCoursePath(firstRoute)
-        }
-
-        //현재 기록된 코스를 저장합니다
-        val createCourseButton : Button = findViewById(R.id.test_button_2)
-        createCourseButton.setOnClickListener{
-            val userPath = path.coords
-            saveUserRoute(userPath)
-            isRecordStarted = false
-        }
-
-        //지정된 코스를 삭제합니다
-        val deleteCourseButton : Button = findViewById(R.id.test_button_3)
-        deleteCourseButton.setOnClickListener{
-            clearCoursePath()
         }
 
         locationSource =
@@ -118,27 +106,30 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         }
     }
 
-
     //산책을 종료하고 기록을 반환합니다
-    private fun stopRecording(startButton: Button) : WalkRecord{
+    private fun stopRecording(startButton: Button) {
         startButton.text="시작"
         startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
         startButton.setTextColor(Color.parseColor("#FFFFFF"))
-        path.map = null
+        userPath.map = null
         timer.cancel()
+    }
+
+    //산책기록을 반환합니다
+    private fun getWalkResult():WalkRecord {
         return WalkRecord(
-            path.coords,
-            altitudes,
-            speeds,
-            walkTime,
-            stepCount,
-            distance,
+                userPath.coords,
+                altitudes,
+                speeds,
+                walkTime,
+                stepCount,
+                distance,
         )
     }
 
     //사용자가 이동한 경로를 저장합니다
     //TODO 유저 경로 저장
-    fun saveUserRoute(p:List<LatLng>) {
+    private fun saveUserRoute(p:List<LatLng>) {
         //임시코드 : 코스 경로로 저장합니다
         //앱 제작 시 저장대상을 서버로 변경
         addCoursePath(p)
@@ -148,7 +139,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     //유저가 이동하며 기록한 경로를 삭제합니다
     //TODO 유저 경로 삭제
     private fun deleteUserRoute() {
-        path.map = null
+        userPath.map = null
     }
 
 
@@ -158,7 +149,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MapFragmentActivity,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
         dlg.setTitle("운동 완료") //제목
         dlg.setMessage("고도 편차: ${altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
-                "지점 갯수: ${path.coords.size}\n" +
+                "지점 갯수: ${userPath.coords.size}\n" +
                 "평균속도: ${speeds.average()}\n" +
                 "발걸음 수: ${stepCount}\n" +
                 "이동거리: ${distance}\n" +
@@ -173,13 +164,15 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     //코스 경로 추가하기
     private fun addCoursePath(p:List<LatLng>) {
-        customPath.coords = p
-        customPath.map = this.map
+        course.coords = p
+        course.map = this.map
+        isCourseSelected = true
     }
 
     //코스 경로 삭제하기
     private fun clearCoursePath() {
-        customPath.map = null
+        course.map = null
+        isCourseSelected = false
     }
 
 
@@ -221,9 +214,9 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         val locationButtonView : LocationButtonView = findViewById(R.id.location)
         locationButtonView.map = this.map
 
-        customPath.color = Color.CYAN
+        course.color = Color.CYAN
 
-        path = PathOverlay()
+        userPath = PathOverlay()
 
         map.addOnLocationChangeListener {
             if(isRecordStarted) {
@@ -233,15 +226,17 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
                 val alt = locationSource.lastLocation?.accuracy
                 if(lat!=null&&lng!=null) {
                     val point = LatLng(lat, lng)
-                    if(path.coords.isNotEmpty() && path.map != null) {
-                        val lastPoint = path.coords.last()
+                    if(userPath.coords.isNotEmpty() && userPath.map != null) {
+                        val lastPoint = userPath.coords.last()
                         if(!isUserReachedToTarget(point, lastPoint)) {
                             if(speed != null && alt != null) {
-                                addUserPath(point, lastPoint,path.coords, speed,alt)
+                                addUserPath(point, lastPoint,userPath.coords, speed,alt)
                             }
                         }
-                        if(customPath.coords.isNotEmpty()) {
-                            checkCoursePointArrival(point, customPath.coords.first(), customPath.coords)
+                        if(isCourseSelected) {
+                            if(course.coords.isNotEmpty()) {
+                                checkCoursePointArrival(point, course.coords.first(), course.coords)
+                            }
                         }
                     } else {
                         //초기 점이 비어있을 때
@@ -260,8 +255,8 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     //유저 경로 초기화
     private fun initUserPath(currentPos: LatLng) {
         val initRoute = mutableListOf(currentPos, currentPos)
-        path.coords = initRoute
-        path.map = this.map
+        userPath.coords = initRoute
+        userPath.map = this.map
     }
 
     //목표 점에 도달했는가 (근접해있는가)
@@ -283,7 +278,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         speeds.add(speed)
         altitudes.add(alt)
         distance+=lastPos.distanceTo(currentPos)
-        path.coords = currentPath
+        userPath.coords = currentPath
     }
 
     //산책 경로 도달 시
@@ -293,11 +288,11 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         if(course.size > 2) {
             if(isUserReachedToTarget(currentPos, lastPos)) {
                 course.removeAt(0)
-                customPath.coords = course
+                this.course.coords = course
             }
         } else {
             //코스완료
-            customPath.map = null
+            this.course.map = null
         }
     }
 
@@ -316,18 +311,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
-        //템플릿 루트
-        private val firstRoute = mutableListOf(
-                LatLng(37.56362279298406, 126.90926225749905),
-                LatLng(37.56345663522066, 126.9091328029345),
-                LatLng(37.56314632623486, 126.90784351195998),
-                LatLng(37.56396493508562, 126.90736905196479),
-                LatLng(37.56417998056722, 126.90825278385154),
-                LatLng(37.56375202367158, 126.90831947940694),
-                LatLng(37.56332059071951, 126.90851459284085),
-                LatLng(37.56346358071265, 126.909140550899),
-                LatLng(37.5637076839577, 126.9092733697774),
-        )
+
     }
 
 
