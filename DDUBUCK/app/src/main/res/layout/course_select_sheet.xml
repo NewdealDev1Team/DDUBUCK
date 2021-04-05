@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        >
+
+    <!--
+    behavior_peekHeight: bottom sheet의 초기 크기, 최소 스크롤 크기
+    behavior_hideable: 사용자 스크롤에 의해 사라질 것인지 설정
+
+    중략-->
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
