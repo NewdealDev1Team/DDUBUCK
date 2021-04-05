@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">DDUBUCK</string>
+    <string name="app_name">뚜벅뚜벅</string>
+    <string name="title_home">홈</string>
+    <string name="title_challenge">챌린지</string>
+    <string name="title_badge">뱃지</string>
+    <string name="title_mypage">마이페이지</string>
 </resources>
