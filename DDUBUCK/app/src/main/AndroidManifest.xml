@@ -22,10 +22,10 @@
         <activity android:name=".weather.WeatherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".SecondActivity"/>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
@@ -39,6 +39,15 @@
                     android:scheme="kakao77629a2e99409577163d7742096517e9" />
             </intent-filter>
         </activity>
+=======
+        <activity android:name=".MapFragmentActivity"/>
+        <meta-data
+            android:name="com.naver.maps.map.CLIENT_ID"
+            android:value="lz0an3yhfn" />
+>>>>>>> master
     </application>
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

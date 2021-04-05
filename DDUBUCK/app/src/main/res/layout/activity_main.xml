@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+<<<<<<< HEAD
     tools:context=".login.LoginActivity">
 
     <!--    <ImageButton-->
@@ -74,5 +75,9 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </LinearLayout>
+=======
+    tools:context=".MainActivity">
+
+>>>>>>> master
 
 </androidx.constraintlayout.widget.ConstraintLayout>
