@@ -1,14 +1,8 @@
 package com.example.ddubuck
 
 import android.os.Bundle
-<<<<<<< HEAD
+
 import androidx.appcompat.app.AppCompatActivity
-
-class MainActivity: AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-=======
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -20,6 +14,8 @@ import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+
+
 
 class MainActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener{ item ->
@@ -49,7 +45,6 @@ class MainActivity : AppCompatActivity() {
      }
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -73,6 +68,5 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragmemnt(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.nav_host_fragment_container,fragment)
->>>>>>> 4a4e29aaf4da28645448f2c7d870077b3d318acd
     }
 }
