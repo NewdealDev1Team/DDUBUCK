@@ -7,3 +7,5 @@ data class Weather(
         var message: String,
         var response: Response
 )
+
+//466c10bee7b689ae03ea8c7729ba0b1f
