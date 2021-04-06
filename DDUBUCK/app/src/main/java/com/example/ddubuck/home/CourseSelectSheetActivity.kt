@@ -1,7 +1,6 @@
 package com.example.ddubuck.home
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,9 @@ class CourseSelectSheetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.sheet_test_page)
-        val intent = Intent(this, MapFragmentActivity::class.java)
+
+        //TODO map fragment implement code
+
         var fooArray = arrayListOf<String>()
         for(i in 1..100) {
             fooArray.add(i.toString())
@@ -32,6 +33,14 @@ class CourseSelectSheetActivity : AppCompatActivity() {
         println("HELLO")
     }
 }
+
+/*
+val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+                ?: MapFragment.newInstance().also {
+                    fm.beginTransaction().add(R.id.map, it).commit()
+                }
+        mapFragment.getMapAsync(this)
+ */
 
 class MainRvAdapter(val context: Context, val itemList: ArrayList<String>):
     RecyclerView.Adapter<Holder>() {
