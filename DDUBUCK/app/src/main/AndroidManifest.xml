@@ -14,16 +14,11 @@
         android:theme="@style/Theme.DDUBUCK">
 
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity">
 
         </activity>
         <activity android:name=".weather.WeatherActivity">
-
         </activity>
         <activity android:name=".SecondActivity"/>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
@@ -39,6 +34,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".MapFragmentActivity">
+        </activity>
+
+        <activity android:name=".CourseSelectSheetActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
