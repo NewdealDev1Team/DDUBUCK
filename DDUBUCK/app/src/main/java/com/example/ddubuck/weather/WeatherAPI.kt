@@ -1,15 +1,18 @@
 package com.example.ddubuck.weather
 
-import com.example.ddubuck.login.UserInfo
+import com.google.gson.JsonObject
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Header
+import retrofit2.http.Query
 
 
 interface WeatherAPI {
-//    @GET("v1/nid/me")
-//    fun getUserInfo(
-//            @Header("Authorization") Authorization: String,
-//    ): Call<UserInfo>
-
+    @GET("weather?")
+    fun getCurrentWeather(
+            @Query("lat") lat: String,
+            @Query("lon") lon: String,
+            @Query("APPID") APPID: String
+    ): Call<WeatherResponse>
 }
+
