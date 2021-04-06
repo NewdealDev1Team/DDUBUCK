@@ -6,11 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/teal_200"
-    tools:context=".CourseSelectSheetActivity">
+    tools:context=".home.CourseSelectSheetActivity">
 
+    <include layout="@layout/map_fragment_activity"
+        android:id="@+id/test_map"/>
     <include layout="@layout/bottom_sheet"
         android:id="@+id/bottom_sheet"
-        android:background="@android:color/white"
-        />
+        android:background="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

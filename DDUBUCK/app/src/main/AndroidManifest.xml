@@ -33,10 +33,10 @@
                     android:scheme="kakao77629a2e99409577163d7742096517e9" />
             </intent-filter>
         </activity>
-        <activity android:name=".MapFragmentActivity">
+        <activity android:name=".home.MapFragmentActivity">
         </activity>
 
-        <activity android:name=".CourseSelectSheetActivity">
+        <activity android:name=".home.CourseSelectSheetActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

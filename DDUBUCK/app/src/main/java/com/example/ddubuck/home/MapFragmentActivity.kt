@@ -1,4 +1,4 @@
-package com.example.ddubuck
+package com.example.ddubuck.home
 
 import android.app.AlertDialog
 import android.content.Context
@@ -13,6 +13,8 @@ import android.widget.TextView
 import androidx.annotation.UiThread
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
+import com.example.ddubuck.MainActivity
+import com.example.ddubuck.R
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.LocationTrackingMode
@@ -67,7 +69,6 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         var walkRecord : WalkRecord
         setContentView(R.layout.map_fragment_activity)
         val fm = supportFragmentManager
@@ -115,7 +116,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     }
 
     //산책기록을 반환합니다
-    private fun getWalkResult():WalkRecord {
+    private fun getWalkResult(): WalkRecord {
         return WalkRecord(
                 userPath.coords,
                 altitudes,
@@ -143,7 +144,7 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
 
     //언젠가 사라질 다이알로그 띄우기
-    private fun showResultDialog(walkRecord:WalkRecord) {
+    private fun showResultDialog(walkRecord: WalkRecord) {
         val intent = Intent(this, MainActivity::class.java)
         val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MapFragmentActivity,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
         dlg.setTitle("운동 완료") //제목
@@ -183,8 +184,6 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     override fun onSensorChanged(event: SensorEvent) {  // 가속도 센서 값이 바뀔때마다 호출됨
         if(isRecordStarted) {
             stepCount++
-            val stepTextView:TextView = findViewById(R.id.stepCurrent)
-            stepTextView.text = stepCount.toString()
         }
     }
 

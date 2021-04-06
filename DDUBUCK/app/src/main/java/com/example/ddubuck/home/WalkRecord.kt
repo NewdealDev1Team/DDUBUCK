@@ -1,4 +1,4 @@
-package com.example.ddubuck
+package com.example.ddubuck.home
 
 import com.google.gson.Gson
 import com.naver.maps.geometry.LatLng
