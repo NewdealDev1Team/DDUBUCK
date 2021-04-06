@@ -69,31 +69,17 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var walkRecord : WalkRecord
-        setContentView(R.layout.map_fragment_activity)
+
+    }
+
+    public fun init() {
         val fm = supportFragmentManager
         val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
-            ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.map, it).commit()
-            }
+                ?: MapFragment.newInstance().also {
+                    fm.beginTransaction().add(R.id.map, it).commit()
+                }
         mapFragment.getMapAsync(this)
-
-        //시작버튼
-        val startButton : Button = findViewById(R.id.start_button)
-        startButton.setOnClickListener {
-            isRecordStarted=!isRecordStarted
-            if(!isRecordStarted) {
-                stopRecording(startButton)
-                walkRecord = getWalkResult()
-                showResultDialog(walkRecord)
-            } else {
-                startRecording(startButton)
-            }
-        }
-
-        locationSource =
-            FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
     }
 
     //버튼 텍스트 바꾸고 산책시작
