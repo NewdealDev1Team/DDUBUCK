@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
+import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.util.FusedLocationSource
 
@@ -26,17 +27,26 @@ class HomeActivity : FragmentActivity() {
         setContentView(R.layout.activity_home)
 
         //임시
-        val fooArray = arrayListOf<String>()
-        for(i in 1..100) {
-            fooArray.add(i.toString())
-        }
+        val fooArray = arrayListOf<CourseItem>()
+        fooArray.add(
+            CourseItem(
+            true,
+            "자유산책",
+            "자유산책입니다",
+            WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0))
+        )
+        fooArray.add(
+            CourseItem(
+           false,
+           "기록",
+           "코스산책입니다",
+            WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0))
+        )
         val sheetRecycler : RecyclerView = findViewById(R.id.sheet_recycler)
-
-        //TODO 시트 아이템 onclick 리스너 달기
-
+        val mAdapter = HomeRvAdapter(this, fooArray)
         sheetRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        //sheetRecycler.adapter = HomeRvAdapter(this, fooArray)
-        sheetRecycler.setOnClickListener { }
+        sheetRecycler.adapter = mAdapter
+        sheetRecycler.setOnClickListener { println("")}
 
         val fm = supportFragmentManager
         val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
@@ -61,7 +71,16 @@ class HomeActivity : FragmentActivity() {
                     startButton.text="시작"
                     startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
                     startButton.setTextColor(Color.parseColor("#FFFFFF"))
-                    showResultDialog(walkRecord)
+                    fooArray.add(
+                        CourseItem(
+                            false,
+                            "코스산책",
+                            "유저가 기록한 정보를 넣었습니다",
+                            walkRecord
+                        )
+                    )
+                    mAdapter.notifyItemChanged(0)
+
                 } else {
                     startRecording()
                     startButton.text="중지"

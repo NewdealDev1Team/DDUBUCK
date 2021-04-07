@@ -33,14 +33,14 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
     //https://blog.yena.io/studynote/2017/12/06/Android-Kotlin-RecyclerView1.html
     fun bind(i: CourseItem, context: Context) {
         if(i.isFreeWalk) {
-            itemView.setOnClickListener{println(i)}
+            itemView.setOnClickListener{println("자유산책")}
             title?.text = "자유산책"
             body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
             picture?.setImageResource(R.mipmap.ic_launcher)
         } else {
-            itemView.setOnClickListener{println(i)}
+            itemView.setOnClickListener{println(i.walkRecord)}
             title?.text = "코스산책"
-            body?.text = "코스산책입니다\n재밌겠다!!!!!!!!!"
+            body?.text = "걸음수 : ${i.walkRecord.stepCount}\n거리 : ${i.walkRecord.distance}\n시간 : ${i.walkRecord.walkTime}"
             picture?.setImageResource(R.mipmap.ic_launcher)
         }
 
