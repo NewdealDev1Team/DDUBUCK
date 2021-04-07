@@ -1,8 +1,6 @@
 package com.example.ddubuck.weather
 
-import com.example.ddubuck.login.Response
 import com.google.gson.annotations.SerializedName
-
 
 class WeatherResponse(){
     @SerializedName("weather") var weather = ArrayList<Weather>()
