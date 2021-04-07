@@ -9,10 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 
-class HomeRvAdapter(val context: Context, val itemList: ArrayList<String>):
+class HomeRvAdapter(private val context: Context, private val itemList: ArrayList<CourseItem>):
         RecyclerView.Adapter<Holder>() {
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(context).inflate(R.layout.sheet_item, parent, false)
         return Holder(view)
@@ -33,10 +31,18 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
     private val picture = itemView?.findViewById<ImageView>(R.id.sheet_item_picture)
 
     //https://blog.yena.io/studynote/2017/12/06/Android-Kotlin-RecyclerView1.html
-    fun bind(i: String, context: Context) {
-        itemView.setOnClickListener{println(i)}
-        title?.text = "자유산책"
-        body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
-        picture?.setImageResource(R.mipmap.ic_launcher)
+    fun bind(i: CourseItem, context: Context) {
+        if(i.isFreeWalk) {
+            itemView.setOnClickListener{println(i)}
+            title?.text = "자유산책"
+            body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
+            picture?.setImageResource(R.mipmap.ic_launcher)
+        } else {
+            itemView.setOnClickListener{println(i)}
+            title?.text = "코스산책"
+            body?.text = "코스산책입니다\n재밌겠다!!!!!!!!!"
+            picture?.setImageResource(R.mipmap.ic_launcher)
+        }
+
     }
 }

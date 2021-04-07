@@ -12,7 +12,6 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.ddubuck.MainActivity
-import com.example.ddubuck.R
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.LocationTrackingMode
@@ -47,15 +46,15 @@ class HomeMapFragment(
         private val locationSource:FusedLocationSource,
         private val sensorManager: SensorManager,
         private val mapFragment : MapFragment,
+        private val locationButtonView:LocationButtonView,
         ) : Fragment(), OnMapReadyCallback, SensorEventListener {
     //환경설정 변수
-    //private lateinit var locationSource: FusedLocationSource
     private lateinit var map: NaverMap
     private lateinit var timer : Timer
 
     //산책 시작 여부
-    private var isRecordStarted=false
-    private var isCourseSelected=false
+    var isRecordStarted=false
+    var isCourseSelected=false
     //측정 관련 변수
     private var userPath  = PathOverlay()
     private var altitudes : MutableList<Float> = mutableListOf()
@@ -74,20 +73,20 @@ class HomeMapFragment(
     }
 
     //버튼 텍스트 바꾸고 산책시작
-    private fun startRecording() {
+    fun startRecording() {
         timer = timer(period = 1000) {
             walkTime++
         }
     }
 
     //산책을 종료하고 기록을 반환합니다
-    private fun stopRecording() {
+    fun stopRecording() {
         userPath.map = null
         timer.cancel()
     }
 
     //산책기록을 반환합니다
-    private fun getWalkResult(): WalkRecord {
+    fun getWalkResult(): WalkRecord {
         return WalkRecord(
                 userPath.coords,
                 altitudes,
@@ -116,7 +115,6 @@ class HomeMapFragment(
 
     //언젠가 사라질 다이알로그 띄우기
     fun showResultDialog(walkRecord: WalkRecord) {
-        val intent = Intent(context, MainActivity::class.java)
         val dlg: AlertDialog.Builder = AlertDialog.Builder(context,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
         dlg.setTitle("운동 완료") //제목
         dlg.setMessage("고도 편차: ${altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
@@ -126,9 +124,7 @@ class HomeMapFragment(
                 "이동거리: ${distance}\n" +
                 "경과시간: ${walkTime}초\n" +
                 "소모 칼로리: ${walkRecord.getCalorie()}") // 메시지
-        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
-            startActivity(intent)
-        })
+        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->})
         dlg.show()
     }
 
@@ -167,9 +163,7 @@ class HomeMapFragment(
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
-
-        //val locationButtonView : LocationButtonView = findViewById(R.id.location)
-        //locationButtonView.map = this.map
+        locationButtonView.map = this.map
 
         course.color = Color.CYAN
 
