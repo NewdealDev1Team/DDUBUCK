@@ -1,49 +1,16 @@
 package com.example.ddubuck.home
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 
-
-class CourseSelectSheetActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.sheet_test_page)
-
-        //TODO map fragment implement code
-
-        var fooArray = arrayListOf<String>()
-        for(i in 1..100) {
-            fooArray.add(i.toString())
-        }
-        var sheetRecycler : RecyclerView = findViewById(R.id.sheet_recycler)
-
-        sheetRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        sheetRecycler.adapter = MainRvAdapter(this, fooArray)
-
-        sheetRecycler.setOnClickListener {  }
-
-        println("HELLO")
-    }
-}
-
-/*
-val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
-                ?: MapFragment.newInstance().also {
-                    fm.beginTransaction().add(R.id.map, it).commit()
-                }
-        mapFragment.getMapAsync(this)
- */
-
-class MainRvAdapter(val context: Context, val itemList: ArrayList<String>):
-    RecyclerView.Adapter<Holder>() {
+class HomeRvAdapter(val context: Context, val itemList: ArrayList<String>):
+        RecyclerView.Adapter<Holder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -72,8 +39,4 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
         body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
         picture?.setImageResource(R.mipmap.ic_launcher)
     }
-
-
-
-
 }

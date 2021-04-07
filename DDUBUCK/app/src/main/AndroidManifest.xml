@@ -33,15 +33,14 @@
                     android:scheme="kakao77629a2e99409577163d7742096517e9" />
             </intent-filter>
         </activity>
-        <activity android:name=".home.MapFragmentActivity">
-        </activity>
 
-        <activity android:name=".home.CourseSelectSheetActivity">
+        <activity android:name=".home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="lz0an3yhfn" />
