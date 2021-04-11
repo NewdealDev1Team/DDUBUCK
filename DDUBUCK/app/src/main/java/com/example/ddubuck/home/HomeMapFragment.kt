@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -48,6 +49,8 @@ class HomeMapFragment(
         private val mapFragment : MapFragment,
         private val locationButtonView:LocationButtonView,
         ) : Fragment(), OnMapReadyCallback, SensorEventListener {
+
+
     //환경설정 변수
     private lateinit var map: NaverMap
     private lateinit var timer : Timer

@@ -43,6 +43,5 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
             body?.text = "걸음수 : ${i.walkRecord.stepCount}\n거리 : ${i.walkRecord.distance}\n시간 : ${i.walkRecord.walkTime}"
             picture?.setImageResource(R.mipmap.ic_launcher)
         }
-
     }
 }

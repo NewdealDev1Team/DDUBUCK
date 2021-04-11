@@ -68,7 +68,7 @@ class HomeActivity : FragmentActivity() {
                 if(!isRecordStarted) {
                     stopRecording()
                     walkRecord = getWalkResult()
-                    startButton.text="시작"
+                    startButton.text="시"
                     startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
                     startButton.setTextColor(Color.parseColor("#FFFFFF"))
                     fooArray.add(
@@ -83,7 +83,7 @@ class HomeActivity : FragmentActivity() {
 
                 } else {
                     startRecording()
-                    startButton.text="중지"
+                    startButton.text="중"
                     startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
                     startButton.setTextColor(Color.parseColor("#000000"))
                 }
