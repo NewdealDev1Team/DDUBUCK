@@ -1,112 +1,139 @@
 package com.example.ddubuck.weather
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.AttributeSet
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import kotlin.math.roundToInt
 
-class WeatherActivity : AppCompatActivity() {
+interface APICallback {
+    fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, textView: TextView)
+}
 
-    var walkString = WalkScore()
+class WeatherActivity : Fragment(), APICallback {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_weather)
-        getCurrentWeather()
-        getCurrentDust()
-        getCurrentUVRays()
+    lateinit var weatherViewModel: WeatherViewModel
+
+    override fun onCreateView(
+            inflater: LayoutInflater,
+            container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        val weatherView = inflater.inflate(R.layout.fragment_weather, container, false)
+        val tv: TextView = weatherView.findViewById(R.id.tv)
+
+        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+        showWeatherInfo(this, tv)
+
+        return weatherView
     }
 
-
-    fun getCurrentWeather() {
-        val tv: TextView = findViewById(R.id.tv)
-        val res: Call<WeatherResponse> = WeatherClient
-                .getInstance()
-                .buildRetrofit()
-                .getCurrentWeather("37.563598", "126.909227", getString(R.string.OPEN_WEATHER_MAP_KEY))
-
-        res.enqueue(object : Callback<WeatherResponse> {
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                Log.d("TAG", "Failure : ${t.message.toString()}")
-            }
-
-            override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
-                val weatherResponse = response.body()
-                val cTemp = (weatherResponse!!.main!!.temp - 273.15).roundToInt() //켈빈을 섭씨로 변환
-                val minTemp = (weatherResponse.main!!.temp_min - 273.15).roundToInt()
-                val maxTemp = (weatherResponse.main!!.temp_max - 273.15).roundToInt()
-                val stringBuilder =
-                        "현재기온: " + cTemp + "\n" +
-                                "최저기온: " + minTemp + "\n" +
-                                "최고기온: " + maxTemp + "\n" +
-                                "날씨: " + weatherResponse!!.weather[0].id + "\n" +
-                                "습도: " + weatherResponse.main!!.humidity + "\n"
-
-                tv.text = stringBuilder
-            }
+    private fun showWeatherInfo(result: APICallback, textView: TextView){
+        weatherViewModel.weatherInfo.observe(viewLifecycleOwner, { weather ->
+            weatherViewModel.uvRaysInfo.observe(viewLifecycleOwner, { uvRays ->
+                weatherViewModel.dustInfo.observe(viewLifecycleOwner, { dust ->
+                    result.onSuccess(weather, uvRays, dust, textView)
+                })
+            })
         })
     }
 
-    private fun getCurrentDust() {
-        val tv2: TextView = findViewById(R.id.tv2)
-        val res: Call<Dust> = DustClient
-                .getInstance()
-                .buildRetrofit()
-                .getCurrentDust("마포구", "DAILY", 1, 1, "json", "WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==")
 
-        res.enqueue(object : Callback<Dust> {
+    @SuppressLint("SetTextI18n")
+    override fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, textView: TextView) {
+        var weatherScore = 0
 
-            override fun onFailure(call: Call<Dust>, t: Throwable) {
-                Log.d("TAG", "Failure : ${t.message.toString()}")
+        // 현재 날씨 ID
+        val weatherID = weatherResponse.weather[0].id
+
+        // 현재 온도
+        val tempNowF = weatherResponse.main?.temp?.toInt()
+        val tempNowC = tempNowF?.minus(273)
+
+        // 최고 온도 & 최저 온도
+        val tempMax = weatherResponse.main?.temp_max?.toInt()?.minus(273)
+        val tempMin = weatherResponse.main?.temp_min?.toInt()?.minus(273)
+
+        // 현재 습도
+        val tempHumidity = weatherResponse.main?.humidity
+
+        // 불쾌 지수 공식
+        val discomfortIndex = (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
+
+        // 자외선 지수
+        val uvRays = uvRays.response.body.items.item[0].today?.toInt()
+
+        // 통합 대기 환경 지수
+        val dustInfo = dust.response.body.items[0].khaiValue?.toInt()
+        var dustString = ""
+
+        when (weatherID) {
+            in 900..909 -> weatherScore += 1
+            in 200..699 -> weatherScore += 2
+            in 800..809 -> weatherScore += 3
+        }
+
+        if (uvRays != null) {
+            if (uvRays <= 6 && weatherID in (900..909)) weatherScore += 1
+        }
+
+        weatherScore += when {
+            discomfortIndex > 80 -> {
+                1
             }
-
-            override fun onResponse(call: Call<Dust>, response: Response<Dust>) {
-                val dustResponse = response.body()?.response
-
-                val dustInfo =
-                        "통합대기환경수치 : " + dustResponse?.body!!.items[0].khaiValue + "\n" +
-                                "통합대기환경지수 : " + dustResponse.body.items[0].khaiGrade
-
-                Log.d("TAG", "Success :: $dustInfo")
-                tv2.text = dustInfo
+            discomfortIndex in 76..80 -> {
+                2
             }
-        })
+            discomfortIndex in 68..75 -> {
+                3
+            }
+            else -> {
+                4
+            }
+        }
 
+        when (dustInfo) {
+            in 0..50 -> {
+                weatherScore += 4
+                dustString = "좋음"
+            }
+            in 51..101 -> {
+                weatherScore +=  3
+                dustString = "보통"
+            }
+            in 101..250 -> {
+                weatherScore += 2
+                dustString = "나쁨"
+            }
+            in 251..500 -> {
+                weatherScore += 1
+                dustString = "아주 나쁨"
+            }
+        }
+
+        when (weatherScore) {
+            in 10..12 -> {
+                textView.text = "산책 지수 : 산책하기 최고의 날 \n 최고 온도 : $tempMax \n 최저온도 : $tempMin \n 미세 : $dustString"
+            }
+            in 6..9 -> {
+                textView.text = "산책 지수 : 산책하기 보통의 날 \n" +
+                        " 최고 온도 : $tempMax \n" +
+                        " 최저온도 : $tempMin \n" +
+                        " 미세 : $dustString"
+            }
+            in 3..5 -> {
+                textView.text = "산책 지수 : 산책하지마 \n" +
+                        " 최고 온도 : $tempMax \n" +
+                        " 최저온도 : $tempMin \n" +
+                        " 미세 : $dustString"
+            }
+        }
     }
 
-    private fun getCurrentUVRays() {
-        val tv3: TextView = findViewById(R.id.tv3)
-        val res: Call<UVRays> = UVRaysClient
-                .getInstance()
-                .buildRetrofit()
-                .getCurrentUVRays("WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==",
-                         1, 1,  "JSON", "1100000000", "2021040812")
-
-        res.enqueue(object : Callback<UVRays> {
-
-            override fun onFailure(call: Call<UVRays>, t: Throwable) {
-                Log.d("TAG", "Failure : ${t.message.toString()}")
-            }
-
-            override fun onResponse(call: Call<UVRays>, response: Response<UVRays>) {
-                val dustResponse = response.body()?.response
-
-                val uvInfo =
-                        "UV : " + dustResponse?.body!!.items.item[0].today
-
-                Log.d("TAG", "Success :: $uvInfo")
-                tv3.text = uvInfo
-            }
-        })
-    }
 
 }

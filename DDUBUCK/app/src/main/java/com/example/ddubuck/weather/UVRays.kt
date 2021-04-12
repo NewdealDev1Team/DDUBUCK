@@ -1,7 +1,5 @@
 package com.example.ddubuck.weather
 
-import com.google.gson.annotations.SerializedName
-
 class UVRays {
     var response = UVRaysResponse()
 }
