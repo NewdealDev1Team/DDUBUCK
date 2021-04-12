@@ -20,7 +20,7 @@ class WeatherViewModel : ViewModel() {
     }
 
     val dustInfo = liveData(Dispatchers.IO) {
-        val retrivedDustInfo = weatherRepository.getDustInfo("서대문구", "DAILY", 1, 1, "json", "WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==")
+        val retrivedDustInfo = weatherRepository.getDustInfo("마포구", "DAILY", 1, 1, "json", "WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==")
         emit(retrivedDustInfo)
     }
 }
