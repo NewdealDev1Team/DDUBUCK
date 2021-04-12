@@ -1,10 +1,8 @@
 package com.example.ddubuck.weather
 
-import android.provider.Settings.Global.getString
-import androidx.lifecycle.LiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.ddubuck.R
 import kotlinx.coroutines.Dispatchers
 
 class WeatherViewModel : ViewModel() {
