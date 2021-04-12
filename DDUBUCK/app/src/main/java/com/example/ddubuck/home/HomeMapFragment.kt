@@ -1,4 +1,4 @@
-package com.example.ddubuck
+package com.example.ddubuck.home
 
 import android.app.AlertDialog
 import android.content.Context
@@ -8,11 +8,11 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
+import android.view.View
 import androidx.annotation.UiThread
-import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.example.ddubuck.MainActivity
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.LocationTrackingMode
@@ -43,17 +43,21 @@ Delete
  */
 
 
-class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventListener {
+class HomeMapFragment(
+        private val locationSource:FusedLocationSource,
+        private val sensorManager: SensorManager,
+        private val mapFragment : MapFragment,
+        private val locationButtonView:LocationButtonView,
+        ) : Fragment(), OnMapReadyCallback, SensorEventListener {
+
+
     //환경설정 변수
-    private lateinit var locationSource: FusedLocationSource
     private lateinit var map: NaverMap
     private lateinit var timer : Timer
-    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
-        getSystemService(Context.SENSOR_SERVICE) as SensorManager
-    }
+
     //산책 시작 여부
-    private var isRecordStarted=false
-    private var isCourseSelected=false
+    var isRecordStarted=false
+    var isCourseSelected=false
     //측정 관련 변수
     private var userPath  = PathOverlay()
     private var altitudes : MutableList<Float> = mutableListOf()
@@ -67,55 +71,24 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        var walkRecord : WalkRecord
-        setContentView(R.layout.map_fragment_activity)
-        val fm = supportFragmentManager
-        val mapFragment = fm.findFragmentById(R.id.map) as MapFragment?
-            ?: MapFragment.newInstance().also {
-                fm.beginTransaction().add(R.id.map, it).commit()
-            }
         mapFragment.getMapAsync(this)
-
-        //시작버튼
-        val startButton : Button = findViewById(R.id.start_button)
-        startButton.setOnClickListener {
-            isRecordStarted=!isRecordStarted
-            if(!isRecordStarted) {
-                stopRecording(startButton)
-                walkRecord = getWalkResult()
-                showResultDialog(walkRecord)
-            } else {
-                startRecording(startButton)
-            }
-        }
-
-        locationSource =
-            FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-
     }
 
     //버튼 텍스트 바꾸고 산책시작
-    private fun startRecording(startButton:Button) {
-        startButton.text="중지"
-        startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
-        startButton.setTextColor(Color.parseColor("#000000"))
+    fun startRecording() {
         timer = timer(period = 1000) {
             walkTime++
         }
     }
 
     //산책을 종료하고 기록을 반환합니다
-    private fun stopRecording(startButton: Button) {
-        startButton.text="시작"
-        startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
-        startButton.setTextColor(Color.parseColor("#FFFFFF"))
+    fun stopRecording() {
         userPath.map = null
         timer.cancel()
     }
 
     //산책기록을 반환합니다
-    private fun getWalkResult():WalkRecord {
+    fun getWalkResult(): WalkRecord {
         return WalkRecord(
                 userPath.coords,
                 altitudes,
@@ -143,9 +116,8 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
 
 
     //언젠가 사라질 다이알로그 띄우기
-    private fun showResultDialog(walkRecord:WalkRecord) {
-        val intent = Intent(this, MainActivity::class.java)
-        val dlg: AlertDialog.Builder = AlertDialog.Builder(this@MapFragmentActivity,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+    fun showResultDialog(walkRecord: WalkRecord) {
+        val dlg: AlertDialog.Builder = AlertDialog.Builder(context,  android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
         dlg.setTitle("운동 완료") //제목
         dlg.setMessage("고도 편차: ${altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
                 "지점 갯수: ${userPath.coords.size}\n" +
@@ -153,11 +125,8 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
                 "발걸음 수: ${stepCount}\n" +
                 "이동거리: ${distance}\n" +
                 "경과시간: ${walkTime}초\n" +
-                "소모 칼로리: ${walkRecord.getCalorie()}") // 메시지
-        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->
-            startActivity(intent)
-            finish()
-        })
+                "소모 칼로리: ${walkRecord.getCalorie(65.0)}") // 메시지
+        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->})
         dlg.show()
     }
 
@@ -174,7 +143,6 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
         isCourseSelected = false
     }
 
-
     override fun onResume() {
         super.onResume()
         sensorManager.registerListener(this,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR), SensorManager.SENSOR_DELAY_NORMAL)
@@ -183,34 +151,20 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
     override fun onSensorChanged(event: SensorEvent) {  // 가속도 센서 값이 바뀔때마다 호출됨
         if(isRecordStarted) {
             stepCount++
-            val stepTextView:TextView = findViewById(R.id.stepCurrent)
-            stepTextView.text = stepCount.toString()
         }
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (locationSource.onRequestPermissionsResult(requestCode, permissions,
-                        grantResults)) {
-            if (!locationSource.isActivated) { // 권한 거부됨
-                map.locationTrackingMode = LocationTrackingMode.None
-            }
-            return
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
-
     @UiThread
     override fun onMapReady(naverMap: NaverMap) {
         map = naverMap
+        if (!locationSource.isActivated) { // 권한 거부됨
+            map.locationTrackingMode = LocationTrackingMode.None
+        }
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
-
-        val locationButtonView : LocationButtonView = findViewById(R.id.location)
         locationButtonView.map = this.map
 
         course.color = Color.CYAN
@@ -306,12 +260,5 @@ class MapFragmentActivity : FragmentActivity(), OnMapReadyCallback, SensorEventL
                 LatLng(point.latitude + radius, point.longitude + radius),
         )
     }
-
-    companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
-
-
-    }
-
 
 }

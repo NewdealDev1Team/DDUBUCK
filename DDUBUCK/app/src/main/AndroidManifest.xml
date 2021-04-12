@@ -17,14 +17,22 @@
         tools:targetApi="n">
 
         <activity android:name=".MainActivity">
+<<<<<<< HEAD
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+=======
+>>>>>>> 690bb8ee780c42394cb8bb46d0f75c41ff39b634
         </activity>
         <activity android:name=".login.LoginActivity">
 
         </activity>
+<<<<<<< HEAD
+=======
+        <activity android:name=".weather.WeatherActivity">
+        </activity>
+>>>>>>> 690bb8ee780c42394cb8bb46d0f75c41ff39b634
         <activity android:name=".SecondActivity"/>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
@@ -38,8 +46,17 @@
                     android:scheme="kakao77629a2e99409577163d7742096517e9" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".MapFragmentActivity">
 
+=======
+
+        <activity android:name=".home.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+>>>>>>> 690bb8ee780c42394cb8bb46d0f75c41ff39b634
         </activity>
 
         <meta-data

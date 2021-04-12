@@ -1,6 +1,7 @@
 package com.example.ddubuck
 
 import android.os.Bundle
+<<<<<<< HEAD
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -44,6 +45,13 @@ class MainActivity : AppCompatActivity() {
         }
      }
 
+=======
+import android.os.PersistableBundle
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.example.ddubuck.login.LoginActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+>>>>>>> 690bb8ee780c42394cb8bb46d0f75c41ff39b634
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
