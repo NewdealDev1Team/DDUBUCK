@@ -18,7 +18,7 @@ data class WalkRecord (
         val distance : Double,
 ) {
 
-    fun getCalorie() : Double {
+    fun getCalorie(weight:Double) : Double {
         //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
         val met = when(speeds.average()) {
             in 0.0..4.0 -> 2.0 // 느리게 걷기
@@ -26,7 +26,7 @@ data class WalkRecord (
             in 8.0..12.0 -> 4.0 // 빠르게 걷기
             else -> 5.0 // 전력질주
         }
-        return (met * (3.5 * 65 * (walkTime /60))) * 0.001 * 5
+        return (met * (3.5 * weight * (walkTime /60))) * 0.001 * 5
     }
 
     //TODO WalkRecord To Json 구현하기

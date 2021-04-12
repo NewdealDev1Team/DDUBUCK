@@ -1,16 +1,13 @@
 package com.example.ddubuck.home
 
 import android.content.Context
-import android.graphics.Color
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.widget.Button
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
-import com.naver.maps.geometry.LatLng
+import com.example.ddubuck.home.bottomSheet.BottomSheetSelectFragment
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.util.FusedLocationSource
 
@@ -26,69 +23,19 @@ class HomeActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        //임시
-        val fooArray = arrayListOf<CourseItem>()
-        fooArray.add(
-            CourseItem(
-            true,
-            "자유산책",
-            "자유산책입니다",
-            WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0))
-        )
-        fooArray.add(
-            CourseItem(
-           false,
-           "기록",
-           "코스산책입니다",
-            WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0))
-        )
-        val sheetRecycler : RecyclerView = findViewById(R.id.sheet_recycler)
-        val mAdapter = HomeRvAdapter(this, fooArray)
-        sheetRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        sheetRecycler.adapter = mAdapter
-        sheetRecycler.setOnClickListener { println("")}
-
         val fm = supportFragmentManager
         val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
                 ?: MapFragment.newInstance().also {
                     fm.beginTransaction().add(R.id.map, it).commit()
-        }
+                }
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
-        val fragmentTransaction = fm.beginTransaction()
         homeMapFragment = HomeMapFragment(locationSource, sensorManager, nMapFragment, findViewById(R.id.location))
-        fragmentTransaction.add(R.id.home_map_fragment, homeMapFragment)
-        fragmentTransaction.commit()
+        fm.beginTransaction().add(R.id.home_map_fragment, homeMapFragment).commit()
 
-        val startButton: Button = findViewById(R.id.start_button)
-        var walkRecord:WalkRecord
-        startButton.setOnClickListener{
-            with(homeMapFragment) {
-                isRecordStarted=!isRecordStarted
-                if(!isRecordStarted) {
-                    stopRecording()
-                    walkRecord = getWalkResult()
-                    startButton.text="시"
-                    startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_paused_radius, null)
-                    startButton.setTextColor(Color.parseColor("#FFFFFF"))
-                    fooArray.add(
-                        CourseItem(
-                            false,
-                            "코스산책",
-                            "유저가 기록한 정보를 넣었습니다",
-                            walkRecord
-                        )
-                    )
-                    mAdapter.notifyItemChanged(0)
+        val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment(this@HomeActivity)
+        fm.beginTransaction().replace(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
 
-                } else {
-                    startRecording()
-                    startButton.text="중"
-                    startButton.background = ResourcesCompat.getDrawable(resources, R.drawable.start_button_started_radius, null)
-                    startButton.setTextColor(Color.parseColor("#000000"))
-                }
-            }
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,

@@ -9,15 +9,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 
-class HomeRvAdapter(private val context: Context, private val itemList: ArrayList<CourseItem>):
+class HomeRvAdapter(private val context: Context,
+                    private val itemList: ArrayList<CourseItem>,
+                    private val onClick:()->Unit):
         RecyclerView.Adapter<Holder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        val view = LayoutInflater.from(context).inflate(R.layout.sheet_item, parent, false)
+        val view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_select_item, parent, false)
         return Holder(view)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind(itemList[position], context)
+        holder.bind(itemList[position], context){onClick}
     }
 
     override fun getItemCount(): Int {
@@ -31,7 +33,7 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
     private val picture = itemView?.findViewById<ImageView>(R.id.sheet_item_picture)
 
     //https://blog.yena.io/studynote/2017/12/06/Android-Kotlin-RecyclerView1.html
-    fun bind(i: CourseItem, context: Context) {
+    fun bind(i: CourseItem, context: Context,onClick:()->Unit) {
         if(i.isFreeWalk) {
             itemView.setOnClickListener{println("자유산책")}
             title?.text = "자유산책"
@@ -43,5 +45,6 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
             body?.text = "걸음수 : ${i.walkRecord.stepCount}\n거리 : ${i.walkRecord.distance}\n시간 : ${i.walkRecord.walkTime}"
             picture?.setImageResource(R.mipmap.ic_launcher)
         }
+        //itemView.setOnClickListener{onClick}
     }
 }

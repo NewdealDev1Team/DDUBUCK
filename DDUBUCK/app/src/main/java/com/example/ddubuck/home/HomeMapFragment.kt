@@ -72,7 +72,6 @@ class HomeMapFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mapFragment.getMapAsync(this)
-        println("Mounted")
     }
 
     //버튼 텍스트 바꾸고 산책시작
@@ -126,7 +125,7 @@ class HomeMapFragment(
                 "발걸음 수: ${stepCount}\n" +
                 "이동거리: ${distance}\n" +
                 "경과시간: ${walkTime}초\n" +
-                "소모 칼로리: ${walkRecord.getCalorie()}") // 메시지
+                "소모 칼로리: ${walkRecord.getCalorie(65.0)}") // 메시지
         dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which ->})
         dlg.show()
     }
