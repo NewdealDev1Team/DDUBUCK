@@ -5,7 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
@@ -17,22 +21,30 @@ import com.example.ddubuck.home.WalkRecord
 import com.naver.maps.map.e
 import java.util.zip.Inflater
 
-class BottomSheetSelectFragment(
-        private val owner: Activity
-) : Fragment() {
-
+class BottomSheetSelectFragment : Fragment() {
     lateinit var bind:BottomSheetSelectBinding
 
+    lateinit var callback: OnCourseSelectedListener
+
+    fun setOnCourseSelectedListener(callback: OnCourseSelectedListener) {
+        this.callback = callback
+    }
+
+    interface OnCourseSelectedListener {
+        fun onCourseSelected(courseItem: CourseItem)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        bind = BottomSheetSelectBinding.inflate(inflater, container, false)
-        val sheetRecycler : RecyclerView = bind.sheetRecycler
-        val mAdapter = HomeRvAdapter(owner.baseContext, fooArray){}
-        //리스트가 안불러와지는 오류 해결\
-        sheetRecycler.layoutManager = LinearLayoutManager(owner.baseContext, LinearLayoutManager.HORIZONTAL, false)
-        sheetRecycler.adapter = mAdapter
-        sheetRecycler.setOnClickListener { println("")}
+        bind = BottomSheetSelectBinding.inflate(inflater, container, true )
         return inflater.inflate(R.layout.bottom_sheet_select,container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val sheetRecycler : RecyclerView = view.findViewById(R.id.sheet_recycler)
+        val mAdapter = HomeRvAdapter(fooArray, callback)
+        sheetRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        sheetRecycler.adapter = mAdapter
     }
 
 
