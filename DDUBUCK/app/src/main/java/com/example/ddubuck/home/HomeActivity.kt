@@ -64,7 +64,6 @@ class HomeActivity : FragmentActivity(), BottomSheetSelectFragment.OnCourseSelec
             val frag = BottomSheetCourseDetailFragment(courseItem)
             val fmTransaction = fm.beginTransaction()
             fmTransaction.replace(R.id.bottom_sheet_container,frag).addToBackStack(null).commit()
-            println("코스코스코스코스코스")
         }
     }
 
