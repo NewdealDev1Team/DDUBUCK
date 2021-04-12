@@ -8,25 +8,37 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.login.LoginActivity
 import com.example.ddubuck.login.NaverAPI
 import com.example.ddubuck.login.UserInfo
+import com.example.ddubuck.weather.Weather
+import com.example.ddubuck.weather.WeatherActivity
+import com.example.ddubuck.weather.WeatherViewModel
 import com.kakao.sdk.user.UserApiClient
 
 class SecondActivity : AppCompatActivity() {
-    @SuppressLint("WrongViewCast", "SetTextI18n")
+
+    lateinit var weatherFragment: WeatherActivity
+
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
+        weatherFragment = WeatherActivity()
+
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.container , weatherFragment)
+        ft.commit()
+        ////
+
         val logout : Button = findViewById(R.id.kakao_logout_button)
         val unlink : Button = findViewById(R.id.kakao_unlink_button)
         val id : TextView = findViewById(R.id.id)
-        var nickname: TextView = findViewById(R.id.nickname)
+        val nickname: TextView = findViewById(R.id.nickname)
         var intent = getIntent()
-        println("여 기 ")
-        println(intent.getStringExtra("a"))
-        println("여 기 ")
 
         logout.setOnClickListener {
             UserApiClient.instance.logout { error ->
