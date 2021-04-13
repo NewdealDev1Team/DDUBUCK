@@ -44,10 +44,12 @@ class HomeActivity
         if(courseItem.isFreeWalk) {
             val frag = BottomSheetFreeDetailFragment()
             val fmTransaction = fm.beginTransaction()
+            fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
             fmTransaction.replace(R.id.bottom_sheet_container,frag, BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(DETAIL_PAGE_FRAG).commit()
         } else {
             val frag = BottomSheetCourseDetailFragment(courseItem)
             val fmTransaction = fm.beginTransaction()
+            fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
             fmTransaction.replace(R.id.bottom_sheet_container,frag, BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(DETAIL_PAGE_FRAG).commit()
         }
     }
@@ -58,6 +60,7 @@ class HomeActivity
         fm.popBackStack(DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         val frag = BottomSheetFreeProgressFragment()
         val fmTransaction = fm.beginTransaction()
+        fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
         fmTransaction.replace(R.id.bottom_sheet_container, frag, BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()
     }
 
@@ -67,6 +70,7 @@ class HomeActivity
         fm.popBackStack(DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         val frag = BottomSheetCourseProgressFragment()
         val fmTransaction = fm.beginTransaction()
+        fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
         fmTransaction.replace(R.id.bottom_sheet_container, frag, BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()
     }
 
