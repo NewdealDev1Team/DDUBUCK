@@ -1,18 +1,25 @@
 package com.example.ddubuck.weather
 
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.R
+import org.w3c.dom.Text
 
 interface APICallback {
-    fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, textView: TextView)
+    fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, weatherText: TextView, tempAndDust: TextView)
 }
 
 class WeatherActivity : Fragment(), APICallback {
@@ -24,19 +31,20 @@ class WeatherActivity : Fragment(), APICallback {
             container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val weatherView = inflater.inflate(R.layout.fragment_weather, container, false)
-        val tv: TextView = weatherView.findViewById(R.id.tv)
+        val weatherText: TextView = weatherView.findViewById(R.id.weather_text)
+        val tempAndDust: TextView = weatherView.findViewById(R.id.temp_and_dust)
 
         weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        showWeatherInfo(this, tv)
+        showWeatherInfo(this, weatherText, tempAndDust)
 
         return weatherView
     }
 
-    private fun showWeatherInfo(result: APICallback, textView: TextView){
+    private fun showWeatherInfo(result: APICallback, weatherText: TextView, tempAndDust: TextView) {
         weatherViewModel.weatherInfo.observe(viewLifecycleOwner, { weather ->
             weatherViewModel.uvRaysInfo.observe(viewLifecycleOwner, { uvRays ->
                 weatherViewModel.dustInfo.observe(viewLifecycleOwner, { dust ->
-                    result.onSuccess(weather, uvRays, dust, textView)
+                    result.onSuccess(weather, uvRays, dust, weatherText, tempAndDust)
                 })
             })
         })
@@ -44,7 +52,7 @@ class WeatherActivity : Fragment(), APICallback {
 
 
     @SuppressLint("SetTextI18n")
-    override fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, textView: TextView) {
+    override fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, weatherText: TextView, tempAndDust: TextView) {
         var weatherScore = 0
 
         // 현재 날씨 ID
@@ -102,7 +110,7 @@ class WeatherActivity : Fragment(), APICallback {
                 dustString = "좋음"
             }
             in 51..101 -> {
-                weatherScore +=  3
+                weatherScore += 3
                 dustString = "보통"
             }
             in 101..250 -> {
@@ -115,21 +123,34 @@ class WeatherActivity : Fragment(), APICallback {
             }
         }
 
+
+
+        weatherScore = 4
+
         when (weatherScore) {
             in 10..12 -> {
-                textView.text = "산책 지수 : 산책하기 최고의 날 \n 최고 온도 : $tempMax \n 최저온도 : $tempMin \n 미세 : $dustString"
+                weatherText.text = "산책하기 최고의 날!"
+                val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
+                spanText.setSpan(ForegroundColorSpan(Color.rgb(118, 118, 118)), 11,15, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                tempAndDust.text = spanText
+
+
             }
             in 6..9 -> {
-                textView.text = "산책 지수 : 산책하기 보통의 날 \n" +
-                        " 최고 온도 : $tempMax \n" +
-                        " 최저온도 : $tempMin \n" +
-                        " 미세 : $dustString"
+                weatherText.text = "산책하기 좋아요!"
+                val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
+                spanText.setSpan(ForegroundColorSpan(Color.rgb(61,171,91)), 0, spanText.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                spanText.setSpan(ForegroundColorSpan(Color.rgb(118, 118, 118)), 11,15, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                tempAndDust.text = spanText
             }
             in 3..5 -> {
-                textView.text = "산책 지수 : 산책하지마 \n" +
-                        " 최고 온도 : $tempMax \n" +
-                        " 최저온도 : $tempMin \n" +
-                        " 미세 : $dustString"
+                weatherText.text = "주의하며 산책해요."
+
+                val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
+                spanText.setSpan(ForegroundColorSpan(Color.rgb(255,153,0)), 0, spanText.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+
+                spanText.setSpan(ForegroundColorSpan(Color.rgb(118, 118, 118)), 11,15, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                tempAndDust.text = spanText
             }
         }
     }
