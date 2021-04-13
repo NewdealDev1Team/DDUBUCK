@@ -109,7 +109,9 @@
             <Button
                 android:id="@+id/start_button"
                 android:text="시작하기"
-                android:layout_marginVertical="3dp"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="8dp"
+                android:background="@drawable/bottom_sheet_detail_start_button"
                 android:textColor="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
