@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.SecondActivity
@@ -48,6 +49,11 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // LoginView에서 상단바 제거
+        var actionBar: ActionBar? = supportActionBar
+        actionBar?.hide()
+
         setContentView(R.layout.login_layout)
         val keyHash = Utility.getKeyHash(this)
         Log.d("Hash", keyHash)
