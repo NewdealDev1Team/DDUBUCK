@@ -3,12 +3,14 @@ package com.example.ddubuck.home
 import android.content.Context
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import com.example.ddubuck.home.bottomSheet.BottomSheetCourseDetailFragment
+import com.example.ddubuck.home.bottomSheet.BottomSheetFreeDetailFragment
 import com.example.ddubuck.home.bottomSheet.BottomSheetSelectFragment
 import com.naver.maps.map.MapFragment
 import com.naver.maps.map.util.FusedLocationSource
@@ -33,10 +35,10 @@ class HomeActivity : FragmentActivity(), BottomSheetSelectFragment.OnCourseSelec
 
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         homeMapFragment = HomeMapFragment(locationSource, sensorManager, nMapFragment, findViewById(R.id.location))
-        fm.beginTransaction().add(R.id.home_map_fragment, homeMapFragment).commit()
+        fm.beginTransaction().add(R.id.home_map_fragment, homeMapFragment, BOTTOM_SHEET_CONTAINER_TAG).commit()
 
         val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment()
-        fm.beginTransaction().replace(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
+        fm.beginTransaction().add(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
@@ -59,16 +61,20 @@ class HomeActivity : FragmentActivity(), BottomSheetSelectFragment.OnCourseSelec
         val fm = supportFragmentManager
 
         if(courseItem.isFreeWalk) {
-            println("자유자유자유자유자유")
+            val frag = BottomSheetFreeDetailFragment()
+            val fmTransaction = fm.beginTransaction()
+            fmTransaction.replace(R.id.bottom_sheet_container,frag, BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()
         } else {
             val frag = BottomSheetCourseDetailFragment(courseItem)
             val fmTransaction = fm.beginTransaction()
-            fmTransaction.replace(R.id.bottom_sheet_container,frag).addToBackStack(null).commit()
+            fmTransaction.replace(R.id.bottom_sheet_container,frag, BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()
         }
     }
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+
+        private const val BOTTOM_SHEET_CONTAINER_TAG = "BOTTOM_SHEET_CONTAINER"
     }
 
 }

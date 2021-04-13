@@ -1,5 +1,6 @@
 package com.example.ddubuck.home
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import com.example.ddubuck.home.bottomSheet.BottomSheetSelectFragment
+import com.naver.maps.map.e
+import kotlin.math.log
 
 class HomeRvAdapter(private val itemList: ArrayList<CourseItem>,
                     private val callback: BottomSheetSelectFragment.OnCourseSelectedListener,):
@@ -32,7 +35,6 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
     private val body = itemView?.findViewById<TextView>(R.id.sheet_item_body)
     private val picture = itemView?.findViewById<ImageView>(R.id.sheet_item_picture)
 
-    //https://blog.yena.io/studynote/2017/12/06/Android-Kotlin-RecyclerView1.html
     fun bind(i: CourseItem,callback : BottomSheetSelectFragment.OnCourseSelectedListener) {
         if(i.isFreeWalk) {
             itemView.setOnClickListener{callback.onCourseSelected(CourseItem(
@@ -45,10 +47,9 @@ class Holder(itemView: View?) : RecyclerView.ViewHolder(itemView!!)  {
             picture?.setImageResource(R.mipmap.ic_launcher)
         } else {
             itemView.setOnClickListener{callback.onCourseSelected(i)}
-            title?.text = "코스산책"
+            title?.text = i.title
             body?.text = "걸음수 : ${i.walkRecord.stepCount}\n거리 : ${i.walkRecord.distance}\n시간 : ${i.walkRecord.walkTime}"
             picture?.setImageResource(R.mipmap.ic_launcher)
         }
-        //itemView.setOnClickListener{onClick}
     }
 }
