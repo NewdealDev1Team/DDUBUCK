@@ -1,18 +1,20 @@
 package com.example.ddubuck.home
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import com.example.ddubuck.MainActivity
+import androidx.fragment.app.FragmentManager
+import com.example.ddubuck.R
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.LocationTrackingMode
@@ -44,16 +46,18 @@ Delete
 
 
 class HomeMapFragment(
-        private val locationSource:FusedLocationSource,
-        private val sensorManager: SensorManager,
-        private val mapFragment : MapFragment,
-        private val locationButtonView:LocationButtonView,
+        private val fm : FragmentManager, owner: Activity,
         ) : Fragment(), OnMapReadyCallback, SensorEventListener {
 
 
     //환경설정 변수
     private lateinit var map: NaverMap
     private lateinit var timer : Timer
+    private lateinit var locationButtonView:LocationButtonView
+    private lateinit var locationSource:FusedLocationSource
+    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
+        owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
 
     //산책 시작 여부
     var isRecordStarted=false
@@ -69,9 +73,25 @@ class HomeMapFragment(
     //코스
     private var course = PathOverlay()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mapFragment.getMapAsync(this)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.map_fragment, container, false)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+                ?: MapFragment.newInstance().also {
+                    fm.beginTransaction().add(R.id.map, it).commit()
+                }
+        nMapFragment.getMapAsync(this)
+        locationButtonView = rootView.findViewById(R.id.location)
+        return rootView
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     //버튼 텍스트 바꾸고 산책시작
@@ -261,4 +281,8 @@ class HomeMapFragment(
         )
     }
 
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
 }
