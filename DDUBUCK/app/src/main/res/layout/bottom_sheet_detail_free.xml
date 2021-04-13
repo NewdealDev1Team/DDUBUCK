@@ -33,7 +33,7 @@
         <Button
             android:id="@+id/start_button_free"
             android:text="시작하기"
-            android:layout_marginVertical="3dp"
+            android:layout_marginTop="14dp"
             android:layout_marginHorizontal="16dp"
             android:textColor="@color/white"
             android:layout_width="match_parent"
