@@ -16,7 +16,8 @@
         android:theme="@style/Theme.DDUBUCK"
         tools:targetApi="n">
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,6 +28,7 @@
         </activity>
 
         <activity android:name=".SecondActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -44,15 +46,6 @@
                     android:scheme="kakao77629a2e99409577163d7742096517e9" />
             </intent-filter>
         </activity>
-
-<<<<<<< HEAD
-
-        <activity android:name=".home.HomeActivity">
-
-        </activity>
-
-=======
->>>>>>> 282b128562a49a402839ebb3ce3775567619221c
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="lz0an3yhfn" />
