@@ -45,9 +45,7 @@ Delete
  */
 
 
-class HomeMapFragment(
-        private val fm : FragmentManager, owner: Activity,
-        ) : Fragment(), OnMapReadyCallback, SensorEventListener {
+class HomeMapFragment(private val fm : FragmentManager, owner: Activity, ) : Fragment(), OnMapReadyCallback, SensorEventListener {
 
 
     //환경설정 변수
@@ -185,7 +183,8 @@ class HomeMapFragment(
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
-        locationButtonView.map = this.map
+
+        //locationButtonView.map = this.map
 
         course.color = Color.CYAN
 

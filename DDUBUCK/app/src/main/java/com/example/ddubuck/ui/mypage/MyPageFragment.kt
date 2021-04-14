@@ -1,6 +1,7 @@
 package com.example.ddubuck.ui.mypage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,4 +30,5 @@ class MyPageFragment : Fragment() {
         })
         return root
     }
+
 }

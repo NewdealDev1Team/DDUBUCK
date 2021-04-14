@@ -20,7 +20,7 @@ class HomeActivity
         setContentView(R.layout.activity_home)
 
         val fm = supportFragmentManager
-        homeMapFragment = HomeMapFragment(fm, this@HomeActivity)
+        homeMapFragment = HomeMapFragment(fm,this@HomeActivity)
         fm.beginTransaction().add(R.id.home_map_container, homeMapFragment, BOTTOM_SHEET_CONTAINER_TAG).commit()
 
         val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment()
