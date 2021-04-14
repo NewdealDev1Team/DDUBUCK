@@ -1,4 +1,4 @@
-package com.example.ddubuck.home
+package com.example.ddubuck.data.home
 
 data class CourseItem(
         val isFreeWalk : Boolean,

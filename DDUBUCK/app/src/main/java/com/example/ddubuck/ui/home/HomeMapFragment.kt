@@ -1,18 +1,24 @@
-package com.example.ddubuck.home
+package com.example.ddubuck.ui.home
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import com.example.ddubuck.MainActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import com.example.ddubuck.R
+import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.LocationTrackingMode
@@ -43,17 +49,18 @@ Delete
  */
 
 
-class HomeMapFragment(
-        private val locationSource:FusedLocationSource,
-        private val sensorManager: SensorManager,
-        private val mapFragment : MapFragment,
-        private val locationButtonView:LocationButtonView,
-        ) : Fragment(), OnMapReadyCallback, SensorEventListener {
-
+class HomeMapFragment(private val fm : FragmentManager, owner: Activity) : Fragment(), OnMapReadyCallback, SensorEventListener {
+    //뷰모델
+    private val model: HomeMapViewModel by activityViewModels()
 
     //환경설정 변수
     private lateinit var map: NaverMap
     private lateinit var timer : Timer
+    private lateinit var locationButtonView:LocationButtonView
+    private lateinit var locationSource:FusedLocationSource
+    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
+        owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+    }
 
     //산책 시작 여부
     var isRecordStarted=false
@@ -69,22 +76,55 @@ class HomeMapFragment(
     //코스
     private var course = PathOverlay()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mapFragment.getMapAsync(this)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.map_fragment, container, false)
+        locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
+                ?: MapFragment.newInstance().also {
+                    fm.beginTransaction().add(R.id.map, it).commit()
+                }
+        nMapFragment.getMapAsync(this)
+        locationButtonView = rootView.findViewById(R.id.location)
+
+        model.isRecordStarted.observe(viewLifecycleOwner, {v->
+            if(v) {
+                //start
+                startRecording()
+            } else {
+                //stop
+                stopRecording()
+            }
+        })
+
+        return rootView
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
+            return
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
     //버튼 텍스트 바꾸고 산책시작
-    fun startRecording() {
+    private fun startRecording() {
         timer = timer(period = 1000) {
             walkTime++
+            model.recordTime(walkTime)
         }
+        isRecordStarted = true
     }
 
     //산책을 종료하고 기록을 반환합니다
-    fun stopRecording() {
+    private fun stopRecording() {
         userPath.map = null
         timer.cancel()
+        model.recordTime(0)
+        model.recordDistance(0.0)
+        model.recordCalorie(0.0)
+        isRecordStarted = false
     }
 
     //산책기록을 반환합니다
@@ -165,6 +205,7 @@ class HomeMapFragment(
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
+
         locationButtonView.map = this.map
 
         course.color = Color.CYAN
@@ -231,7 +272,9 @@ class HomeMapFragment(
         speeds.add(speed)
         altitudes.add(alt)
         distance+=lastPos.distanceTo(currentPos)
+        model.recordDistance(distance)
         userPath.coords = currentPath
+        model.recordCalorie(WalkRecord(userPath.coords,altitudes,speeds,walkTime,stepCount,distance).getCalorie(65.0))
     }
 
     //산책 경로 도달 시
@@ -261,4 +304,8 @@ class HomeMapFragment(
         )
     }
 
+
+    companion object {
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    }
 }

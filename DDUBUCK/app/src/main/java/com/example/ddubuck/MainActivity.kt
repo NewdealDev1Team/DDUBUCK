@@ -3,42 +3,43 @@ package com.example.ddubuck
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.ddubuck.data.home.CourseItem
+import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import android.os.PersistableBundle
-import android.view.View
-import com.example.ddubuck.login.LoginActivity
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : FragmentActivity() {
+    private val homeFragment = HomeFragment(this@MainActivity)
+    private val challengeFragment = ChallengeFragment()
+    private val badgeFragment = BadgeFragment()
+    private val myPageFragment = MyPageFragment()
+    private lateinit var activeFragment : Fragment
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener{ item ->
         when(item.itemId){
             R.id.navigation_home -> {
-                println("home")
-                replaceFragmemnt(HomeFragment())
+                replaceFragment(homeFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_challenge -> {
-                println("challenge")
-                replaceFragmemnt(ChallengeFragment())
+                replaceFragment(challengeFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_badge -> {
-                println("home")
-                replaceFragmemnt(BadgeFragment())
+                replaceFragment(badgeFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_mypage -> {
-                println("home")
-                replaceFragmemnt(MyPageFragment())
+                replaceFragment(myPageFragment)
                 return@OnNavigationItemSelectedListener true
             }
             else -> false
@@ -48,25 +49,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        replaceFragmemnt(HomeFragment())
+        initFragmentManager()
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-
-        //화면 상단 바
-//        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        //화면 텍스트
-        val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.navigation_home, R.id.navigation_challenge, R.id.navigation_badge,  R.id.navigation_mypage))
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
     }
 
-    private fun replaceFragmemnt(fragment: Fragment) {
+    private fun initFragmentManager() {
+        supportFragmentManager.beginTransaction().apply {
+            add(R.id.nav_main_container, homeFragment).show(homeFragment)
+            add(R.id.nav_main_container, challengeFragment).hide(challengeFragment)
+            add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
+            add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
+        }.commit()
+        activeFragment = homeFragment
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.nav_host_fragment_container,fragment)
+        fragmentTransaction.hide(activeFragment).show(fragment).commit()
+        activeFragment = fragment
     }
+
 }

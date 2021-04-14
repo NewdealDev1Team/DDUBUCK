@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/sheet_item_radius"
+    android:background="@drawable/bottom_sheet_select_item_rounded"
     android:orientation="horizontal"
     android:elevation="5dp"
     android:layout_marginStart="8dp"
@@ -14,7 +14,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/sheet_item_picture"
+        android:id="@+id/sheet_select_item_pictureIv"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginEnd="16dp"/>
@@ -26,13 +26,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/sheet_item_title"
+            android:id="@+id/sheet_select_item_titleTv"
             android:text="Title"
             android:textColor="@color/black"
             android:textSize="16dp"/>
 
         <TextView
-            android:id="@+id/sheet_item_body"
+            android:id="@+id/sheet_select_item_bodyTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
