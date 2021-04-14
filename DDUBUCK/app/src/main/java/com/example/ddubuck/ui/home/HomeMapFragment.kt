@@ -1,4 +1,4 @@
-package com.example.ddubuck.home
+package com.example.ddubuck.ui.home
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -15,6 +15,7 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.example.ddubuck.R
+import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.LocationTrackingMode
@@ -46,7 +47,6 @@ Delete
 
 
 class HomeMapFragment(private val fm : FragmentManager, owner: Activity, ) : Fragment(), OnMapReadyCallback, SensorEventListener {
-
 
     //환경설정 변수
     private lateinit var map: NaverMap

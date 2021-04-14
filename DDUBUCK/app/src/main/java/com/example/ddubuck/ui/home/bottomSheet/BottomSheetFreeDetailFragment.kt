@@ -1,4 +1,4 @@
-package com.example.ddubuck.home.bottomSheet
+package com.example.ddubuck.ui.home.bottomSheet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,18 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.example.ddubuck.R
+import com.example.ddubuck.ui.home.HomeFragment
 
 class BottomSheetFreeDetailFragment : Fragment() {
-    lateinit var callback: OnFreeStartClickedListener
-
-    fun setOnFreeStartClickedListener(callback: OnFreeStartClickedListener) {
-        this.callback = callback
-    }
-
-    interface OnFreeStartClickedListener {
-        fun onFreeStartClicked()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,7 +20,12 @@ class BottomSheetFreeDetailFragment : Fragment() {
         val rootView  = inflater.inflate(R.layout.bottom_sheet_free_detail,container, false)
         val startButton : Button = rootView.findViewById(R.id.start_button_free)
         startButton.setOnClickListener{
-            callback.onFreeStartClicked()
+            val fm = parentFragmentManager
+            fm.popBackStack(HomeFragment.DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            val frag = BottomSheetFreeProgressFragment()
+            val fmTransaction = fm.beginTransaction()
+            fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
+            fmTransaction.replace(R.id.bottom_sheet_container, frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()
         }
         return rootView
     }

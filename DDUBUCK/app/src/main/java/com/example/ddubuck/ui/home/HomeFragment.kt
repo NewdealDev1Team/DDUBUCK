@@ -5,16 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.R
-import com.example.ddubuck.home.CourseItem
-import com.example.ddubuck.home.HomeActivity
-import com.example.ddubuck.home.HomeMapFragment
-import com.example.ddubuck.home.bottomSheet.*
+import com.example.ddubuck.ui.home.bottomSheet.BottomSheetSelectFragment
 
 class HomeFragment(private val owner:Activity) : Fragment() {
 
@@ -28,7 +22,7 @@ class HomeFragment(private val owner:Activity) : Fragment() {
     ): View? {
         homeViewModel =
                 ViewModelProvider(this).get(HomeViewModel::class.java)
-        val root = inflater.inflate(R.layout.activity_home, container, false)
+        val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         val fm = parentFragmentManager
         homeMapFragment = HomeMapFragment(fm,owner)
@@ -41,7 +35,7 @@ class HomeFragment(private val owner:Activity) : Fragment() {
     }
 
     companion object {
-        private const val BOTTOM_SHEET_CONTAINER_TAG = "BOTTOM_SHEET_CONTAINER"
-        private const val DETAIL_PAGE_FRAG = "DETAIL_PAGE_FRAG"
+        const val BOTTOM_SHEET_CONTAINER_TAG = "BOTTOM_SHEET_CONTAINER"
+        const val DETAIL_PAGE_FRAG = "DETAIL_PAGE_FRAG"
     }
 }

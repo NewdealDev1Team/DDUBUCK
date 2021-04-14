@@ -1,4 +1,4 @@
-package com.example.ddubuck.home.bottomSheet
+package com.example.ddubuck.ui.home.bottomSheet
 
 
 import android.os.Bundle
@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
-import com.example.ddubuck.home.CourseItem
-import com.example.ddubuck.home.HomeRvAdapter
-import com.example.ddubuck.home.WalkRecord
+import com.example.ddubuck.data.home.CourseItem
+import com.example.ddubuck.data.home.WalkRecord
+import com.example.ddubuck.ui.home.HomeRvAdapter
 
 class BottomSheetSelectFragment : Fragment() {
     lateinit var callback: OnCourseSelectedListener
@@ -28,7 +28,7 @@ class BottomSheetSelectFragment : Fragment() {
         //xml 에 인위적으로 작성된 ui 구현 코드 수정하기 (bottom_sheet_select.xml 주석 참조 할 것)
         val rootView = inflater.inflate(R.layout.bottom_sheet_select,container, false)
         val sheetRecycler : RecyclerView = rootView.findViewById(R.id.sheet_recycler)
-        val mAdapter = HomeRvAdapter(fooArray, callback)
+        val mAdapter = HomeRvAdapter(fooArray, parentFragmentManager)
         sheetRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         sheetRecycler.adapter = mAdapter
         return rootView

@@ -1,4 +1,4 @@
-package com.example.ddubuck.home.bottomSheet
+package com.example.ddubuck.ui.home.bottomSheet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,19 +8,12 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.example.ddubuck.R
-import com.example.ddubuck.home.CourseItem
+import com.example.ddubuck.data.home.CourseItem
+import com.example.ddubuck.ui.home.HomeFragment
 
 class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Fragment() {
-    lateinit var callback: OnCourseStartClickedListener
-
-    fun setOnCourseStartClickedListener(callback: OnCourseStartClickedListener) {
-        this.callback = callback
-    }
-
-    interface OnCourseStartClickedListener {
-        fun onCourseStartClicked()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,9 +27,15 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         rootView.findViewById<TextView>(R.id.elevation_deviation).text = courseItem.walkRecord.altitudes.toString()
         rootView.findViewById<ImageView>(R.id.sheet_detail_picture).setImageResource(R.mipmap.ic_launcher)
         rootView.findViewById<Button>(R.id.start_button).setOnClickListener{
-            callback.onCourseStartClicked()
+            val fm = parentFragmentManager
+            fm.popBackStack(HomeFragment.DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            val frag = BottomSheetCourseProgressFragment()
+            val fmTransaction = fm.beginTransaction()
+            fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
+            fmTransaction.replace(R.id.bottom_sheet_container, frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()
         }
         return rootView
     }
+
 
 }
