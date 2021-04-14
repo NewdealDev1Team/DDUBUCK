@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_free_progress_timeTv"
-                    android:text="12분"
+                    android:text="--:--"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_free_progress_distanceTv"
-                    android:text="123.56m"
+                    android:text="--.-- m"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_free_progress_calorieTv"
-                    android:text="12m"
+                    android:text="--.-- kcal"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="18sp"
