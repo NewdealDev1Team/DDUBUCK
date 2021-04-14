@@ -10,7 +10,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.ddubuck.data.home.CourseItem
-import com.example.ddubuck.home.bottomSheet.*
+import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment

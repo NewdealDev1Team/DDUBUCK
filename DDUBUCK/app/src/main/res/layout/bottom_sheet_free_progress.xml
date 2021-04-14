@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:id="@+id/home_bottom_title"
+        android:id="@+id/sheet_free_progress_titleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/estimated_time"
+                    android:id="@+id/sheet_free_progress_timeTv"
                     android:text="12분"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/estimated_distance"
+                    android:id="@+id/sheet_free_progress_distanceTv"
                     android:text="123.56m"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/elevation_deviation"
+                    android:id="@+id/sheet_free_progress_calorieTv"
                     android:text="12m"
                     android:textColor="@color/black"
                     android:textStyle="bold"
@@ -105,7 +105,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
-                android:id="@+id/sheet_free_progress_pause"
+                android:id="@+id/sheet_free_progress_pauseButton"
                 android:text="일시정지"
                 android:textColor="@color/white"
                 android:layout_weight="1"
@@ -114,7 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
             <Button
-                android:id="@+id/sheet_free_progress_end"
+                android:id="@+id/sheet_free_progress_endButton"
                 android:text="끝내기"
                 android:textColor="@color/white"
                 android:layout_weight="1"

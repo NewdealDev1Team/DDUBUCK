@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:id="@+id/home_bottom_title"
+        android:id="@+id/sheet_free_detail_titleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <Button
-            android:id="@+id/start_button_free"
+            android:id="@+id/sheet_free_detail_startButton"
             android:text="시작하기"
             android:background="@drawable/bottom_sheet_detail_start_button"
             android:layout_marginTop="14dp"

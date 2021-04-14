@@ -18,7 +18,7 @@ class BottomSheetFreeDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView  = inflater.inflate(R.layout.bottom_sheet_free_detail,container, false)
-        val startButton : Button = rootView.findViewById(R.id.start_button_free)
+        val startButton : Button = rootView.findViewById(R.id.sheet_free_detail_startButton)
         startButton.setOnClickListener{
             val fm = parentFragmentManager
             fm.popBackStack(HomeFragment.DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.home.HomeRvAdapter
 
 class BottomSheetSelectFragment : Fragment() {
     lateinit var callback: OnCourseSelectedListener
@@ -25,10 +24,9 @@ class BottomSheetSelectFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        //xml 에 인위적으로 작성된 ui 구현 코드 수정하기 (bottom_sheet_select.xml 주석 참조 할 것)
         val rootView = inflater.inflate(R.layout.bottom_sheet_select,container, false)
-        val sheetRecycler : RecyclerView = rootView.findViewById(R.id.sheet_recycler)
-        val mAdapter = HomeRvAdapter(fooArray, parentFragmentManager)
+        val sheetRecycler : RecyclerView = rootView.findViewById(R.id.sheet_select_rv)
+        val mAdapter = BottomSheetSelectRvAdapter(fooArray, parentFragmentManager)
         sheetRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         sheetRecycler.adapter = mAdapter
         return rootView

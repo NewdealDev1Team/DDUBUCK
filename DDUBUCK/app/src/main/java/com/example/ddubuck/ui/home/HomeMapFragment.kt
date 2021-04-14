@@ -8,12 +8,15 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
@@ -46,7 +49,9 @@ Delete
  */
 
 
-class HomeMapFragment(private val fm : FragmentManager, owner: Activity, ) : Fragment(), OnMapReadyCallback, SensorEventListener {
+class HomeMapFragment(private val fm : FragmentManager, owner: Activity) : Fragment(), OnMapReadyCallback, SensorEventListener {
+    //뷰모델
+    private val model: HomeMapViewModel by activityViewModels()
 
     //환경설정 변수
     private lateinit var map: NaverMap
@@ -80,6 +85,17 @@ class HomeMapFragment(private val fm : FragmentManager, owner: Activity, ) : Fra
                 }
         nMapFragment.getMapAsync(this)
         locationButtonView = rootView.findViewById(R.id.location)
+
+        model.isRecordStarted.observe(viewLifecycleOwner, {v->
+            if(v) {
+                //start
+                Log.e("TRIGGER", "STARTED!")
+            } else {
+                //stop
+                Log.e("TRIGGER", "ENDED!")
+            }
+        })
+
         return rootView
     }
 
@@ -97,12 +113,14 @@ class HomeMapFragment(private val fm : FragmentManager, owner: Activity, ) : Fra
         timer = timer(period = 1000) {
             walkTime++
         }
+        isRecordStarted = true
     }
 
     //산책을 종료하고 기록을 반환합니다
     fun stopRecording() {
         userPath.map = null
         timer.cancel()
+        isRecordStarted = false
     }
 
     //산책기록을 반환합니다
@@ -184,7 +202,7 @@ class HomeMapFragment(private val fm : FragmentManager, owner: Activity, ) : Fra
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
 
-        //locationButtonView.map = this.map
+        locationButtonView.map = this.map
 
         course.color = Color.CYAN
 

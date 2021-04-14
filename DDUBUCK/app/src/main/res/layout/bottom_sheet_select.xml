@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <TextView
-        android:id="@+id/home_bottom_title"
+        android:id="@+id/sheet_select_titleTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -17,15 +17,8 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold" />
-    <!--
-    여기서 Recycler View 를 생성하면서
-    adapter 가 부착되지 않았다는 로그가 발생하는 것 같습니다
-    (No adapter attached; skipping layout)
-    BottomSheetSelectFragment.kt 파일에서 초기화를 정상적으로 진행하니
-    해당 로그는 무시해도 좋습니다.
-    -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/sheet_recycler"
+        android:id="@+id/sheet_select_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never"

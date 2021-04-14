@@ -21,12 +21,12 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         savedInstanceState: Bundle?
     ): View? {
         val rootView  = inflater.inflate(R.layout.bottom_sheet_course_detail,container, false)
-        rootView.findViewById<TextView>(R.id.sheet_detail_title).text = courseItem.title
-        rootView.findViewById<TextView>(R.id.estimated_time).text = courseItem.walkRecord.walkTime.toString()
-        rootView.findViewById<TextView>(R.id.estimated_distance).text = courseItem.walkRecord.distance.toString()
-        rootView.findViewById<TextView>(R.id.elevation_deviation).text = courseItem.walkRecord.altitudes.toString()
-        rootView.findViewById<ImageView>(R.id.sheet_detail_picture).setImageResource(R.mipmap.ic_launcher)
-        rootView.findViewById<Button>(R.id.start_button).setOnClickListener{
+        rootView.findViewById<TextView>(R.id.sheet_course_detail_titleTv).text = courseItem.title
+        rootView.findViewById<TextView>(R.id.sheet_course_detail_timeTv).text = courseItem.walkRecord.walkTime.toString()
+        rootView.findViewById<TextView>(R.id.sheet_course_detail_distanceTv).text = courseItem.walkRecord.distance.toString()
+        rootView.findViewById<TextView>(R.id.sheet_course_detail_elevationTv).text = courseItem.walkRecord.altitudes.toString()
+        rootView.findViewById<ImageView>(R.id.sheet_course_detail_pictureIv).setImageResource(R.mipmap.ic_launcher)
+        rootView.findViewById<Button>(R.id.sheet_course_detail_startButton).setOnClickListener{
             val fm = parentFragmentManager
             fm.popBackStack(HomeFragment.DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             val frag = BottomSheetCourseProgressFragment()
