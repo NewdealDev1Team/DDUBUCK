@@ -104,6 +104,8 @@ class WeatherActivity : Fragment(), APICallback {
             }
         }
 
+
+
         when (dustInfo) {
             in 0..50 -> {
                 weatherScore += 4
@@ -123,9 +125,6 @@ class WeatherActivity : Fragment(), APICallback {
             }
         }
 
-
-
-        weatherScore = 4
 
         when (weatherScore) {
             in 10..12 -> {
