@@ -10,14 +10,27 @@ import kotlin.concurrent.timer
 
 class HomeMapViewModel : ViewModel() {
     private lateinit var timer : Timer
-    //시작 요청
     val isRecordStarted = MutableLiveData<Boolean>()
     fun recorderTrigger(v:Boolean) {
         isRecordStarted.value = v
     }
 
-    //일시중지 요청
-    //중지 요청
+
+    val walkDistance = MutableLiveData<Double>()
+    fun recordDistance(v:Double) {
+        walkDistance.value = v
+    }
+
+    val walkTime = MutableLiveData<Long>()
+    fun recordTime(v:Long) {
+        walkTime.postValue(v)
+    }
+
+    val walkCalorie = MutableLiveData<Double>()
+    fun recordCalorie(v:Double) {
+        walkCalorie.value = v
+    }
+
     //값 반환
 
 }

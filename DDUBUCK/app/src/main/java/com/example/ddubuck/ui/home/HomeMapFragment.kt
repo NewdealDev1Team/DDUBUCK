@@ -89,10 +89,10 @@ class HomeMapFragment(private val fm : FragmentManager, owner: Activity) : Fragm
         model.isRecordStarted.observe(viewLifecycleOwner, {v->
             if(v) {
                 //start
-                Log.e("TRIGGER", "STARTED!")
+                startRecording()
             } else {
                 //stop
-                Log.e("TRIGGER", "ENDED!")
+                stopRecording()
             }
         })
 
@@ -109,17 +109,21 @@ class HomeMapFragment(private val fm : FragmentManager, owner: Activity) : Fragm
     }
 
     //버튼 텍스트 바꾸고 산책시작
-    fun startRecording() {
+    private fun startRecording() {
         timer = timer(period = 1000) {
             walkTime++
+            model.recordTime(walkTime)
         }
         isRecordStarted = true
     }
 
     //산책을 종료하고 기록을 반환합니다
-    fun stopRecording() {
+    private fun stopRecording() {
         userPath.map = null
         timer.cancel()
+        model.recordTime(0)
+        model.recordDistance(0.0)
+        model.recordCalorie(0.0)
         isRecordStarted = false
     }
 
@@ -268,7 +272,9 @@ class HomeMapFragment(private val fm : FragmentManager, owner: Activity) : Fragm
         speeds.add(speed)
         altitudes.add(alt)
         distance+=lastPos.distanceTo(currentPos)
+        model.recordDistance(distance)
         userPath.coords = currentPath
+        model.recordCalorie(WalkRecord(userPath.coords,altitudes,speeds,walkTime,stepCount,distance).getCalorie(65.0))
     }
 
     //산책 경로 도달 시

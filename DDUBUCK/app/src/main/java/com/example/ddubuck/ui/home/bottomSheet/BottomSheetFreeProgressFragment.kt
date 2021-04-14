@@ -32,9 +32,17 @@ class BottomSheetFreeProgressFragment : Fragment() {
         }
 
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_free_progress_timeTv)
+        model.walkTime.observe(viewLifecycleOwner,{v->
+            walkTimeTv.text=v.toString()
+        })
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_free_progress_distanceTv)
+        model.walkDistance.observe(viewLifecycleOwner,{v->
+            distanceTv.text=v.toString()
+        })
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_free_progress_calorieTv)
-
+        model.walkCalorie.observe(viewLifecycleOwner,{v->
+            calorieTv.text=v.toString()
+        })
         return rootView
     }
 }
