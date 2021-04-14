@@ -23,7 +23,6 @@ interface APICallback {
 class WeatherActivity : Fragment(), APICallback {
 
     lateinit var weatherViewModel: WeatherViewModel
-    lateinit var weatherFragment: Fragment
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val weatherView = inflater.inflate(R.layout.fragment_weather, container, false)
@@ -121,7 +120,6 @@ class WeatherActivity : Fragment(), APICallback {
                 dustString = "아주 나쁨"
             }
         }
-
 
         when (weatherScore) {
             in 10..12 -> {

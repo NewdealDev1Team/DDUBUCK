@@ -60,11 +60,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="328dp"
-        android:layout_height="74dp"
-        android:layout_margin="10dp"
-        tools:ignore="MissingConstraints" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,18 +20,13 @@ import com.kakao.sdk.user.UserApiClient
 
 class SecondActivity : AppCompatActivity() {
 
-    lateinit var weatherFragment: WeatherActivity
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
-        weatherFragment = WeatherActivity()
 
-        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.container , weatherFragment)
-        ft.commit()
         ////
 
         val logout : Button = findViewById(R.id.kakao_logout_button)
