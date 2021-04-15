@@ -1,6 +1,7 @@
 package com.example.ddubuck.ui.home.bottomSheet
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.ui.home.HomeFragment
+import java.text.DecimalFormat
 
 class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Fragment() {
 
@@ -21,15 +23,21 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         savedInstanceState: Bundle?
     ): View? {
         val rootView  = inflater.inflate(R.layout.bottom_sheet_course_detail,container, false)
-        rootView.findViewById<TextView>(R.id.sheet_course_detail_titleTv).text = courseItem.title
-        rootView.findViewById<TextView>(R.id.sheet_course_detail_timeTv).text = courseItem.walkRecord.walkTime.toString()
-        rootView.findViewById<TextView>(R.id.sheet_course_detail_distanceTv).text = courseItem.walkRecord.distance.toString()
-        rootView.findViewById<TextView>(R.id.sheet_course_detail_elevationTv).text = courseItem.walkRecord.altitudes.toString()
-        rootView.findViewById<ImageView>(R.id.sheet_course_detail_pictureIv).setImageResource(R.mipmap.ic_launcher)
-        rootView.findViewById<Button>(R.id.sheet_course_detail_startButton).setOnClickListener{
+        val titleTv : TextView = rootView.findViewById(R.id.sheet_course_detail_titleTv)
+        titleTv.text = courseItem.title
+        val timeTv : TextView = rootView.findViewById(R.id.sheet_course_detail_timeTv)
+        timeTv.text = DateUtils.formatElapsedTime(courseItem.walkRecord.walkTime)
+        val distanceTv : TextView = rootView.findViewById(R.id.sheet_course_detail_distanceTv)
+        distanceTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.distance)
+        val elevationTv : TextView = rootView.findViewById(R.id.sheet_course_detail_elevationTv)
+        elevationTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.altitudes.average())
+        val pictureIv : ImageView = rootView.findViewById(R.id.sheet_course_detail_pictureIv)
+        pictureIv.setImageResource(R.mipmap.ic_launcher)
+        val startButton : Button = rootView.findViewById(R.id.sheet_course_detail_startButton)
+        startButton.setOnClickListener{
             val fm = parentFragmentManager
             fm.popBackStack(HomeFragment.DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            val frag = BottomSheetCourseProgressFragment()
+            val frag = BottomSheetCourseProgressFragment(courseItem)
             val fmTransaction = fm.beginTransaction()
             fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
             fmTransaction.replace(R.id.bottom_sheet_container, frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()

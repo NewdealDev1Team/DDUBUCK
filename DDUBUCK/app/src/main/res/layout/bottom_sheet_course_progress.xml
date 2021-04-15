@@ -20,13 +20,22 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_marginHorizontal="39dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="9dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <!--프로그래스 바-->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/sheet_course_progress_progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:trackThickness="5dp"
+            app:trackCornerRadius="30dp"
+            app:indicatorColor="@color/green"/>
         <!--정보들-->
         <LinearLayout
             android:orientation="horizontal"
             android:weightSum="3"
+            android:layout_marginTop="9dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <!--산책시간-->
@@ -47,7 +56,7 @@
                 <TextView
                     android:text="산책시간"
                     android:textSize="12sp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -69,7 +78,7 @@
                 <TextView
                     android:text="산책거리"
                     android:textSize="12sp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -91,7 +100,7 @@
                 <TextView
                     android:text="칼로리"
                     android:textSize="12sp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
@@ -99,7 +108,7 @@
         <!--버튼들-->
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:weightSum="2"
             android:layout_gravity="center"
             android:layout_width="match_parent"

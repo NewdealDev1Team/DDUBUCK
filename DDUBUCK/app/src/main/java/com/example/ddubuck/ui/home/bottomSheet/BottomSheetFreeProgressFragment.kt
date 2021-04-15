@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -59,6 +60,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
         endButton.setOnClickListener{
             parentFragmentManager.popBackStack()
         }
+
 
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_free_progress_timeTv)
         model.walkTime.observe(viewLifecycleOwner,{v->

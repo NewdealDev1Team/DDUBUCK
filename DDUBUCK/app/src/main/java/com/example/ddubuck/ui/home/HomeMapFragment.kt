@@ -110,19 +110,22 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             }
         })
 
+
+
         model.isRecordPaused.observe(viewLifecycleOwner, { v ->
-            if (v) {
+            allowRecording = if (v) {
                 //start
                 pauseRecording()
-                allowRecording = false
+                false
             } else {
                 //stop
                 resumeRecording()
-                allowRecording = true
+                true
             }
         })
 
-        //model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
+        model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
+        model.coursePath.observe(viewLifecycleOwner, {v -> course.coords= v.toMutableList()})
         return rootView
     }
 
@@ -175,7 +178,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     }
 
     //산책기록을 반환합니다
-    fun getWalkResult(): WalkRecord {
+    private fun getWalkResult(): WalkRecord {
         return WalkRecord(
             userPath.coords,
             altitudes,
@@ -282,8 +285,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                             }
                         }
                         if (isCourseSelected) {
-                            if (course.coords.isNotEmpty()) {
+                            if (course.map!=null) {
                                 checkCoursePointArrival(point, course.coords.first(), course.coords)
+                            }else {
+                                course.map = this.map
                             }
                         }
                     } else {
@@ -363,6 +368,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         if (course.size > 2) {
             if (isUserReachedToTarget(currentPos, lastPos)) {
                 course.removeAt(0)
+                model.passPathData(course)
                 this.course.coords = course
             }
         } else {

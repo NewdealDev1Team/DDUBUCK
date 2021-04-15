@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
+import com.naver.maps.geometry.LatLng
 
 class BottomSheetSelectFragment : Fragment() {
     lateinit var callback: OnCourseSelectedListener
@@ -33,6 +34,19 @@ class BottomSheetSelectFragment : Fragment() {
     }
 
     companion object {
+        private val fooRoute = listOf( //9개
+                LatLng(37.56362279298406, 126.90926225749905),
+                LatLng(37.56345663522066, 126.9091328029345),
+                LatLng(37.56314632623486, 126.90784351195998),
+                LatLng(37.56396493508562, 126.90736905196479),
+                LatLng(37.56417998056722, 126.90825278385154),
+                LatLng(37.56375202367158, 126.90831947940694),
+                LatLng(37.56332059071951, 126.90851459284085),
+                LatLng(37.56346358071265, 126.909140550899),
+                LatLng(37.5637076839577, 126.9092733697774),
+        )
+        private val fooAltitude = listOf(1.0F,3.0F,2.0F,5.0F,7.0F,1.0F,2.0F,4.0F,2.0F)
+        private val fooSpeed = listOf(0.1F,0.2F,0.2F,0.3F,0.6F,3F,5F,3F,5F)
         private val fooArray = arrayListOf(
         CourseItem(
             true,
@@ -44,7 +58,8 @@ class BottomSheetSelectFragment : Fragment() {
             false,
             "코스산책",
             "코스산책입니다",
-            WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0)),
+            WalkRecord(fooRoute, fooAltitude, fooSpeed, 325, 5683, 900.0)),
         )
+
     }
 }
