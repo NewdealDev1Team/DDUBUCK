@@ -151,7 +151,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     //산책을 일시정지 합니다
     private fun pauseRecording() {
         timer.cancel()
-        userPath.map = null
     }
 
     private fun resumeRecording() {
@@ -165,9 +164,15 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     private fun stopRecording() {
         userPath.map = null
         timer.cancel()
+        course.map = null
         //기록 및 반환 코드
         showResultDialog(getWalkResult())
         //
+        //------ 수 정 하 라 !!!!!!!!
+        model.walkTime.value = 0
+        model.walkCalorie.value = 0.0
+        model. walkDistance.value = 0.0
+        //-------
         altitudes.clear()
         speeds.clear()
         stepCount=0
@@ -374,6 +379,9 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         } else {
             //코스완료
             this.course.map = null
+            //bottom sheet pop 해서 코스선택 메뉴로 이동시키기
+            stopRecording()
+            parentFragmentManager.popBackStack()
         }
     }
 

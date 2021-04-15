@@ -11,7 +11,7 @@ import kotlin.concurrent.timer
 
 
 class HomeMapViewModel : ViewModel() {
-    private lateinit var timer: Timer
+
     val isRecordStarted = MutableLiveData<Boolean>()
     fun recorderTrigger(v: Boolean) {
         isRecordStarted.value = v
