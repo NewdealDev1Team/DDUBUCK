@@ -2,10 +2,12 @@ package com.example.ddubuck.weather
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.location.Location
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,18 +15,38 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.R
+import com.example.ddubuck.ui.home.HomeMapFragment
+import com.example.ddubuck.ui.home.HomeMapViewModel
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.LocationTrackingMode
+import com.naver.maps.map.util.FusedLocationSource
 
 interface APICallback {
-    fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, weatherText: TextView, tempAndDust: TextView, weatherImage: ImageView)
+    fun onSuccess(
+        weatherResponse: WeatherResponse,
+        uvRays: UVRays,
+        dust: Dust,
+        weatherText: TextView,
+        tempAndDust: TextView,
+        weatherImage: ImageView
+    )
 }
 
 class WeatherActivity : Fragment(), APICallback {
 
     lateinit var weatherViewModel: WeatherViewModel
+    private val locationViewModel: HomeMapViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val weatherView = inflater.inflate(R.layout.fragment_weather, container, false)
         val weatherText: TextView = weatherView.findViewById(R.id.weather_text)
         val tempAndDust: TextView = weatherView.findViewById(R.id.temp_and_dust)
@@ -36,19 +58,39 @@ class WeatherActivity : Fragment(), APICallback {
         return weatherView
     }
 
-    private fun showWeatherInfo(result: APICallback, weatherText: TextView, tempAndDust: TextView, weatherImage: ImageView) {
-        weatherViewModel.weatherInfo.observe(viewLifecycleOwner, { weather ->
-            weatherViewModel.uvRaysInfo.observe(viewLifecycleOwner, { uvRays ->
-                weatherViewModel.dustInfo.observe(viewLifecycleOwner, { dust ->
-                    result.onSuccess(weather, uvRays, dust, weatherText, tempAndDust, weatherImage)
+    // Coroutine 사용 필요
+    private fun showWeatherInfo(
+        result: APICallback,
+        weatherText: TextView,
+        tempAndDust: TextView,
+        weatherImage: ImageView
+    ) {
+
+        locationViewModel.position.observe(viewLifecycleOwner, {location ->
+            val lat = location.latitude.toString()
+            val lon = location.longitude.toString()
+
+            weatherViewModel.weatherInfo(lat,lon).observe(viewLifecycleOwner, { weather ->
+                weatherViewModel.uvRaysInfo.observe(viewLifecycleOwner, { uvRays ->
+                    weatherViewModel.dustInfo.observe(viewLifecycleOwner, { dust ->
+                        result.onSuccess(weather, uvRays, dust, weatherText, tempAndDust, weatherImage)
+                    })
                 })
             })
         })
+
     }
 
 
     @SuppressLint("SetTextI18n", "ResourceType")
-    override fun onSuccess(weatherResponse: WeatherResponse, uvRays: UVRays, dust: Dust, weatherText: TextView, tempAndDust: TextView, weatherImage: ImageView) {
+    override fun onSuccess(
+        weatherResponse: WeatherResponse,
+        uvRays: UVRays,
+        dust: Dust,
+        weatherText: TextView,
+        tempAndDust: TextView,
+        weatherImage: ImageView
+    ) {
         var weatherScore = 0
 
         // 현재 날씨 ID
@@ -66,7 +108,8 @@ class WeatherActivity : Fragment(), APICallback {
         val tempHumidity = weatherResponse.main?.humidity
 
         // 불쾌 지수 공식
-        val discomfortIndex = (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
+        val discomfortIndex =
+            (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
 
         // 자외선 지수
         val uvRays = uvRays.response.body.items.item[0].today?.toInt()
@@ -125,15 +168,30 @@ class WeatherActivity : Fragment(), APICallback {
             in 10..12 -> {
                 weatherText.text = "산책하기 최고의 날!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
-                spanText.setSpan(ForegroundColorSpan(Color.rgb(118, 118, 118)), 11, 15, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                spanText.setSpan(
+                    ForegroundColorSpan(Color.rgb(118, 118, 118)),
+                    11,
+                    15,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
                 tempAndDust.text = spanText
                 weatherImage.setImageResource(R.drawable.weather_high)
             }
             in 6..9 -> {
                 weatherText.text = "산책하기 좋아요!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
-                spanText.setSpan(ForegroundColorSpan(Color.rgb(61, 171, 91)), 0, spanText.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-                spanText.setSpan(ForegroundColorSpan(Color.rgb(118, 118, 118)), 11, 15, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                spanText.setSpan(
+                    ForegroundColorSpan(Color.rgb(61, 171, 91)),
+                    0,
+                    spanText.length,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
+                spanText.setSpan(
+                    ForegroundColorSpan(Color.rgb(118, 118, 118)),
+                    11,
+                    15,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
                 tempAndDust.text = spanText
                 weatherImage.setImageResource(R.drawable.weather_middle)
             }
@@ -141,13 +199,25 @@ class WeatherActivity : Fragment(), APICallback {
                 weatherText.text = "주의하며 산책해요."
 
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
-                spanText.setSpan(ForegroundColorSpan(Color.rgb(255, 153, 0)), 0, spanText.length, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                spanText.setSpan(
+                    ForegroundColorSpan(Color.rgb(255, 153, 0)),
+                    0,
+                    spanText.length,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
 
-                spanText.setSpan(ForegroundColorSpan(Color.rgb(118, 118, 118)), 11, 15, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
+                spanText.setSpan(
+                    ForegroundColorSpan(Color.rgb(118, 118, 118)),
+                    11,
+                    15,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                )
                 tempAndDust.text = spanText
 
                 weatherImage.setImageResource(R.drawable.weather_low)
             }
         }
     }
+
+
 }

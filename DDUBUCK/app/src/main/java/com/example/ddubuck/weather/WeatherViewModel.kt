@@ -9,8 +9,8 @@ class WeatherViewModel : ViewModel() {
     val weatherRepository: WeatherRepository = WeatherRepository()
     private val APIKEY = "466c10bee7b689ae03ea8c7729ba0b1f"
 
-    val weatherInfo = liveData(Dispatchers.IO) {
-        val retrivedWeatherInfo = weatherRepository.getWeatherInfo("37.563598", "126.909227", APIKEY)
+    fun weatherInfo(lat: String, lon: String) = liveData(Dispatchers.IO) {
+        val retrivedWeatherInfo = weatherRepository.getWeatherInfo(lat, lon, APIKEY)
         emit(retrivedWeatherInfo)
     }
 
