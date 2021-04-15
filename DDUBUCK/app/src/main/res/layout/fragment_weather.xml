@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:paddingVertical="12dp"
+    android:paddingHorizontal="24dp"
     android:background="@drawable/weather_border">
 
     <LinearLayout
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
         android:orientation="vertical">
 
         <TextView
@@ -18,21 +21,17 @@
             android:layout_height="match_parent"
             android:text="Weather Text"
             android:textColor="#000000"
-            android:textSize="18dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16.5dp"/>
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/temp_and_dust"
             android:layout_width="150dp"
             android:layout_height="16dp"
+            android:layout_marginTop="3dp"
+            android:bufferType="spannable"
             android:text="temp and dust"
             android:textColor="#60BEFF"
-            android:textSize="14dp"
-            android:bufferType="spannable"
-            android:layout_marginTop="3dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginBottom="16.5dp" />
+            android:textSize="14dp" />
 
     </LinearLayout>
 
@@ -40,10 +39,8 @@
         android:id="@+id/weather_image"
         android:layout_width="70dp"
         android:layout_height="60dp"
-        android:scaleType="fitCenter"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="70dp"/>
+        android:layout_alignParentEnd="true"
+        android:scaleType="fitCenter" />
 
 
-</LinearLayout>
+</RelativeLayout>
