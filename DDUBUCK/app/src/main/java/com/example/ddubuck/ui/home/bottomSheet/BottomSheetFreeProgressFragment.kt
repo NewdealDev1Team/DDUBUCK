@@ -17,14 +17,27 @@ import org.w3c.dom.Text
 class BottomSheetFreeProgressFragment : Fragment() {
     //뷰모델
     private val model: HomeMapViewModel by activityViewModels()
-
+    private var isStarted : Boolean = true
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.bottom_sheet_free_progress, container, false)
         val pauseButton : Button = rootView.findViewById(R.id.sheet_free_progress_pauseButton)
         val endButton : Button = rootView.findViewById(R.id.sheet_free_progress_endButton)
 
+        //산책 시작
+        model.recorderTrigger(true)
+
         pauseButton.setOnClickListener{
-            model.recorderTrigger(true)
+            isStarted = if(isStarted) {
+                //일시정지
+                model.recorderTrigger(false)
+                //ui변경
+                false
+            } else {
+                //재개 resume
+                model.recorderTrigger(true)
+                //ui변경
+                true
+            }
         }
 
         endButton.setOnClickListener{

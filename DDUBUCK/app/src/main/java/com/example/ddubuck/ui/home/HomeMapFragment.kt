@@ -72,6 +72,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     private var altitudes: MutableList<Float> = mutableListOf()
     private var speeds: MutableList<Float> = mutableListOf()
     private var walkTime: Long = 0
+    private var timePoint:Long=0
     private var stepCount: Int = 0
     private var distance: Double = 0.0
 
@@ -127,13 +128,30 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         isRecordStarted = true
     }
 
+    //산책을 일시정지 합니다
+    private fun pauseRecording() {
+        timer.cancel()
+        userPath.map = null
+        isRecordStarted = false
+    }
+
+    private fun resumeRecording() {
+        timer = timer(period = 1000) {
+            walkTime++
+            model.recordTime(walkTime)
+        }
+        isRecordStarted = true
+    }
+
     //산책을 종료하고 기록을 반환합니다
     private fun stopRecording() {
         userPath.map = null
         timer.cancel()
-        model.recordTime(0)
-        model.recordDistance(0.0)
-        model.recordCalorie(0.0)
+        //기록 및 반환 코드
+        //
+        //
+        timePoint=0
+        walkTime=0
         isRecordStarted = false
     }
 
@@ -298,6 +316,12 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         speed: Float,
         alt: Float
     ) {
+        if(timePoint!=0.toLong()){
+            model.recordCalorie(calculateMomentCalorie(speed, walkTime-timePoint))
+        }  else {
+            model.recordCalorie(calculateMomentCalorie(speed, walkTime))
+            timePoint=walkTime
+        }
         //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
         //현재 점이 포함되어있다면 추가하지 않음
         currentPath.add(currentPos)
@@ -306,17 +330,34 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         distance += lastPos.distanceTo(currentPos)
         model.recordDistance(distance)
         userPath.coords = currentPath
-        model.recordCalorie(
-            WalkRecord(
-                userPath.coords,
-                altitudes,
-                speeds,
-                walkTime,
-                stepCount,
-                distance
-            ).getCalorie(65.0)
-        )
     }
+
+    //순간 칼로리 연산
+    private fun calculateMomentCalorie(speed:Float, passedTime:Long):Double {
+        val weight = 65
+        val met = when(speed) {
+            in 0.0..4.0 -> 2.0 // 느리게 걷기
+            in 4.0..8.0 -> 3.8 // 보통 걷기
+            in 8.0..12.0 -> 4.0 // 빠르게 걷기
+            else -> 5.0 // 전력질주
+        }
+        val time = passedTime/60
+        return (met * (3.5 * weight * time)) * 0.001 * 5
+    }
+
+    /*
+    칼로리 계산
+    fun getCalorie(weight:Double) : Double {
+        //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
+        val met = when(speeds.average()) {
+            in 0.0..4.0 -> 2.0 // 느리게 걷기
+            in 4.0..8.0 -> 3.8 // 보통 걷기
+            in 8.0..12.0 -> 4.0 // 빠르게 걷기
+            else -> 5.0 // 전력질주
+        }
+        return (met * (3.5 * weight * (walkTime /60))) * 0.001 * 5
+    }
+     */
 
     //산책 경로 도달 시
     private fun checkCoursePointArrival(
