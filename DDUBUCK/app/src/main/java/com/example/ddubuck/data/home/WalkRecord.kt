@@ -26,7 +26,7 @@ data class WalkRecord (
             in 8.0..12.0 -> 4.0 // 빠르게 걷기
             else -> 5.0 // 전력질주
         }
-        return (met * (3.5 * weight * (walkTime /60))) * 0.001 * 5
+        return (met * (3.5 * weight * (walkTime /60.0))) * 0.001 * 5
     }
 
     //TODO WalkRecord To Json 구현하기

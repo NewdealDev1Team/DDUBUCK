@@ -17,6 +17,11 @@ class HomeMapViewModel : ViewModel() {
         isRecordStarted.value = v
     }
 
+    val isRecordPaused = MutableLiveData<Boolean>()
+    fun pauseTrigger(v:Boolean) {
+        isRecordPaused.value=v
+    }
+
 
     val walkDistance = MutableLiveData<Double>()
     fun recordDistance(v: Double) {
