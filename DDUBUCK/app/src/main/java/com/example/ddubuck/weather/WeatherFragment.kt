@@ -41,7 +41,7 @@ interface APICallback {
     )
 }
 
-class WeatherActivity : Fragment(), APICallback {
+class WeatherFragment : Fragment(), APICallback {
 
     lateinit var weatherViewModel: WeatherViewModel
     private val locationViewModel: HomeMapViewModel by activityViewModels()

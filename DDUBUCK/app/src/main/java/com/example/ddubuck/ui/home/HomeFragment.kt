@@ -10,13 +10,13 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.R
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetSelectFragment
-import com.example.ddubuck.weather.WeatherActivity
+import com.example.ddubuck.weather.WeatherFragment
 
 class HomeFragment(private val owner:Activity) : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var homeMapFragment : HomeMapFragment
-    lateinit var weatherFragment: WeatherActivity
+    lateinit var weatherFragment: WeatherFragment
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -31,7 +31,7 @@ class HomeFragment(private val owner:Activity) : Fragment() {
         homeMapFragment = HomeMapFragment(fm,owner)
         fm.beginTransaction().add(R.id.home_map_container, homeMapFragment, BOTTOM_SHEET_CONTAINER_TAG).commit()
 
-        weatherFragment = WeatherActivity()
+        weatherFragment = WeatherFragment()
 
         fm.beginTransaction().add(R.id.home_weather_container , weatherFragment).commit()
 

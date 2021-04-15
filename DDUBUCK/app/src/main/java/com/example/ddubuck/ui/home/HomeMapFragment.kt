@@ -242,8 +242,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                         locationSource.lastLocation?.longitude!!
                     )
                 )
-                Log.d("lat", lat.toString())
-                Log.d("lon", lng.toString())
             }
 
             if (isRecordStarted) {
