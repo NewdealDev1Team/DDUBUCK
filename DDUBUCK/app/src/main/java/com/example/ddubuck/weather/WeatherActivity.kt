@@ -3,6 +3,7 @@ package com.example.ddubuck.weather
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -13,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -25,6 +27,8 @@ import com.google.android.gms.location.LocationServices
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.util.FusedLocationSource
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 interface APICallback {
     fun onSuccess(
@@ -42,6 +46,7 @@ class WeatherActivity : Fragment(), APICallback {
     lateinit var weatherViewModel: WeatherViewModel
     private val locationViewModel: HomeMapViewModel by activityViewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -112,7 +117,7 @@ class WeatherActivity : Fragment(), APICallback {
             (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
 
         // 자외선 지수
-        val uvRays = uvRays.response.body.items.item[0].today?.toInt()
+        val uvRays = uvRays.response.body.items.item[0].today
 
         // 통합 대기 환경 지수
         val dustInfo = dust.response.body.items[0].khaiValue?.toInt()
@@ -124,8 +129,8 @@ class WeatherActivity : Fragment(), APICallback {
             in 800..809 -> weatherScore += 3
         }
 
-        if (uvRays != null) {
-            if (uvRays <= 6 && weatherID in (900..909)) weatherScore += 1
+        if (uvRays != null && uvRays.toString() != "") {
+            if (uvRays.toInt() <= 6 && weatherID in (900..909)) weatherScore += 1
         }
 
         weatherScore += when {

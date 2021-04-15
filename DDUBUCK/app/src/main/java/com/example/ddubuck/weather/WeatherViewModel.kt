@@ -1,9 +1,19 @@
 package com.example.ddubuck.weather
 
 
+import android.annotation.SuppressLint
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import kotlinx.coroutines.Dispatchers
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ofPattern
+import java.util.*
 
 class WeatherViewModel : ViewModel() {
     val weatherRepository: WeatherRepository = WeatherRepository()
@@ -14,8 +24,11 @@ class WeatherViewModel : ViewModel() {
         emit(retrivedWeatherInfo)
     }
 
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(Build.VERSION_CODES.O)
     val uvRaysInfo = liveData(Dispatchers.IO) {
-        val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo("WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==", 1, 1,  "JSON", "1100000000", "2021041409")
+        val date = LocalDateTime.now().format(ofPattern("yyyyMMddkk")).toString()
+        val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo("WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==", 1, 1,  "JSON", "1100000000", date)
         emit(retrivedUVRaysInfo)
     }
 
