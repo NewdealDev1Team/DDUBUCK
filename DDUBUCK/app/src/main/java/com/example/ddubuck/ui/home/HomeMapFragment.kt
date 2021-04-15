@@ -8,6 +8,8 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
+import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +28,7 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.widget.LocationButtonView
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.concurrent.timer
 
@@ -97,9 +100,13 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             if (v) {
                 //start
                 startRecording()
+                allowRecording = true
             } else {
                 //stop
                 stopRecording()
+                allowRecording =false
+                isRestarted=true
+                isCourseSelected=false
             }
         })
 
@@ -107,11 +114,15 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             if (v) {
                 //start
                 pauseRecording()
+                allowRecording = false
             } else {
                 //stop
                 resumeRecording()
+                allowRecording = true
             }
         })
+
+        //model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
         return rootView
     }
 
@@ -132,14 +143,12 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             walkTime++
             model.recordTime(walkTime)
         }
-        allowRecording = true
     }
 
     //산책을 일시정지 합니다
     private fun pauseRecording() {
         timer.cancel()
         userPath.map = null
-        allowRecording = false
     }
 
     private fun resumeRecording() {
@@ -147,7 +156,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             walkTime++
             model.recordTime(walkTime)
         }
-        allowRecording = true
     }
 
     //산책을 종료하고 기록을 반환합니다
@@ -155,7 +163,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         userPath.map = null
         timer.cancel()
         //기록 및 반환 코드
-        //
+        showResultDialog(getWalkResult())
         //
         altitudes.clear()
         speeds.clear()
@@ -164,8 +172,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         timePoint=0
         walkTime=0
         burnedCalorie=0.0
-        allowRecording = false
-        isRestarted=true
     }
 
     //산책기록을 반환합니다
@@ -186,13 +192,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         //임시코드 : 코스 경로로 저장합니다
         //앱 제작 시 저장대상을 서버로 변경
         addCoursePath(p)
-        deleteUserRoute()
-    }
-
-    //유저가 이동하며 기록한 경로를 삭제합니다
-    //TODO 유저 경로 삭제
-    private fun deleteUserRoute() {
-        userPath.map = null
     }
 
 
@@ -208,9 +207,9 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                     "지점 갯수: ${userPath.coords.size}\n" +
                     "평균속도: ${speeds.average()}\n" +
                     "발걸음 수: ${stepCount}\n" +
-                    "이동거리: ${distance}\n" +
-                    "경과시간: ${walkTime}초\n" +
-                    "소모 칼로리: ${walkRecord.getCalorie(65.0)}"
+                    "이동거리: ${DecimalFormat("#.## m").format(distance)}\n" +
+                    "경과시간: ${DateUtils.formatElapsedTime(walkTime)}\n" +
+                    "소모 칼로리: ${DecimalFormat("#.## kcal").format(walkRecord.getCalorie(65.0))}"
         ) // 메시지
         dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which -> })
         dlg.show()
@@ -263,19 +262,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         userPath = PathOverlay()
 
         map.addOnLocationChangeListener {
-
-            val lat = locationSource.lastLocation?.latitude
-            val lng = locationSource.lastLocation?.longitude
-            if (lat != null) {
-                model.recordPosition(
-                    LatLng(
-                        locationSource.lastLocation?.latitude!!,
-                        locationSource.lastLocation?.longitude!!
-                    )
-                )
-
-            }
-
             if (allowRecording) {
                 val lat = locationSource.lastLocation?.latitude
                 val lng = locationSource.lastLocation?.longitude
@@ -283,6 +269,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                 val alt = locationSource.lastLocation?.accuracy
                 if (lat != null && lng != null) {
                     if(isRestarted) {
+                        //초기 점이 비어있을 때
                         initUserPath(LatLng(lat, lng))
                         isRestarted=false
                     }
@@ -355,7 +342,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     private fun calculateMomentCalorie(speed:Float, passedTime:Long):Double {
         val weight = 65
         val met = when(speed) {
-            in 0.0..4.0 -> 2.0 // 느리게 걷기
+            in 0.0..0.09 -> 0.0
+            in 0.1..4.0 -> 2.0 // 느리게 걷기
             in 4.0..8.0 -> 3.8 // 보통 걷기
             in 8.0..12.0 -> 4.0 // 빠르게 걷기
             else -> 5.0 // 전력질주
@@ -363,20 +351,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         val time = passedTime/60.0
         return (met * (3.5 * weight * time)) * 0.001 * 5
     }
-
-    /*
-    칼로리 계산
-    fun getCalorie(weight:Double) : Double {
-        //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
-        val met = when(speeds.average()) {
-            in 0.0..4.0 -> 2.0 // 느리게 걷기
-            in 4.0..8.0 -> 3.8 // 보통 걷기
-            in 8.0..12.0 -> 4.0 // 빠르게 걷기
-            else -> 5.0 // 전력질주
-        }
-        return (met * (3.5 * weight * (walkTime /60))) * 0.001 * 5
-    }
-     */
 
     //산책 경로 도달 시
     private fun checkCoursePointArrival(

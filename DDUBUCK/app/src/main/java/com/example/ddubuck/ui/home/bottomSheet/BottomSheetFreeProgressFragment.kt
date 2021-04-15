@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.R
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import java.text.DecimalFormat
+import java.text.Format
 import java.text.Normalizer
 
 class BottomSheetFreeProgressFragment: Fragment() {
@@ -32,6 +34,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
 
         //산책 시작
         model.recorderTrigger(true)
+        model.courseWalkTrigger(false)
 
         pauseButton.setOnClickListener{
             isPaused = if(isPaused) {
@@ -54,13 +57,12 @@ class BottomSheetFreeProgressFragment: Fragment() {
         }
 
         endButton.setOnClickListener{
-            model.recorderTrigger(false)
             parentFragmentManager.popBackStack()
         }
 
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_free_progress_timeTv)
         model.walkTime.observe(viewLifecycleOwner,{v->
-            walkTimeTv.text=v.toString()
+            walkTimeTv.text=DateUtils.formatElapsedTime(v)
         })
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_free_progress_distanceTv)
         val distanceForm = DecimalFormat("#.## m")
@@ -78,6 +80,11 @@ class BottomSheetFreeProgressFragment: Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        model.recorderTrigger(false)
     }
 
 }

@@ -28,6 +28,7 @@ class MainActivity : FragmentActivity() {
         when(item.itemId){
             R.id.navigation_home -> {
                 replaceFragment(homeFragment)
+                supportFragmentManager.popBackStack()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_challenge -> {

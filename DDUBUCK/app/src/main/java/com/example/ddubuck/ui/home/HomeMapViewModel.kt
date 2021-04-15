@@ -22,6 +22,16 @@ class HomeMapViewModel : ViewModel() {
         isRecordPaused.value=v
     }
 
+    val isCourseWalk = MutableLiveData<Boolean>()
+    fun courseWalkTrigger(v:Boolean) {
+        isCourseWalk.value=v
+    }
+
+    val coursePath = MutableLiveData<List<LatLng>>()
+    fun passPathData(v:List<LatLng>) {
+        coursePath.value = v
+    }
+
 
     val walkDistance = MutableLiveData<Double>()
     fun recordDistance(v: Double) {
