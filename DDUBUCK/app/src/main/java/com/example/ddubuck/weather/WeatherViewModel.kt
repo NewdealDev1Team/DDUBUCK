@@ -4,8 +4,10 @@ package com.example.ddubuck.weather
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import com.naver.maps.geometry.LatLng
 import kotlinx.coroutines.Dispatchers
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter.ofPattern
@@ -31,5 +33,10 @@ class WeatherViewModel : ViewModel() {
     val dustInfo = liveData(Dispatchers.IO) {
         val retrivedDustInfo = weatherRepository.getDustInfo("마포구", "DAILY", 1, 1, "json", OPENAPI_KEY)
         emit(retrivedDustInfo)
+    }
+
+    val isSuccessfulResponse = MutableLiveData<Boolean>()
+    fun getResponseValue(value: Boolean) {
+        isSuccessfulResponse.value = value
     }
 }

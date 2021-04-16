@@ -74,7 +74,6 @@ class WeatherFragment : Fragment(), APICallback {
         locationViewModel.position.observe(viewLifecycleOwner, {location ->
             val lat = location.latitude.toString()
             val lon = location.longitude.toString()
-
             weatherViewModel.weatherInfo(lat,lon).observe(viewLifecycleOwner, { weather ->
                 weatherViewModel.uvRaysInfo.observe(viewLifecycleOwner, { uvRays ->
                     weatherViewModel.dustInfo.observe(viewLifecycleOwner, { dust ->
@@ -183,6 +182,8 @@ class WeatherFragment : Fragment(), APICallback {
                 weatherImage.setImageResource(R.drawable.weather_high)
             }
             in 6..9 -> {
+                Log.d("6","6")
+
                 weatherText.text = "산책하기 좋아요!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
                 spanText.setSpan(
@@ -201,6 +202,8 @@ class WeatherFragment : Fragment(), APICallback {
                 weatherImage.setImageResource(R.drawable.weather_middle)
             }
             in 3..5 -> {
+                Log.d("3","3")
+
                 weatherText.text = "주의하며 산책해요."
 
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
@@ -220,6 +223,9 @@ class WeatherFragment : Fragment(), APICallback {
                 tempAndDust.text = spanText
 
                 weatherImage.setImageResource(R.drawable.weather_low)
+            }
+            else -> {
+                weatherViewModel.getResponseValue(false)
             }
         }
     }
