@@ -64,6 +64,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
+
     //산책 시작 여부
     var allowRecording = false
     var isRestarted = false

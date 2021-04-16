@@ -1,6 +1,5 @@
 package com.example.ddubuck.ui.home.bottomSheet
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -9,16 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.R
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import java.text.DecimalFormat
-import java.text.Format
-import java.text.Normalizer
 
 class BottomSheetFreeProgressFragment: Fragment() {
     //뷰모델
@@ -43,7 +38,8 @@ class BottomSheetFreeProgressFragment: Fragment() {
                 model.pauseTrigger(false)
                 pauseButton.text="일시정지"
                 pauseButton.setTextColor(Color.parseColor("#3DAB5B"))
-                pauseButton.background = ContextCompat.getDrawable(mContext, R.drawable.bottom_sheet_free_progress_button_deactivated)
+                pauseButton.setBackgroundResource(R.drawable.bottom_sheet_progress_button_activated)
+
                 //ui변경
                 false
             } else {
@@ -51,7 +47,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
                 model.pauseTrigger(true)
                 pauseButton.text="시작하기"
                 pauseButton.setTextColor(Color.WHITE)
-                pauseButton.background = ContextCompat.getDrawable(mContext, R.drawable.bottom_sheet_free_progress_button_activated)
+                pauseButton.setBackgroundResource(R.drawable.bottom_sheet_progress_button_deactivated)
                 //ui변경
                 true
             }

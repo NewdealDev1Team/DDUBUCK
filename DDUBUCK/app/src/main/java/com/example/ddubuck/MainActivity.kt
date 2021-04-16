@@ -1,18 +1,10 @@
 package com.example.ddubuck
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
@@ -21,7 +13,7 @@ import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : FragmentActivity() {
+class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
     private val challengeFragment = ChallengeFragment()
     private val badgeFragment = BadgeFragment()
@@ -56,6 +48,7 @@ class MainActivity : FragmentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initFragmentManager()
+        initToolBar()
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
@@ -70,10 +63,22 @@ class MainActivity : FragmentActivity() {
         activeFragment = homeFragment
     }
 
+    private fun initToolBar() {
+        val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
+        setSupportActionBar(tb)
+        val tbm = supportActionBar
+        if(tbm != null) {
+            tbm.setDisplayShowTitleEnabled(false)
+            tbm.show()
+        }
+    }
+
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
         activeFragment = fragment
     }
+
+
 
 }
