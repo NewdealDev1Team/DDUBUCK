@@ -33,22 +33,6 @@ import java.util.*
 import kotlin.concurrent.timer
 
 
-//TODO 코드 최적화
-/*
-목표
-1. CRUD 구현
-Create
- - startRecording - stopRecording
-Read
- - getWalkResult
-Update
- - X
-Delete
- - X
-2. 백그라운드 작동
-
- */
-
 
 class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragment(),
         OnMapReadyCallback, SensorEventListener {
