@@ -26,12 +26,8 @@ class WeatherViewModel : ViewModel() {
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     val uvRaysInfo = liveData(Dispatchers.IO) {
-<<<<<<< HEAD
-        val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo("WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==", 1, 1,  "JSON", "1100000000", "2021041609")
-=======
         val date = LocalDateTime.now().format(ofPattern("yyyyMMddkk")).toString()
         val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo(OPENAPI_KEY, 1, 1,  "JSON", "1100000000", date)
->>>>>>> dev-update-weather
         emit(retrivedUVRaysInfo)
     }
 
@@ -42,6 +38,7 @@ class WeatherViewModel : ViewModel() {
 
     val isSuccessfulResponse = MutableLiveData<Boolean>()
     fun getResponseValue(value: Boolean) {
+        
         isSuccessfulResponse.value = value
 
     }
