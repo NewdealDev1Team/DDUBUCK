@@ -36,6 +36,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class LoginActivity : AppCompatActivity() {
+
+    // 우리 서버로 저장하는 방식 적용할 것 
+
     private val mAuth: FirebaseAuth? = null
     lateinit var mOAuthLoginInstance: OAuthLogin
     lateinit var mContext: Context
