@@ -55,7 +55,7 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
             }
         }
 
-        fun selectItem(fm:FragmentManager, courseItem : CourseItem) {
+        private fun selectItem(fm:FragmentManager, courseItem : CourseItem) {
             if(courseItem.isFreeWalk) {
                 val frag = BottomSheetFreeDetailFragment()
                 val fmTransaction = fm.beginTransaction()

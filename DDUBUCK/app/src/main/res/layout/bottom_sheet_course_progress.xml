@@ -25,15 +25,17 @@
         android:layout_height="wrap_content">
         <!--프로그래스 바-->
         <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/sheet_course_progress_progressBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:trackThickness="5dp"
+            app:trackCornerRadius="30dp"
             app:indicatorColor="@color/green"/>
         <!--정보들-->
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_marginTop="9dp"
             android:weightSum="3"
+            android:layout_marginTop="9dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <!--산책시간-->
@@ -44,8 +46,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/sheet_course_progress_walkTimeTv"
-                    android:text="12분"
+                    android:id="@+id/sheet_course_progress_timeTv"
+                    android:text="--:--"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -67,7 +69,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_course_progress_distanceTv"
-                    android:text="123.56m"
+                    android:text="--.-- m"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -89,7 +91,7 @@
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_course_progress_calorieTv"
-                    android:text="12m"
+                    android:text="--.-- kcal"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="18sp"
@@ -111,22 +113,23 @@
             android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
+            <android.widget.Button
                 android:id="@+id/sheet_course_progress_pauseButton"
                 android:text="일시정지"
-                android:textColor="@color/white"
+                android:textColor="@color/green"
                 android:layout_weight="1"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/bottom_sheet_free_progress_button_activated"
+                android:background="@drawable/bottom_sheet_progress_button_activated"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-            <Button
+            <android.widget.Button
                 android:id="@+id/sheet_course_progress_endButton"
                 android:text="끝내기"
                 android:textColor="@color/white"
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/bottom_sheet_free_progress_button_activated"
+                android:background="@drawable/bottom_sheet_progress_button_deactivated"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </LinearLayout>

@@ -15,7 +15,7 @@ class WeatherViewModel : ViewModel() {
     }
 
     val uvRaysInfo = liveData(Dispatchers.IO) {
-        val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo("WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==", 1, 1,  "JSON", "1100000000", "2021041409")
+        val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo("WUS/HlSHsC8A/VZZlz1//4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz+slJ85LzMZIIahT9UgeveNhce/yw==", 1, 1,  "JSON", "1100000000", "2021041609")
         emit(retrivedUVRaysInfo)
     }
 

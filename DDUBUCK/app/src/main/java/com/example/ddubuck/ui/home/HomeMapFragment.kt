@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
+import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,6 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
@@ -28,6 +28,7 @@ import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.widget.LocationButtonView
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.concurrent.timer
 
@@ -63,8 +64,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
+
     //산책 시작 여부
-    var isRecordStarted = false
+    var allowRecording = false
+    var isRestarted = false
     var isCourseSelected = false
 
     //측정 관련 변수
@@ -72,8 +75,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     private var altitudes: MutableList<Float> = mutableListOf()
     private var speeds: MutableList<Float> = mutableListOf()
     private var walkTime: Long = 0
+    private var timePoint:Long=0
     private var stepCount: Int = 0
     private var distance: Double = 0.0
+    private var burnedCalorie : Double = 0.0
 
     //코스
     private var course = PathOverlay()
@@ -83,7 +88,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView = inflater.inflate(R.layout.map_fragment, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_map, container, false)
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
             ?: MapFragment.newInstance().also {
@@ -96,14 +101,32 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             if (v) {
                 //start
                 startRecording()
+                allowRecording = true
             } else {
                 //stop
                 stopRecording()
+                allowRecording =false
+                isRestarted=true
+                isCourseSelected=false
             }
         })
 
 
 
+        model.isRecordPaused.observe(viewLifecycleOwner, { v ->
+            allowRecording = if (v) {
+                //start
+                pauseRecording()
+                false
+            } else {
+                //stop
+                resumeRecording()
+                true
+            }
+        })
+
+        model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
+        model.coursePath.observe(viewLifecycleOwner, {v -> course.coords= v.toMutableList()})
         return rootView
     }
 
@@ -121,24 +144,47 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     //버튼 텍스트 바꾸고 산책시작
     private fun startRecording() {
         timer = timer(period = 1000) {
-            walkTime++
             model.recordTime(walkTime)
+            walkTime++
         }
-        isRecordStarted = true
+    }
+
+    //산책을 일시정지 합니다
+    private fun pauseRecording() {
+        timer.cancel()
+    }
+
+    private fun resumeRecording() {
+        timer = timer(period = 1000) {
+            model.recordTime(walkTime)
+            walkTime++
+        }
     }
 
     //산책을 종료하고 기록을 반환합니다
     private fun stopRecording() {
         userPath.map = null
         timer.cancel()
-        model.recordTime(0)
-        model.recordDistance(0.0)
-        model.recordCalorie(0.0)
-        isRecordStarted = false
+        course.map = null
+        //기록 및 반환 코드
+        showResultDialog(getWalkResult())
+        //
+        //------ 수 정 하 라 !!!!!!!!
+        model.walkTime.value = 0
+        model.walkCalorie.value = 0.0
+        model. walkDistance.value = 0.0
+        //-------
+        altitudes.clear()
+        speeds.clear()
+        stepCount=0
+        distance= 0.0
+        timePoint=0
+        walkTime=0
+        burnedCalorie=0.0
     }
 
     //산책기록을 반환합니다
-    fun getWalkResult(): WalkRecord {
+    private fun getWalkResult(): WalkRecord {
         return WalkRecord(
             userPath.coords,
             altitudes,
@@ -155,13 +201,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         //임시코드 : 코스 경로로 저장합니다
         //앱 제작 시 저장대상을 서버로 변경
         addCoursePath(p)
-        deleteUserRoute()
-    }
-
-    //유저가 이동하며 기록한 경로를 삭제합니다
-    //TODO 유저 경로 삭제
-    private fun deleteUserRoute() {
-        userPath.map = null
     }
 
 
@@ -177,9 +216,9 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                     "지점 갯수: ${userPath.coords.size}\n" +
                     "평균속도: ${speeds.average()}\n" +
                     "발걸음 수: ${stepCount}\n" +
-                    "이동거리: ${distance}\n" +
-                    "경과시간: ${walkTime}초\n" +
-                    "소모 칼로리: ${walkRecord.getCalorie(65.0)}"
+                    "이동거리: ${DecimalFormat("#.## m").format(distance)}\n" +
+                    "경과시간: ${DateUtils.formatElapsedTime(walkTime)}\n" +
+                    "소모 칼로리: ${DecimalFormat("#.## kcal").format(walkRecord.getCalorie(65.0))}"
         ) // 메시지
         dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which -> })
         dlg.show()
@@ -208,7 +247,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     }
 
     override fun onSensorChanged(event: SensorEvent) {  // 가속도 센서 값이 바뀔때마다 호출됨
-        if (isRecordStarted) {
+        if (allowRecording) {
             stepCount++
         }
     }
@@ -232,25 +271,17 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         userPath = PathOverlay()
 
         map.addOnLocationChangeListener {
-
-            val lat = locationSource.lastLocation?.latitude
-            val lng = locationSource.lastLocation?.longitude
-            if (lat != null) {
-                model.recordPosition(
-                    LatLng(
-                        locationSource.lastLocation?.latitude!!,
-                        locationSource.lastLocation?.longitude!!
-                    )
-                )
-
-            }
-
-            if (isRecordStarted) {
+            if (allowRecording) {
                 val lat = locationSource.lastLocation?.latitude
                 val lng = locationSource.lastLocation?.longitude
                 val speed = locationSource.lastLocation?.speed
                 val alt = locationSource.lastLocation?.accuracy
                 if (lat != null && lng != null) {
+                    if(isRestarted) {
+                        //초기 점이 비어있을 때
+                        initUserPath(LatLng(lat, lng))
+                        isRestarted=false
+                    }
                     val point = LatLng(lat, lng)
                     if (userPath.coords.isNotEmpty() && userPath.map != null) {
                         val lastPoint = userPath.coords.last()
@@ -260,8 +291,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                             }
                         }
                         if (isCourseSelected) {
-                            if (course.coords.isNotEmpty()) {
+                            if (course.map!=null) {
                                 checkCoursePointArrival(point, course.coords.first(), course.coords)
+                            }else {
+                                course.map = this.map
                             }
                         }
                     } else {
@@ -298,6 +331,13 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         speed: Float,
         alt: Float
     ) {
+        if(timePoint!=0.toLong()){
+            burnedCalorie += calculateMomentCalorie(speed, walkTime-timePoint)
+            timePoint=walkTime
+        }  else {
+            burnedCalorie += calculateMomentCalorie(speed, walkTime)
+            timePoint=walkTime
+        }
         //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
         //현재 점이 포함되어있다면 추가하지 않음
         currentPath.add(currentPos)
@@ -305,17 +345,22 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         altitudes.add(alt)
         distance += lastPos.distanceTo(currentPos)
         model.recordDistance(distance)
+        model.recordCalorie(burnedCalorie)
         userPath.coords = currentPath
-        model.recordCalorie(
-            WalkRecord(
-                userPath.coords,
-                altitudes,
-                speeds,
-                walkTime,
-                stepCount,
-                distance
-            ).getCalorie(65.0)
-        )
+    }
+
+    //순간 칼로리 연산
+    private fun calculateMomentCalorie(speed:Float, passedTime:Long):Double {
+        val weight = 65
+        val met = when(speed) {
+            in 0.0..0.09 -> 0.0
+            in 0.1..4.0 -> 2.0 // 느리게 걷기
+            in 4.0..8.0 -> 3.8 // 보통 걷기
+            in 8.0..12.0 -> 4.0 // 빠르게 걷기
+            else -> 5.0 // 전력질주
+        }
+        val time = passedTime/60.0
+        return (met * (3.5 * weight * time)) * 0.001 * 5
     }
 
     //산책 경로 도달 시
@@ -329,11 +374,15 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         if (course.size > 2) {
             if (isUserReachedToTarget(currentPos, lastPos)) {
                 course.removeAt(0)
+                model.passPathData(course)
                 this.course.coords = course
             }
         } else {
             //코스완료
             this.course.map = null
+            //bottom sheet pop 해서 코스선택 메뉴로 이동시키기
+            stopRecording()
+            parentFragmentManager.popBackStack()
         }
     }
 

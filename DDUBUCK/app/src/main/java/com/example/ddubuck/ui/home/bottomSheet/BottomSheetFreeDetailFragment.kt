@@ -29,5 +29,4 @@ class BottomSheetFreeDetailFragment : Fragment() {
         }
         return rootView
     }
-
 }

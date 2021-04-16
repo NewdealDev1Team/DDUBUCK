@@ -11,10 +11,25 @@ import kotlin.concurrent.timer
 
 
 class HomeMapViewModel : ViewModel() {
-    private lateinit var timer: Timer
+
     val isRecordStarted = MutableLiveData<Boolean>()
     fun recorderTrigger(v: Boolean) {
         isRecordStarted.value = v
+    }
+
+    val isRecordPaused = MutableLiveData<Boolean>()
+    fun pauseTrigger(v:Boolean) {
+        isRecordPaused.value=v
+    }
+
+    val isCourseWalk = MutableLiveData<Boolean>()
+    fun courseWalkTrigger(v:Boolean) {
+        isCourseWalk.value=v
+    }
+
+    val coursePath = MutableLiveData<List<LatLng>>()
+    fun passPathData(v:List<LatLng>) {
+        coursePath.value = v
     }
 
 
