@@ -38,7 +38,9 @@ class HomeFragment(private val owner: Activity) : Fragment() {
         fm.beginTransaction().add(R.id.home_weather_container, weatherFragment).hide(weatherFragment).commit()
         weatherViewModel.isSuccessfulResponse.observe(viewLifecycleOwner, { v ->
             if (v == true) {
-                fm.beginTransaction().show(weatherFragment).commit()
+                fm.beginTransaction()
+                        .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
+                        .show(weatherFragment).commit()
             }
         })
 
