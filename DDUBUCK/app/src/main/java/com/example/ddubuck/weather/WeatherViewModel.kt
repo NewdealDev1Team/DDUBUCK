@@ -3,6 +3,7 @@ package com.example.ddubuck.weather
 
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -38,5 +39,6 @@ class WeatherViewModel : ViewModel() {
     val isSuccessfulResponse = MutableLiveData<Boolean>()
     fun getResponseValue(value: Boolean) {
         isSuccessfulResponse.value = value
+
     }
 }

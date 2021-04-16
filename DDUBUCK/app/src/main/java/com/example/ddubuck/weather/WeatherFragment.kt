@@ -43,10 +43,9 @@ interface APICallback {
 
 class WeatherFragment : Fragment(), APICallback {
 
-    lateinit var weatherViewModel: WeatherViewModel
+    private val weatherViewModel: WeatherViewModel by activityViewModels()
     private val locationViewModel: HomeMapViewModel by activityViewModels()
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,7 +56,7 @@ class WeatherFragment : Fragment(), APICallback {
         val tempAndDust: TextView = weatherView.findViewById(R.id.temp_and_dust)
         val weatherImage: ImageView = weatherView.findViewById(R.id.weather_image)
 
-        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
+//        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         showWeatherInfo(this, weatherText, tempAndDust, weatherImage)
 
         return weatherView
@@ -78,6 +77,7 @@ class WeatherFragment : Fragment(), APICallback {
                 weatherViewModel.uvRaysInfo.observe(viewLifecycleOwner, { uvRays ->
                     weatherViewModel.dustInfo.observe(viewLifecycleOwner, { dust ->
                         result.onSuccess(weather, uvRays, dust, weatherText, tempAndDust, weatherImage)
+                        weatherViewModel.getResponseValue(true)
                     })
                 })
             })
@@ -182,8 +182,6 @@ class WeatherFragment : Fragment(), APICallback {
                 weatherImage.setImageResource(R.drawable.weather_high)
             }
             in 6..9 -> {
-                Log.d("6","6")
-
                 weatherText.text = "산책하기 좋아요!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
                 spanText.setSpan(
@@ -202,8 +200,6 @@ class WeatherFragment : Fragment(), APICallback {
                 weatherImage.setImageResource(R.drawable.weather_middle)
             }
             in 3..5 -> {
-                Log.d("3","3")
-
                 weatherText.text = "주의하며 산책해요."
 
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
@@ -224,9 +220,7 @@ class WeatherFragment : Fragment(), APICallback {
 
                 weatherImage.setImageResource(R.drawable.weather_low)
             }
-            else -> {
-                weatherViewModel.getResponseValue(false)
-            }
+
         }
     }
 
