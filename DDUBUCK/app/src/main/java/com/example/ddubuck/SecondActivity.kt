@@ -8,14 +8,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.login.LoginActivity
-import com.example.ddubuck.login.NaverAPI
-import com.example.ddubuck.login.UserInfo
-import com.example.ddubuck.weather.Weather
-import com.example.ddubuck.weather.WeatherActivity
-import com.example.ddubuck.weather.WeatherViewModel
 import com.kakao.sdk.user.UserApiClient
 
 class SecondActivity : AppCompatActivity() {

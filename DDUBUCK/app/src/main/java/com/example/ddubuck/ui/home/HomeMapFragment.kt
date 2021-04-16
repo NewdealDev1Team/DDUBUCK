@@ -271,7 +271,23 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         userPath = PathOverlay()
 
         map.addOnLocationChangeListener {
+<<<<<<< HEAD
             if (allowRecording) {
+=======
+
+            val lat = locationSource.lastLocation?.latitude
+            val lng = locationSource.lastLocation?.longitude
+            if (lat != null) {
+                model.recordPosition(
+                    LatLng(
+                        locationSource.lastLocation?.latitude!!,
+                        locationSource.lastLocation?.longitude!!
+                    )
+                )
+            }
+
+            if (isRecordStarted) {
+>>>>>>> dev-update-weather
                 val lat = locationSource.lastLocation?.latitude
                 val lng = locationSource.lastLocation?.longitude
                 val speed = locationSource.lastLocation?.speed
@@ -398,8 +414,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         )
     }
 
-
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 }
