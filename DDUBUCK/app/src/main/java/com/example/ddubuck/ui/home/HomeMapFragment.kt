@@ -271,8 +271,15 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         userPath = PathOverlay()
 
         map.addOnLocationChangeListener {
-            if (allowRecording) {
 
+            model.recordPosition(
+                    LatLng(
+                            locationSource.lastLocation?.latitude!!,
+                            locationSource.lastLocation?.longitude!!
+                    )
+            )
+
+            if (allowRecording) {
                 val lat = locationSource.lastLocation?.latitude
                 val lng = locationSource.lastLocation?.longitude
                 val speed = locationSource.lastLocation?.speed
