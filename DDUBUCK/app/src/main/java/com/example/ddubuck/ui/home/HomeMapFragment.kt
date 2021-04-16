@@ -144,8 +144,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     //버튼 텍스트 바꾸고 산책시작
     private fun startRecording() {
         timer = timer(period = 1000) {
-            walkTime++
             model.recordTime(walkTime)
+            walkTime++
         }
     }
 
@@ -156,8 +156,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
     private fun resumeRecording() {
         timer = timer(period = 1000) {
-            walkTime++
             model.recordTime(walkTime)
+            walkTime++
         }
     }
 

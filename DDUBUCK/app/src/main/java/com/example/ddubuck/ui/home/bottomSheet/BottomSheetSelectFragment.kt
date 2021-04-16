@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
@@ -26,9 +27,8 @@ class BottomSheetSelectFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.bottom_sheet_select,container, false)
-        val sheetRecycler : RecyclerView = rootView.findViewById(R.id.sheet_select_rv)
+        val sheetRecycler : ViewPager2 = rootView.findViewById(R.id.sheet_select_rv)
         val mAdapter = BottomSheetSelectRvAdapter(fooArray, parentFragmentManager)
-        sheetRecycler.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         sheetRecycler.adapter = mAdapter
         return rootView
     }
