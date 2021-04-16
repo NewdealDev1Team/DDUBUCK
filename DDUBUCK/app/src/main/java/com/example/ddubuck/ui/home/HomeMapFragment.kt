@@ -64,6 +64,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
 
+    private var isLocationFirstChanged = false
+
 
     //산책 시작 여부
     var allowRecording = false
@@ -271,13 +273,16 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         userPath = PathOverlay()
 
         map.addOnLocationChangeListener {
+            if(!isLocationFirstChanged) {
+                model.recordPosition(
+                        LatLng(
+                                locationSource.lastLocation?.latitude!!,
+                                locationSource.lastLocation?.longitude!!
+                        )
+                )
+                isLocationFirstChanged=true
+            }
 
-            model.recordPosition(
-                    LatLng(
-                            locationSource.lastLocation?.latitude!!,
-                            locationSource.lastLocation?.longitude!!
-                    )
-            )
 
             if (allowRecording) {
                 val lat = locationSource.lastLocation?.latitude
