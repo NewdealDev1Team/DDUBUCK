@@ -11,5 +11,7 @@
     <string name="OPEN_WEATHER_MAP_KEY">466c10bee7b689ae03ea8c7729ba0b1f</string>
     <string name="WEATHER_BASE_URL">http://api.openweathermap.org/</string>
     <string name="DUST_API_KEY">WUS%2FHlSHsC8A%2FVZZlz1%2F%2F4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz%2BslJ85LzMZIIahT9UgeveNhce%2Fyw%3D%3D</string>
+    <string name="birthdayInputTitle">생년월일 입력</string>
+    <string name="inputLaterButtonText"><u>나중에 입력하기</u></string>
 
 </resources>
