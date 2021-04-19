@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.SecondActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -37,7 +38,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
 
-    // 우리 서버로 저장하는 방식 적용할 것 
+    // 우리 서버로 저장하는 방식 적용할 것
 
     private val mAuth: FirebaseAuth? = null
     lateinit var mOAuthLoginInstance: OAuthLogin
@@ -54,7 +55,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // LoginView에서 상단바 제거
-        var actionBar: ActionBar? = supportActionBar
+        val actionBar: ActionBar? = supportActionBar
         actionBar?.hide()
 
         setContentView(R.layout.login_layout)
@@ -115,6 +116,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                     else if (user != null) {
 
+                        // 카카오 가입자 정보 전송
                         database.child("users").child("Kakao")
                         database.child("users").child("Kakao").child(user.id.toString())
                         database.child("users").child("Kakao").child(user.id.toString()).child("username").setValue(user.kakaoAccount?.profile?.nickname)
@@ -123,8 +125,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
 
-                val intent = Intent(this, SecondActivity::class.java)
-                startActivity(intent)
+                kakaoSuccess()
             }
         }
 
@@ -160,6 +161,8 @@ class LoginActivity : AppCompatActivity() {
 //                println("Google ID")
 //                println(account.givenName + " " + account.familyName)
 
+
+                // 구글 가입자 정보 전송
                 database.child("users").child("Google")
                 database.child("users").child("Google").child(account.id.toString())
                 database.child("users").child("Google").child(account.id.toString()).child("username").setValue(account.familyName + account.givenName)
@@ -253,13 +256,11 @@ class LoginActivity : AppCompatActivity() {
                         val user = response.body()?.response
                         val userInfo = emptyArray<String>()
                         if (user != null) {
-                            // db 삽입
-
+                            // 네이버 삽입
                             database.child("users").child("Naver")
                             database.child("users").child("Naver").child(user.id)
                             database.child("users").child("Naver").child(user.id).child("username").setValue(user.nickname)
                             database.child("users").child("Naver").child(user.id).child("birthday").setValue(user.birthyear + "-" + user.birthday)
-
 
                         }
                     }
@@ -285,20 +286,20 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun naverSuccess() {
-        val intent = Intent(this, SecondActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
     private fun kakaoSuccess() {
-        val intent = Intent(this, SecondActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
 
     private fun loginSuccess() {
-        val intent = Intent(this, SecondActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
