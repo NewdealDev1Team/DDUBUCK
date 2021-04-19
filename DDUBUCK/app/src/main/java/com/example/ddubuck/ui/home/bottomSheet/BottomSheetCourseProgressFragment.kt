@@ -18,7 +18,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
 import java.text.DecimalFormat
 
 class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : Fragment() {
-    private val model: HomeMapViewModel by activityViewModels()
+    private val homeMapViewModel: HomeMapViewModel by activityViewModels()
     private var isPaused : Boolean = false
 
     //메모리 누수 경고!
@@ -29,14 +29,14 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
         val pauseButton : Button = rootView.findViewById(R.id.sheet_course_progress_pauseButton)
         val endButton : Button = rootView.findViewById(R.id.sheet_course_progress_endButton)
         //산책 시작
-        model.recorderTrigger(true)
-        model.passPathData(courseInfo.walkRecord.path)
-        model.courseWalkTrigger(true)
+        homeMapViewModel.recorderTrigger(true)
+        homeMapViewModel.passPathData(courseInfo.walkRecord.path)
+        homeMapViewModel.courseWalkTrigger(true)
 
         pauseButton.setOnClickListener{
             isPaused = if(isPaused) {
                 //재개
-                model.pauseTrigger(false)
+                homeMapViewModel.pauseTrigger(false)
                 pauseButton.text="일시정지"
                 pauseButton.setTextColor(Color.parseColor("#3DAB5B"))
                 pauseButton.setBackgroundResource(R.drawable.sheet_button_activated)
@@ -44,7 +44,7 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
                 false
             } else {
                 //pause
-                model.pauseTrigger(true)
+                homeMapViewModel.pauseTrigger(true)
                 pauseButton.text="시작하기"
                 pauseButton.setTextColor(Color.WHITE)
                 pauseButton.setBackgroundResource(R.drawable.sheet_button_deactivated)
@@ -59,22 +59,22 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
 
         val progressBar : LinearProgressIndicator = rootView.findViewById(R.id.sheet_course_progress_progressBar)
         progressBar.max = courseInfo.walkRecord.path.count()
-        model.coursePath.observe(viewLifecycleOwner,{v->
+        homeMapViewModel.coursePath.observe(viewLifecycleOwner,{ v->
             progressBar.progress= courseInfo.walkRecord.path.count() - v.count()
         })
 
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_course_progress_timeTv)
-        model.walkTime.observe(viewLifecycleOwner,{v->
+        homeMapViewModel.walkTime.observe(viewLifecycleOwner,{ v->
             walkTimeTv.text= DateUtils.formatElapsedTime(v)
         })
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_course_progress_distanceTv)
         val distanceForm = DecimalFormat("#.##m")
-        model.walkDistance.observe(viewLifecycleOwner,{v->
+        homeMapViewModel.walkDistance.observe(viewLifecycleOwner,{ v->
             distanceTv.text=distanceForm.format(v)
         })
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_course_progress_calorieTv)
         val calorieForm = DecimalFormat("#.##kcal")
-        model.walkCalorie.observe(viewLifecycleOwner,{v->
+        homeMapViewModel.walkCalorie.observe(viewLifecycleOwner,{ v->
             calorieTv.text=calorieForm.format(v)
         })
         return rootView
@@ -83,6 +83,6 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
 
     override fun onDestroyView() {
         super.onDestroyView()
-        model.recorderTrigger(false)
+        homeMapViewModel.recorderTrigger(false)
     }
 }

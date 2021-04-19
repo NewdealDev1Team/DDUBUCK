@@ -9,7 +9,6 @@ import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,10 +20,7 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
-import com.naver.maps.map.LocationTrackingMode
-import com.naver.maps.map.MapFragment
-import com.naver.maps.map.NaverMap
-import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.*
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.widget.LocationButtonView
@@ -181,6 +177,18 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         )
     }
 
+
+    private fun cameraToCourse(v:List<LatLng>) {
+        if(v.size >2){
+            val cameraUpdate = CameraUpdate.scrollAndZoomTo(v[0], 16.0).animate(CameraAnimation.Easing)
+            map.moveCamera(cameraUpdate)
+            course.coords = v
+            course.map = map
+        } else {
+            course.map = null
+        }
+    }
+
     //사용자가 이동한 경로를 저장합니다
     //TODO 유저 경로 저장
     private fun saveUserRoute(p: List<LatLng>) {
@@ -256,6 +264,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
         userPath = PathOverlay()
 
+        model.coursePath.observe(viewLifecycleOwner, {v->
+            cameraToCourse(v)
+        })
+
         map.addOnLocationChangeListener {
             if(!isLocationFirstChanged) {
                 model.recordPosition(
@@ -266,7 +278,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                 )
                 isLocationFirstChanged=true
             }
-
 
             if (allowRecording) {
                 val lat = locationSource.lastLocation?.latitude

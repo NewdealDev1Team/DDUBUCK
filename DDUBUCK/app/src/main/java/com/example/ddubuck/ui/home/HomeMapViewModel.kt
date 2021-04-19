@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
 import java.util.*
 import kotlin.concurrent.timer
@@ -54,5 +55,4 @@ class HomeMapViewModel : ViewModel() {
     }
 
     //값 반환
-
 }
