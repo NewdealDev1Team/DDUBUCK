@@ -1,6 +1,5 @@
 package com.example.ddubuck.ui.home.bottomSheet
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -21,16 +20,13 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
     private val homeMapViewModel: HomeMapViewModel by activityViewModels()
     private var isPaused : Boolean = false
 
-    //메모리 누수 경고!
-    private lateinit var mContext : Context
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.bottom_sheet_course_progress, container, false)
         val pauseButton : Button = rootView.findViewById(R.id.sheet_course_progress_pauseButton)
         val endButton : Button = rootView.findViewById(R.id.sheet_course_progress_endButton)
         //산책 시작
         homeMapViewModel.recorderTrigger(true)
-        homeMapViewModel.passPathData(courseInfo.walkRecord.path)
+        homeMapViewModel.passProgressData(courseInfo.walkRecord.path)
         homeMapViewModel.courseWalkTrigger(true)
 
         pauseButton.setOnClickListener{
@@ -59,7 +55,7 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
 
         val progressBar : LinearProgressIndicator = rootView.findViewById(R.id.sheet_course_progress_progressBar)
         progressBar.max = courseInfo.walkRecord.path.count()
-        homeMapViewModel.coursePath.observe(viewLifecycleOwner,{ v->
+        homeMapViewModel.courseProgressPath.observe(viewLifecycleOwner,{ v->
             progressBar.progress= courseInfo.walkRecord.path.count() - v.count()
         })
 

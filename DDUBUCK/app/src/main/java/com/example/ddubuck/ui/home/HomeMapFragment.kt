@@ -108,7 +108,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         })
 
         model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v })
-        model.coursePath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
+        model.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
         return rootView
     }
 
@@ -128,6 +128,13 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         timer = timer(period = 1000) {
             model.recordTime(walkTime)
             walkTime++
+        }
+        //TODO 경로 초기화 작업 (2개 점 추가하기)
+        if(isCourseSelected){
+            val v = course.coords
+            v.add(v.last())
+            v.add(v.last())
+            course.coords=v
         }
     }
 
@@ -180,7 +187,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
     private fun cameraToCourse(v:List<LatLng>) {
         if(v.size >2){
-            val cameraUpdate = CameraUpdate.scrollAndZoomTo(v[0], 16.0).animate(CameraAnimation.Easing)
+            val cameraUpdate = CameraUpdate.scrollAndZoomTo(v[0], 16.0).animate(CameraAnimation.Fly)
             map.moveCamera(cameraUpdate)
             course.coords = v
             course.map = map
@@ -199,7 +206,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
 
     //언젠가 사라질 다이알로그 띄우기
-    fun showResultDialog(walkRecord: WalkRecord) {
+    private fun showResultDialog(walkRecord: WalkRecord) {
         val dlg: AlertDialog.Builder = AlertDialog.Builder(
                 context,
                 android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
@@ -260,11 +267,13 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
         locationButtonView.map = this.map
 
-        course.color = Color.CYAN
+        course.color = Color.parseColor("#2798E7")
+        course.width = 15
+        course.outlineWidth = 0
 
         userPath = PathOverlay()
 
-        model.coursePath.observe(viewLifecycleOwner, {v->
+        model.coursePath.observe(viewLifecycleOwner, { v->
             cameraToCourse(v)
         })
 
@@ -382,14 +391,13 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         if (course.size > 2) {
             if (isUserReachedToTarget(currentPos, lastPos)) {
                 course.removeAt(0)
-                model.passPathData(course)
+                model.passProgressData(course)
                 this.course.coords = course
             }
         } else {
             //코스완료
             this.course.map = null
             //bottom sheet pop 해서 코스선택 메뉴로 이동시키기
-            stopRecording()
             parentFragmentManager.popBackStack()
         }
     }
