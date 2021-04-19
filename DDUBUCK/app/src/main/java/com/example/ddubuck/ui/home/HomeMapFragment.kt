@@ -9,6 +9,7 @@ import android.graphics.PointF
 import android.hardware.*
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,6 +52,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     var allowRecording = false
     var isRestarted = false
     var isCourseSelected = false
+    var isCourseInitialized = false
 
     //측정 관련 변수
     private var userPath = PathOverlay()
@@ -107,7 +109,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             }
         })
 
-        model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v })
+        model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
         model.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
         return rootView
     }
@@ -125,16 +127,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
     //버튼 텍스트 바꾸고 산책시작
     private fun startRecording() {
+        isCourseInitialized=false
         timer = timer(period = 1000) {
             model.recordTime(walkTime)
             walkTime++
-        }
-        //TODO 경로 초기화 작업 (2개 점 추가하기)
-        if(isCourseSelected){
-            val v = course.coords
-            v.add(v.last())
-            v.add(v.last())
-            course.coords=v
         }
     }
 
@@ -308,10 +304,20 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                             }
                         }
                         if (isCourseSelected) {
-                            if (course.map != null) {
-                                checkCoursePointArrival(point, course.coords.first(), course.coords)
+                            if(isCourseInitialized) {
+                                //TODO 다음 경로 위치 알 수 있는 방법 고민 할 것
+                                if (course.map != null) {
+                                    checkCoursePointArrival(point, course.coords.first(), course.coords)
+                                } else {
+                                    course.map = this.map
+                                }
                             } else {
-                                course.map = this.map
+                                val v = course.coords.toMutableList()
+                                //last 가 맞는지 확인 할 것
+                                v.add(v.last())
+                                v.add(v.last())
+                                course.coords=v
+                                isCourseInitialized=true
                             }
                         }
                     } else {

@@ -25,9 +25,9 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
         val pauseButton : Button = rootView.findViewById(R.id.sheet_course_progress_pauseButton)
         val endButton : Button = rootView.findViewById(R.id.sheet_course_progress_endButton)
         //산책 시작
+        homeMapViewModel.courseWalkTrigger(true)
         homeMapViewModel.recorderTrigger(true)
         homeMapViewModel.passProgressData(courseInfo.walkRecord.path)
-        homeMapViewModel.courseWalkTrigger(true)
 
         pauseButton.setOnClickListener{
             isPaused = if(isPaused) {
