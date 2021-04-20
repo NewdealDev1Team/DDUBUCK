@@ -37,20 +37,6 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
         
         datePicker.init(1990, 0, 1, null)
         val builder = AlertDialog.Builder(this)
-//        val dialogView = layoutInflater.inflate(R.layout.dialog_layout, null)
-//
-//        laterButton!!.setOnClickListener {
-//            builder.setView(dialogView)
-//            if (dialogView.parent != null) {
-//                (dialogView.parent as ViewGroup).removeView(dialogView)
-//            }
-//            builder.show()
-////            toHomePage()
-//        }
-//
-//        nextButton!!.setOnClickListener {
-//            toNextPageForHeightWeight()
-//        }
 
         binding.nextTimeButton.setOnClickListener {
             val dialog = NextTimeDialog("알림", "추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.", this)
