@@ -304,7 +304,9 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             if (allowRecording) {
                 val lat = locationSource.lastLocation?.latitude
                 val lng = locationSource.lastLocation?.longitude
+                //https://developer.android.com/reference/android/location/Location#getSpeed()
                 val speed = locationSource.lastLocation?.speed
+                //https://developer.android.com/reference/android/location/Location#getAltitude()
                 val alt = locationSource.lastLocation?.accuracy
                 if (lat != null && lng != null) {
                     if (isRestarted) {

@@ -31,7 +31,8 @@ class BottomSheetCompleteFragment(private val walkRecord: WalkRecord,
         calorieTv.text = DecimalFormat("#.##kcal").format(walkRecord.getCalorie(65.0))
         val averageSpeedTv : TextView = rootView.findViewById(R.id.sheet_complete_averageSpeedTv)
         averageSpeedTv.text = DecimalFormat("#.##km/h").format(walkRecord.speeds.average())
-        val heartTv : TextView = rootView.findViewById(R.id.sheet_complete_heartTv)
+        val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
+        averageAltitudeTv.text = DecimalFormat("#.##m").format(walkRecord.altitudes.average())
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
         shareButton.setOnClickListener{
             Log.e("공유하기버튼","누르지마!")
