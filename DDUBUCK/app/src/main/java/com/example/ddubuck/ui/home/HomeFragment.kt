@@ -16,7 +16,6 @@ import com.example.ddubuck.weather.WeatherViewModel
 
 class HomeFragment(private val owner: Activity) : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
     private val weatherViewModel: WeatherViewModel by activityViewModels()
     private lateinit var homeMapFragment: HomeMapFragment
     lateinit var weatherFragment: WeatherFragment
@@ -26,8 +25,6 @@ class HomeFragment(private val owner: Activity) : Fragment() {
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-//        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         val fm = parentFragmentManager
@@ -39,8 +36,8 @@ class HomeFragment(private val owner: Activity) : Fragment() {
         weatherViewModel.isSuccessfulResponse.observe(viewLifecycleOwner, { v ->
             if (v == true) {
                 fm.beginTransaction()
-                        .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
-                        .show(weatherFragment).commit()
+                    .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
+                    .show(weatherFragment).commit()
             }
         })
 

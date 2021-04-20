@@ -54,9 +54,9 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
         }
 
         val progressBar : LinearProgressIndicator = rootView.findViewById(R.id.sheet_course_progress_progressBar)
-        progressBar.max = courseInfo.walkRecord.path.count()
+        progressBar.max = courseInfo.walkRecord.path.count()-2
         homeMapViewModel.courseProgressPath.observe(viewLifecycleOwner,{ v->
-            progressBar.progress= courseInfo.walkRecord.path.count() - v.count()
+            progressBar.progress= courseInfo.walkRecord.path.count()-2 - v.count()-2
         })
 
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_course_progress_timeTv)

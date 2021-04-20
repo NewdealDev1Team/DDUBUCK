@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
+import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
@@ -33,6 +34,27 @@ import kotlin.concurrent.timer
 
 class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragment(),
         OnMapReadyCallback, SensorEventListener {
+
+
+    //산책 시작 여부
+    //TODO STATE로 운용할 것
+    var allowRecording = false
+    var isRestarted = false
+    var isCourseSelected = false
+    var isCourseInitialized = false
+
+    companion object {
+        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        const val WALK_WAITING = 200 //산책대기중
+        const val WALK_WAITING_DISPLAY = 201 //산책대기중_코스표기
+        const val WALK_START = 300 //산책시작 : initializing
+        const val WALK_PROGRESS = 301 //산책진행
+        const val WALK_PAUSE = 302 //산책일시중지
+        const val WALK_COURSE = 400 // 코스산책
+        const val WALK_FREE = 100 //자유산책
+        const val WALK_EXIT = 101 //산책종료
+    }
+
     //뷰모델
     private val model: HomeMapViewModel by activityViewModels()
 
@@ -46,13 +68,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     }
 
     private var isLocationFirstChanged = false
-
-
-    //산책 시작 여부
-    var allowRecording = false
-    var isRestarted = false
-    var isCourseSelected = false
-    var isCourseInitialized = false
 
     //측정 관련 변수
     private var userPath = PathOverlay()
@@ -92,10 +107,9 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                 allowRecording = false
                 isRestarted = true
                 isCourseSelected = false
+                isCourseInitialized = false
             }
         })
-
-
 
         model.isRecordPaused.observe(viewLifecycleOwner, { v ->
             allowRecording = if (v) {
@@ -127,7 +141,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
     //버튼 텍스트 바꾸고 산책시작
     private fun startRecording() {
-        isCourseInitialized=false
         timer = timer(period = 1000) {
             model.recordTime(walkTime)
             walkTime++
@@ -152,6 +165,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         timer.cancel()
         course.map = null
         //기록 및 반환 코드
+        parentFragmentManager.beginTransaction()
+                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(getWalkResult(), WALK_COURSE),
+                        HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
+                .commit()
         showResultDialog(getWalkResult())
         //
         //------ 수 정 하 라 !!!!!!!!
@@ -418,9 +435,5 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                 LatLng(point.latitude - radius, point.longitude - radius),
                 LatLng(point.latitude + radius, point.longitude + radius),
         )
-    }
-
-    companion object {
-        const val LOCATION_PERMISSION_REQUEST_CODE = 1000
     }
 }
