@@ -13,6 +13,7 @@ import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.naver.maps.geometry.LatLng
+import java.util.*
 
 class BottomSheetSelectFragment : Fragment() {
     private val homeMapViewModel: HomeMapViewModel by activityViewModels()
@@ -54,13 +55,13 @@ class BottomSheetSelectFragment : Fragment() {
             true,
             "자유산책",
             "자유산책입니다",
-            WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0)
+            WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0, Date())
         ),
         CourseItem(
             false,
             "코스산책",
             "코스산책입니다",
-            WalkRecord(fooRoute, fooAltitude, fooSpeed, 325, 5683, 900.0)),
+            WalkRecord(fooRoute, fooAltitude, fooSpeed, 325, 5683, 900.0, Date())),
         )
 
     }

@@ -37,9 +37,9 @@ class BottomSheetCompleteFragment(private val walkRecord: WalkRecord,
         shareButton.setOnClickListener{
             Log.e("공유하기버튼","누르지마!")
         }
-        val addToMyPathButton = rootView.findViewById<Button>(R.id.sheet_complete_addToMyPathButton)
+        val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
         if(walkType == HomeMapFragment.WALK_COURSE) {
-            val buttonLayout = rootView.findViewById<LinearLayout>(R.id.sheet_complete_buttonLayout)
+            val buttonLayout : LinearLayout = rootView.findViewById(R.id.sheet_complete_buttonLayout)
             buttonLayout.removeView(addToMyPathButton)
         } else {
             addToMyPathButton.setOnClickListener{

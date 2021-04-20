@@ -3,6 +3,7 @@ package com.example.ddubuck.ui.home.bottomSheet
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,6 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
         //산책 시작
         homeMapViewModel.courseWalkTrigger(true)
         homeMapViewModel.recorderTrigger(true)
-        homeMapViewModel.passProgressData(courseInfo.walkRecord.path)
 
         pauseButton.setOnClickListener{
             isPaused = if(isPaused) {
@@ -54,9 +54,9 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
         }
 
         val progressBar : LinearProgressIndicator = rootView.findViewById(R.id.sheet_course_progress_progressBar)
-        progressBar.max = courseInfo.walkRecord.path.count()-2
+        progressBar.max = courseInfo.walkRecord.path.count()-1
         homeMapViewModel.courseProgressPath.observe(viewLifecycleOwner,{ v->
-            progressBar.progress= courseInfo.walkRecord.path.count()-2 - v.count()-2
+            progressBar.progress= courseInfo.walkRecord.path.count() - (v.count()-1)
         })
 
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_course_progress_timeTv)

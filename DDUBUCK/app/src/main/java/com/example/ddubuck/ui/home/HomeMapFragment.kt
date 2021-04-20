@@ -18,13 +18,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.R
+import com.example.ddubuck.data.RetrofitClient
+import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
+import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
 import com.naver.maps.map.widget.LocationButtonView
 import java.text.DecimalFormat
 import java.util.*
@@ -81,6 +85,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
     //코스
     private var course = PathOverlay()
+    private var courseMarker = Marker()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -164,12 +169,18 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         userPath.map = null
         timer.cancel()
         course.map = null
+        courseMarker.map = null
         //기록 및 반환 코드
+        val walkTag = if(isCourseSelected)
+            WALK_COURSE
+        else
+            WALK_FREE
         parentFragmentManager.beginTransaction()
-                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(getWalkResult(), WALK_COURSE),
+                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(getWalkResult(), walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
                 .commit()
         showResultDialog(getWalkResult())
+        //RetrofitService().createPost(getWalkResult())
         //
         //------ 수 정 하 라 !!!!!!!!
         model.walkTime.value = 0
@@ -194,6 +205,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                 walkTime,
                 stepCount,
                 distance,
+                Date()
         )
     }
 
@@ -245,11 +257,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         isCourseSelected = true
     }
 
-    //코스 경로 삭제하기
-    private fun clearCoursePath() {
-        course.map = null
-        isCourseSelected = false
-    }
 
     override fun onResume() {
         super.onResume()
@@ -283,6 +290,9 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         course.color = Color.parseColor("#2798E7")
         course.width = 15
         course.outlineWidth = 0
+
+        //courseMarker.iconTintColor = Color.parseColor("#2798E7")
+        courseMarker.icon = MarkerIcons.BLUE
 
         userPath = PathOverlay()
 
@@ -326,7 +336,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                             if(isCourseInitialized) {
                                 //TODO 다음 경로 위치 알 수 있는 방법 고민 할 것
                                 if (course.map != null) {
-                                    checkCoursePointArrival(point, course.coords.first(), course.coords)
+                                    checkCoursePointArrival(point, course.coords)
                                 } else {
                                     course.map = this.map
                                 }
@@ -336,6 +346,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                                 v.add(v.last())
                                 v.add(v.last())
                                 course.coords=v
+                                courseMarker.position = v.first()
+                                courseMarker.map = this.map
                                 isCourseInitialized=true
                             }
                         }
@@ -408,14 +420,14 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     //산책 경로 도달 시
     private fun checkCoursePointArrival(
             currentPos: LatLng,
-            lastPos: LatLng,
             course: MutableList<LatLng>
     ) {
         //현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
         //현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리
         if (course.size > 2) {
-            if (isUserReachedToTarget(currentPos, lastPos)) {
+            if (isUserReachedToTarget(currentPos, course.first())) {
                 course.removeAt(0)
+                courseMarker.position = course.first()
                 model.passProgressData(course)
                 this.course.coords = course
             }
