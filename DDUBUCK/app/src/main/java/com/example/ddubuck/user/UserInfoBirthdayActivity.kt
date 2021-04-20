@@ -39,7 +39,7 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
 
         binding.nextTimeButton.setOnClickListener {
-            val dialog = NextTimeDialog("알림", "추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.", this)
+            val dialog = NextTimeDialog("알림", "추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.", this)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
         }
