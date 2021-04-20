@@ -2,9 +2,12 @@ package com.example.ddubuck
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.ddubuck.data.publicdata.RetrofitClient
+import com.example.ddubuck.data.publicdata.publicData
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
@@ -12,6 +15,9 @@ import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
@@ -51,6 +57,39 @@ class MainActivity : AppCompatActivity() {
         initToolBar()
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        RetrofitClient.instance.getRests().enqueue(object: Callback<publicData> {
+            override fun onResponse(call: Call<publicData>, response: Response<publicData>) {
+                val result = response.body()
+                result?.let {
+                    for (cafe in it.cafe) {
+                        println("카페 latitude: ${cafe.latitude} longitude: ${cafe.longitude}")
+                    }
+                    for(carFreeRoad in it.carFreeRoad){
+                        println("차 없는 도로 latitude: ${carFreeRoad.latitude} longitude: ${carFreeRoad.longitude} ")
+                    }
+                    for(petCafe in it.petCafe){
+                        println("애견카페 latitude: ${petCafe.latitude} longitude: ${petCafe.longitude} ")
+                    }
+                    for(petRestaurant in it.petRestaurant){
+                        println("반려견과 함께 latitude: ${petRestaurant.latitude} longitude: ${petRestaurant.longitude} ")
+                    }
+                    for(publicToilet in it.publicToilet){
+                        println("공공화장실 latitude: ${publicToilet.latitude} longitude: ${publicToilet.longitude} ")
+                    }
+                    for(restArea in it.restArea){
+                        println("공공쉼터 latitude: ${restArea.latitude} longitude: ${restArea.longitude} ")
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<publicData>, t: Throwable) {
+                t.message?.let {
+                    Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show()
+                } ?: Toast.makeText(this@MainActivity, "요청 에러", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
     private fun initFragmentManager() {
