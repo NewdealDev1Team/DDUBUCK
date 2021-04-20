@@ -24,6 +24,12 @@ class NextTimeDialog(private val title: String , private val message: String, pr
             dismiss()
         }
 
+        val okButton: TextView = findViewById(R.id.dialog_ok_button)
+        okButton.setOnClickListener{
+            owner.dialogCallback(true)
+            dismiss()
+        }
+
     }
 
 

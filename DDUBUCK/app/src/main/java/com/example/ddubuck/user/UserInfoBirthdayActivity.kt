@@ -36,30 +36,32 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
         }
         
         datePicker.init(1990, 0, 1, null)
-        val builder = AlertDialog.Builder(this)
 
         binding.nextTimeButton.setOnClickListener {
-            val dialog = NextTimeDialog("알림", "추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.", this)
+            val dialog = NextTimeDialog("알림", "추가 정보를 입력하지 않으면" + "\n"
+                    +"서비스 이용에 제한이 있을 수" + "\n"+ "있습니다.", this)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
         }
-    }
-    fun dialogCallback(flag: Boolean){
-        if(flag == true){
-            Toast.makeText(this,"삭제했습니다", Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(this,"취소했습니다", Toast.LENGTH_SHORT).show()
+
+        binding.toNextPageButton.setOnClickListener {
+            toNextPage()
         }
     }
-
-    private fun toNextPageForHeightWeight() {
-        val intent = Intent(this, UserInfoHeightWeight::class.java)
-        startActivity(intent)
-        finish()
+    fun dialogCallback(flag: Boolean){
+        if(flag) {
+            toHomePage()
+        }
     }
 
     private fun toHomePage() {
         val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun toNextPage() {
+        val intent = Intent(this, UserInfoHeightWeight::class.java)
         startActivity(intent)
         finish()
     }
