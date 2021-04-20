@@ -23,12 +23,13 @@
 
         </activity>
 
-        <activity android:name=".user.AdditionalUserInfo">
+        <activity android:name=".user.UserInfoBirthdayActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".user.UserInfoHeightWeight"/>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

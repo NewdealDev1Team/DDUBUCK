@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".user.AdditionalUserInfo">
+    tools:context=".user.UserInfoBirthdayActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/birthday_toolbar"
@@ -56,13 +56,13 @@
             android:layout_marginLeft="133dp"
             android:layout_marginRight="133dp"
             android:textSize="14dp"
-
             android:layout_marginTop="240dp"
             android:text="@string/inputLaterButtonText"
             android:textAlignment="center"
             android:textColor="#767676" />
 
         <Button
+            android:id="@+id/to_next_page"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
