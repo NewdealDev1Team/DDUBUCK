@@ -112,7 +112,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             if (v) {
                 //start
                 startRecording()
-                model.vibrate(true)
                 allowRecording = true
             } else {
                 //stop
@@ -368,10 +367,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                 }
             }
         }
-
-        map.setOnMapClickListener { p: PointF, l: LatLng ->
-            println(l)
-        }
     }
 
     //유저 경로 초기화
@@ -452,10 +447,10 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
     //비교용 영역 만들기
     private fun createBound(point: LatLng): LatLngBounds {
-        // 주어진 좌표에 좌측 상단 0.00005 +
-        // 우측 하단 0.00005 -
+        // 주어진 좌표에 좌측 상단 0.00007 +
+        // 우측 하단 0.00007 -
         // 두 점으로 사각형 구역을 만들어 반환
-        val radius = 0.00005
+        val radius = 0.00007
         return LatLngBounds(
                 LatLng(point.latitude - radius, point.longitude - radius),
                 LatLng(point.latitude + radius, point.longitude + radius),

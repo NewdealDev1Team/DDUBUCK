@@ -1,6 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.DDUBUCK" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!--Window ActionBar Issue-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <!-- Primary brand color. -->
         <!--  타이틀 바 전체 색      -->
         <item name="colorPrimary">@color/green</item>
