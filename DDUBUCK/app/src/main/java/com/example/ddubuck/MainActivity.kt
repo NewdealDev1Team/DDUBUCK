@@ -1,6 +1,8 @@
 package com.example.ddubuck
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -10,6 +12,8 @@ import android.widget.Toolbar
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
@@ -54,8 +58,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initFragmentManager()
-
         initToolBar()
+        initPermission()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             initVibrator()
         }
@@ -70,6 +74,29 @@ class MainActivity : AppCompatActivity() {
             vibrator.vibrate(VibrationEffect.createOneShot(100,85))
         })
     }
+
+
+    private fun initPermission() {
+        val list = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            listOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACTIVITY_RECOGNITION,
+                    Manifest.permission.VIBRATE
+            )
+        } else {
+            listOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.VIBRATE
+            )
+        }
+
+        ActivityCompat.requestPermissions(this, list.toTypedArray(), 1000)
+        //TODO 권한 거절 시 대응
+
+    }
+
 
     private fun initFragmentManager() {
         supportFragmentManager.beginTransaction().apply {

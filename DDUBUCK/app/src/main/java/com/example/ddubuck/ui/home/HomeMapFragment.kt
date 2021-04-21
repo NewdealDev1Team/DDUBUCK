@@ -266,15 +266,6 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
     }
 
 
-    override fun onResume() {
-        super.onResume()
-        sensorManager.registerListener(
-                this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),
-                SensorManager.SENSOR_DELAY_NORMAL
-        )
-    }
-
     override fun onSensorChanged(event: SensorEvent) {  // 가속도 센서 값이 바뀔때마다 호출됨
         if (allowRecording) {
             stepCount++
@@ -289,6 +280,13 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         if (!locationSource.isActivated) { // 권한 거부됨
             map.locationTrackingMode = LocationTrackingMode.None
         }
+
+        sensorManager.registerListener(
+                this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),
+                SensorManager.SENSOR_DELAY_NORMAL
+        )
+
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
         map.uiSettings.isLocationButtonEnabled = false
