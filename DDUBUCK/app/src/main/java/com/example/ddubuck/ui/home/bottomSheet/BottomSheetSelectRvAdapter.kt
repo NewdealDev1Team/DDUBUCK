@@ -52,7 +52,7 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
             } else {
                 itemView.setOnClickListener{selectItem(fm,i)}
                 title?.text = i.title
-                body?.text = "걸음수 : ${i.walkRecord.stepCount}\n거리 : ${i.walkRecord.distance}\n시간 : ${i.walkRecord.walkTime}"
+                body?.text = i.description
                 picture?.setImageResource(R.mipmap.ic_launcher)
             }
         }

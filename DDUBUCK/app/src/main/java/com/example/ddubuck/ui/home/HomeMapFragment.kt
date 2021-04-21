@@ -43,6 +43,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
 
     //산책 시작 여부
     //TODO STATE로 운용할 것
+
+    //TODO 진동, background operation
     var allowRecording = false
     var isRestarted = false
     var isCourseSelected = false
