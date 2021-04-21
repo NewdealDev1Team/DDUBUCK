@@ -7,12 +7,16 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.PointF
 import android.hardware.*
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -108,6 +112,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
             if (v) {
                 //start
                 startRecording()
+                model.vibrate(true)
                 allowRecording = true
             } else {
                 //stop
@@ -183,7 +188,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
                 .commit()
         showResultDialog(getWalkResult())
-        RetrofitService().createPost(getWalkResult())
+        //RetrofitService().createPost(getWalkResult())
 
         //
         //------ 수 정 하 라 !!!!!!!!
@@ -431,6 +436,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         if (course.size > 2) {
             if (isUserReachedToTarget(currentPos, course.first())) {
                 course.removeAt(0)
+                //진동
+                model.vibrate(true)
                 courseMarker.position = course.first()
                 model.passProgressData(course)
                 this.course.coords = course

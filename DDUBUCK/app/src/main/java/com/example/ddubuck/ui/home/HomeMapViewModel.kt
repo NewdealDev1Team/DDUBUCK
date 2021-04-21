@@ -53,5 +53,10 @@ class HomeMapViewModel : ViewModel() {
         position.value = v
     }
 
+    val vibrationControl = MutableLiveData<Boolean>()
+    fun vibrate(v:Boolean) {
+        vibrationControl.value = v
+    }
+
     //값 반환
 }

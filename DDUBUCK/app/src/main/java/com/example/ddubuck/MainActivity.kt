@@ -1,8 +1,13 @@
 package com.example.ddubuck
 
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.ddubuck.ui.home.bottomSheet.*
@@ -49,8 +54,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initFragmentManager()
         initToolBar()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            initVibrator()
+        }
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun initVibrator() {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        mapModel.vibrationControl.observe(this, {
+            vibrator.vibrate(VibrationEffect.createOneShot(100,85))
+        })
     }
 
     private fun initFragmentManager() {
