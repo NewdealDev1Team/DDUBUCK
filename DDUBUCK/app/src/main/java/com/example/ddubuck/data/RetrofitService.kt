@@ -1,15 +1,9 @@
 package com.example.ddubuck.data
 
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.ddubuck.data.home.Api
 import com.example.ddubuck.data.home.WalkRecord
+import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,12 +12,16 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient{
 
-    private const val BASE_URL = "http://3.37.6.181:3000/"
+    private const val BASE_URL = "http://3.37.6.181:3000/ "
 
     val instance: Api by lazy {
+        val gson = GsonBuilder()
+                .setLenient()
+                .create()
+
         val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
 
         retrofit.create(Api::class.java)
@@ -33,7 +31,14 @@ object RetrofitClient{
 class RetrofitService {
 
     fun createPost(walkRecord: WalkRecord){
-        RetrofitClient.instance.createPost("foo",walkRecord.toJson()).enqueue(object : Callback<WalkRecord> {
+        RetrofitClient.instance.createPost(
+                "foo",
+                walkRecord.path,
+                walkRecord.altitudes,
+                walkRecord.speeds,
+                walkRecord.walkTime,
+                walkRecord.stepCount,
+                walkRecord.distance, ).enqueue(object : Callback<WalkRecord> {
             override fun onResponse(
                 call: Call<WalkRecord>,
                 response: Response<WalkRecord>

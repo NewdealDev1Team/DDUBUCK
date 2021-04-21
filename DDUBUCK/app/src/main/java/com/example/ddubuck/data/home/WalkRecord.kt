@@ -39,8 +39,7 @@ data class WalkRecord (
     }
 
     fun toJson() : String {
-        return Gson().toJson(
-            WalkRecord(path, altitudes, speeds, walkTime, stepCount, distance, recordedDate))
+        return Gson().toJson(WalkRecord(path, altitudes, speeds, walkTime, stepCount, distance, recordedDate))
     }
 
 

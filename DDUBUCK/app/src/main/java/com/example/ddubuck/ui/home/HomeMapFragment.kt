@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.R
+import com.example.ddubuck.data.Api
 import com.example.ddubuck.data.RetrofitClient
 import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
@@ -180,7 +181,8 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
                 .commit()
         showResultDialog(getWalkResult())
-        //RetrofitService().createPost(getWalkResult())
+        RetrofitService().createPost(getWalkResult())
+
         //
         //------ 수 정 하 라 !!!!!!!!
         model.walkTime.value = 0
