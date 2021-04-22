@@ -4,8 +4,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.core.view.isEmpty
+import androidx.core.view.marginBottom
+import androidx.core.view.marginTop
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.databinding.HeightWeightInfoLayoutBinding
@@ -15,7 +20,7 @@ interface MoreUserInfo {
 
 }
 
-class UserInfoHeightWeightActivity: AppCompatActivity() {
+class UserInfoHeightWeightActivity : AppCompatActivity() {
     private lateinit var binding: HeightWeightInfoLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +64,20 @@ class UserInfoHeightWeightActivity: AppCompatActivity() {
         }
 
         binding.endMoreInfoButton.setOnClickListener {
-            toHomePage()
+
+            if (binding.weightTextFieldInput.text.toString().trim().isEmpty() && binding.heightTextFieldInput.text.toString().trim().isEmpty()) {
+                binding.weightTextField.error = "몸무게를 입력하세요."
+                binding.heightTextField.error = "키를 입력하세요."
+            } else if (binding.heightTextFieldInput.text.toString().trim().isEmpty()) {
+                binding.weightTextField.error = null
+                binding.heightTextField.error = "키를 입력하세요."
+
+            } else if (binding.weightTextFieldInput.text.toString().trim().isEmpty()) {
+                binding.weightTextField.error = "몸무게를 입력하세요."
+                binding.heightTextField.error = null
+            } else {
+                toHomePage()
+            }
         }
     }
 
