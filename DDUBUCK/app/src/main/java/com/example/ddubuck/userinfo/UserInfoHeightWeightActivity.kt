@@ -1,16 +1,11 @@
-package com.example.ddubuck.user
+package com.example.ddubuck.userinfo
 
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
-import androidx.core.view.isEmpty
-import androidx.core.view.marginBottom
-import androidx.core.view.marginTop
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.databinding.HeightWeightInfoLayoutBinding

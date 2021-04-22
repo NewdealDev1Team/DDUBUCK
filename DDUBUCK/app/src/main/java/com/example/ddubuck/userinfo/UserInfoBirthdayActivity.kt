@@ -1,4 +1,4 @@
-package com.example.ddubuck.user
+package com.example.ddubuck.userinfo
 
 import android.annotation.SuppressLint
 import android.content.Intent
