@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="200dp"
-android:orientation="vertical"
-tools:context="ui.mypage.MPChartActivity">
-
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/rvGraph"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey"
-    android:scrollbars="horizontal"/>
+    android:layout_height="200dp"
+    android:orientation="vertical"
+    tools:context=".ui.mypage.mpchart.MPChartActivity">
 
-<View
-    android:layout_width="2dp"
-    android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:background="@color/black"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGraph"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey"
+        android:scrollbars="horizontal"/>
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/black"/>
 </FrameLayout>
 
-<!-- RecyclerView를 생성해 layout 구성-->
+    <!-- RecyclerView를 생성해 layout 구성-->

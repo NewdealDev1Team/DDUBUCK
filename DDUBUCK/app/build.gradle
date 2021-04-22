@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'com.google.gms.google-services'
+    id 'kotlin-android-extensions'
 }
 
 android {
@@ -84,6 +85,11 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.4'
     //디자인 머테리어
     implementation 'com.google.android.material:material:1.0.0'
+
+    //mpAndroidChart 그래프
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
     //noinspection GradleCompatible
     implementation 'com.android.support:design:28.0.0'
     testImplementation 'junit:junit:4.+'

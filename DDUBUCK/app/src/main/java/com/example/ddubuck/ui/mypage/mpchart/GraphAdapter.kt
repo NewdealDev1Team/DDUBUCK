@@ -1,6 +1,5 @@
-package com.example.ddubuck.ui.mypage
+package com.example.ddubuck.ui.mypage.mpchart
 
-import android.os.Trace
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.mypage.GraphAdapter.*
+import com.example.ddubuck.ui.mypage.mpchart.GraphAdapter.*
 
 
 class GraphAdapter(data: List<WalkRecord>?) : RecyclerView.Adapter<ViewHolder?>() {

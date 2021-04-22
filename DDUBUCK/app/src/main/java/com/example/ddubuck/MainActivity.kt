@@ -1,7 +1,6 @@
 package com.example.ddubuck
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -20,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private val myPageFragment = MyPageFragment()
     private lateinit var activeFragment : Fragment
     private val mapModel: HomeMapViewModel by viewModels()
-
+//수치
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener{ item ->
         when(item.itemId){
             R.id.navigation_home -> {
@@ -73,12 +72,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
+    fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
         activeFragment = fragment
     }
 
-
+//    fun onFragmentChaneged(index: Int){
+//        if(index==0){
+//            supportFragmentManager.beginTransaction().replace(R.id.navigation_mypage,myPageFragment).commit()
+//        } else if(index==1){
+//            supportFragmentManager.beginTransaction().replace(R.id.WalkTimeFragment,walk)
+//        }
+//    }
 
 }

@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.mypage
+package com.example.ddubuck.ui.mypage.mpchart
 
 import android.os.Bundle
 import android.widget.FrameLayout
@@ -6,18 +6,14 @@ import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.databinding.ActivityMainBinding
 
 
 abstract class MPChartActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-
-    var rvGraph: RecyclerView = findViewById(R.id.rvGraph)
-    private lateinit var graphAdapter:GraphAdapter
+    lateinit var rvGraph: RecyclerView
+    lateinit var graphAdapter: GraphAdapter
 
     private val WalkRecord : ArrayList<WalkRecord> = arrayListOf()
     private val week = 7    //가로 : 7일
@@ -27,8 +23,7 @@ abstract class MPChartActivity : AppCompatActivity() {
 
     override fun onCreate(@Nullable savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       setContentView(R.layout.activity_m_p_chart)
-
+        setContentView(R.layout.activity_m_p_chart)
 
         val linearLayoutManager = LinearLayoutManager(this)
         linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL

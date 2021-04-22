@@ -18,23 +18,24 @@
         android:theme="@style/Theme.DDUBUCK"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
-        <activity android:name=".ui.mypage.MPChartActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+        <activity android:name=".ui.home.option.SelectOptionActivity">
+        </activity>
+        <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity">
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-
-
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".SecondActivity" />

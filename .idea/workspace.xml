@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="573aa10d-9ced-4cab-8a8f-6f219a902878" name="Default Changelist" comment="" />
+    <list default="true" id="573aa10d-9ced-4cab-8a8f-6f219a902878" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MPChartActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MPChartActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MyPageFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MyPageFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/layout/fragment_mypage.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/layout/fragment_mypage.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/values/strings.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
