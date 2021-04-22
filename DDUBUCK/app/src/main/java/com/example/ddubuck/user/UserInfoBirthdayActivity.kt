@@ -1,17 +1,12 @@
 package com.example.ddubuck.user
 
 import android.annotation.SuppressLint
-import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
-import android.transition.Slide
-import android.util.Log
-import android.view.Gravity
-import android.view.Window
 import android.widget.DatePicker
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
@@ -19,7 +14,6 @@ import com.example.ddubuck.databinding.BirthdayInfoLayoutBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import java.util.*
 
 class UserInfoBirthdayActivity : AppCompatActivity() {
     private lateinit var binding: BirthdayInfoLayoutBinding
@@ -42,11 +36,22 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
         }
 
 
-
         binding.nextTimeButton.setOnClickListener {
             val dialog = NextTimeDialog("알림", "추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.", this)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
+
+            val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
+            cancelButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+
+            val okButton: TextView = dialog.findViewById(R.id.dialog_ok_button)
+            okButton.setOnClickListener {
+                dialog.dismiss()
+                toHomePage()
+            }
         }
 
         binding.toNextPageButton.setOnClickListener {
@@ -69,12 +74,6 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
 
         }.addOnFailureListener{
             datePicker.init(1990, 0, 1, null)
-        }
-    }
-
-    fun dialogCallback(flag: Boolean) {
-        if (flag) {
-            toHomePage()
         }
     }
 
