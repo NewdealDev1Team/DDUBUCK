@@ -29,7 +29,6 @@ object RetrofitClient{
 }
 
 class RetrofitService {
-
     fun createPost(walkRecord: WalkRecord){
         RetrofitClient.instance.createPost(
                 "foo",

@@ -41,14 +41,13 @@ import kotlin.concurrent.timer
 
 
 
-class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragment(),
+class HomeMapFragment(private val fm: FragmentManager, private val owner: Activity) : Fragment(),
         OnMapReadyCallback, SensorEventListener {
 
 
     //산책 시작 여부
+    //TODO background operation
     //TODO STATE로 운용할 것
-
-    //TODO 진동, background operation
     var allowRecording = false
     var isRestarted = false
     var isCourseSelected = false
@@ -183,7 +182,7 @@ class HomeMapFragment(private val fm: FragmentManager, owner: Activity) : Fragme
         else
             WALK_FREE
         parentFragmentManager.beginTransaction()
-                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(getWalkResult(), walkTag),
+                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
                 .commit()
         showResultDialog(getWalkResult())
