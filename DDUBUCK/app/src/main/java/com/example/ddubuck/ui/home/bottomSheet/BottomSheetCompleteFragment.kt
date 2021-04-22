@@ -48,7 +48,6 @@ class BottomSheetCompleteFragment(
         shareButton.setOnClickListener{
             val intent = Intent(context, ShareActivity::class.java)
             startActivity(intent)
-            parentFragmentManager.popBackStack()
         }
         val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
         if(walkType == HomeMapFragment.WALK_COURSE) {
