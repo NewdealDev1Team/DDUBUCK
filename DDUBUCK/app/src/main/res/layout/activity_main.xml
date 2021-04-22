@@ -11,8 +11,8 @@
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
+        android:layout_height="56dp"
+            android:background="@color/white"
         app:titleTextColor="@color/black"
         android:elevation="5dp"
         android:id="@+id/main_toolbar"
@@ -22,8 +22,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="뚜벅뚜벅"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:textSize="18sp"
+            android:fontFamily="@font/mapohongdaefreedom"
             android:textColor="@color/black"
             android:id="@+id/main_toolbar_text"/>
     </androidx.appcompat.widget.Toolbar>
