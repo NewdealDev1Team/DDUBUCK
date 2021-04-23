@@ -13,6 +13,8 @@ import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCourseDetailFragment
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetFreeDetailFragment
+import java.util.*
+import kotlin.collections.ArrayList
 
 class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                                  private val fm: FragmentManager,):
@@ -43,14 +45,14 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                                 true,
                                 "자유산책",
                                 "자유산책입니다",
-                                WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0)),)}
+                                WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0, Date())),)}
                 title?.text = "자유산책"
                 body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
                 picture?.setImageResource(R.mipmap.ic_launcher)
             } else {
                 itemView.setOnClickListener{selectItem(fm,i)}
                 title?.text = i.title
-                body?.text = "걸음수 : ${i.walkRecord.stepCount}\n거리 : ${i.walkRecord.distance}\n시간 : ${i.walkRecord.walkTime}"
+                body?.text = i.description
                 picture?.setImageResource(R.mipmap.ic_launcher)
             }
         }

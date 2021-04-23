@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/next_time_dialog_style">
+        <shape android:shape="rectangle">
+            <corners android:radius="10dip" />
+            <solid android:color="#FFFFFF" />
+            <stroke
+                android:width="0dp"
+                android:color="#FFFFFF" />
+        </shape>
+    </item>
+</selector>

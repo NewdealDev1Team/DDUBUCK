@@ -1,8 +1,20 @@
 package com.example.ddubuck
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.util.Log
+import android.widget.Toolbar
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
@@ -48,9 +60,47 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initFragmentManager()
         initToolBar()
+        initPermission()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            initVibrator()
+        }
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun initVibrator() {
+        val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        mapModel.vibrationControl.observe(this, {
+            vibrator.vibrate(VibrationEffect.createOneShot(100,85))
+        })
+    }
+
+
+    private fun initPermission() {
+        val list = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            listOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACTIVITY_RECOGNITION,
+                    Manifest.permission.VIBRATE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        } else {
+            listOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.VIBRATE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        }
+
+        ActivityCompat.requestPermissions(this, list.toTypedArray(), 1000)
+        //TODO 권한 거절 시 대응
+
+    }
+
 
     private fun initFragmentManager() {
         supportFragmentManager.beginTransaction().apply {

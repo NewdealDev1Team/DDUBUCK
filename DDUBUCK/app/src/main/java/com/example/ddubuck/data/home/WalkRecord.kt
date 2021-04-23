@@ -3,20 +3,23 @@ package com.example.ddubuck.data.home
 import android.util.Log
 import com.google.gson.Gson
 import com.naver.maps.geometry.LatLng
+import java.util.*
 
 //var 로 바꿔놓은건 임시용이라서 그럼
 
 data class WalkRecord (
-    //경로 정보 모음
+        //경로 정보 모음
         val path : List<LatLng>,
         val altitudes : List<Float>,
         val speeds : List<Float>,
-    //경과시간 (sec)
+        //경과시간 (sec)
         val walkTime : Long,
-    //발걸음 수
+        //발걸음 수
         val stepCount : Int,
-    //거리 (m)
+        //거리 (m)
         val distance : Double,
+        //산책 기록이 기록된 날짜
+        val recordedDate : Date,
 ) {
 
     fun getCalorie(weight:Double) : Double {
@@ -35,11 +38,7 @@ data class WalkRecord (
         return (met * (3.5 * weight * (walkTime /60.0))) * 0.001 * 5
     }
 
-    //TODO WalkRecord To Json 구현하기
     fun toJson() : String {
-        return Gson().toJson(
-            WalkRecord(path, altitudes, speeds, walkTime, stepCount, distance))
+        return Gson().toJson(WalkRecord(path, altitudes, speeds, walkTime, stepCount, distance, recordedDate))
     }
-
-
 }

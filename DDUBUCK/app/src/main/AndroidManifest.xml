@@ -21,16 +21,12 @@
         <activity android:name=".ui.home.option.SelectOptionActivity">
         </activity>
         <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity">
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.DDUBUCK"></activity>
+        <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -38,7 +34,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity" />
-        <activity android:name=".SecondActivity" />
+        <activity android:name=".SecondActivity"></activity>
+
+        <activity android:name=".ui.ShareActivity">
+        </activity>
+        <activity android:name=".userinfo.UserInfoBirthdayActivity">
+
+        </activity>
+        <activity android:name=".userinfo.UserInfoHeightWeightActivity" />
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -56,5 +59,13 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="lz0an3yhfn" />
     </application>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 </manifest>

@@ -11,6 +11,11 @@
     <string name="OPEN_WEATHER_MAP_KEY">466c10bee7b689ae03ea8c7729ba0b1f</string>
     <string name="WEATHER_BASE_URL">http://api.openweathermap.org/</string>
     <string name="DUST_API_KEY">WUS%2FHlSHsC8A%2FVZZlz1%2F%2F4eSJiXcoh5gfR2EsoqdYGjhybgzun09KJKWZz%2BslJ85LzMZIIahT9UgeveNhce%2Fyw%3D%3D</string>
+    <string name="birthdayInputTitle">생년월일 입력</string>
+    <string name="inputLaterButtonText"><u>나중에 입력하기</u></string>
+    <string name="next_time_alert_message">추가 정보를 입력하지 않으면 서비스 이용에 제한이 있을 수 있습니다.</string>
+    <string name="body_info_text">칼로리 계산을 위해 키, 몸무게를 입력해주세요.</string>
+    <string name="more_info_end_button">추가정보 입력완료</string>
 
     <string name="work_time">산책 시간</string>
     <string name="cose_clear">코스 완주</string>

@@ -34,7 +34,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_free_progress_timeTv"
@@ -56,7 +56,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_free_progress_distanceTv"
@@ -78,7 +78,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/sheet_free_progress_calorieTv"
@@ -110,7 +110,7 @@
                 android:textColor="@color/green"
                 android:layout_weight="1"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/bottom_sheet_progress_button_activated"
+                android:background="@drawable/sheet_button_activated"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
             <android.widget.Button
@@ -119,7 +119,7 @@
                 android:textColor="@color/white"
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/bottom_sheet_progress_button_deactivated"
+                android:background="@drawable/sheet_button_deactivated"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </LinearLayout>
