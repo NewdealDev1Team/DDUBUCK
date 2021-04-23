@@ -1,13 +1,8 @@
 package com.example.ddubuck.ui.home
 
-import android.util.Log
-import android.widget.TextView
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.naver.maps.geometry.LatLng
-import java.util.*
-import kotlin.concurrent.timer
 
 
 class HomeMapViewModel : ViewModel() {
@@ -25,6 +20,11 @@ class HomeMapViewModel : ViewModel() {
     val isCourseWalk = MutableLiveData<Boolean>()
     fun courseWalkTrigger(v:Boolean) {
         isCourseWalk.value=v
+    }
+
+    val courseProgressPath = MutableLiveData<List<LatLng>>()
+    fun passProgressData(v:List<LatLng>) {
+        courseProgressPath.value = v
     }
 
     val coursePath = MutableLiveData<List<LatLng>>()
@@ -53,6 +53,10 @@ class HomeMapViewModel : ViewModel() {
         position.value = v
     }
 
-    //값 반환
+    val vibrationControl = MutableLiveData<Boolean>()
+    fun vibrate(v:Boolean) {
+        vibrationControl.value = v
+    }
 
+    //값 반환
 }

@@ -17,7 +17,7 @@ import java.text.DecimalFormat
 
 class BottomSheetFreeProgressFragment: Fragment() {
     //뷰모델
-    private val model: HomeMapViewModel by activityViewModels()
+    private val homeMapViewModel: HomeMapViewModel by activityViewModels()
     private var isPaused : Boolean = false
 
     //메모리 누수 경고!
@@ -29,25 +29,25 @@ class BottomSheetFreeProgressFragment: Fragment() {
         val endButton : Button = rootView.findViewById(R.id.sheet_free_progress_endButton)
 
         //산책 시작
-        model.recorderTrigger(true)
-        model.courseWalkTrigger(false)
+        homeMapViewModel.courseWalkTrigger(false)
+        homeMapViewModel.recorderTrigger(true)
 
         pauseButton.setOnClickListener{
             isPaused = if(isPaused) {
                 //재개
-                model.pauseTrigger(false)
+                homeMapViewModel.pauseTrigger(false)
                 pauseButton.text="일시정지"
                 pauseButton.setTextColor(Color.parseColor("#3DAB5B"))
-                pauseButton.setBackgroundResource(R.drawable.bottom_sheet_progress_button_activated)
+                pauseButton.setBackgroundResource(R.drawable.sheet_button_activated)
 
                 //ui변경
                 false
             } else {
                 //pause
-                model.pauseTrigger(true)
+                homeMapViewModel.pauseTrigger(true)
                 pauseButton.text="시작하기"
                 pauseButton.setTextColor(Color.WHITE)
-                pauseButton.setBackgroundResource(R.drawable.bottom_sheet_progress_button_deactivated)
+                pauseButton.setBackgroundResource(R.drawable.sheet_button_deactivated)
                 //ui변경
                 true
             }
@@ -59,17 +59,17 @@ class BottomSheetFreeProgressFragment: Fragment() {
 
 
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_free_progress_timeTv)
-        model.walkTime.observe(viewLifecycleOwner,{v->
+        homeMapViewModel.walkTime.observe(viewLifecycleOwner,{ v->
             walkTimeTv.text=DateUtils.formatElapsedTime(v)
         })
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_free_progress_distanceTv)
         val distanceForm = DecimalFormat("#.## m")
-        model.walkDistance.observe(viewLifecycleOwner,{v->
+        homeMapViewModel.walkDistance.observe(viewLifecycleOwner,{ v->
             distanceTv.text=distanceForm.format(v)
         })
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_free_progress_calorieTv)
         val calorieForm = DecimalFormat("#.## kcal")
-        model.walkCalorie.observe(viewLifecycleOwner,{v->
+        homeMapViewModel.walkCalorie.observe(viewLifecycleOwner,{ v->
             calorieTv.text=calorieForm.format(v)
         })
         return rootView
@@ -82,7 +82,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        model.recorderTrigger(false)
+        homeMapViewModel.recorderTrigger(false)
     }
 
 }

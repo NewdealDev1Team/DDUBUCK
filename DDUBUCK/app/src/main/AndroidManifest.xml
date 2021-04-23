@@ -17,6 +17,7 @@
         tools:targetApi="n">
 
         <activity android:name=".MainActivity"
+            android:theme="@style/Theme.DDUBUCK"
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".login.LoginActivity">
@@ -25,7 +26,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SecondActivity">
+        </activity>
 
+        <activity android:name=".ui.ShareActivity">
         <activity android:name=".userinfo.UserInfoBirthdayActivity">
 
         </activity>
@@ -49,4 +53,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
 </manifest>
