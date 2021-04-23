@@ -26,9 +26,12 @@ class WeatherViewModel : ViewModel() {
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
     val uvRaysInfo = liveData(Dispatchers.IO) {
-        val date = LocalDateTime.now().format(ofPattern("yyyyMMddkk")).toString()
-        val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo(OPENAPI_KEY, 1, 1,  "JSON", "1100000000", date)
-        emit(retrivedUVRaysInfo)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val date = LocalDateTime.now().format(ofPattern("yyyyMMddkk")).toString()
+            val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo(OPENAPI_KEY, 1, 1,  "JSON", "1100000000", date)
+            emit(retrivedUVRaysInfo)
+        }
+
     }
 
     val dustInfo = liveData(Dispatchers.IO) {
