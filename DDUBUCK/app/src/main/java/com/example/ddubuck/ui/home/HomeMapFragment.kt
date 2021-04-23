@@ -185,7 +185,16 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
                 .commit()
-        showResultDialog(getWalkResult())
+        /*
+        산책 종료 시 반환할 값 정의
+        1.
+        2.
+        3.
+        4.
+        5.
+        6.
+
+        */
         //RetrofitService().createPost(getWalkResult())
 
         //
@@ -207,8 +216,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private fun getWalkResult(): WalkRecord {
         return WalkRecord(
                 userPath.coords,
-                altitudes,
-                speeds,
+                altitudes.average(),
+                speeds.average(),
                 walkTime,
                 stepCount,
                 distance,
@@ -236,26 +245,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         addCoursePath(p)
     }
 
-
-    //언젠가 사라질 다이알로그 띄우기
-    private fun showResultDialog(walkRecord: WalkRecord) {
-        val dlg: AlertDialog.Builder = AlertDialog.Builder(
-                context,
-                android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
-        )
-        dlg.setTitle("운동 완료") //제목
-        dlg.setMessage(
-                "고도 편차: ${altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
-                        "지점 갯수: ${userPath.coords.size}\n" +
-                        "평균속도: ${speeds.average()}\n" +
-                        "발걸음 수: ${stepCount}\n" +
-                        "이동거리: ${DecimalFormat("#.## m").format(distance)}\n" +
-                        "경과시간: ${DateUtils.formatElapsedTime(walkTime)}\n" +
-                        "소모 칼로리: ${DecimalFormat("#.## kcal").format(walkRecord.getCalorie(65.0))}"
-        ) // 메시지
-        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which -> })
-        dlg.show()
-    }
 
     //코스 경로 추가하기
     private fun addCoursePath(p: List<LatLng>) {

@@ -22,6 +22,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.PhotoEditorView
 import ja.burhanrashid52.photoeditor.SaveSettings
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 class ShareActivity : AppCompatActivity() {
@@ -51,7 +52,7 @@ class ShareActivity : AppCompatActivity() {
         val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
 
         mPhotoEditorView.source.setImageResource(R.drawable.weather_high)
-
+        dispatchTakePictureIntent()
         val mTextRobotoTf = ResourcesCompat.getFont(this, R.font.mapohongdaefreedom)
 
         mPhotoEditor = PhotoEditor.Builder(this, mPhotoEditorView)
@@ -69,9 +70,11 @@ class ShareActivity : AppCompatActivity() {
 
     private fun initButtons() {
         val cancelButton : Button = findViewById(R.id.share_buttons_cancel)
+
         cancelButton.setOnClickListener{
             finish()
         }
+
         val confirmButton : Button = findViewById(R.id.share_buttons_confirm)
 
 
@@ -108,12 +111,35 @@ class ShareActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(data!=null) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                val imageBitmap = data.extras!!.get("data") as Bitmap
+                val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
+                mPhotoEditorView.source.setImageBitmap(imageBitmap)
+            }
+        }
+
+    }
+
+
     fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
         return Uri.parse(path.toString())
     }
+
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
 
     //뒤로가기 버튼 눌렀을 때 작동
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -124,6 +150,11 @@ class ShareActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    companion object{
+        const val REQUEST_IMAGE_CAPTURE = 1
     }
 
 }

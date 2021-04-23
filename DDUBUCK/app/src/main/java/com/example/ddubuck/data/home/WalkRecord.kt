@@ -9,9 +9,12 @@ import java.util.*
 
 data class WalkRecord (
         //경로 정보 모음
+        //경로
         val path : List<LatLng>,
-        val altitudes : List<Float>,
-        val speeds : List<Float>,
+        //고도평균
+        val altitude : Double,
+        //
+        val speed : Double,
         //경과시간 (sec)
         val walkTime : Long,
         //발걸음 수
@@ -20,11 +23,21 @@ data class WalkRecord (
         val distance : Double,
         //산책 기록이 기록된 날짜
         val recordedDate : Date,
+        //이름
+        //바디
+        //해시태그
+        /*
+        paths=[
+            {x:123,y:123},{x:123,y:123}
+        ]
+        이 형식으로 보내기
+
+         */
+
 ) {
 
     fun getCalorie(weight:Double) : Double {
         //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
-        val speed = speeds.average()
         var met = when(speed) {
             in 0.0..0.09 -> 0.0
             in 0.0..4.0 -> 2.0 // 느리게 걷기
@@ -39,6 +52,6 @@ data class WalkRecord (
     }
 
     fun toJson() : String {
-        return Gson().toJson(WalkRecord(path, altitudes, speeds, walkTime, stepCount, distance, recordedDate))
+        return Gson().toJson(WalkRecord(path, altitude, speed, walkTime, stepCount, distance, recordedDate))
     }
 }
