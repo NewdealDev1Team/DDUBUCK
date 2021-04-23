@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,12 +9,12 @@
     tools:context=".ui.ShareActivity">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/share_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/white"
         app:titleTextColor="@color/black"
         android:elevation="5dp"
-        android:id="@+id/share_toolbar"
         app:title="공유하기"
         app:layout_constraintTop_toTopOf="parent">
     </androidx.appcompat.widget.Toolbar>
@@ -22,20 +22,41 @@
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/photoEditorView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/share_buttons"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/share_toolbar"/>
     <LinearLayout
+        android:id="@+id/share_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2"
-        android:orientation="horizontal">
-        <Button
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+        <android.widget.Button
+            android:id="@+id/share_buttons_cancel"
+            android:text="취소"
+            android:textSize="14sp"
+            android:textColor="#767676"
+            android:textStyle="bold"
+            android:background="@drawable/share_buttons_cancel"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"/>
-        <Button
+        <android.widget.Button
+            android:id="@+id/share_buttons_confirm"
+            android:text="확인"
+            android:textSize="14sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@drawable/share_buttons_confirm"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"/>
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

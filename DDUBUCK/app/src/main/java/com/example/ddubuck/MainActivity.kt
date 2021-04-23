@@ -82,13 +82,15 @@ class MainActivity : AppCompatActivity() {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACTIVITY_RECOGNITION,
-                    Manifest.permission.VIBRATE
+                    Manifest.permission.VIBRATE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         } else {
             listOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.VIBRATE
+                    Manifest.permission.VIBRATE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         }
 
