@@ -59,11 +59,11 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
         }
     }
 
-    fun getDefaultBirthday() {
+    private fun getDefaultBirthday() {
         val datePicker: DatePicker = findViewById(R.id.birthdaySpinner)
 
         database = Firebase.database.reference
-        database.child("users").child("Naver").child("14116137").child("birthday").get().addOnSuccessListener {
+        database.child("users").child("Kakao").child("1677486124").child("birthday").get().addOnSuccessListener {
             var birthday = (it.value as String).split("-")
             if (birthday[0] != "null") {
                 datePicker.init(birthday[0].toInt(), birthday[1].toInt()-1, birthday[2].toInt(), null)
@@ -71,20 +71,22 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
                 datePicker.init(1990, birthday[1].toInt()-1, birthday[2].toInt(), null)
 
             }
-
         }.addOnFailureListener{
             datePicker.init(1990, 0, 1, null)
         }
     }
 
     private fun toHomePage() {
-
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
 
     private fun toNextPage() {
+
+        val datePicker: DatePicker = findViewById(R.id.birthdaySpinner)
+
+        saveBirthday(datePicker.year, datePicker.month + 1, datePicker.dayOfMonth)
         val intent = Intent(this, UserInfoHeightWeightActivity::class.java)
         startActivity(intent)
         overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out)
@@ -92,7 +94,8 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
     }
 
     private fun saveBirthday(year: Int, month: Int, day: Int) {
-
+        val birthday = "$year-$month-$day"
+        database.child("users").child("Kakao").child("1677486124").child("birthday").setValue(birthday)
     }
 
 }

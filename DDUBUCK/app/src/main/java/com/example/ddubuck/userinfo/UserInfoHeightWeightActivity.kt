@@ -1,5 +1,6 @@
 package com.example.ddubuck.userinfo
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.databinding.HeightWeightInfoLayoutBinding
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 interface MoreUserInfo {
@@ -17,6 +21,7 @@ interface MoreUserInfo {
 
 class UserInfoHeightWeightActivity : AppCompatActivity() {
     private lateinit var binding: HeightWeightInfoLayoutBinding
+    private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +76,7 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
                 binding.weightTextField.error = "몸무게를 입력하세요."
                 binding.heightTextField.error = null
             } else {
+                saveHeightWeight(binding.heightTextFieldInput.text.toString().toFloat() , binding.weightTextFieldInput.text.toString().toFloat())
                 toHomePage()
             }
         }
@@ -80,6 +86,15 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    // 키와 몸무게 정보 저장
+    private fun saveHeightWeight(height: Float, weight: Float) {
+        database = Firebase.database.reference
+        database.child("users").child("Kakao").child("1677486124").child("height").setValue(height)
+        database.child("users").child("Kakao").child("1677486124").child("weight").setValue(weight)
+
+
     }
 
 

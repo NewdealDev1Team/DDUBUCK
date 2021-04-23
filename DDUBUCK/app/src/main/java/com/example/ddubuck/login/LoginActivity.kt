@@ -120,7 +120,13 @@ class LoginActivity : AppCompatActivity() {
                         database.child("users").child("Kakao")
                         database.child("users").child("Kakao").child(user.id.toString())
                         database.child("users").child("Kakao").child(user.id.toString()).child("username").setValue(user.kakaoAccount?.profile?.nickname)
-                        database.child("users").child("Kakao").child(user.id.toString()).child("birthday").setValue( user.kakaoAccount?.birthyear+ "-" + user.kakaoAccount?.birthday.toString().substring(0,2) + "-" + user.kakaoAccount?.birthday.toString().substring(2,4) )
+
+                        if (user.kakaoAccount?.birthyear == null) {
+                            database.child("users").child("Kakao").child(user.id.toString()).child("birthday").setValue( "1990" + "-" + user.kakaoAccount?.birthday.toString().substring(0,2) + "-" + user.kakaoAccount?.birthday.toString().substring(2,4) )
+                        } else {
+                            database.child("users").child("Kakao").child(user.id.toString()).child("birthday").setValue( user.kakaoAccount?.birthyear+ "-" + user.kakaoAccount?.birthday.toString().substring(0,2) + "-" + user.kakaoAccount?.birthday.toString().substring(2,4) )
+
+                        }
 
                     }
                 }
@@ -249,10 +255,6 @@ class LoginActivity : AppCompatActivity() {
                             call: Call<UserInfo>,
                             response: Response<UserInfo>
                     ) {
-                        Log.d("결과", "성공 : ${response.raw()}")
-                        println("헤더 : " + response.headers())
-                        println("바디 : " + response.body()?.response)
-
                         val user = response.body()?.response
                         val userInfo = emptyArray<String>()
                         if (user != null) {
