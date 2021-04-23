@@ -14,8 +14,8 @@ interface Api {
     fun createPost(
             @Field("userKey")userKey:String,
             @Field("path") path:List<LatLng>,
-            @Field("altitudes") altitudes:List<Float>,
-            @Field("speeds") speeds:List<Float>,
+            @Field("altitude") altitude:Double,
+            @Field("speed") speed:Double,
             @Field("walkTime") walkTime:Long,
             @Field("stepCount") stepCount:Int,
             @Field("distance") distance:Double,

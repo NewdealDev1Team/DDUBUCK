@@ -30,7 +30,7 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_course_detail_distanceTv)
         distanceTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.distance)
         val elevationTv : TextView = rootView.findViewById(R.id.sheet_course_detail_elevationTv)
-        elevationTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.altitudes.average())
+        elevationTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.altitude)
         val pictureIv : ImageView = rootView.findViewById(R.id.sheet_course_detail_pictureIv)
         pictureIv.setImageResource(R.mipmap.ic_launcher)
         val startButton : Button = rootView.findViewById(R.id.sheet_course_detail_startButton)

@@ -41,9 +41,9 @@ class BottomSheetCompleteFragment(
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_complete_calorieTv)
         calorieTv.text = DecimalFormat("#.##kcal").format(walkRecord.getCalorie(65.0))
         val averageSpeedTv : TextView = rootView.findViewById(R.id.sheet_complete_averageSpeedTv)
-        averageSpeedTv.text = DecimalFormat("#.##km/h").format(walkRecord.speeds.average())
+        averageSpeedTv.text = DecimalFormat("#.##km/h").format(walkRecord.speed)
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
-        averageAltitudeTv.text = DecimalFormat("#.##m").format(walkRecord.altitudes.average())
+        averageAltitudeTv.text = DecimalFormat("#.##m").format(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
         shareButton.setOnClickListener{
             val intent = Intent(context, ShareActivity::class.java)

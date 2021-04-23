@@ -33,8 +33,8 @@ class RetrofitService {
         RetrofitClient.instance.createPost(
                 "foo",
                 walkRecord.path,
-                walkRecord.altitudes,
-                walkRecord.speeds,
+                walkRecord.altitude,
+                walkRecord.speed,
                 walkRecord.walkTime,
                 walkRecord.stepCount,
                 walkRecord.distance, ).enqueue(object : Callback<WalkRecord> {

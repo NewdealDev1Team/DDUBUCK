@@ -45,7 +45,7 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                                 true,
                                 "자유산책",
                                 "자유산책입니다",
-                                WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0, Date())),)}
+                                WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0, Date())),)}
                 title?.text = "자유산책"
                 body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
                 picture?.setImageResource(R.mipmap.ic_launcher)
