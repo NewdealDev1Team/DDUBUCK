@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
