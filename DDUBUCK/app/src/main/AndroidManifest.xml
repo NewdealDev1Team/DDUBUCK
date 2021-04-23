@@ -37,10 +37,11 @@
 
         <activity android:name=".ui.ShareActivity">
         </activity>
-        <activity android:name=".userinfo.UserInfoBirthdayActivity">
+        <activity android:name=".userinfo.UserInfoBirthdayActivity"
+            android:screenOrientation="portrait"/>
 
-        </activity>
-        <activity android:name=".userinfo.UserInfoHeightWeightActivity" />
+        <activity android:name=".userinfo.UserInfoHeightWeightActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
