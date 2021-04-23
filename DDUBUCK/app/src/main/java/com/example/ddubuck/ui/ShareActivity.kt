@@ -58,9 +58,10 @@ class ShareActivity : AppCompatActivity() {
             .setPinchTextScalable(true)
             .setDefaultTextTypeface(mTextRobotoTf)
             .build()
-        //mPhotoEditorView.setBackgroundColor(Color.BLACK)
 
-        mPhotoEditor.addText("두둥탁두둥탁두둥탁", Color.BLACK)
+
+
+        mPhotoEditor.addText("브랜치를파즈아", Color.BLACK)
 
         isFileLoaded = true
 
