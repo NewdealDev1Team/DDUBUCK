@@ -119,7 +119,10 @@ class WeatherFragment : Fragment(), APICallback {
         val uvRays = uvRays.response.body.items.item[0].today
 
         // 통합 대기 환경 지수
-        val dustInfo = dust.response.body.items[0].khaiValue?.toInt()
+        val dustInfo = dust.response.body.items[0].khaiValue
+
+
+
         var dustString = ""
 
         when (weatherID) {
@@ -148,25 +151,31 @@ class WeatherFragment : Fragment(), APICallback {
         }
 
 
+        if (dustInfo != "null" && dustInfo != "-") {
+            when (dustInfo!!.toInt()) {
+                in 0..50 -> {
+                    weatherScore += 4
+                    dustString = "좋음"
+                }
+                in 51..101 -> {
+                    weatherScore += 3
+                    dustString = "보통"
+                }
+                in 101..250 -> {
+                    weatherScore += 2
+                    dustString = "나쁨"
+                }
+                in 251..500 -> {
+                    weatherScore += 1
+                    dustString = "아주 나쁨"
+                }
 
-        when (dustInfo) {
-            in 0..50 -> {
-                weatherScore += 4
-                dustString = "좋음"
             }
-            in 51..101 -> {
-                weatherScore += 3
-                dustString = "보통"
-            }
-            in 101..250 -> {
-                weatherScore += 2
-                dustString = "나쁨"
-            }
-            in 251..500 -> {
-                weatherScore += 1
-                dustString = "아주 나쁨"
-            }
+
+        } else {
+            dustString += "점검중"
         }
+
 
         when (weatherScore) {
             in 10..12 -> {
