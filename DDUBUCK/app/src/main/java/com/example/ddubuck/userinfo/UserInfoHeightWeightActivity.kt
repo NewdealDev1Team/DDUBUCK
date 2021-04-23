@@ -14,11 +14,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
-interface MoreUserInfo {
-
-}
-
 class UserInfoHeightWeightActivity : AppCompatActivity() {
     private lateinit var binding: HeightWeightInfoLayoutBinding
     private lateinit var database: DatabaseReference
