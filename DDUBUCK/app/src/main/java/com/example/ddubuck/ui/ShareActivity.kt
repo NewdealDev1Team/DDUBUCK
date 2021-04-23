@@ -62,7 +62,7 @@ class ShareActivity : AppCompatActivity() {
 
 
 
-        mPhotoEditor.addText("브랜치를파즈아", Color.BLACK)
+        //TODO bundle 받기
 
         isFileLoaded = true
 

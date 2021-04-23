@@ -47,6 +47,10 @@ class BottomSheetCompleteFragment(
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
         shareButton.setOnClickListener{
             val intent = Intent(context, ShareActivity::class.java)
+            val recordedValue:Array<String> = arrayOf(DateUtils.formatElapsedTime(walkRecord.walkTime),
+                    DecimalFormat("#.##m").format(walkRecord.distance),
+                    DecimalFormat("#걸음").format(walkRecord.stepCount),)
+            intent.putExtra("recordedValue", recordedValue)
             startActivity(intent)
         }
         val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
