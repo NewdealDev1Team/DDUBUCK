@@ -1,11 +1,10 @@
-package com.example.ddubuck.ui
+package com.example.ddubuck.ui.share
 
 import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -16,13 +15,13 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import ja.burhanrashid52.photoeditor.OnSaveBitmap
 import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.PhotoEditorView
 import ja.burhanrashid52.photoeditor.SaveSettings
 import java.io.ByteArrayOutputStream
-import java.io.File
 
 
 class ShareActivity : AppCompatActivity() {
@@ -35,6 +34,7 @@ class ShareActivity : AppCompatActivity() {
         initToolBar()
         initPhotoEditor()
         initButtons()
+        initRecyclerView()
     }
 
     private fun initToolBar() {
@@ -59,13 +59,22 @@ class ShareActivity : AppCompatActivity() {
             .setPinchTextScalable(true)
             .setDefaultTextTypeface(mTextRobotoTf)
             .build()
-
+        mPhotoEditor.addText("aaaa", Color.WHITE)
 
 
         //TODO bundle 받기
 
         isFileLoaded = true
 
+    }
+
+    private fun initRecyclerView() {
+        val recordedValue : Array<String> = intent.getStringArrayExtra("recordedValue") as Array<String>
+        val shareSelectRv : RecyclerView = findViewById(R.id.share_selectRV)
+        val mAdapter = ShareSelectRvAdapter(recordedValue) { v ->
+            mPhotoEditor.addText(v, Color.WHITE)
+        }
+        shareSelectRv.adapter = mAdapter
     }
 
     private fun initButtons() {
@@ -76,7 +85,6 @@ class ShareActivity : AppCompatActivity() {
         }
 
         val confirmButton : Button = findViewById(R.id.share_buttons_confirm)
-
 
         confirmButton.setOnClickListener{
             if(isFileLoaded) {

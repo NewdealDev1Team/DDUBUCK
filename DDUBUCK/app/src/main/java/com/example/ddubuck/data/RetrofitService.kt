@@ -3,6 +3,7 @@ package com.example.ddubuck.data
 
 import android.util.Log
 import com.example.ddubuck.data.home.WalkRecord
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import retrofit2.Call
 import retrofit2.Callback
@@ -11,9 +12,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient{
-    //http://3.37.6.181:3000/set/User/RecordData
-    private const val BASE_URL = "http://3.37.6.181:3000/ "
-
+    //private const val BASE_URL = "http://3.37.6.181:3000/"
+    private const val BASE_URL = "https://ptsv2.com/t/hajl1-1619415607/"
     val instance: Api by lazy {
         val gson = GsonBuilder()
                 .setLenient()
@@ -28,16 +28,18 @@ object RetrofitClient{
     }
 }
 
+
 class RetrofitService {
     fun createPost(walkRecord: WalkRecord){
-        RetrofitClient.instance.createPost(
-                "foo",
-                walkRecord.pathToMap(),
-                walkRecord.altitude,
-                walkRecord.speed,
-                walkRecord.walkTime,
-                walkRecord.stepCount,
-                walkRecord.distance, ).enqueue(object : Callback<WalkRecord> {
+        val map = hashMapOf<String, Any>()
+        map["altitude"] = walkRecord.altitude
+        map["speed"] = walkRecord.speed
+        map["stepCount"] = walkRecord.stepCount
+        map["distance"] = walkRecord.distance
+        map["path"] = Gson().toJson(walkRecord.pathToMap())
+
+        RetrofitClient.instance.createPost(map)
+                .enqueue(object : Callback<WalkRecord> {
             override fun onResponse(
                 call: Call<WalkRecord>,
                 response: Response<WalkRecord>

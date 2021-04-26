@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.ShareActivity">
+    tools:context=".ui.share.ShareActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/share_toolbar"
@@ -18,17 +18,21 @@
         app:title="공유하기"
         app:layout_constraintTop_toTopOf="parent">
     </androidx.appcompat.widget.Toolbar>
+
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/share_buttons"
+        app:layout_constraintBottom_toTopOf="@+id/share_selectRV"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/share_toolbar">
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black"/>
+            android:background="#FFFFFF" />
+
         <ja.burhanrashid52.photoeditor.PhotoEditorView
             android:id="@+id/photoEditorView"
             android:layout_width="match_parent"
@@ -36,8 +40,19 @@
             app:layout_constraintBottom_toTopOf="@+id/share_buttons"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/share_toolbar"/>
+            app:layout_constraintTop_toBottomOf="@id/share_toolbar" />
     </FrameLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/share_selectRV"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:background="#444444"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/share_select_item"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/share_buttons" />
 
     <LinearLayout
         android:id="@+id/share_buttons"

@@ -1,9 +1,16 @@
 package com.example.ddubuck.data.home
 
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.annotations.JsonAdapter
 import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
+import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
+import kotlin.collections.HashMap
 
 //var 로 바꿔놓은건 임시용이라서 그럼
 
@@ -54,12 +61,22 @@ data class WalkRecord(
     fun pathToMap() : List<HashMap<String,Any>> {
         val list : MutableList<HashMap<String,Any>> = mutableListOf()
         path.forEach { v ->
-            val map = mutableMapOf<String,Any>()
+            val map =  hashMapOf<String, Any>()
             map["x"] = v.latitude
             map["y"] = v.longitude
-            list.add(map as HashMap<String, Any>)
+            list.add(map)
         }
         return list
     }
-}
 
+    fun getJson() : JsonElement {
+        val json = JsonObject()
+        json.addProperty("path", Gson().toJson(pathToMap()))
+        json.addProperty("altitude", altitude)
+        json.addProperty("speed", speed)
+        json.addProperty("walkTime", walkTime)
+        json.addProperty("stepCount", stepCount)
+        json.addProperty("distance", distance)
+        return json
+    }
+}

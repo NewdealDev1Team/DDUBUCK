@@ -32,6 +32,7 @@ import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import com.naver.maps.map.widget.LocationButtonView
@@ -80,7 +81,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var isLocationFirstChanged = false
 
     //측정 관련 변수
-    private var userPath = PathOverlay()
+    private var userPath = PolylineOverlay()
     private var altitudes: MutableList<Float> = mutableListOf()
     private var speeds: MutableList<Float> = mutableListOf()
     private var walkTime: Long = 0
@@ -90,7 +91,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var burnedCalorie: Double = 0.0
 
     //코스
-    private var course = PathOverlay()
+    private var course = PolylineOverlay()
     private var courseMarker = Marker()
 
     override fun onCreateView(
@@ -185,24 +186,13 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
                 .commit()
-        /*
-        산책 종료 시 반환할 값 정의
-        1.
-        2.
-        3.
-        4.
-        5.
-        6.
-
-        */
         //RetrofitService().createPost(getWalkResult())
+        //Log.e("aa", getWalkResult().getJson().toString())
 
-        //
-        //------ 수 정 하 라 !!!!!!!!
         model.walkTime.value = 0
         model.walkCalorie.value = 0.0
         model.walkDistance.value = 0.0
-        //-------
+
         altitudes.clear()
         speeds.clear()
         stepCount = 0
@@ -283,12 +273,15 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         course.color = Color.parseColor("#2798E7")
         course.width = 15
-        course.outlineWidth = 0
+        course.capType = PolylineOverlay.LineCap.Round
+        course.joinType = PolylineOverlay.LineJoin.Round
+
+        userPath.capType = PolylineOverlay.LineCap.Round
+        userPath.joinType = PolylineOverlay.LineJoin.Round
+
 
         //courseMarker.iconTintColor = Color.parseColor("#2798E7")
         courseMarker.icon = MarkerIcons.BLUE
-
-        userPath = PathOverlay()
 
         model.coursePath.observe(viewLifecycleOwner, { v->
             cameraToCourse(v)

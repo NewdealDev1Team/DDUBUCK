@@ -41,7 +41,7 @@
         </activity>
         <activity android:name=".SecondActivity"></activity>
 
-        <activity android:name=".ui.ShareActivity">
+        <activity android:name=".ui.share.ShareActivity">
         </activity>
         <activity android:name=".userinfo.UserInfoBirthdayActivity">
 

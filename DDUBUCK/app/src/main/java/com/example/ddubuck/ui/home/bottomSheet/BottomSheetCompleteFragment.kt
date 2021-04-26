@@ -12,11 +12,9 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.login.LoginActivity
-import com.example.ddubuck.ui.ShareActivity
+import com.example.ddubuck.ui.share.ShareActivity
 import com.example.ddubuck.ui.home.HomeMapFragment
 import java.text.DecimalFormat
 
@@ -48,9 +46,12 @@ class BottomSheetCompleteFragment(
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
         shareButton.setOnClickListener{
             val intent = Intent(context, ShareActivity::class.java)
-            val recordedValue:Array<String> = arrayOf(DateUtils.formatElapsedTime(walkRecord.walkTime),
-                    DecimalFormat("#.##m").format(walkRecord.distance),
-                    DecimalFormat("#걸음").format(walkRecord.stepCount),)
+            val formatter = BottomSheetNumberFormat()
+            val recordedValue:Array<String> = arrayOf(
+                    DateUtils.formatElapsedTime(walkRecord.walkTime),
+                    formatter.getFormattedDistance(walkRecord.distance),
+                    DecimalFormat("#걸음").format(walkRecord.stepCount),
+                    formatter.getFormattedCalorie(walkRecord.getCalorie(65.0)))
             intent.putExtra("recordedValue", recordedValue)
             startActivity(intent)
         }
