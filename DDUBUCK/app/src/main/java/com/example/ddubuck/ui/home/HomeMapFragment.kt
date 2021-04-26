@@ -81,7 +81,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var isLocationFirstChanged = false
 
     //측정 관련 변수
-    private var userPath = PolylineOverlay()
+    private var userPath = PathOverlay()
     private var altitudes: MutableList<Float> = mutableListOf()
     private var speeds: MutableList<Float> = mutableListOf()
     private var walkTime: Long = 0
@@ -187,7 +187,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
                 .commit()
         //RetrofitService().createPost(getWalkResult())
-        //Log.e("aa", getWalkResult().getJson().toString())
 
         model.walkTime.value = 0
         model.walkCalorie.value = 0.0
@@ -275,10 +274,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         course.width = 15
         course.capType = PolylineOverlay.LineCap.Round
         course.joinType = PolylineOverlay.LineJoin.Round
-
-        userPath.capType = PolylineOverlay.LineCap.Round
-        userPath.joinType = PolylineOverlay.LineJoin.Round
-
 
         //courseMarker.iconTintColor = Color.parseColor("#2798E7")
         courseMarker.icon = MarkerIcons.BLUE
