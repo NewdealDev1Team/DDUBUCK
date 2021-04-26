@@ -23,14 +23,15 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         savedInstanceState: Bundle?
     ): View? {
         val rootView  = inflater.inflate(R.layout.bottom_sheet_course_detail,container, false)
+        val formatter = BottomSheetNumberFormat()
         val titleTv : TextView = rootView.findViewById(R.id.sheet_course_detail_titleTv)
         titleTv.text = courseItem.title
         val timeTv : TextView = rootView.findViewById(R.id.sheet_course_detail_timeTv)
         timeTv.text = DateUtils.formatElapsedTime(courseItem.walkRecord.walkTime)
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_course_detail_distanceTv)
-        distanceTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.distance)
+        distanceTv.text = formatter.getFormattedDistance(courseItem.walkRecord.distance)
         val elevationTv : TextView = rootView.findViewById(R.id.sheet_course_detail_elevationTv)
-        elevationTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.altitude)
+        elevationTv.text = formatter.getFormattedAltitude(courseItem.walkRecord.altitude)
         val pictureIv : ImageView = rootView.findViewById(R.id.sheet_course_detail_pictureIv)
         pictureIv.setImageResource(R.mipmap.ic_launcher)
         val startButton : Button = rootView.findViewById(R.id.sheet_course_detail_startButton)

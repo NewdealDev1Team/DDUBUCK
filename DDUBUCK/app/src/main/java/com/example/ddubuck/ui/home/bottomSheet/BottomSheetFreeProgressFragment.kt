@@ -27,6 +27,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
         val rootView = inflater.inflate(R.layout.bottom_sheet_free_progress, container, false)
         val pauseButton : Button = rootView.findViewById(R.id.sheet_free_progress_pauseButton)
         val endButton : Button = rootView.findViewById(R.id.sheet_free_progress_endButton)
+        val formatter = BottomSheetNumberFormat()
 
         //산책 시작
         homeMapViewModel.courseWalkTrigger(false)
@@ -63,14 +64,12 @@ class BottomSheetFreeProgressFragment: Fragment() {
             walkTimeTv.text=DateUtils.formatElapsedTime(v)
         })
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_free_progress_distanceTv)
-        val distanceForm = DecimalFormat("#.## m")
         homeMapViewModel.walkDistance.observe(viewLifecycleOwner,{ v->
-            distanceTv.text=distanceForm.format(v)
+            distanceTv.text=formatter.getFormattedDistance(v)
         })
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_free_progress_calorieTv)
-        val calorieForm = DecimalFormat("#.## kcal")
         homeMapViewModel.walkCalorie.observe(viewLifecycleOwner,{ v->
-            calorieTv.text=calorieForm.format(v)
+            calorieTv.text=formatter.getFormattedCalorie(v)
         })
         return rootView
     }

@@ -29,21 +29,22 @@ class BottomSheetCompleteFragment(
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.bottom_sheet_complete, container, false)
         val titleTv : TextView = rootView.findViewById(R.id.sheet_complete_titleTv)
+        val formatter = BottomSheetNumberFormat()
         if(walkType == HomeMapFragment.WALK_COURSE) {
             //TODO
         }
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_complete_walTimeTv)
         walkTimeTv.text = DateUtils.formatElapsedTime(walkRecord.walkTime)
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_complete_distanceTv)
-        distanceTv.text = DecimalFormat("#.##m").format(walkRecord.distance)
+        distanceTv.text = formatter.getFormattedDistance(walkRecord.distance)
         val stepTv : TextView = rootView.findViewById(R.id.sheet_complete_stepTv)
         stepTv.text = walkRecord.stepCount.toString()
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_complete_calorieTv)
-        calorieTv.text = DecimalFormat("#.##kcal").format(walkRecord.getCalorie(65.0))
+        calorieTv.text = formatter.getFormattedCalorie(walkRecord.getCalorie(65.0))
         val averageSpeedTv : TextView = rootView.findViewById(R.id.sheet_complete_averageSpeedTv)
-        averageSpeedTv.text = DecimalFormat("#.##km/h").format(walkRecord.speed)
+        averageSpeedTv.text = formatter.getFormattedSpeed(walkRecord.speed)
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
-        averageAltitudeTv.text = DecimalFormat("#.##m").format(walkRecord.altitude)
+        averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
         shareButton.setOnClickListener{
             val intent = Intent(context, ShareActivity::class.java)
