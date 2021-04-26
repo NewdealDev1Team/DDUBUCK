@@ -1,28 +1,28 @@
 package com.example.ddubuck.data.home
 
-import android.util.Log
 import com.google.gson.Gson
+import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
 import java.util.*
 
 //var 로 바꿔놓은건 임시용이라서 그럼
 
-data class WalkRecord (
+data class WalkRecord(
         //경로 정보 모음
         //경로
-        val path : List<LatLng>,
+        val path: List<LatLng>,
         //고도평균
-        val altitude : Double,
+        val altitude: Double,
         //
-        val speed : Double,
+        val speed: Double,
         //경과시간 (sec)
-        val walkTime : Long,
+        val walkTime: Long,
         //발걸음 수
-        val stepCount : Int,
+        val stepCount: Int,
         //거리 (m)
-        val distance : Double,
+        val distance: Double,
         //산책 기록이 기록된 날짜
-        val recordedDate : Date,
+        val recordedDate: Date,
         //이름
         //바디
         //해시태그
@@ -36,7 +36,7 @@ data class WalkRecord (
 
 ) {
 
-    fun getCalorie(weight:Double) : Double {
+    fun getCalorie(weight: Double) : Double {
         //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
         var met = when(speed) {
             in 0.0..0.09 -> 0.0
@@ -51,7 +51,15 @@ data class WalkRecord (
         return (met * (3.5 * weight * (walkTime /60.0))) * 0.001 * 5
     }
 
-    fun toJson() : String {
-        return Gson().toJson(WalkRecord(path, altitude, speed, walkTime, stepCount, distance, recordedDate))
+    fun pathToMap() : List<HashMap<String,Any>> {
+        val list : MutableList<HashMap<String,Any>> = mutableListOf()
+        path.forEach { v ->
+            val map = mutableMapOf<String,Any>()
+            map["x"] = v.latitude
+            map["y"] = v.longitude
+            list.add(map as HashMap<String, Any>)
+        }
+        return list
     }
 }
+

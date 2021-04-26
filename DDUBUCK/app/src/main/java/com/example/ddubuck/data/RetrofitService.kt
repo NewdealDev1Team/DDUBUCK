@@ -11,7 +11,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient{
-
+    //http://3.37.6.181:3000/set/User/RecordData
     private const val BASE_URL = "http://3.37.6.181:3000/ "
 
     val instance: Api by lazy {
@@ -32,7 +32,7 @@ class RetrofitService {
     fun createPost(walkRecord: WalkRecord){
         RetrofitClient.instance.createPost(
                 "foo",
-                walkRecord.path,
+                walkRecord.pathToMap(),
                 walkRecord.altitude,
                 walkRecord.speed,
                 walkRecord.walkTime,

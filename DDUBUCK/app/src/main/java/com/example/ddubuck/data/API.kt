@@ -9,11 +9,12 @@ interface Api {
 
     //post로 서버에 데이터 넘기기
     //TODO record 밖으로 빼내기
+    @JvmSuppressWildcards
     @FormUrlEncoded
-    @POST("setUserRecordData")
+    @POST("set/User/RecordData")
     fun createPost(
             @Field("userKey")userKey:String,
-            @Field("path") path:List<LatLng>,
+            @Field("path") path:List<HashMap<String, Any>>,
             @Field("altitude") altitude:Double,
             @Field("speed") speed:Double,
             @Field("walkTime") walkTime:Long,
