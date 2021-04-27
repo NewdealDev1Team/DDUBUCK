@@ -43,6 +43,7 @@
 
         <activity android:name=".ui.share.ShareActivity">
         </activity>
+        <activity android:name=".ui.share.CanvasActivity"/>
         <activity android:name=".userinfo.UserInfoBirthdayActivity">
 
         </activity>

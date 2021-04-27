@@ -48,12 +48,12 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     //산책 시작 여부
     //TODO background operation
-    //TODO STATE로 운용할 것
     var allowRecording = false
     var isRestarted = false
     var isCourseSelected = false
     var isCourseInitialized = false
 
+    //TODO STATE로 운용할 것
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         const val WALK_WAITING = 200 //산책대기중
