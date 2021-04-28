@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitClient{
     private const val BASE_URL = "http://3.37.6.181:3000/"
     //private const val BASE_URL = "https://ptsv2.com/t/lgx93-1619424022/"
-    val instance: Api by lazy {
+    val mapInstance: MapAPI by lazy {
         val gson = GsonBuilder()
                 .setLenient()
                 .create()
@@ -24,13 +24,13 @@ object RetrofitClient{
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build()
 
-        retrofit.create(Api::class.java)
+        retrofit.create(MapAPI::class.java)
     }
 }
 
 
 class RetrofitService {
-    fun createPost(walkRecord: WalkRecord){
+    fun createRecordPost(walkRecord: WalkRecord){
         val map = hashMapOf<String, Any>()
         map["altitude"] = walkRecord.altitude
         map["speed"] = walkRecord.speed
@@ -38,7 +38,7 @@ class RetrofitService {
         map["distance"] = walkRecord.distance
         map["path"] = Gson().toJson(walkRecord.pathToMap())
 
-        RetrofitClient.instance.createPost(map)
+        RetrofitClient.mapInstance.createPost(map)
                 .enqueue(object : Callback<WalkRecord> {
             override fun onResponse(
                 call: Call<WalkRecord>,

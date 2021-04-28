@@ -1,30 +1,18 @@
 package com.example.ddubuck.ui.home
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
-import android.graphics.PointF
 import android.hardware.*
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.R
-import com.example.ddubuck.data.Api
-import com.example.ddubuck.data.RetrofitClient
-import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
@@ -36,7 +24,6 @@ import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import com.naver.maps.map.widget.LocationButtonView
-import java.text.DecimalFormat
 import java.util.*
 import kotlin.concurrent.timer
 

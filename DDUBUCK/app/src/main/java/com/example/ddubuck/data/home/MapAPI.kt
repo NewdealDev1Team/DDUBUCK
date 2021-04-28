@@ -7,7 +7,7 @@ import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
 
-interface Api {
+interface MapAPI {
     @FormUrlEncoded
     @POST("set/User/RecordData")
     fun createPost(@FieldMap params:HashMap<String, Any>): Call<WalkRecord>
