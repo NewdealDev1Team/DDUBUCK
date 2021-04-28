@@ -69,14 +69,4 @@ data class WalkRecord(
         return list
     }
 
-    fun getJson() : JsonElement {
-        val json = JsonObject()
-        json.addProperty("path", Gson().toJson(pathToMap()))
-        json.addProperty("altitude", altitude)
-        json.addProperty("speed", speed)
-        json.addProperty("walkTime", walkTime)
-        json.addProperty("stepCount", stepCount)
-        json.addProperty("distance", distance)
-        return json
-    }
 }

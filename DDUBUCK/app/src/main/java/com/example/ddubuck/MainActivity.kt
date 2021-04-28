@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initToolBar() {
+        //TODO 재사용 가능하게 수정하기
         val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
         setSupportActionBar(tb)
         val tbm = supportActionBar
@@ -118,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
         activeFragment = fragment

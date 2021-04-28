@@ -36,9 +36,9 @@ class CanvasActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_canvas)
-        //dispatchTakePictureIntent()
-        val tempBitmap = BitmapFactory.decodeResource(this.resources, R.drawable.weather_high)
-        initCanvas(tempBitmap)
+        dispatchTakePictureIntent()
+        //val tempBitmap = BitmapFactory.decodeResource(this.resources, R.drawable.weather_high)
+        //initCanvas(tempBitmap)
         initToolBar()
         initButtons()
     }
@@ -67,7 +67,6 @@ class CanvasActivity : AppCompatActivity() {
                 initCanvas(imageBitmap)
             }
         }
-
     }
 
 
