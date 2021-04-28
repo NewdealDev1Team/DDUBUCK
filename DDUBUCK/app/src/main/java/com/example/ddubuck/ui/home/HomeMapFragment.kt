@@ -12,6 +12,7 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
@@ -171,7 +172,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             WALK_FREE
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
-                        HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
+                        HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_BACK_STACK_TAG)
                 .commit()
         //RetrofitService().createPost(getWalkResult())
 

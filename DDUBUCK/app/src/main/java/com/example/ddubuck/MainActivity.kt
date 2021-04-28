@@ -7,11 +7,14 @@ import android.os.Bundle
 
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
@@ -32,19 +35,22 @@ class MainActivity : AppCompatActivity() {
         when(item.itemId){
             R.id.navigation_home -> {
                 replaceFragment(homeFragment)
-                supportFragmentManager.popBackStack()
+                changeToolBar(null)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_challenge -> {
                 replaceFragment(challengeFragment)
+                changeToolBar("챌린지")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_badge -> {
                 replaceFragment(badgeFragment)
+                changeToolBar("배지")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_mypage -> {
                 replaceFragment(myPageFragment)
+                changeToolBar("마이페이지")
                 return@OnNavigationItemSelectedListener true
             }
             else -> false
@@ -99,7 +105,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initFragmentManager() {
-        supportFragmentManager.beginTransaction().apply {
+        val fm = supportFragmentManager
+        fm.beginTransaction().apply {
             add(R.id.nav_main_container, homeFragment).show(homeFragment)
             add(R.id.nav_main_container, challengeFragment).hide(challengeFragment)
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
@@ -109,28 +116,60 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initToolBar() {
-        //TODO 재사용 가능하게 수정하기
+        val fm = supportFragmentManager
         val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
         setSupportActionBar(tb)
         val tbm = supportActionBar
         if(tbm != null) {
             tbm.setDisplayShowTitleEnabled(false)
             tbm.show()
+            fm.addOnBackStackChangedListener {
+                if(fm.backStackEntryCount != 0) {
+                    val backStackTag = when(activeFragment) {
+                        challengeFragment -> CHALLENGE_BACK_STACK_TAG
+                        badgeFragment -> BADGE_BACK_STACK_TAG
+                        myPageFragment -> MYPAGE_BACK_STACK_TAG
+                        else -> ""
+                    }
+                    if(backStackTag != "") {
+                        tbm.setDisplayHomeAsUpEnabled(true)
+                        tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                    }
+                } else {
+                    tbm.setDisplayHomeAsUpEnabled(false)
+                }
+            }
+        }
+    }
+
+    private fun changeToolBar(title:String?) {
+        val toolbarTextView : TextView = findViewById(R.id.main_toolbar_text)
+        val tbm = supportActionBar
+        if(tbm != null) {
+            if(title != null) {
+                tbm.setDisplayShowTitleEnabled(true)
+                tbm.title = title
+                toolbarTextView.text = ""
+            } else {
+                tbm.setDisplayShowTitleEnabled(false)
+                toolbarTextView.text = "뚜벅뚜벅"
+            }
+            tbm.setDisplayHomeAsUpEnabled(false)
         }
     }
 
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
+        supportFragmentManager.popBackStackImmediate()
         activeFragment = fragment
     }
 
-//    fun onFragmentChaneged(index: Int){
-//        if(index==0){
-//            supportFragmentManager.beginTransaction().replace(R.id.navigation_mypage,myPageFragment).commit()
-//        } else if(index==1){
-//            supportFragmentManager.beginTransaction().replace(R.id.WalkTimeFragment,walk)
-//        }
-//    }
+    companion object {
+        const val HOME_BACK_STACK_TAG = "HOME"
+        const val CHALLENGE_BACK_STACK_TAG = "CHALLENGE"
+        const val BADGE_BACK_STACK_TAG = "BADGE"
+        const val MYPAGE_BACK_STACK_TAG = "MYPAGE"
+    }
 
 }

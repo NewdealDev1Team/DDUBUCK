@@ -50,6 +50,5 @@ class HomeFragment(private val owner: Activity) : Fragment() {
 
     companion object {
         const val BOTTOM_SHEET_CONTAINER_TAG = "BOTTOM_SHEET_CONTAINER"
-        const val DETAIL_PAGE_FRAG = "DETAIL_PAGE_FRAG"
     }
 }

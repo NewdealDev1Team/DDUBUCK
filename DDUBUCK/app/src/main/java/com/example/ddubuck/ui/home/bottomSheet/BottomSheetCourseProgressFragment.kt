@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.ui.home.HomeMapViewModel
@@ -51,7 +53,7 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
         }
 
         endButton.setOnClickListener{
-            parentFragmentManager.popBackStack()
+            parentFragmentManager.popBackStack(MainActivity.HOME_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
 
         val progressBar : LinearProgressIndicator = rootView.findViewById(R.id.sheet_course_progress_progressBar)

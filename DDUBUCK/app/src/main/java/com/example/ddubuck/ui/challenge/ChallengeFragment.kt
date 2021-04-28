@@ -8,7 +8,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
+import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCourseProgressFragment
+import com.example.ddubuck.ui.home.bottomSheet.BottomSheetFreeDetailFragment
 
 class ChallengeFragment : Fragment() {
 
@@ -26,6 +29,13 @@ class ChallengeFragment : Fragment() {
         challengeViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+        val frag = BottomSheetFreeDetailFragment()
+        textView.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                    .replace(R.id.challenge_container, frag, null)
+                    .addToBackStack(MainActivity.CHALLENGE_BACK_STACK_TAG)
+                    .commit()
+        }
         return root
     }
 }
