@@ -1,53 +1,102 @@
-package com.example.ddubuck.ui.share
+package com.example.ddubuck.ui.share.canvas
 
+import android.R.attr
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.naver.maps.geometry.LatLng
 
+
 //class android.content.Context, interface android.util.AttributeSet
 
-class CustomCanvas @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
+
+class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0, bitmap: Bitmap) : this(context, attrs, defStyleAttr) {
+        this.backgroundBitmap = bitmap
+    }
+
     private val linePaint = Paint().apply {
         isAntiAlias = true
-        color = Color.WHITE
+        color = Color.BLUE
         style = Paint.Style.STROKE
-        strokeWidth = 5.0f
+        strokeWidth = 10.0f
     }
+
+    private lateinit var path : Path
+    private val translateMatrix = Matrix()
+    private val boundRect = RectF()
+    private var backgroundBitmap : Bitmap? = null
+
+    private val src = Rect()
+    private val dest = Rect()
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val sizeMax = if(widthMeasureSpec>heightMeasureSpec) {
+            heightMeasureSpec
+        } else {
+            widthMeasureSpec
+        }
+        layoutParams.height=sizeMax
+        layoutParams.width=sizeMax
+
+    }
+
+
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawColor(Color.BLACK)
-        val fooList = mutableListOf<Float>()
-        var maxHeight = 0.0F
-        var maxWidth=0.0F
-        for (i in path) {
-            fooList.add(i.latitude.toFloat())
-            fooList.add(i.longitude.toFloat())
-            if(maxHeight==0.0F||maxWidth==0.0F) {
-                maxHeight = i.longitude.toFloat()
-                maxWidth = i.latitude.toFloat()
-            } else {
-                if(maxHeight <= i.longitude.toFloat()) {
-                    maxHeight = i.longitude.toFloat()
-                }
-                if(maxWidth <= i.latitude.toFloat()) {
-                    maxWidth = i.latitude.toFloat()
-                }
-            }
+        if(backgroundBitmap!=null) {
+            src.set(0, 0, backgroundBitmap!!.width - 1, backgroundBitmap!!.height - 1)
+            dest.set(0, 0, width - 1, height - 1)
+            canvas?.drawBitmap(backgroundBitmap!!, src,dest,null)
+        }
+        path = routeToPath(userPath, width)
+
+        //TO CENTER
+        translateMatrix.setTranslate(width / 2F, height / 2F)
+        path.transform(translateMatrix)
+        path.computeBounds(boundRect, true)
+        Log.e("boundSize", "${boundRect.width()}, ${boundRect.height()}")
+        canvas?.drawPath(path, linePaint)
+    }
+
+
+
+    private fun routeToPath(
+            route: List<LatLng>,
+            viewWidth: Int,
+    ) : Path {
+        val scaleMatrix = Matrix()
+        val bound = RectF()
+        val path = Path()
+        path.reset()
+        path.moveTo(route[0].latitude.toFloat(), route[0].longitude.toFloat())
+        for (i in route) {
+            path.lineTo(i.latitude.toFloat(), i.longitude.toFloat())
+        }
+        path.computeBounds(bound, true)
+        val boundMax:Float = if(bound.height() > bound.width()) {
+            bound.height()
+        } else {
+            bound.width()
         }
 
-        maxHeight+=10.0F
-        maxWidth+=10.0F
-        //canvas?.setBitmap(Bitmap.createBitmap(maxWidth.toInt(), maxHeight.toInt(), Bitmap.Config.ARGB_8888))
-        canvas?.drawLines(fooList.toFloatArray(), linePaint)
-        //canvas?.drawLine(36.0F, 126.0F, 33.0F,123.0F, linePaint)
+        val scaleValue = (viewWidth-100) / boundMax
+        scaleMatrix.setScale(
+                scaleValue,
+                scaleValue,
+                bound.centerX(),
+                bound.centerY())
+        path.transform(scaleMatrix)
+
+        return path
     }
 
     companion object{
-        val path = listOf(
+        val userPath = listOf(
                 LatLng(37.5634487, 126.9095964),
                 LatLng(37.5634487, 126.9095964),
                 LatLng(37.5633626, 126.909694),

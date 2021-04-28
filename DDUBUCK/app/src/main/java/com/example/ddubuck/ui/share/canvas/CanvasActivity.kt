@@ -1,25 +1,24 @@
-package com.example.ddubuck.ui.share
+package com.example.ddubuck.ui.share.canvas
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
-import android.util.AttributeSet
+import android.provider.MediaStore
 import android.util.Log
-import android.view.View
 import android.widget.Button
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.ddubuck.R
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.e
-import ja.burhanrashid52.photoeditor.OnSaveBitmap
-import ja.burhanrashid52.photoeditor.SaveSettings
+import com.example.ddubuck.ui.share.ShareActivity
+import ja.burhanrashid52.photoeditor.PhotoEditorView
+import java.io.ByteArrayOutputStream
 
 ///캔버스로 사진 편집기 구현
 ///--------------------------------------
@@ -37,8 +36,10 @@ class CanvasActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_canvas)
+        //dispatchTakePictureIntent()
+        val tempBitmap = BitmapFactory.decodeResource(this.resources, R.drawable.weather_high)
+        initCanvas(tempBitmap)
         initToolBar()
-        initCanvas()
         initButtons()
     }
 
@@ -52,30 +53,32 @@ class CanvasActivity : AppCompatActivity() {
         }
     }
 
-    private fun initCanvas() {
-        var maxHeight = 0.0F
-        var maxWidth=0.0F
-        for (i in CustomCanvas.path) {
-            if(maxHeight==0.0F||maxWidth==0.0F) {
-                maxHeight = i.longitude.toFloat()
-                maxWidth = i.latitude.toFloat()
-            } else {
-                if(maxHeight <= i.longitude.toFloat()) {
-                    maxHeight = i.longitude.toFloat()
-                }
-                if(maxWidth <= i.latitude.toFloat()) {
-                    maxWidth = i.latitude.toFloat()
-                }
+    private fun initCanvas(tempBitmap: Bitmap) {
+        val canvasView = CustomCanvas(this, null,0,tempBitmap)
+        val frameView = findViewById<FrameLayout>(R.id.canvas_container)
+        frameView.addView(canvasView)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(data!=null) {
+            if (requestCode == ShareActivity.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                val imageBitmap = data.extras!!.get("data") as Bitmap
+                initCanvas(imageBitmap)
             }
         }
 
-        maxHeight+=10.0F
-        maxWidth+=10.0F
-        val bitmap =  Bitmap.createBitmap(maxWidth.toInt(), maxHeight.toInt(), Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        val canvasView = CustomCanvas(this)
-        canvasView.draw(canvas)
     }
+
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, ShareActivity.REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
 
     private fun initButtons() {
         val cancelButton : Button = findViewById(R.id.canvas_buttons_cancel)

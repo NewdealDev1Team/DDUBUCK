@@ -2,7 +2,6 @@ package com.example.ddubuck.ui.home.bottomSheet
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Canvas
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
@@ -15,9 +14,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.share.ShareActivity
 import com.example.ddubuck.ui.home.HomeMapFragment
-import com.example.ddubuck.ui.share.CanvasActivity
+import com.example.ddubuck.ui.share.canvas.CanvasActivity
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
 
