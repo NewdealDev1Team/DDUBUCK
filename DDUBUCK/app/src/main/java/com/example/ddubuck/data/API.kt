@@ -6,9 +6,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface Api {
-
     //post로 서버에 데이터 넘기기
-    //TODO record 밖으로 빼내기
     @FormUrlEncoded
     @POST("setUserRecordData")
     fun createPost(
@@ -22,5 +20,3 @@ interface Api {
     ): Call<WalkRecord>
 }
 
-
-//http://15.164.99.36:3000/getPublicData

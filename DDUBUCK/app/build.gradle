@@ -87,11 +87,13 @@ dependencies {
     //mpAndroidChart 그래프
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     //noinspection GradleCompatible
     //
     implementation 'com.burhanrashid52:photoeditor:1.1.1'
-    implementation 'com.android.support:design:28.0.0'
+    //noinspection GradleCompatible
+    implementation'com.android.support:design:28.0.0'
     testImplementation 'junit:junit:4.+'
     //RecyclerView
     //noinspection GradleCompatible

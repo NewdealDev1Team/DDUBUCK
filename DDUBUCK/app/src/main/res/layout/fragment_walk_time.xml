@@ -7,8 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ui.mypage.mpandroidchart.BarChartActivity">
-
+    tools:context=".ui.mypage.mywalk.WalkTimeFragment">
 
     <TextView
         android:layout_width="match_parent"
@@ -27,6 +26,7 @@
         android:text="@string/time_title_walk"/>
 
     <TextView
+        android:id="@+id/minititle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -35,18 +35,19 @@
         android:textSize="14dp"
         android:text="@string/time_mini_title"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_gradient">
-
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/bar_chart"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_margin="20dp"
-            app:layout_constraintTop_toTopOf="parent" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_gradient">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/bar_chart"
+                android:background="@drawable/background_gradient"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="20dp"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
