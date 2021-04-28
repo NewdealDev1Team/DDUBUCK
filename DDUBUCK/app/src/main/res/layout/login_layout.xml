@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_above="@+id/login_buttons"
         android:layout_centerHorizontal="true"
         android:orientation="vertical">
@@ -48,7 +49,7 @@
             android:id="@+id/google_login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-20dp"
+            android:layout_marginBottom="-10dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:src="@drawable/google_login"
@@ -58,7 +59,7 @@
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="-20dp">
+            android:layout_marginBottom="-10dp">
 
             <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
                 android:id="@+id/buttonOAuthLoginImg"
