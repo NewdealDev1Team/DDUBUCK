@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.green
 import com.example.ddubuck.R
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
@@ -41,12 +43,11 @@ class WalkTimeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        Log.d("onCreateView","~~~ onCreateView ~~~")
         val rootView : View = inflater.inflate(R.layout.fragment_walk_time, container, false)
-
         chart = rootView.findViewById(R.id.bar_chart)
+
             //바 차트 커스텀
-            with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
+            with(chart) {//그래프의 마커를 터치 시 때 해당 데이터를 보여줌
                 description.isEnabled = false
                 legend.isEnabled = false
                 isDoubleTapToZoomEnabled = false
@@ -62,6 +63,8 @@ class WalkTimeFragment : Fragment() {
             }
             setData(listData)
 
+//        val textView : TextView = rootView.findViewById(R.id.time_bottom_title_text_day)
+//        textView.setText(textformatterString.toInt())
         return rootView
     }
 
@@ -72,27 +75,24 @@ class WalkTimeFragment : Fragment() {
         private const val END_RANDOM = 90
     }
 
-    ////현재 날짜/시간 가져오기
-//@RequiresApi(Build.VERSION_CODES.O)
-//val date: LocalDate = LocalDate.now()
-//fun main(args: Array<String>) {
-//    println("-------- 현재 날짜:-------- $date")
-//}
     //현재 날짜/시간 가져오기
     @RequiresApi(Build.VERSION_CODES.O)
     val dateNow: LocalDateTime = LocalDateTime.now()
-//    LocalDateTime twoDaysAgo = now.minusDays(2); // 2일 전
+    //1 ~ 5일
     val oneDaysAgo : LocalDateTime = dateNow.minusDays(1)
     val twoDaysAgo : LocalDateTime = dateNow.minusDays(2)
     val threeDaysAgo : LocalDateTime = dateNow.minusDays(3)
     val fourDaysAgo : LocalDateTime = dateNow.minusDays(4)
     val fiveDaysAgo : LocalDateTime = dateNow.minusDays(5)
-    val sixDaysAgo : LocalDateTime = dateNow.minusDays(5)
+    val sixDaysAgo : LocalDateTime = dateNow.minusDays(6)
 
 
     //LocalDate 문자열로 포맷
-    val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/dd")
+    val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("dd")
     val formatterString: String = dateNow.format(formatter)
+
+    val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/dd")
+    val textformatterString : String = dateNow.format(formatter)
 
     private val listData by lazy {
         mutableListOf(
@@ -116,9 +116,11 @@ class WalkTimeFragment : Fragment() {
             setDrawValues(false)
             //차트 색
             setColor(Color.argb(55,31, 117, 60));
-//            gradientColors = mutableListOf(GradientColor(R.color.white, R.color.white))
             //투명,불투명
-            highLightAlpha = 0
+            highLightAlpha = 100
+            highLightColor = color.green
+            isHighlightEnabled = true
+
         }
         //data 클릭 시 분으로 나오는 커스텀
         barDataSet.valueFormatter = object : ValueFormatter(){
@@ -131,7 +133,6 @@ class WalkTimeFragment : Fragment() {
 //막대 그래프 너비 설정
         val dataSets = mutableListOf(barDataSet)
         val data = BarData(dataSets as List<IBarDataSet>?).apply {
-//            setValueTextSize(30F)
             barWidth = 0.3F
         }
 //애니메이션 효과 0.1초
@@ -156,8 +157,8 @@ class WalkTimeFragment : Fragment() {
                 setDrawAxisLine(false) //격자
                 //그래프 가로 축,선 (점선으로 변경)
                 gridColor = R.color.black
-                //cnr wjatjs
-                gridLineWidth = 0.5F
+                //점선 크기 조정
+               gridLineWidth = 0.5F
                 //선 길이, 조각 사이의 공간, 위상
                 enableGridDashedLine(5f,5f,5f)
                 axisMinimum = 0F
@@ -184,7 +185,8 @@ class WalkTimeFragment : Fragment() {
             this.data = data
             invalidate()
         }
-        //setData
     }
+
+
 }
 
