@@ -47,6 +47,7 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DDUBUCK">
+
 <!--             <intent-filter>-->
 <!--             <action android:name="android.intent.action.MAIN" />-->
 <!--             <category android:name="android.intent.category.LAUNCHER" />-->
@@ -65,6 +66,27 @@
         <activity android:name=".ui.ShareActivity" />
         <activity android:name=".userinfo.UserInfoBirthdayActivity" />
         <activity android:name=".userinfo.UserInfoHeightWeightActivity" />
+
+
+        </activity>
+        <activity android:name=".login.LoginActivity"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".ui.ShareActivity">
+        </activity>
+        <activity android:name=".userinfo.UserInfoBirthdayActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".userinfo.UserInfoHeightWeightActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

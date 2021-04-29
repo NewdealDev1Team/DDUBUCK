@@ -5,17 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.challenge.ChallengeFragment">
+
+
     <TextView
-        android:id="@+id/text_challenge"
+        android:id="@+id/challenge_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="16dp"
+        android:textSize="21dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:text="뚜벅뚜벅 챌린지"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        app:layout_constraintTop_toBottomOf="@+id/challenge_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="우리 함께 기분 좋은 산책,\n시작해볼까요?"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MissingConstraints">
+
+
+    </RelativeLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

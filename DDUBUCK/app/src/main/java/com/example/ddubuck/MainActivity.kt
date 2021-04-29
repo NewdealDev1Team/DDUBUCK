@@ -7,12 +7,15 @@ import android.os.Bundle
 
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
@@ -67,6 +70,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Log.e("정보 ", UserSharedPreferences.getUserId(this))
+
         initFragmentManager()
         initToolBar()
         initPermission()

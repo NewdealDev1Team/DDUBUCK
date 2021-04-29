@@ -5,14 +5,23 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.databinding.HeightWeightInfoLayoutBinding
+import com.example.ddubuck.login.User
+import com.example.ddubuck.login.UserInfo
+import com.example.ddubuck.login.UserService
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class UserInfoHeightWeightActivity : AppCompatActivity() {
     private lateinit var binding: HeightWeightInfoLayoutBinding
@@ -71,7 +80,7 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
                 binding.weightTextField.error = "몸무게를 입력하세요."
                 binding.heightTextField.error = null
             } else {
-                saveHeightWeight(binding.heightTextFieldInput.text.toString().toFloat() , binding.weightTextFieldInput.text.toString().toFloat())
+                saveHeightWeight(binding.heightTextFieldInput.text.toString().toDouble() , binding.weightTextFieldInput.text.toString().toDouble())
                 toHomePage()
             }
         }
@@ -83,14 +92,35 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
         finish()
     }
 
-    // 키와 몸무게 정보 저장
-    private fun saveHeightWeight(height: Float, weight: Float) {
-        database = Firebase.database.reference
-        database.child("users").child("Kakao").child("1677486124").child("height").setValue(height)
-        database.child("users").child("Kakao").child("1677486124").child("weight").setValue(weight)
+    // 생일과 키와 몸무게 정보 저장
+    private fun saveHeightWeight(height: Double, weight: Double) {
+        if (intent.hasExtra("birthday")) {
+            val birthday = intent.getStringExtra("birthday")
+            val userKey = intent.getStringExtra("userKey")!!
+            val userInfo: Retrofit = Retrofit.Builder()
+                    .baseUrl("http://3.37.6.181:3000/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+            val userMoreServer: UserInfoService = userInfo.create(UserInfoService::class.java)
+
+            userMoreServer.saveUserBodyInfo(userKey, height, weight).enqueue(object : Callback<UserBody> {
+                override fun onResponse(call: Call<UserBody>, response: Response<UserBody>) {
+                    Log.e("Success", response.message())
+                }
+
+                override fun onFailure(call: Call<UserBody>, t: Throwable) {
+                    t.message?.let { Log.e("Fail", it) }
+                }
+            })
+
+        } else {
+            Log.e("Error : ", "생일 저장 데이터 없음")
+        }
 
 
     }
+
+
 
 
 }

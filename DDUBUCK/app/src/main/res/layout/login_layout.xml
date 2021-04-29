@@ -1,33 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
+    android:background="@android:color/white"
     tools:context=".login.LoginActivity">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/logo"
-        android:src="@drawable/logo_without_margin"
-        android:layout_marginStart="156dp"
-        android:layout_marginTop="192dp"
-        tools:ignore="MissingConstraints" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="85dp"
-        android:layout_marginTop="322dp"
+        android:layout_marginBottom="10dp"
+        android:layout_above="@+id/login_buttons"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/ic_ddubuck_logo" />
+
+        <ImageView
+            android:id="@+id/logo_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_ddubuck_logo_title" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/login_buttons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/google_login_button"
-            android:layout_width="240dp"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-15dp"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:src="@drawable/google_login"
@@ -35,38 +57,54 @@
 
 
         <FrameLayout
-            android:layout_width="240dp"
-            android:layout_height="36dp"
-            android:layout_marginTop="10dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-15dp">
 
             <com.nhn.android.naverlogin.ui.view.OAuthLoginButton
                 android:id="@+id/buttonOAuthLoginImg"
-                android:layout_marginTop="10dp"
-                android:layout_width="36dp"
-                android:layout_height="5dp" />
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp" />
 
             <ImageView
                 android:id="@+id/fake_naver"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
-                android:src="@drawable/naver_login"/>
-
+                android:src="@drawable/naver_login" />
 
         </FrameLayout>
 
         <ImageButton
             android:id="@+id/kakao_login_button"
-            android:layout_width="240dp"
-            android:layout_height="36dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
             android:src="@drawable/kakao_login"
-            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_buttons"
+        android:layout_centerHorizontal="true">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:buttonTint="#1D8440" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="자동 로그인" />
+    </LinearLayout>
+
 
 </RelativeLayout>

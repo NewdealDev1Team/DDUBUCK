@@ -22,10 +22,10 @@ class BadgeFragment : Fragment() {
         badgeViewModel =
                 ViewModelProvider(this).get(BadgeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_badge, container, false)
-        val textView: TextView = root.findViewById(R.id.text_badge)
-        badgeViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
-        })
+////        val textView: TextView = root.findViewById(R.id.text_badge)
+//        badgeViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
         return root
     }
 }

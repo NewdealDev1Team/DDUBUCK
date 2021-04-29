@@ -28,6 +28,11 @@ class ChallengeFragment : Fragment() {
             textView.text = it
         })
 
+
+//        val textView: TextView = root.findViewById(R.id.text_challenge)
+//        challengeViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
         return root
     }
 }
