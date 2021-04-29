@@ -45,13 +45,11 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         const val WALK_WAITING = 200 //산책대기중
-        const val WALK_WAITING_DISPLAY = 201 //산책대기중_코스표기
         const val WALK_START = 300 //산책시작 : initializing
         const val WALK_PROGRESS = 301 //산책진행
         const val WALK_PAUSE = 302 //산책일시중지
         const val WALK_COURSE = 400 // 코스산책
         const val WALK_FREE = 100 //자유산책
-        const val WALK_EXIT = 101 //산책종료
     }
 
     //뷰모델
@@ -88,6 +86,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
+        model.walkState.value = WALK_START
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
                 ?: MapFragment.newInstance().also {
@@ -101,6 +100,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 //start
                 startRecording()
                 allowRecording = true
+                model.walkState.value = WALK_PROGRESS
             } else {
                 //stop
                 stopRecording()
@@ -108,6 +108,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 isRestarted = true
                 isCourseSelected = false
                 isCourseInitialized = false
+                model.walkState.value = WALK_WAITING
             }
         })
 
@@ -115,10 +116,12 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             allowRecording = if (v) {
                 //start
                 pauseRecording()
+                model.walkState.value = WALK_PAUSE
                 false
             } else {
                 //stop
                 resumeRecording()
+                model.walkState.value = WALK_PROGRESS
                 true
             }
         })
@@ -172,7 +175,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             WALK_FREE
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
-                        HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_BACK_STACK_TAG)
+                        HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
                 .commit()
         //RetrofitService().createPost(getWalkResult())
 
@@ -214,22 +217,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         }
     }
 
-    //사용자가 이동한 경로를 저장합니다
-    //TODO 유저 경로 저장
-    private fun saveUserRoute(p: List<LatLng>) {
-        //임시코드 : 코스 경로로 저장합니다
-        //앱 제작 시 저장대상을 서버로 변경
-        addCoursePath(p)
-    }
-
-
-    //코스 경로 추가하기
-    private fun addCoursePath(p: List<LatLng>) {
-        course.coords = p
-        course.map = this.map
-        isCourseSelected = true
-    }
-
 
     override fun onSensorChanged(event: SensorEvent) {  // 가속도 센서 값이 바뀔때마다 호출됨
         if (allowRecording) {
@@ -269,6 +256,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         model.coursePath.observe(viewLifecycleOwner, { v->
             cameraToCourse(v)
         })
+        model.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener {
             if(!isLocationFirstChanged) {

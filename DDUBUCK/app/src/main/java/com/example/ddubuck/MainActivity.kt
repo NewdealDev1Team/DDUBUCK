@@ -7,7 +7,6 @@ import android.os.Bundle
 
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -30,27 +29,24 @@ class MainActivity : AppCompatActivity() {
     private val myPageFragment = MyPageFragment()
     private lateinit var activeFragment : Fragment
     private val mapModel: HomeMapViewModel by viewModels()
+    private val activityModel : MainActivityViewModel by viewModels()
 //수치
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener{ item ->
         when(item.itemId){
             R.id.navigation_home -> {
                 replaceFragment(homeFragment)
-                changeToolBar(null)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_challenge -> {
                 replaceFragment(challengeFragment)
-                changeToolBar("챌린지")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_badge -> {
                 replaceFragment(badgeFragment)
-                changeToolBar("배지")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_mypage -> {
                 replaceFragment(myPageFragment)
-                changeToolBar("마이페이지")
                 return@OnNavigationItemSelectedListener true
             }
             else -> false
@@ -113,27 +109,30 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
         }.commit()
         activeFragment = homeFragment
-    }
-
-    private fun initToolBar() {
-        val fm = supportFragmentManager
-        val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
-        setSupportActionBar(tb)
         val tbm = supportActionBar
+        val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
         if(tbm != null) {
-            tbm.setDisplayShowTitleEnabled(false)
-            tbm.show()
             fm.addOnBackStackChangedListener {
                 if(fm.backStackEntryCount != 0) {
-                    val backStackTag = when(activeFragment) {
-                        challengeFragment -> CHALLENGE_BACK_STACK_TAG
-                        badgeFragment -> BADGE_BACK_STACK_TAG
-                        myPageFragment -> MYPAGE_BACK_STACK_TAG
-                        else -> ""
-                    }
-                    if(backStackTag != "") {
-                        tbm.setDisplayHomeAsUpEnabled(true)
-                        tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                    when(activeFragment) {
+                        challengeFragment -> {
+                            val backStackTag = CHALLENGE_TAG
+                            tbm.setDisplayHomeAsUpEnabled(true)
+                            tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                        }
+                        badgeFragment -> {
+                            val backStackTag = BADGE_TAG
+                            tbm.setDisplayHomeAsUpEnabled(true)
+                            tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                        }
+                        myPageFragment -> {
+                            val backStackTag = MYPAGE_TAG
+                            tbm.setDisplayHomeAsUpEnabled(true)
+                            tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                        }
+                        else -> {
+
+                        }
                     }
                 } else {
                     tbm.setDisplayHomeAsUpEnabled(false)
@@ -142,19 +141,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun changeToolBar(title:String?) {
-        val toolbarTextView : TextView = findViewById(R.id.main_toolbar_text)
+    private fun initToolBar() {
+        val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
+        setSupportActionBar(tb)
         val tbm = supportActionBar
         if(tbm != null) {
-            if(title != null) {
-                tbm.setDisplayShowTitleEnabled(true)
-                tbm.title = title
-                toolbarTextView.text = ""
-            } else {
-                tbm.setDisplayShowTitleEnabled(false)
-                toolbarTextView.text = "뚜벅뚜벅"
-            }
-            tbm.setDisplayHomeAsUpEnabled(false)
+            tbm.setDisplayShowTitleEnabled(false)
+            tbm.show()
+            activityModel.toolbarTitle.observe(this, {v->
+                tbm.title = v
+            })
         }
     }
 
@@ -163,13 +159,44 @@ class MainActivity : AppCompatActivity() {
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
         supportFragmentManager.popBackStackImmediate()
         activeFragment = fragment
+        changeToolBar(fragment)
+    }
+
+    private fun changeToolBar(fragment: Fragment) {
+        val toolbarTextView : TextView = findViewById(R.id.main_toolbar_text)
+        val tbm = supportActionBar
+        if(tbm != null) {
+            when(fragment) {
+                challengeFragment -> {
+                    tbm.setDisplayShowTitleEnabled(true)
+                    tbm.title = "챌린지"
+                    toolbarTextView.text = ""
+                }
+                badgeFragment -> {
+                    tbm.setDisplayShowTitleEnabled(true)
+                    tbm.title = "뱃지"
+                    toolbarTextView.text = ""
+                }
+                myPageFragment -> {
+                    tbm.setDisplayShowTitleEnabled(true)
+                    tbm.title = "마이페이지"
+                    toolbarTextView.text = ""
+                }
+                else -> {
+                    tbm.setDisplayShowTitleEnabled(false)
+                    toolbarTextView.text = "뚜벅뚜벅"
+                }
+            }
+            tbm.setDisplayHomeAsUpEnabled(false)
+        }
     }
 
     companion object {
         const val HOME_BACK_STACK_TAG = "HOME"
-        const val CHALLENGE_BACK_STACK_TAG = "CHALLENGE"
-        const val BADGE_BACK_STACK_TAG = "BADGE"
-        const val MYPAGE_BACK_STACK_TAG = "MYPAGE"
+        const val HOME_RESULT_TAG = "HOME_RESULT"
+        const val CHALLENGE_TAG = "CHALLENGE"
+        const val BADGE_TAG = "BADGE"
+        const val MYPAGE_TAG = "MYPAGE"
     }
 
 }
