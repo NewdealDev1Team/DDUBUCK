@@ -6,5 +6,4 @@ import retrofit2.http.*
 interface Api {
     @GET("getPublicData")
     fun getRests(): Call<publicData>
-
 }

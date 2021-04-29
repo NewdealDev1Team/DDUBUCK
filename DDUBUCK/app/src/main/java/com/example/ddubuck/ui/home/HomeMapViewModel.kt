@@ -59,4 +59,5 @@ class HomeMapViewModel : ViewModel() {
     }
 
     //값 반환
+    val walkState = MutableLiveData<Int>()
 }

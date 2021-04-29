@@ -1,11 +1,10 @@
-package com.example.ddubuck.ui
+package com.example.ddubuck.ui.share
 
 import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -16,6 +15,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import ja.burhanrashid52.photoeditor.OnSaveBitmap
 import ja.burhanrashid52.photoeditor.PhotoEditor
@@ -34,6 +34,7 @@ class ShareActivity : AppCompatActivity() {
         initToolBar()
         initPhotoEditor()
         initButtons()
+        initRecyclerView()
     }
 
     private fun initToolBar() {
@@ -51,28 +52,39 @@ class ShareActivity : AppCompatActivity() {
         val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
 
         mPhotoEditorView.source.setImageResource(R.drawable.weather_high)
-
+        dispatchTakePictureIntent()
         val mTextRobotoTf = ResourcesCompat.getFont(this, R.font.mapohongdaefreedom)
 
         mPhotoEditor = PhotoEditor.Builder(this, mPhotoEditorView)
             .setPinchTextScalable(true)
             .setDefaultTextTypeface(mTextRobotoTf)
             .build()
-        //mPhotoEditorView.setBackgroundColor(Color.BLACK)
+        mPhotoEditor.addText("aaaa", Color.WHITE)
 
-        mPhotoEditor.addText("두둥탁두둥탁두둥탁", Color.BLACK)
+
+        //TODO bundle 받기
 
         isFileLoaded = true
 
     }
 
+    private fun initRecyclerView() {
+        val recordedValue : Array<String> = intent.getStringArrayExtra("recordedValue") as Array<String>
+        val shareSelectRv : RecyclerView = findViewById(R.id.share_selectRV)
+        val mAdapter = ShareSelectRvAdapter(recordedValue) { v ->
+            mPhotoEditor.addText(v, Color.WHITE)
+        }
+        shareSelectRv.adapter = mAdapter
+    }
+
     private fun initButtons() {
         val cancelButton : Button = findViewById(R.id.share_buttons_cancel)
+
         cancelButton.setOnClickListener{
             finish()
         }
-        val confirmButton : Button = findViewById(R.id.share_buttons_confirm)
 
+        val confirmButton : Button = findViewById(R.id.share_buttons_confirm)
 
         confirmButton.setOnClickListener{
             if(isFileLoaded) {
@@ -107,12 +119,35 @@ class ShareActivity : AppCompatActivity() {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(data!=null) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+                val imageBitmap = data.extras!!.get("data") as Bitmap
+                val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
+                mPhotoEditorView.source.setImageBitmap(imageBitmap)
+            }
+        }
+
+    }
+
+
     fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
         return Uri.parse(path.toString())
     }
+
+
+    private fun dispatchTakePictureIntent() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        }
+    }
+
 
     //뒤로가기 버튼 눌렀을 때 작동
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -123,6 +158,11 @@ class ShareActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+
+    companion object{
+        const val REQUEST_IMAGE_CAPTURE = 1
     }
 
 }

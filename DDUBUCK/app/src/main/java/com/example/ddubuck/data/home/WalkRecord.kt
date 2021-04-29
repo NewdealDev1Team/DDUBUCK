@@ -1,30 +1,50 @@
 package com.example.ddubuck.data.home
 
-import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.JsonArray
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.annotations.JsonAdapter
+import com.naver.maps.geometry.Coord
 import com.naver.maps.geometry.LatLng
+import org.json.JSONArray
+import org.json.JSONObject
 import java.util.*
+import kotlin.collections.HashMap
 
 //var 로 바꿔놓은건 임시용이라서 그럼
 
-data class WalkRecord (
+data class WalkRecord(
         //경로 정보 모음
-        val path : List<LatLng>,
-        val altitudes : List<Float>,
-        val speeds : List<Float>,
+        //경로
+        val path: List<LatLng>,
+        //고도평균
+        val altitude: Double,
+        //
+        val speed: Double,
         //경과시간 (sec)
-        val walkTime : Long,
+        val walkTime: Long,
         //발걸음 수
-        val stepCount : Int,
+        val stepCount: Int,
         //거리 (m)
-        val distance : Double,
+        val distance: Double,
         //산책 기록이 기록된 날짜
-        val recordedDate : Date,
+        val recordedDate: Date,
+        //이름
+        //바디
+        //해시태그
+        /*
+        paths=[
+            {x:123,y:123},{x:123,y:123}
+        ]
+        이 형식으로 보내기
+
+         */
+
 ) {
 
-    fun getCalorie(weight:Double) : Double {
+    fun getCalorie(weight: Double) : Double {
         //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
-        val speed = speeds.average()
         var met = when(speed) {
             in 0.0..0.09 -> 0.0
             in 0.0..4.0 -> 2.0 // 느리게 걷기
@@ -38,7 +58,15 @@ data class WalkRecord (
         return (met * (3.5 * weight * (walkTime /60.0))) * 0.001 * 5
     }
 
-    fun toJson() : String {
-        return Gson().toJson(WalkRecord(path, altitudes, speeds, walkTime, stepCount, distance, recordedDate))
+    fun pathToMap() : List<HashMap<String,Any>> {
+        val list : MutableList<HashMap<String,Any>> = mutableListOf()
+        path.forEach { v ->
+            val map =  hashMapOf<String, Any>()
+            map["x"] = v.latitude
+            map["y"] = v.longitude
+            list.add(map)
+        }
+        return list
     }
+
 }

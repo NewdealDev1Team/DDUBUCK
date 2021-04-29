@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
@@ -45,7 +46,7 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                                 true,
                                 "자유산책",
                                 "자유산책입니다",
-                                WalkRecord(listOf(), listOf(), listOf(), 1, 1, 1.0, Date())),)}
+                                WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0, Date())),)}
                 title?.text = "자유산책"
                 body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
                 picture?.setImageResource(R.mipmap.ic_launcher)
@@ -62,12 +63,12 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                 val frag = BottomSheetFreeDetailFragment()
                 val fmTransaction = fm.beginTransaction()
                 fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
-                fmTransaction.replace(R.id.bottom_sheet_container,frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(HomeFragment.DETAIL_PAGE_FRAG).commit()
+                fmTransaction.replace(R.id.bottom_sheet_container,frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_BACK_STACK_TAG).commit()
             } else {
                 val frag = BottomSheetCourseDetailFragment(courseItem)
                 val fmTransaction = fm.beginTransaction()
                 fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
-                fmTransaction.replace(R.id.bottom_sheet_container,frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(HomeFragment.DETAIL_PAGE_FRAG).commit()
+                fmTransaction.replace(R.id.bottom_sheet_container,frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_BACK_STACK_TAG).commit()
             }
         }
 

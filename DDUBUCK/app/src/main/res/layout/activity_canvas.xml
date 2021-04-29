@@ -6,10 +6,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.share.ShareActivity">
+    tools:context=".ui.share.canvas.CanvasActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/share_toolbar"
+        android:id="@+id/canvas_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/white"
@@ -20,42 +20,16 @@
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/canvas_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/share_selectRV"
+        app:layout_constraintBottom_toTopOf="@+id/canvas_buttons"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/share_toolbar">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF" />
-
-        <ja.burhanrashid52.photoeditor.PhotoEditorView
-            android:id="@+id/photoEditorView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/share_buttons"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/share_toolbar" />
-    </FrameLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/share_selectRV"
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="#444444"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/share_select_item"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/share_buttons" />
+        app:layout_constraintTop_toBottomOf="@id/canvas_toolbar"/>
 
     <LinearLayout
-        android:id="@+id/share_buttons"
+        android:id="@+id/canvas_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="2"
@@ -65,7 +39,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
         <android.widget.Button
-            android:id="@+id/share_buttons_cancel"
+            android:id="@+id/canvas_buttons_cancel"
             android:text="취소"
             android:textSize="14sp"
             android:textColor="#767676"
@@ -75,7 +49,7 @@
             android:layout_height="56dp"
             android:layout_weight="1"/>
         <android.widget.Button
-            android:id="@+id/share_buttons_confirm"
+            android:id="@+id/canvas_buttons_confirm"
             android:text="확인"
             android:textSize="14sp"
             android:textColor="@color/white"

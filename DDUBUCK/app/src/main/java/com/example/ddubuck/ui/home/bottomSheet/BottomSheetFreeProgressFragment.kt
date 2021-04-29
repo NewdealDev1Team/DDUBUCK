@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import java.text.DecimalFormat
@@ -27,6 +29,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
         val rootView = inflater.inflate(R.layout.bottom_sheet_free_progress, container, false)
         val pauseButton : Button = rootView.findViewById(R.id.sheet_free_progress_pauseButton)
         val endButton : Button = rootView.findViewById(R.id.sheet_free_progress_endButton)
+        val formatter = BottomSheetNumberFormat()
 
         //산책 시작
         homeMapViewModel.courseWalkTrigger(false)
@@ -54,7 +57,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
         }
 
         endButton.setOnClickListener{
-            parentFragmentManager.popBackStack()
+            parentFragmentManager.popBackStack(MainActivity.HOME_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
 
 
@@ -63,14 +66,12 @@ class BottomSheetFreeProgressFragment: Fragment() {
             walkTimeTv.text=DateUtils.formatElapsedTime(v)
         })
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_free_progress_distanceTv)
-        val distanceForm = DecimalFormat("#.## m")
         homeMapViewModel.walkDistance.observe(viewLifecycleOwner,{ v->
-            distanceTv.text=distanceForm.format(v)
+            distanceTv.text=formatter.getFormattedDistance(v)
         })
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_free_progress_calorieTv)
-        val calorieForm = DecimalFormat("#.## kcal")
         homeMapViewModel.walkCalorie.observe(viewLifecycleOwner,{ v->
-            calorieTv.text=calorieForm.format(v)
+            calorieTv.text=formatter.getFormattedCalorie(v)
         })
         return rootView
     }
