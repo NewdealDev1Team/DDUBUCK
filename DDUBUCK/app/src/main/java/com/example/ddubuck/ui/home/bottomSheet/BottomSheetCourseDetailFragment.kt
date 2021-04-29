@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.ui.home.HomeFragment
@@ -23,24 +24,25 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         savedInstanceState: Bundle?
     ): View? {
         val rootView  = inflater.inflate(R.layout.bottom_sheet_course_detail,container, false)
+        val formatter = BottomSheetNumberFormat()
         val titleTv : TextView = rootView.findViewById(R.id.sheet_course_detail_titleTv)
         titleTv.text = courseItem.title
         val timeTv : TextView = rootView.findViewById(R.id.sheet_course_detail_timeTv)
         timeTv.text = DateUtils.formatElapsedTime(courseItem.walkRecord.walkTime)
         val distanceTv : TextView = rootView.findViewById(R.id.sheet_course_detail_distanceTv)
-        distanceTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.distance)
+        distanceTv.text = formatter.getFormattedDistance(courseItem.walkRecord.distance)
         val elevationTv : TextView = rootView.findViewById(R.id.sheet_course_detail_elevationTv)
-        elevationTv.text = DecimalFormat("#.##m").format(courseItem.walkRecord.altitudes.average())
+        elevationTv.text = formatter.getFormattedAltitude(courseItem.walkRecord.altitude)
         val pictureIv : ImageView = rootView.findViewById(R.id.sheet_course_detail_pictureIv)
         pictureIv.setImageResource(R.mipmap.ic_launcher)
         val startButton : Button = rootView.findViewById(R.id.sheet_course_detail_startButton)
         startButton.setOnClickListener{
             val fm = parentFragmentManager
-            fm.popBackStack(HomeFragment.DETAIL_PAGE_FRAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            fm.popBackStack(MainActivity.HOME_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             val frag = BottomSheetCourseProgressFragment(courseItem)
             val fmTransaction = fm.beginTransaction()
             fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
-            fmTransaction.replace(R.id.bottom_sheet_container, frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null).commit()
+            fmTransaction.replace(R.id.bottom_sheet_container, frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_BACK_STACK_TAG).commit()
         }
         return rootView
     }

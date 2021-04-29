@@ -1,30 +1,19 @@
 package com.example.ddubuck.ui.home
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
-import android.graphics.PointF
 import android.hardware.*
-import android.os.Build
 import android.os.Bundle
-import android.os.VibrationEffect
-import android.os.Vibrator
-import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
-import com.example.ddubuck.data.Api
-import com.example.ddubuck.data.RetrofitClient
-import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
@@ -32,10 +21,10 @@ import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
+import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import com.naver.maps.map.widget.LocationButtonView
-import java.text.DecimalFormat
 import java.util.*
 import kotlin.concurrent.timer
 
@@ -47,22 +36,20 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     //산책 시작 여부
     //TODO background operation
-    //TODO STATE로 운용할 것
     var allowRecording = false
     var isRestarted = false
     var isCourseSelected = false
     var isCourseInitialized = false
 
+    //TODO STATE로 운용할 것
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         const val WALK_WAITING = 200 //산책대기중
-        const val WALK_WAITING_DISPLAY = 201 //산책대기중_코스표기
         const val WALK_START = 300 //산책시작 : initializing
         const val WALK_PROGRESS = 301 //산책진행
         const val WALK_PAUSE = 302 //산책일시중지
         const val WALK_COURSE = 400 // 코스산책
         const val WALK_FREE = 100 //자유산책
-        const val WALK_EXIT = 101 //산책종료
     }
 
     //뷰모델
@@ -90,7 +77,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var burnedCalorie: Double = 0.0
 
     //코스
-    private var course = PathOverlay()
+    private var course = PolylineOverlay()
     private var courseMarker = Marker()
 
     override fun onCreateView(
@@ -99,6 +86,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             savedInstanceState: Bundle?
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
+        model.walkState.value = WALK_START
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
                 ?: MapFragment.newInstance().also {
@@ -112,6 +100,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 //start
                 startRecording()
                 allowRecording = true
+                model.walkState.value = WALK_PROGRESS
             } else {
                 //stop
                 stopRecording()
@@ -119,6 +108,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 isRestarted = true
                 isCourseSelected = false
                 isCourseInitialized = false
+                model.walkState.value = WALK_WAITING
             }
         })
 
@@ -126,10 +116,12 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             allowRecording = if (v) {
                 //start
                 pauseRecording()
+                model.walkState.value = WALK_PAUSE
                 false
             } else {
                 //stop
                 resumeRecording()
+                model.walkState.value = WALK_PROGRESS
                 true
             }
         })
@@ -183,17 +175,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             WALK_FREE
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
-                        HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(null)
+                        HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
                 .commit()
-        showResultDialog(getWalkResult())
         //RetrofitService().createPost(getWalkResult())
 
-        //
-        //------ 수 정 하 라 !!!!!!!!
         model.walkTime.value = 0
         model.walkCalorie.value = 0.0
         model.walkDistance.value = 0.0
-        //-------
+
         altitudes.clear()
         speeds.clear()
         stepCount = 0
@@ -207,8 +196,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private fun getWalkResult(): WalkRecord {
         return WalkRecord(
                 userPath.coords,
-                altitudes,
-                speeds,
+                altitudes.average(),
+                speeds.average(),
                 walkTime,
                 stepCount,
                 distance,
@@ -226,42 +215,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         } else {
             course.map = null
         }
-    }
-
-    //사용자가 이동한 경로를 저장합니다
-    //TODO 유저 경로 저장
-    private fun saveUserRoute(p: List<LatLng>) {
-        //임시코드 : 코스 경로로 저장합니다
-        //앱 제작 시 저장대상을 서버로 변경
-        addCoursePath(p)
-    }
-
-
-    //언젠가 사라질 다이알로그 띄우기
-    private fun showResultDialog(walkRecord: WalkRecord) {
-        val dlg: AlertDialog.Builder = AlertDialog.Builder(
-                context,
-                android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth
-        )
-        dlg.setTitle("운동 완료") //제목
-        dlg.setMessage(
-                "고도 편차: ${altitudes.maxOrNull()?.minus(walkRecord.altitudes.minOrNull()!!)}\n" +
-                        "지점 갯수: ${userPath.coords.size}\n" +
-                        "평균속도: ${speeds.average()}\n" +
-                        "발걸음 수: ${stepCount}\n" +
-                        "이동거리: ${DecimalFormat("#.## m").format(distance)}\n" +
-                        "경과시간: ${DateUtils.formatElapsedTime(walkTime)}\n" +
-                        "소모 칼로리: ${DecimalFormat("#.## kcal").format(walkRecord.getCalorie(65.0))}"
-        ) // 메시지
-        dlg.setPositiveButton("확인", DialogInterface.OnClickListener { dialog, which -> })
-        dlg.show()
-    }
-
-    //코스 경로 추가하기
-    private fun addCoursePath(p: List<LatLng>) {
-        course.coords = p
-        course.map = this.map
-        isCourseSelected = true
     }
 
 
@@ -294,16 +247,16 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         course.color = Color.parseColor("#2798E7")
         course.width = 15
-        course.outlineWidth = 0
+        course.capType = PolylineOverlay.LineCap.Round
+        course.joinType = PolylineOverlay.LineJoin.Round
 
         //courseMarker.iconTintColor = Color.parseColor("#2798E7")
         courseMarker.icon = MarkerIcons.BLUE
 
-        userPath = PathOverlay()
-
         model.coursePath.observe(viewLifecycleOwner, { v->
             cameraToCourse(v)
         })
+        model.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener {
             if(!isLocationFirstChanged) {

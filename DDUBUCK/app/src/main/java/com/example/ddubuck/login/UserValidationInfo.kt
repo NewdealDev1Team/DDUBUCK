@@ -5,11 +5,9 @@ data class UserValidationInfo(
         var userKey: String?,
         var picture: String? = null,
         var name: String?,
-        var year: String?,
-        var month: String?,
-        var day: String?,
-        var height: Int?,
-        var weight: Int?,
+        var birth: String?,
+        var height: Double?,
+        var weight: Double?,
         var division: String?,
         var created_at: String?
 )

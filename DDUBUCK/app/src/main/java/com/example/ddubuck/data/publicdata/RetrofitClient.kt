@@ -1,5 +1,6 @@
 package com.example.ddubuck.data.publicdata
 
+import com.example.ddubuck.data.Api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

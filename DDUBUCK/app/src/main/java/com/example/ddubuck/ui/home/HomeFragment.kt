@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetSelectFragment
 import com.example.ddubuck.weather.WeatherFragment
@@ -17,8 +18,10 @@ import com.example.ddubuck.weather.WeatherViewModel
 class HomeFragment(private val owner: Activity) : Fragment() {
 
     private val weatherViewModel: WeatherViewModel by activityViewModels()
+    private val mapViewModel : HomeMapViewModel by activityViewModels()
     private lateinit var homeMapFragment: HomeMapFragment
     lateinit var weatherFragment: WeatherFragment
+    private var isWeatherDataReady=false
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -35,9 +38,28 @@ class HomeFragment(private val owner: Activity) : Fragment() {
         fm.beginTransaction().add(R.id.home_weather_container, weatherFragment).hide(weatherFragment).commit()
         weatherViewModel.isSuccessfulResponse.observe(viewLifecycleOwner, { v ->
             if (v == true) {
+                isWeatherDataReady=true
                 fm.beginTransaction()
                     .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
                     .show(weatherFragment).commit()
+            }
+        })
+
+
+        mapViewModel.walkState.observe(viewLifecycleOwner, {v ->
+            if(isWeatherDataReady) {
+                when(v) {
+                    HomeMapFragment.WALK_PROGRESS -> {
+                        fm.beginTransaction()
+                                .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
+                                .hide(weatherFragment).commit()
+                    }
+                    else -> {
+                        fm.beginTransaction()
+                                .setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
+                                .show(weatherFragment).commit()
+                    }
+                }
             }
         })
 
@@ -50,6 +72,5 @@ class HomeFragment(private val owner: Activity) : Fragment() {
 
     companion object {
         const val BOTTOM_SHEET_CONTAINER_TAG = "BOTTOM_SHEET_CONTAINER"
-        const val DETAIL_PAGE_FRAG = "DETAIL_PAGE_FRAG"
     }
 }
