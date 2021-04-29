@@ -10,25 +10,34 @@ import android.os.Vibrator
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
+import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
+import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
+import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
     private val challengeFragment = ChallengeFragment()
     private val badgeFragment = BadgeFragment()
+
     private val myPageFragment = MyPageFragment()
+
     private lateinit var activeFragment : Fragment
     private val mapModel: HomeMapViewModel by viewModels()
     private val activityModel : MainActivityViewModel by viewModels()
@@ -49,6 +58,8 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.navigation_mypage -> {
                 replaceFragment(myPageFragment)
+//                val fm:FragmentManager = supportFragmentManager
+//                fm.beginTransaction().add(R.id.navigation_mypage,myPageFragment).commit()
                 return@OnNavigationItemSelectedListener true
             }
             else -> false
@@ -58,9 +69,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Log.e("정보 ", UserSharedPreferences.getUserId(this))
+
         initFragmentManager()
         initToolBar()
         initPermission()
+//        initMyPageFragment()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             initVibrator()
         }
@@ -68,6 +83,21 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
+//    fun initMyPageFragment(){
+//        binding = ActivityMainBinding.inflate(layoutInflater)
+//        val view = binding.root
+//        setContentView(view)
+//    }
+//    // fragmentA 에서 frameLayoutB에 fragment 추가하기 위해 호출 하는 메서드
+//    fun openFragmentOnFrameLayoutB(int: Int){
+//    val transaction = supportFragmentManager.beginTransaction()
+//    when(int){
+//        1 -> transaction.replace(R.id.navigation_mypage,walktimFm)
+//        2 -> transaction.replace(R.id.navigation_mypage,coseClearFm)
+//        3 -> transaction.replace(R.id.navigation_mypage,caloriesfm)
+//    }
+//        transaction.commit()
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
@@ -236,5 +266,4 @@ class MainActivity : AppCompatActivity() {
         const val BADGE_TAG = "BADGE"
         const val MYPAGE_TAG = "MYPAGE"
     }
-
 }

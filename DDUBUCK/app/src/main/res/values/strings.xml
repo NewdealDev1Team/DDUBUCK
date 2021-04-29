@@ -23,7 +23,21 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <string name="name"> 김달려님, 잘하셨어요! </string>
-    <string name="walk"> 완료한 나의 산책시간을 확인하세요. </string>
+    <string name="time_title_name"> 김달려님, 잘하셨어요! </string>
+    <string name="time_title_walk"> 완료한 나의 산책시간을 확인하세요. </string>
+    <string name="time_mini_title"> 오늘의 산책시간은 31분입니다.</string>
+    <string name="time_bottom_title"> 마지막 업데이트 4/9 오후 14:39</string>
+    <string name="time_bottom_title_day"> </string>
+    <string name="time_bottom_title_time"> </string>
+
+    <string name="cose_title"> 김달려님, 좋아요! </string>
+    <string name="cose_title_number"> 코스완주 홧수를 확인하세요</string>
+    <string name="cose_mini_title">오늘도 코스를 1회 완료했어요! </string>
+    <string name="cose_bottom_title">마지막 업데이트 4/2 오후 14:39</string>
+
+    <string name="calories_title"> 김달려님, 최고에요! </string>
+    <string name="calories_confirm"> 소모된 칼로리를 확인하세요</string>
+    <string name="calories_mini_title"> 오늘 벌써 144kcal나 소모했어요! </string>
+    <string name="calories_update"> 마지막 업데이트 4/2 오후 14:49 </string>
 
 </resources>

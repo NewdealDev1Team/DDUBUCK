@@ -27,6 +27,9 @@
         android:theme="@style/Theme.DDUBUCK"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
+        <activity android:name=".ui.mypage.mywalk.MyWalkActivity">
+
+        </activity>
         <activity android:name=".ui.home.option.SelectOptionActivity">
 
             <!-- <intent-filter> -->
@@ -57,9 +60,24 @@
             <!-- </intent-filter> -->
         </activity>
         <activity android:name=".SecondActivity" />
+            android:theme="@style/Theme.DDUBUCK"/>
 
 
+        <activity android:name=".login.LoginActivity"
+            android:screenOrientation="portrait">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
+
+        <activity android:name=".ui.ShareActivity">
+        </activity>
+        <activity android:name=".userinfo.UserInfoBirthdayActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".userinfo.UserInfoHeightWeightActivity"
             android:screenOrientation="portrait"/>
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">

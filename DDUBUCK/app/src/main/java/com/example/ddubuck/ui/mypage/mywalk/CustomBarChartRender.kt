@@ -8,11 +8,6 @@ import com.github.mikephil.charting.renderer.BarChartRenderer
 import com.github.mikephil.charting.utils.Utils
 import com.github.mikephil.charting.utils.ViewPortHandler
 import kotlin.math.ceil
-
-/**
- * Created by pertadima on 03,December,2019
- */
-
 class CustomBarChartRender(
     chart: BarDataProvider?,
     animator: ChartAnimator?,

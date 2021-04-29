@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ui.mypage.mpandroidchart.BarChartActivity">
-
+    tools:context=".ui.mypage.mywalk.CoseClearFragment">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,23 +15,25 @@
         android:layout_marginLeft="16dp"
         android:textColor="@color/black"
         android:textSize="18dp"
-        android:text="@string/time_title_name"/>
+        android:text="@string/cose_title"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
+        android:text="@string/cose_title_number"
         android:textColor="@color/black"
-        android:textSize="18dp"
-        android:text="@string/time_title_walk"/>
+        android:textSize="18dp" />
 
     <TextView
+        android:id="@+id/minititle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginBottom="30dp"
         android:textSize="14dp"
-        android:text="@string/time_mini_title"/>
+        android:text="@string/cose_mini_title"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,17 +41,31 @@
         android:background="@drawable/background_gradient">
 
         <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/bar_chart"
+            android:id="@+id/cose_bar_chart"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_margin="20dp"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
+    <android.widget.Button
+        android:id="@+id/sheet_complete_shareButton"
+        android:text="이번주 총 5회 완주"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/green"
+        android:layout_weight="1"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/mypage_circle"
+        android:layout_width="160dp"
+        android:layout_height="35dp"/>
+
+
+
     <TextView
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/time_bottom_title"
+        android:text="@string/cose_bottom_title"
         android:textSize="12dp"
         android:gravity="center"/>
 
