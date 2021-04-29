@@ -14,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.SecondActivity
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.userinfo.UserInfoBirthdayActivity
 import com.example.ddubuck.weather.WeatherViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -55,15 +56,22 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!UserSharedPreferences.getUserId(this).isBlank()) {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         // LoginView에서 상단바 제거
         val actionBar: ActionBar? = supportActionBar
         actionBar?.hide()
 
         setContentView(R.layout.login_layout)
-
 
         auth = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -282,7 +290,7 @@ class LoginActivity : AppCompatActivity() {
         val toMainActivity = Intent(this, MainActivity::class.java)
         val toBirthdayActivity = Intent(this, UserInfoBirthdayActivity::class.java)
 
-        userValidationServer.getUserInfo("1677486124").enqueue(object : Callback<UserValidationInfo> {
+        userValidationServer.getUserInfo(UserSharedPreferences.getUserId(this)).enqueue(object : Callback<UserValidationInfo> {
             override fun onResponse(call: Call<UserValidationInfo>, response: Response<UserValidationInfo>) {
                 val height = response.body()?.height
                 val weight = response.body()?.weight
@@ -306,6 +314,10 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun saveUserInfo(id: String, name: String, birthday: String, diversion: String) {
+
+        // Shared Preference에 회원 id 저장
+        UserSharedPreferences.setUserId(this, id)
+
         val userInfo: Retrofit = Retrofit.Builder()
                 .baseUrl("http://3.37.6.181:3000/")
                 .addConverterFactory(GsonConverterFactory.create())

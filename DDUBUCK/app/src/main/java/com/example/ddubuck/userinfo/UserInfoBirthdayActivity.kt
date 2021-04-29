@@ -14,6 +14,7 @@ import com.example.ddubuck.R
 import com.example.ddubuck.databinding.BirthdayInfoLayoutBinding
 import com.example.ddubuck.login.UserService
 import com.example.ddubuck.login.UserValidationInfo
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -25,7 +26,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class UserInfoBirthdayActivity : AppCompatActivity() {
     private lateinit var binding: BirthdayInfoLayoutBinding
-    private lateinit var database: DatabaseReference
 
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +75,7 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
                 .build()
 
         val userValidationServer: UserService = userValidation.create(UserService::class.java)
-        userValidationServer.getUserInfo("1677486124").enqueue(object : Callback<UserValidationInfo> {
+        userValidationServer.getUserInfo(UserSharedPreferences.getUserId(this)).enqueue(object : Callback<UserValidationInfo> {
             override fun onResponse(call: Call<UserValidationInfo>, response: Response<UserValidationInfo>) {
                 val year = response.body()?.year
                 val month = response.body()?.month
@@ -108,7 +108,7 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
 
         val toBodyActivity = Intent(this, UserInfoHeightWeightActivity::class.java)
         toBodyActivity.putExtra("birthday", birthday)
-        toBodyActivity.putExtra("userKey", "1677486124")
+        toBodyActivity.putExtra("userKey", UserSharedPreferences.getUserId(this))
         startActivity(toBodyActivity)
         overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out)
 

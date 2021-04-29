@@ -27,7 +27,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DDUBUCK">
 
-
         </activity>
         <activity android:name=".login.LoginActivity"
             android:screenOrientation="portrait">
@@ -37,6 +36,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <activity android:name=".ui.ShareActivity">
