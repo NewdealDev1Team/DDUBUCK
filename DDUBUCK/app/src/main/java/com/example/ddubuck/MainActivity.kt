@@ -34,10 +34,6 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
 
     private val myPageFragment = MyPageFragment()
-    private var walktimFm = WalkTimeFragment()
-    private var coseClearFm = CoseClearFragment()
-    private var caloriesfm = CaloriesFragment()
-
 
     private lateinit var activeFragment : Fragment
     private val mapModel: HomeMapViewModel by viewModels()

@@ -295,7 +295,7 @@ class LoginActivity : AppCompatActivity() {
                 val height = response.body()?.height
                 val weight = response.body()?.weight
 
-                if (height == 0 && weight == 0) {
+                if (height!!.toInt() == 0 && weight!!.toInt() == 0) {
                     startActivity(toBirthdayActivity)
                     overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out)
                 } else {

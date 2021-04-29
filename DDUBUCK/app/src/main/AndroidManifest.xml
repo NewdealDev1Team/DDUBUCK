@@ -43,9 +43,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.DDUBUCK">
-
-        </activity>
+            android:theme="@style/Theme.DDUBUCK"/>
 
 
         <activity android:name=".login.LoginActivity"

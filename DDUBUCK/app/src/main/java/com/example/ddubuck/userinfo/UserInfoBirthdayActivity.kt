@@ -77,11 +77,13 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
         val userValidationServer: UserService = userValidation.create(UserService::class.java)
         userValidationServer.getUserInfo(UserSharedPreferences.getUserId(this)).enqueue(object : Callback<UserValidationInfo> {
             override fun onResponse(call: Call<UserValidationInfo>, response: Response<UserValidationInfo>) {
-                val year = response.body()?.year
-                val month = response.body()?.month
-                val day = response.body()?.day
 
-                if (year == null ) {
+                val birth = response.body()?.birth!!.split("-")
+                val year = birth[0]
+                val month = birth[1]
+                val day = birth[2]
+
+                if (year == "" ) {
                     datePicker.init(1990, month!!.toInt() - 1, day!!.toInt(), null)
                 } else {
                     datePicker.init(year.toInt(), month!!.toInt() - 1, day!!.toInt(), null)

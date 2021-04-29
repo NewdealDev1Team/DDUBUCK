@@ -14,7 +14,7 @@
         android:layout_marginRight="38dp"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
 
