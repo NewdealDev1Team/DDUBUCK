@@ -5,35 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/mypage_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/toolbar_border"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:id="@+id/birthday_toobar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="마이페이지"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:textStyle="bold" />
-    </androidx.appcompat.widget.Toolbar>
-
 
     <LinearLayout
         android:id="@+id/mypage_profile_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@id/mypage_toolbar"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="35dp"
         android:layout_marginRight="38dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/mypage_toolbar"
         tools:ignore="MissingConstraints">
 
 
