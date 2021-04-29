@@ -7,6 +7,8 @@ import android.os.Bundle
 
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -154,6 +156,38 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuInflater = menuInflater
+        when(activeFragment) {
+            homeFragment -> {
+                menuInflater.inflate(R.menu.toolbar_menu_home, menu)
+            }
+            myPageFragment -> {
+                menuInflater.inflate(R.menu.toolbar_menu_mypage, menu)
+            }
+            else -> {
+
+            }
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.action_filter -> {
+
+            }
+            R.id.action_bookmark -> {
+
+            }
+            R.id.action_settings -> {
+
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
     private fun replaceFragment(fragment: Fragment) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
@@ -171,20 +205,24 @@ class MainActivity : AppCompatActivity() {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "챌린지"
                     toolbarTextView.text = ""
+                    invalidateOptionsMenu()
                 }
                 badgeFragment -> {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "뱃지"
                     toolbarTextView.text = ""
+                    invalidateOptionsMenu()
                 }
                 myPageFragment -> {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "마이페이지"
                     toolbarTextView.text = ""
+                    invalidateOptionsMenu()
                 }
                 else -> {
                     tbm.setDisplayShowTitleEnabled(false)
                     toolbarTextView.text = "뚜벅뚜벅"
+                    invalidateOptionsMenu()
                 }
             }
             tbm.setDisplayHomeAsUpEnabled(false)
