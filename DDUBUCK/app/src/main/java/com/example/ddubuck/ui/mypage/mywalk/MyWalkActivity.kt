@@ -9,7 +9,7 @@ import com.example.ddubuck.R
 import kotlinx.android.synthetic.main.activity_my_walk.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_mypage.button_worktime
-import kotlinx.android.synthetic.main.mypage_sheet_button.*
+//import kotlinx.android.synthetic.main.mypage_sheet_button.*
 
 class MyWalkActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

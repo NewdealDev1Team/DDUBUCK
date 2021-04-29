@@ -1,17 +1,16 @@
 package com.example.ddubuck.ui.mypage.mywalk
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import com.example.ddubuck.R
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -19,17 +18,20 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.github.mikephil.charting.model.GradientColor
 import com.github.mikephil.charting.utils.ViewPortHandler
 import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
-import kotlinx.android.synthetic.main.fragment_walk_time.bar_chart
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 //서버에 연결해서 데이터 입력
 //마이페이지에서 화면 연결하기 //api 정리하기!!
 
+@RequiresApi(Build.VERSION_CODES.O)
 class WalkTimeFragment : Fragment() {
 
     private lateinit var chart : BarChart
@@ -69,20 +71,38 @@ class WalkTimeFragment : Fragment() {
         private const val START_RANDOM = 0
         private const val END_RANDOM = 90
     }
-//    private void autoScroll(){
-//
-//    }
+
+    ////현재 날짜/시간 가져오기
+//@RequiresApi(Build.VERSION_CODES.O)
+//val date: LocalDate = LocalDate.now()
+//fun main(args: Array<String>) {
+//    println("-------- 현재 날짜:-------- $date")
+//}
+    //현재 날짜/시간 가져오기
+    @RequiresApi(Build.VERSION_CODES.O)
+    val dateNow: LocalDateTime = LocalDateTime.now()
+//    LocalDateTime twoDaysAgo = now.minusDays(2); // 2일 전
+    val oneDaysAgo : LocalDateTime = dateNow.minusDays(1)
+    val twoDaysAgo : LocalDateTime = dateNow.minusDays(2)
+    val threeDaysAgo : LocalDateTime = dateNow.minusDays(3)
+    val fourDaysAgo : LocalDateTime = dateNow.minusDays(4)
+    val fiveDaysAgo : LocalDateTime = dateNow.minusDays(5)
+    val sixDaysAgo : LocalDateTime = dateNow.minusDays(5)
+
+
+    //LocalDate 문자열로 포맷
+    val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/dd")
+    val formatterString: String = dateNow.format(formatter)
 
     private val listData by lazy {
         mutableListOf(
-//                WalkRecord("월",)
-            ChartData("월", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("화", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("수", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("목", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("금", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("토", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("일", Random.nextInt(START_RANDOM, END_RANDOM).toFloat())
+            ChartData(sixDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+            ChartData(fiveDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+            ChartData(fourDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+            ChartData(threeDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+            ChartData(twoDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+            ChartData(oneDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+            ChartData(dateNow.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat())
         )
     }
 
@@ -100,7 +120,7 @@ class WalkTimeFragment : Fragment() {
             //투명,불투명
             highLightAlpha = 0
         }
-        //data 클릭 시 분으로 나오는 커스텀??????????
+        //data 클릭 시 분으로 나오는 커스텀
         barDataSet.valueFormatter = object : ValueFormatter(){
             private val mFormat : DecimalFormat = DecimalFormat("###")
             fun getFormattedValue(value:Int, entry: Entry, dataSetIndex : Int, viewPortHandler: ViewPortHandler) : String{
@@ -125,7 +145,7 @@ class WalkTimeFragment : Fragment() {
                 //월 ~ 일
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
-                        return barData[value.toInt()].date
+                        return barData[value.toInt()].date.toString()
                     }
                 }
             }
@@ -164,6 +184,7 @@ class WalkTimeFragment : Fragment() {
             this.data = data
             invalidate()
         }
+        //setData
     }
 }
 
