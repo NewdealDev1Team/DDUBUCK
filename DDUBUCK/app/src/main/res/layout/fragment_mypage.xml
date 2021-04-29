@@ -4,51 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="35dp"
     tools:context=".ui.mypage.MyPageFragment">
 
-    android:layout_marginTop="35dp">
 
-
-<!--    <include-->
-<!--        android:id="@+id/mypage_button_sheet"-->
-<!--        layout="@layout/mypage_sheet"-->
-<!--        tools:layout_editor_absoluteX="-40dp"-->
-<!--        tools:layout_editor_absoluteY="16dp" />-->
     <LinearLayout
         android:id="@+id/mypage_profile_area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="3"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_worktime"
-            android:layout_width="104dp"
-            android:layout_height="80dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/work_time" />
-
-        <Button
-            android:id="@+id/button_coseclear"
-            android:layout_width="104dp"
-            android:layout_height="80dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/cose_clear" />
-
-        <Button
-            android:id="@+id/button_calories"
-            android:layout_width="104dp"
-            android:layout_height="80dp"
-            android:text="@string/calores" />
-    </LinearLayout>
-
-</LinearLayout>
         android:layout_marginLeft="18dp"
         android:layout_marginRight="38dp"
         android:orientation="horizontal"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
 
         <androidx.cardview.widget.CardView
@@ -113,8 +80,8 @@
         android:id="@+id/mypage_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="22dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="22dp"
         android:layout_marginRight="16dp"
         android:background="@color/grey"
         app:layout_constraintTop_toBottomOf="@+id/mypage_profile_area"
@@ -124,134 +91,137 @@
         android:id="@+id/my_walk_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/mypage_divider"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
+        android:text="나의 산책"
+        android:textColor="@color/black"
         android:textSize="21dp"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:text="나의 산책"/>
+        app:layout_constraintTop_toBottomOf="@id/mypage_divider" />
 
     <LinearLayout
         android:id="@+id/walking_result_area"
-        app:layout_constraintTop_toBottomOf="@+id/my_walk_title"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/my_walk_title"
         tools:ignore="MissingConstraints">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_alignParentStart="true"
             android:id="@+id/walking_time_button"
-            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="18dp"
+            android:layout_alignParentStart="true"
             android:background="@drawable/mypage_time_button_style"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:focusable="true">
+            android:paddingTop="18dp">
+
             <TextView
-                android:paddingLeft="25dp"
-                android:paddingRight="24dp"
-                android:textAlignment="center"
                 android:id="@+id/walking_time_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:paddingRight="24dp"
+                android:text="산책 시간"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="16dp"
-                android:text="산책 시간"/>
+                android:textSize="16dp" />
 
             <TextView
-                android:paddingLeft="31dp"
-                android:paddingRight="31dp"
-                android:paddingBottom="19dp"
-                android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/walking_time_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:paddingLeft="31dp"
+                android:paddingRight="31dp"
+                android:paddingBottom="19dp"
+                android:text="30분"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textStyle="bold"
                 android:textSize="20dp"
-                android:text="30분"/>
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/walking_time_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/course_end_button"
-            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:paddingTop="18dp"
             android:background="@drawable/mypage_course_button_style"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:focusable="true">
+            android:paddingTop="18dp">
+
             <TextView
-                android:paddingLeft="25dp"
-                android:paddingRight="24dp"
-                android:textAlignment="center"
                 android:id="@+id/course_end_button_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:paddingRight="24dp"
+                android:text="산책 시간"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="16dp"
-                android:text="산책 시간"/>
+                android:textSize="16dp" />
 
             <TextView
-                android:paddingLeft="31dp"
-                android:paddingRight="31dp"
-                android:paddingBottom="19dp"
-                android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/course_end_button_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:paddingLeft="31dp"
+                android:paddingRight="31dp"
+                android:paddingBottom="19dp"
+                android:text="30분"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textStyle="bold"
                 android:textSize="20dp"
-                android:text="30분"/>
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/course_end_button_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_alignParentRight="true"
             android:id="@+id/calorie_button"
-            android:clickable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="18dp"
+            android:layout_alignParentRight="true"
             android:background="@drawable/mypage_calorie_button_style"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
-            android:focusable="true">
+            android:paddingTop="18dp">
+
             <TextView
-                android:paddingLeft="25dp"
-                android:paddingRight="24dp"
-                android:textAlignment="center"
                 android:id="@+id/calorie_button_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:paddingRight="24dp"
+                android:text="산책 시간"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="16dp"
-                android:text="산책 시간"/>
+                android:textSize="16dp" />
 
             <TextView
-                android:paddingLeft="31dp"
-                android:paddingRight="31dp"
-                android:paddingBottom="19dp"
-                android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/calorie_button_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:paddingLeft="31dp"
+                android:paddingRight="31dp"
+                android:paddingBottom="19dp"
+                android:text="30분"
+                android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textStyle="bold"
                 android:textSize="20dp"
-                android:text="30분"/>
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/calorie_button_title" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
@@ -261,20 +231,20 @@
         android:id="@+id/my_gallary_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/walking_result_area"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
+        android:text="나의 갤러리"
+        android:textColor="@color/black"
         android:textSize="21dp"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:text="나의 갤러리"/>
+        app:layout_constraintTop_toBottomOf="@id/walking_result_area" />
 
     <View
         android:id="@+id/mypage_divider_big"
         android:layout_width="match_parent"
         android:layout_height="6dp"
-        android:layout_marginTop="22dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="22dp"
         android:layout_marginRight="16dp"
         android:background="@color/grey"
         app:layout_constraintTop_toBottomOf="@+id/my_gallary_title"
@@ -285,12 +255,12 @@
         android:id="@+id/user_route_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/mypage_divider_big"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
+        android:text="사용자 지정 경로"
+        android:textColor="@color/black"
         android:textSize="21dp"
         android:textStyle="bold"
-        android:textColor="@color/black"
-        android:text="사용자 지정 경로"/>
+        app:layout_constraintTop_toBottomOf="@id/mypage_divider_big" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
