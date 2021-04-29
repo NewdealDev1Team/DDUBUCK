@@ -4,13 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".ui.mypage.MyPageFragment">
+
     android:layout_marginTop="35dp">
 
 
+<!--    <include-->
+<!--        android:id="@+id/mypage_button_sheet"-->
+<!--        layout="@layout/mypage_sheet"-->
+<!--        tools:layout_editor_absoluteX="-40dp"-->
+<!--        tools:layout_editor_absoluteY="16dp" />-->
     <LinearLayout
         android:id="@+id/mypage_profile_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_worktime"
+            android:layout_width="104dp"
+            android:layout_height="80dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/work_time" />
+
+        <Button
+            android:id="@+id/button_coseclear"
+            android:layout_width="104dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/cose_clear" />
+
+        <Button
+            android:id="@+id/button_calories"
+            android:layout_width="104dp"
+            android:layout_height="80dp"
+            android:text="@string/calores" />
+    </LinearLayout>
+
+</LinearLayout>
         android:layout_marginLeft="18dp"
         android:layout_marginRight="38dp"
         android:orientation="horizontal"

@@ -22,6 +22,13 @@ class ChallengeFragment : Fragment() {
         challengeViewModel =
                 ViewModelProvider(this).get(ChallengeViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_challenge, container, false)
+
+        val textView: TextView = root.findViewById(R.id.text_challenge)
+        challengeViewModel.text.observe(viewLifecycleOwner, Observer {
+            textView.text = it
+        })
+
+
 //        val textView: TextView = root.findViewById(R.id.text_challenge)
 //        challengeViewModel.text.observe(viewLifecycleOwner, Observer {
 //            textView.text = it
