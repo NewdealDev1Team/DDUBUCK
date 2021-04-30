@@ -190,6 +190,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         timePoint = 0
         walkTime = 0
         burnedCalorie = 0.0
+
+        //TODO 후처리 코드 넣기
     }
 
     //산책기록을 반환합니다

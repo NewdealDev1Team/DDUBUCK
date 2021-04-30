@@ -3,6 +3,7 @@ package com.example.ddubuck.ui.share.canvas
 import android.R.attr
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
@@ -24,11 +25,27 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
         strokeWidth = 10.0f
     }
 
+    private val srcPaint = Paint().apply {
+        isAntiAlias = true
+        color = Color.GREEN
+        style = Paint.Style.STROKE
+        strokeWidth = 50.0f
+        background = ColorDrawable(Color.GREEN)
+    }
+
+    private val destPaint = Paint().apply {
+        isAntiAlias = true
+        color = Color.BLUE
+        style = Paint.Style.STROKE
+        strokeWidth = 10.0f
+    }
+
     private lateinit var path : Path
     private val translateMatrix = Matrix()
     private val boundRect = RectF()
     private var backgroundBitmap : Bitmap? = null
 
+    private val bmpMatrix = Matrix()
     private val src = Rect()
     private val dest = Rect()
 
@@ -50,20 +67,22 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
         super.onDraw(canvas)
         canvas?.drawColor(Color.BLACK)
         if(backgroundBitmap!=null) {
-            //이미지 비율
-            val bitmapWidth = backgroundBitmap!!.width
-            val bitmapHeight = backgroundBitmap!!.height
-            val imageAspectRatio:Float = bitmapWidth.toFloat()/bitmapHeight.toFloat()
-            if(bitmapWidth>bitmapHeight) {
-                //가로로 긴 이미지
-                dest.set(0,0, (bitmapWidth.toFloat()/imageAspectRatio).toInt(), height)
+            val srcBmp = backgroundBitmap!!
+            val bmpWidth = srcBmp.width
+            val bmpHeight = srcBmp.height
+            val bmpRatio:Float = (bmpWidth/bmpHeight).toFloat()
+            if(bmpWidth>=bmpHeight) {
+                //가로로 김
+                dest.set(width/2-((bmpWidth-width)/2),0,width/2+((bmpWidth-width)/2),height)
             } else {
-                //세로로 긴 이미지
-                dest.set(0, 0, width, (bitmapHeight.toFloat()/imageAspectRatio).toInt())
+                //세로로 김
+                bmpMatrix.postScale(width.toFloat(), bmpHeight/bmpRatio)
             }
-            src.set(0, 0, backgroundBitmap!!.width, backgroundBitmap!!.height)
-            canvas?.drawBitmap(backgroundBitmap!!, src,dest,null)
+            src.set(0,0,bmpWidth,bmpHeight)
+            canvas?.drawBitmap(srcBmp, null,dest,null)
+
         }
+
         path = routeToPath(userPath, width)
 
         //TO CENTER
