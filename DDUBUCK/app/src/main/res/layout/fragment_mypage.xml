@@ -10,12 +10,12 @@
 
     <LinearLayout
         android:id="@+id/mypage_profile_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="38dp"
         android:orientation="horizontal"
-        tools:ignore="MissingConstraints"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        tools:ignore="MissingConstraints">
 
 
         <androidx.cardview.widget.CardView
@@ -148,7 +148,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/course_end_button"
+            android:id="@+id/course_complete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
