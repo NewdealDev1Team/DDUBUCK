@@ -133,10 +133,10 @@ class LoginActivity : AppCompatActivity() {
                             user.kakaoAccount?.birthyear + "-" + user.kakaoAccount?.birthday.toString().substring(0, 2) + "-" + user.kakaoAccount?.birthday.toString().substring(2, 4)
                         }
                         saveUserInfo(id, name, birthday, "Kakao")
-
+                        loginSuccess()
                     }
                 }
-                loginSuccess()
+
                 autoLogin()
             }
         }
@@ -180,12 +180,14 @@ class LoginActivity : AppCompatActivity() {
                 saveUserInfo(id, name, birthday, "Google")
 
                 firebaseAuthWithGoogle(account.idToken!!)
+
+                loginSuccess()
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e)
                 Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
             }
-            loginSuccess()
+
         }
     }
 
@@ -258,6 +260,7 @@ class LoginActivity : AppCompatActivity() {
                             val birthday = user.birthyear + "-" + user.birthday
 
                             saveUserInfo(id, name, birthday, "Naver")
+                            loginSuccess()
                         }
                     }
 
@@ -265,7 +268,6 @@ class LoginActivity : AppCompatActivity() {
                         Log.d("실패", "Naver Login Fail")
                     }
                 })
-                loginSuccess()
 
 
             } else {
