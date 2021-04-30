@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -36,9 +37,9 @@ class CanvasActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_canvas)
-        dispatchTakePictureIntent()
-        //val tempBitmap = BitmapFactory.decodeResource(this.resources, R.drawable.weather_high)
-        //initCanvas(tempBitmap)
+        //dispatchTakePictureIntent()
+        val tempBitmap = BitmapFactory.decodeResource(this.resources, R.drawable.wide_aspect_ratio)
+        initCanvas(tempBitmap)
         initToolBar()
         initButtons()
     }
@@ -53,8 +54,8 @@ class CanvasActivity : AppCompatActivity() {
         }
     }
 
-    private fun initCanvas(tempBitmap: Bitmap) {
-        val canvasView = CustomCanvas(this, null,0,tempBitmap)
+    private fun initCanvas(srcBmp: Bitmap) {
+        val canvasView = CustomCanvas(this, null,0,srcBmp)
         val frameView = findViewById<FrameLayout>(R.id.canvas_container)
         frameView.addView(canvasView)
     }

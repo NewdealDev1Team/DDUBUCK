@@ -48,9 +48,20 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+        canvas?.drawColor(Color.BLACK)
         if(backgroundBitmap!=null) {
-            src.set(0, 0, backgroundBitmap!!.width - 1, backgroundBitmap!!.height - 1)
-            dest.set(0, 0, width - 1, height - 1)
+            //이미지 비율
+            val bitmapWidth = backgroundBitmap!!.width
+            val bitmapHeight = backgroundBitmap!!.height
+            val imageAspectRatio:Float = bitmapWidth.toFloat()/bitmapHeight.toFloat()
+            if(bitmapWidth>bitmapHeight) {
+                //가로로 긴 이미지
+                dest.set(0,0, (bitmapWidth.toFloat()/imageAspectRatio).toInt(), height)
+            } else {
+                //세로로 긴 이미지
+                dest.set(0, 0, width, (bitmapHeight.toFloat()/imageAspectRatio).toInt())
+            }
+            src.set(0, 0, backgroundBitmap!!.width, backgroundBitmap!!.height)
             canvas?.drawBitmap(backgroundBitmap!!, src,dest,null)
         }
         path = routeToPath(userPath, width)
