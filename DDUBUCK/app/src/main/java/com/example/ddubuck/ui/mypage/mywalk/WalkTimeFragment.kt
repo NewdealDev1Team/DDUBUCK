@@ -24,8 +24,6 @@ import com.github.mikephil.charting.utils.ViewPortHandler
 import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
@@ -63,8 +61,11 @@ class WalkTimeFragment : Fragment() {
             }
             setData(listData)
 
-//        val textView : TextView = rootView.findViewById(R.id.time_bottom_title_text_day)
-//        textView.setText(textformatterString.toInt())
+        val day : TextView = rootView.findViewById(R.id.time_bottom_title_text_day)
+        day.setText(textformatterString)
+        val time : TextView = rootView.findViewById(R.id.time_bottom_title_text_time)
+        time.setText(timeformatterString)
+
         return rootView
     }
 
@@ -76,7 +77,6 @@ class WalkTimeFragment : Fragment() {
     }
 
     //현재 날짜/시간 가져오기
-    @RequiresApi(Build.VERSION_CODES.O)
     val dateNow: LocalDateTime = LocalDateTime.now()
     //1 ~ 5일
     val oneDaysAgo : LocalDateTime = dateNow.minusDays(1)
@@ -88,11 +88,15 @@ class WalkTimeFragment : Fragment() {
 
 
     //LocalDate 문자열로 포맷
-    val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("dd")
+    val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("E")
     val formatterString: String = dateNow.format(formatter)
 
     val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/dd")
-    val textformatterString : String = dateNow.format(formatter)
+    val textformatterString : String = dateNow.format(textformatter)
+
+    val timeformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
+    val timeformatterString : String = dateNow.format(timeformatter)
+
 
     private val listData by lazy {
         mutableListOf(

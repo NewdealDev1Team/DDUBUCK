@@ -58,22 +58,20 @@
             android:layout_marginLeft="108dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/time_bottom_title"
+            android:text="마지막 업데이트 "
             android:textSize="12dp"
             android:gravity="center"/>
         <TextView
             android:id="@+id/time_bottom_title_text_day"
-            android:layout_width="wrap_content"
+            android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:textSize="12dp"
             android:gravity="center"/>
         <TextView
             android:id="@+id/time_bottom_title_text_time"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:textSize="12dp"
-            android:gravity="center"/>
-
+            android:textSize="12dp" />
     </LinearLayout>
 
 

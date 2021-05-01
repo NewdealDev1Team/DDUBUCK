@@ -1,12 +1,15 @@
 package com.example.ddubuck.ui.mypage.mywalk
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.annotation.RequiresApi
 import com.example.ddubuck.R
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
@@ -20,8 +23,12 @@ import com.github.mikephil.charting.utils.ViewPortHandler
 import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
 import java.text.DecimalFormat
+import java.time.DateTimeException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
+@RequiresApi(Build.VERSION_CODES.O)
 class CoseClearFragment : Fragment() {
     private lateinit var chart : BarChart
 
@@ -51,6 +58,11 @@ class CoseClearFragment : Fragment() {
         }
         setData(listData)
 
+        val day : TextView = rootView.findViewById(R.id.cose_bottom_title_text_day)
+        day.setText(textformatterString)
+        val time : TextView = rootView.findViewById(R.id.cose_bottom_title_text_time)
+        time.setText(coseformatterString)
+
         return rootView
     }
 
@@ -61,17 +73,35 @@ class CoseClearFragment : Fragment() {
         private const val END_RANDOM = 90
     }
 
-    private val listData by lazy {
-        mutableListOf(
-//                WalkRecord("월",)
-            ChartData("월", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("화", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("수", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("목", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("금", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("토", Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
-            ChartData("일", Random.nextInt(START_RANDOM, END_RANDOM).toFloat())
-        )
+    //현재 날짜/시간 가져오기
+    val dateNow: LocalDateTime = LocalDateTime.now()
+    //1 ~ 5일
+    val oneDaysAgo : LocalDateTime = dateNow.minusDays(1)
+    val twoDaysAgo : LocalDateTime = dateNow.minusDays(2)
+    val threeDaysAgo : LocalDateTime = dateNow.minusDays(3)
+    val fourDaysAgo : LocalDateTime = dateNow.minusDays(4)
+    val fiveDaysAgo : LocalDateTime = dateNow.minusDays(5)
+    val sixDaysAgo : LocalDateTime = dateNow.minusDays(6)
+
+    //LocalDate 문자열로 포맷
+    val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("E")
+
+    val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/dd")
+    val textformatterString : String = dateNow.format(textformatter)
+
+    val coseformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
+    val coseformatterString : String = dateNow.format(coseformatter)
+
+   private val listData by lazy {
+            mutableListOf(
+                ChartData(sixDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+                ChartData(fiveDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+                ChartData(fourDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+                ChartData(threeDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+                ChartData(twoDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+                ChartData(oneDaysAgo.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat()),
+                ChartData(dateNow.format(formatter).toString(), Random.nextInt(START_RANDOM, END_RANDOM).toFloat())
+            )
     }
 
     private fun setData(barData: List<ChartData>) {
