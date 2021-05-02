@@ -15,6 +15,7 @@
         android:layout_marginLeft="16dp"
         android:textColor="@color/black"
         android:textSize="18dp"
+        android:textStyle="bold"
         android:text="@string/cose_title"/>
 
     <TextView
@@ -23,17 +24,39 @@
         android:layout_marginLeft="16dp"
         android:text="@string/cose_title_number"
         android:textColor="@color/black"
+        android:textStyle="bold"
         android:textSize="18dp" />
 
-    <TextView
-        android:id="@+id/minititle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="30dp"
-        android:textSize="14dp"
-        android:text="@string/cose_mini_title"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="14dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="오늘도 코스를"
+            android:textSize="14dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/cose_mini_title"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="14dp" />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="회 완료했어요!"
+            android:textSize="14dp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,6 +101,7 @@
             android:layout_width="30dp"
             android:layout_height="wrap_content"
             android:textSize="12dp"
+            android:textStyle="bold"
             android:gravity="center"/>
         <TextView
             android:id="@+id/cose_bottom_title_text_time"

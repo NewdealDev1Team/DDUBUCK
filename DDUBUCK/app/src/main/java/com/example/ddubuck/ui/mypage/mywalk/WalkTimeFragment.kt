@@ -56,10 +56,11 @@ class WalkTimeFragment : Fragment() {
     val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("E")
     val formatterString: String = dateNow.format(formatter)
 
-    val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/dd")
+    val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/d")
     val textformatterString : String = dateNow.format(textformatter)
 
     val timeformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
+
     val timeformatterString : String = dateNow.format(timeformatter)
 
 

@@ -85,7 +85,7 @@ class CoseClearFragment : Fragment() {
     //LocalDate 문자열로 포맷
     val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("E")
 
-    val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/dd")
+    val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/d")
     val textformatterString : String = dateNow.format(textformatter)
 
     val coseformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
