@@ -2,15 +2,11 @@ package com.example.ddubuck.ui.share.canvas
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.ColorDrawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
+import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
-
-
-//class android.content.Context, interface android.util.AttributeSet
-
+import java.text.DecimalFormat
 
 class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(
     context,
@@ -20,48 +16,42 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
         context: Context,
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0,
-        bitmap: Bitmap
+        bitmap: Bitmap,
+        walkRecord: WalkRecord,
     ) : this(context, attrs, defStyleAttr) {
         this.srcBmp = bitmap
+        this.walkRecord = walkRecord
     }
 
-    private val linePaint = Paint().apply {
+    private val whitePaint = Paint().apply {
+        textAlign = Paint.Align.CENTER
+        textSize = 60f
         isAntiAlias = true
-        color = Color.BLUE
+        color = Color.WHITE
         style = Paint.Style.STROKE
-        strokeWidth = 10.0f
+        strokeWidth = 8.0f
     }
 
-    private val srcPaint = Paint().apply {
+    private val blackPaint = Paint().apply {
         isAntiAlias = true
-        color = Color.GREEN
+        color = Color.BLACK
         style = Paint.Style.STROKE
-        strokeWidth = 50.0f
-        background = ColorDrawable(Color.GREEN)
-    }
-
-    private val destPaint = Paint().apply {
-        isAntiAlias = true
-        color = Color.BLUE
-        style = Paint.Style.STROKE
-        strokeWidth = 10.0f
+        strokeWidth = 8.0f
     }
 
     private lateinit var path : Path
     private val translateMatrix = Matrix()
     private val boundRect = RectF()
     private var srcBmp : Bitmap? = null
+    private var walkRecord : WalkRecord? = null
 
-    private val bmpMatrix = Matrix()
-    private val src = Rect()
-    private val dest = Rect()
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         cropBitmap()
     }
 
-    fun cropBitmap() {
+    private fun cropBitmap() {
         val srcBmp = srcBmp!!
         if(srcBmp.width >= srcBmp.height) {
             this.srcBmp = Bitmap.createBitmap(
@@ -95,25 +85,25 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
 
 
 
-
-
-
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
-        canvas?.drawColor(Color.BLACK)
         if(srcBmp!=null) {
             val croppedBmp = srcBmp!!
             canvas?.drawBitmap(croppedBmp,(width-croppedBmp.width)/2f,(height-croppedBmp.height)/2f,null)
         }
+        if(walkRecord!=null) {
+            val record = walkRecord!!
+            //사용자 이동경로 그리기
+            path = routeToPath(record.path, width)
+            path.computeBounds(boundRect, true)
+            translateMatrix.setTranslate(width*0.1f, (height - boundRect.height()))
+            path.transform(translateMatrix)
+            canvas?.drawPath(path, whitePaint)
 
-        path = routeToPath(userPath, width)
-
-        //TO CENTER
-        translateMatrix.setTranslate(width / 2F, height / 2F)
-        path.transform(translateMatrix)
-        path.computeBounds(boundRect, true)
-        Log.e("boundSize", "${boundRect.width()}, ${boundRect.height()}")
-        canvas?.drawPath(path, linePaint)
+            //사용자 이동정보 그리기
+            val distanceForm = DecimalFormat("#.##km").format(record.distance/1000)
+            canvas?.drawText(distanceForm, width*0.1f, (height - boundRect.height()-80f), whitePaint)
+        }
     }
 
 
@@ -137,7 +127,7 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
             bound.width()
         }
 
-        val scaleValue = (viewWidth-100) / boundMax
+        val scaleValue = (viewWidth*0.3F) / boundMax
         scaleMatrix.setScale(
             scaleValue,
             scaleValue,
