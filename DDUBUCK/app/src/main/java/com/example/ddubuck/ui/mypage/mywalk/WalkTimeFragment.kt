@@ -18,7 +18,9 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ViewPortHandler
 import id.co.barchartresearch.ChartData
@@ -33,43 +35,6 @@ import kotlin.random.Random
 
 @RequiresApi(Build.VERSION_CODES.O)
 class WalkTimeFragment : Fragment() {
-
-    private lateinit var chart : BarChart
-
-    override fun onCreateView( //프래그먼트가 인터페이스를 처음 그릴때 사용함
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View? {
-        val rootView : View = inflater.inflate(R.layout.fragment_walk_time, container, false)
-        chart = rootView.findViewById(R.id.bar_chart)
-
-            //바 차트 커스텀
-            with(chart) {//그래프의 마커를 터치 시 때 해당 데이터를 보여줌
-                description.isEnabled = false
-                legend.isEnabled = false
-                isDoubleTapToZoomEnabled = false
-
-                setPinchZoom(false)
-                setDrawBarShadow(false)
-                setDrawValueAboveBar(false)
-                //차트 라운들 모양 커스텀
-                val barChartRender = CustomBarChartRender(this, animator, viewPortHandler).apply {
-                    setRadius(20)
-                }
-                renderer = barChartRender
-            }
-            setData(listData)
-
-        val day : TextView = rootView.findViewById(R.id.time_bottom_title_text_day)
-        day.setText(textformatterString)
-        val time : TextView = rootView.findViewById(R.id.time_bottom_title_text_time)
-        time.setText(timeformatterString)
-
-        return rootView
-    }
-
-
     //왼쪽 수치 시작 ~ 끝
     companion object {
         private const val START_RANDOM = 0
@@ -110,22 +75,64 @@ class WalkTimeFragment : Fragment() {
         )
     }
 
+    private lateinit var chart : BarChart
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
+        val rootView : View = inflater.inflate(R.layout.fragment_walk_time, container, false)
+        chart = rootView.findViewById(R.id.bar_chart)
+
+            //바 차트 커스텀
+            with(chart) {//그래프의 마커를 터치 시 때 해당 데이터를 보여줌
+                description.isEnabled = false
+                legend.isEnabled = false
+                isDoubleTapToZoomEnabled = false
+
+                setPinchZoom(false)
+                setDrawBarShadow(false)
+                setDrawValueAboveBar(false)
+
+                //차트 라운들 모양 커스텀
+                val barChartRender = CustomBarChartRender(this, animator, viewPortHandler).apply {
+                    setRadius(20)
+                }
+                renderer = barChartRender
+            }
+            setData(listData)
+
+        val day : TextView = rootView.findViewById(R.id.time_bottom_title_text_day)
+        day.setText(textformatterString)
+        val time : TextView = rootView.findViewById(R.id.time_bottom_title_text_time)
+        time.setText(timeformatterString)
+
+        return rootView
+    }
+
     private fun setData(barData: List<ChartData>) {
         val values = mutableListOf<BarEntry>()
+        //Entry에 값을 추가
         barData.forEachIndexed { index, chartData ->
             values.add(BarEntry(index.toFloat(), chartData.value))
         }
 
+        //BarDataentries.add(BarEntry(i as Float, sumOfDay))
         val barDataSet = BarDataSet(values, "").apply {
             setDrawValues(false)
             //차트 색
-            setColor(Color.argb(55,31, 117, 60));
-            //투명,불투명
-            highLightAlpha = 100
-            highLightColor = color.green
-            isHighlightEnabled = true
-
+            val colors = ArrayList<Int>()
+            colors.add(Color.argb(55,61, 171, 91))
+            colors.add(Color.argb(55,61, 171, 91))
+            colors.add(Color.argb(55,61, 171, 91))
+            colors.add(Color.argb(55,61, 171, 91))
+            colors.add(Color.argb(55,61, 171, 91))
+            colors.add(Color.argb(55,61, 171, 91))
+            colors.add(Color.argb(200,61, 171, 91))
+            setColors(colors)
         }
+
         //data 클릭 시 분으로 나오는 커스텀
         barDataSet.valueFormatter = object : ValueFormatter(){
             private val mFormat : DecimalFormat = DecimalFormat("###")
@@ -139,6 +146,9 @@ class WalkTimeFragment : Fragment() {
         val data = BarData(dataSets as List<IBarDataSet>?).apply {
             barWidth = 0.3F
         }
+        val h = BarData()
+
+
 //애니메이션 효과 0.1초
         with(chart) {
             animateY(1000)
@@ -190,7 +200,6 @@ class WalkTimeFragment : Fragment() {
             invalidate()
         }
     }
-
 
 }
 

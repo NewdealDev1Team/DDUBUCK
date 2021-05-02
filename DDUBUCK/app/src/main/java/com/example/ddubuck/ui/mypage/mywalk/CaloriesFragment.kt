@@ -112,10 +112,17 @@ class CaloriesFragment : Fragment() {
 
         val barDataSet = BarDataSet(values, "").apply {
             setDrawValues(false)
-            //차트 색
+            //차트 색상
 
-            setColor(Color.argb(55,250, 168, 46));
-//            gradientColors = mutableListOf(GradientColor(R.color.white, R.color.white))
+            val colors = ArrayList<Int>()
+            colors.add(Color.argb(55,250, 168, 46));
+            colors.add(Color.argb(55,250, 168, 46));
+            colors.add(Color.argb(55,250, 168, 46));
+            colors.add(Color.argb(55,250, 168, 46));
+            colors.add(Color.argb(55,250, 168, 46));
+            colors.add(Color.argb(55,250, 168, 46));
+            colors.add(Color.argb(200,250, 168, 46));
+            setColors(colors)
             //투명,불투명
             highLightAlpha = 0
         }

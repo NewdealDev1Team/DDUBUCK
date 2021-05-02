@@ -113,13 +113,20 @@ class CoseClearFragment : Fragment() {
         val barDataSet = BarDataSet(values, "").apply {
             setDrawValues(false)
             //차트 색
+            val colors = ArrayList<Int>()
+            colors.add(Color.argb(55,31, 117, 60));
+            colors.add(Color.argb(55,31, 117, 60));
+            colors.add(Color.argb(55,31, 117, 60));
+            colors.add(Color.argb(55,31, 117, 60));
+            colors.add(Color.argb(55,31, 117, 60));
+            colors.add(Color.argb(55,31, 117, 60));
+            colors.add(Color.argb(200,31, 117, 60));
+            setColors(colors)
 
-            setColor(Color.argb(55,61, 171, 91));
-//            gradientColors = mutableListOf(GradientColor(R.color.white, R.color.white))
             //투명,불투명
             highLightAlpha = 0
         }
-        //data 클릭 시 분으로 나오는 커스텀??????????
+        //data 클릭 시 분으로 나오는 커스텀
         barDataSet.valueFormatter = object : ValueFormatter(){
             private val mFormat : DecimalFormat = DecimalFormat("###")
             fun getFormattedValue(value:Int, entry: Entry, dataSetIndex : Int, viewPortHandler: ViewPortHandler) : String{
