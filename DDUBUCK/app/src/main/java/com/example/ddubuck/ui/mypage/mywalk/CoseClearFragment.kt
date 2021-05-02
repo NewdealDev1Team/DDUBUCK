@@ -37,7 +37,6 @@ class CoseClearFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        Log.d("onCreateView","~~~ onCreateView ~~~")
         val rootView : View = inflater.inflate(R.layout.fragment_cose_clear, container, false)
 
         chart = rootView.findViewById(R.id.cose_bar_chart)
@@ -70,7 +69,7 @@ class CoseClearFragment : Fragment() {
     //왼쪽 수치 시작 ~ 끝
     companion object {
         private const val START_RANDOM = 0
-        private const val END_RANDOM = 90
+        private const val END_RANDOM = 5
     }
 
     //현재 날짜/시간 가져오기
@@ -166,9 +165,22 @@ class CoseClearFragment : Fragment() {
                 gridLineWidth = 0.5F
                 //선 길이, 조각 사이의 공간, 위상
                 enableGridDashedLine(5f,5f,5f)
-                axisMinimum = 0F
-                axisMaximum = 3F
+
+                var count = 0
+                barData.forEachIndexed{ index, chartData ->
+                    while(chartData.value > axisMaximum){
+                        count++
+                        if(chartData.value > axisMaximum){
+                            axisMaximum += 1F
+                        }else{
+                            axisMaximum = 3F
+                        }
+                    }
+                }
+
                 granularity = 1F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                axisMinimum = 0F
+//                axisMaximum = 3F
                 //y축 제목 커스
                 valueFormatter = object : ValueFormatter(){
                     private val mFormat : DecimalFormat = DecimalFormat("###")
@@ -178,18 +190,32 @@ class CoseClearFragment : Fragment() {
                 }
             }
 
-//차트 오른쪽 축, Y방향 false처리
+//차트 오른쪽 축, Y방향 false처리, 최소,최대
             axisLeft.apply {
                 isEnabled = false
                 //그래프 가로 축,선 (점선으로 변경)
                 gridColor = R.color.black
-                axisMinimum = 30F
-                axisMaximum = 90F
+
+                var count = 0
+                barData.forEachIndexed{ index, chartData ->
+                    while(chartData.value > axisMaximum){
+                        count++
+                        if(chartData.value > axisMaximum){
+                            axisMaximum += 1F
+                        }else{
+                            axisMaximum = 3F
+                        }
+                    }
+                }
+                granularity = 1F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                axisMinimum = 0F
+//                axisMaximum = 3F
             }
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
             this.data = data
             invalidate()
         }
+
     }
 
 

@@ -37,7 +37,6 @@ class CaloriesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        Log.d("onCreateView","~~~ onCreateView ~~~")
         val rootView : View = inflater.inflate(R.layout.fragment_calories, container, false)
 
         chart = rootView.findViewById(R.id.calories_bar_chart)
@@ -68,7 +67,7 @@ class CaloriesFragment : Fragment() {
     //왼쪽 수치 시작 ~ 끝
     companion object {
         private const val START_RANDOM = 0
-        private const val END_RANDOM = 90
+        private const val END_RANDOM = 800
     }
 
     //현재 날짜/시간 가져오기
@@ -166,9 +165,20 @@ class CaloriesFragment : Fragment() {
                 gridLineWidth = 0.5F
                 //선 길이, 조각 사이의 공간, 위상
                 enableGridDashedLine(5f,5f,5f)
-                axisMinimum = 0F
-                axisMaximum = 600F
+
+                var count = 0
+                barData.forEachIndexed{ index, chartData ->
+                    while(chartData.value > axisMaximum){
+                        count++
+                        if(chartData.value > axisMaximum){
+                            axisMaximum += 300F
+                        }else{
+                            axisMaximum = 600F
+                        }
+                    }
+                }
                 granularity = 200F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                axisMinimum = 0F
             }
 
 //차트 오른쪽 축, Y방향 false처리
@@ -176,8 +186,21 @@ class CaloriesFragment : Fragment() {
                 isEnabled = false
                 //그래프 가로 축,선 (점선으로 변경)
                 gridColor = R.color.black
-                axisMinimum = 30F
-                axisMaximum = 90F
+
+                var count = 0
+                barData.forEachIndexed{ index, chartData ->
+                    while(chartData.value > axisMaximum){
+                        count++
+                        if(chartData.value > axisMaximum){
+                            axisMaximum += 300F
+                        }else{
+                            axisMaximum = 600F
+                        }
+                    }
+                }
+                granularity = 200F
+                //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                axisMinimum = 0F
             }
             notifyDataSetChanged()
             this.data = data

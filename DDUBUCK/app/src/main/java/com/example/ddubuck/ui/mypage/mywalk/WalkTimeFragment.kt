@@ -38,7 +38,7 @@ class WalkTimeFragment : Fragment() {
     //왼쪽 수치 시작 ~ 끝
     companion object {
         private const val START_RANDOM = 0
-        private const val END_RANDOM = 90
+        private const val END_RANDOM = 100
     }
 
     //현재 날짜/시간 가져오기
@@ -173,10 +173,23 @@ class WalkTimeFragment : Fragment() {
                 gridColor = R.color.black
                 //점선 크기 조정
                gridLineWidth = 0.5F
-                //선 길이, 조각 사이의 공간, 위상
+                //선 길이, 조각 사이의 공간, 위상(점선)
                 enableGridDashedLine(5f,5f,5f)
+
+                var count = 0
+                barData.forEachIndexed{ index, chartData ->
+                    while(chartData.value > axisMaximum){
+                        count++
+                        if(chartData.value > axisMaximum){
+                            axisMaximum += 30F
+                        }else{
+                            axisMaximum = 90F
+                        }
+                    }
+                }
+                granularity = 30F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
                 axisMinimum = 0F
-                axisMaximum = 90F
+
                 granularity = 30F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
                 //y축 제목 커스
                 valueFormatter = object : ValueFormatter(){
@@ -192,8 +205,21 @@ class WalkTimeFragment : Fragment() {
                 isEnabled = false
                 //그래프 가로 축,선 (점선으로 변경)
                 gridColor = R.color.black
-                axisMinimum = 30F
-                axisMaximum = 90F
+
+                var count = 0
+                barData.forEachIndexed{ index, chartData ->
+                    while(chartData.value > axisMaximum){
+                        count++
+                        if(chartData.value > axisMaximum){
+                            axisMaximum += 30F
+                        }else{
+                            axisMaximum = 90F
+                        }
+                    }
+                }
+                granularity = 30F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                axisMinimum = 0F
+//                axisMaximum = 90F
             }
             notifyDataSetChanged()
             this.data = data
