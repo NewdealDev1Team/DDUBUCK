@@ -24,47 +24,50 @@ import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
+import com.example.ddubuck.ui.mypage.MyPageEditFragment
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
 import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_mypage.*
 
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
     private val challengeFragment = ChallengeFragment()
     private val badgeFragment = BadgeFragment()
-
     private val myPageFragment = MyPageFragment()
 
-    private lateinit var activeFragment : Fragment
+    private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
-    private val activityModel : MainActivityViewModel by viewModels()
-//수치
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener{ item ->
-        when(item.itemId){
-            R.id.navigation_home -> {
-                replaceFragment(homeFragment)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_challenge -> {
-                replaceFragment(challengeFragment)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_badge -> {
-                replaceFragment(badgeFragment)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_mypage -> {
-                replaceFragment(myPageFragment)
+    private val activityModel: MainActivityViewModel by viewModels()
+
+    //수치
+    private val mOnNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    replaceFragment(homeFragment)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_challenge -> {
+                    replaceFragment(challengeFragment)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_badge -> {
+                    replaceFragment(badgeFragment)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_mypage -> {
+                    replaceFragment(myPageFragment)
 //                val fm:FragmentManager = supportFragmentManager
 //                fm.beginTransaction().add(R.id.navigation_mypage,myPageFragment).commit()
-                return@OnNavigationItemSelectedListener true
+                    return@OnNavigationItemSelectedListener true
+                }
+                else -> false
             }
-            else -> false
         }
-     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +106,7 @@ class MainActivity : AppCompatActivity() {
     fun initVibrator() {
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         mapModel.vibrationControl.observe(this, {
-            vibrator.vibrate(VibrationEffect.createOneShot(100,85))
+            vibrator.vibrate(VibrationEffect.createOneShot(100, 85))
         })
     }
 
@@ -111,18 +114,18 @@ class MainActivity : AppCompatActivity() {
     private fun initPermission() {
         val list = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             listOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACTIVITY_RECOGNITION,
-                    Manifest.permission.VIBRATE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACTIVITY_RECOGNITION,
+                Manifest.permission.VIBRATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         } else {
             listOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.VIBRATE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.VIBRATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         }
 
@@ -143,24 +146,33 @@ class MainActivity : AppCompatActivity() {
         activeFragment = homeFragment
         val tbm = supportActionBar
         val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
-        if(tbm != null) {
+        if (tbm != null) {
             fm.addOnBackStackChangedListener {
-                if(fm.backStackEntryCount != 0) {
-                    when(activeFragment) {
+                if (fm.backStackEntryCount != 0) {
+                    when (activeFragment) {
                         challengeFragment -> {
                             val backStackTag = CHALLENGE_TAG
                             tbm.setDisplayHomeAsUpEnabled(true)
-                            tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                            tb.setNavigationOnClickListener {
+                                fm.popBackStack(backStackTag,
+                                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            }
                         }
                         badgeFragment -> {
                             val backStackTag = BADGE_TAG
                             tbm.setDisplayHomeAsUpEnabled(true)
-                            tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                            tb.setNavigationOnClickListener {
+                                fm.popBackStack(backStackTag,
+                                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            }
                         }
                         myPageFragment -> {
                             val backStackTag = MYPAGE_TAG
                             tbm.setDisplayHomeAsUpEnabled(true)
-                            tb.setNavigationOnClickListener {fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)}
+                            tb.setNavigationOnClickListener {
+                                fm.popBackStack(backStackTag,
+                                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                            }
                         }
                         else -> {
 
@@ -177,10 +189,10 @@ class MainActivity : AppCompatActivity() {
         val tb = findViewById<androidx.appcompat.widget.Toolbar>(R.id.main_toolbar)
         setSupportActionBar(tb)
         val tbm = supportActionBar
-        if(tbm != null) {
+        if (tbm != null) {
             tbm.setDisplayShowTitleEnabled(false)
             tbm.show()
-            activityModel.toolbarTitle.observe(this, {v->
+            activityModel.toolbarTitle.observe(this, { v ->
                 tbm.title = v
             })
         }
@@ -188,7 +200,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val menuInflater = menuInflater
-        when(activeFragment) {
+        when (activeFragment) {
             homeFragment -> {
                 menuInflater.inflate(R.menu.toolbar_menu_home, menu)
             }
@@ -203,7 +215,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.action_filter -> {
 
             }
@@ -227,10 +239,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun changeToolBar(fragment: Fragment) {
-        val toolbarTextView : TextView = findViewById(R.id.main_toolbar_text)
+        val toolbarTextView: TextView = findViewById(R.id.main_toolbar_text)
         val tbm = supportActionBar
-        if(tbm != null) {
-            when(fragment) {
+        if (tbm != null) {
+            when (fragment) {
                 challengeFragment -> {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "챌린지"
