@@ -5,10 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Rect
-import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -19,9 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.share.ShareActivity
 import com.naver.maps.geometry.LatLng
-import ja.burhanrashid52.photoeditor.PhotoEditorView
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -35,15 +29,13 @@ import java.util.*
 ///3.사진 저장하기
 
 class CanvasActivity : AppCompatActivity() {
-
-    private var isFileLoaded : Boolean = false
+    lateinit var canvasView : CustomCanvas
+    private var isFileLoaded : Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_canvas)
-        //dispatchTakePictureIntent()
-        val tempBitmap = BitmapFactory.decodeResource(this.resources, R.drawable.wide_aspect_ratio)
-        initCanvas(tempBitmap)
+        dispatchTakePictureIntent()
         initToolBar()
         initButtons()
     }
@@ -59,9 +51,16 @@ class CanvasActivity : AppCompatActivity() {
     }
 
     private fun initCanvas(srcBmp: Bitmap) {
-        val canvasView = CustomCanvas(this, null,0,srcBmp, record)
+        canvasView = CustomCanvas(this, null,0,srcBmp, record)
         val frameView = findViewById<FrameLayout>(R.id.canvas_container)
         frameView.addView(canvasView)
+    }
+
+    private fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
+        return Uri.parse(path.toString())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -99,7 +98,16 @@ class CanvasActivity : AppCompatActivity() {
         confirmButton.setOnClickListener{
             if(isFileLoaded) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    Log.e("저장", "저장성공!")
+                    val imageUris: ArrayList<Uri> = arrayListOf(
+                        getImageUriFromBitmap(this@CanvasActivity, canvasView.saveCanvas())
+                    )
+
+                    val shareIntent = Intent().apply {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris)
+                        type = "image/*"
+                    }
+                    startActivity(Intent.createChooser(shareIntent, "Share images to.."))
                 } else {
                     //TODO 권한 비허가 시
                     Log.e("권한", "쓰기 권한을 허용해주세요")

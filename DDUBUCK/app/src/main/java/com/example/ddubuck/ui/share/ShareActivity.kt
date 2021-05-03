@@ -12,27 +12,33 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
+import com.example.ddubuck.data.home.WalkRecord
+import com.example.ddubuck.ui.share.canvas.CanvasActivity
+import com.example.ddubuck.ui.share.canvas.CustomCanvas
+import com.naver.maps.geometry.LatLng
 import ja.burhanrashid52.photoeditor.OnSaveBitmap
 import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.PhotoEditorView
 import ja.burhanrashid52.photoeditor.SaveSettings
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 class ShareActivity : AppCompatActivity() {
-    private lateinit var mPhotoEditor : PhotoEditor
+    lateinit var canvasView : CustomCanvas
     private var isFileLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share)
+        dispatchTakePictureIntent()
         initToolBar()
-        initPhotoEditor()
         initButtons()
         initRecyclerView()
     }
@@ -48,38 +54,28 @@ class ShareActivity : AppCompatActivity() {
 
     }
 
-    private fun initPhotoEditor() {
-        val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
-
-        mPhotoEditorView.source.setImageResource(R.drawable.weather_high)
-        dispatchTakePictureIntent()
-        val mTextRobotoTf = ResourcesCompat.getFont(this, R.font.mapohongdaefreedom)
-
-        mPhotoEditor = PhotoEditor.Builder(this, mPhotoEditorView)
-            .setPinchTextScalable(true)
-            .setDefaultTextTypeface(mTextRobotoTf)
-            .build()
-        mPhotoEditor.addText("aaaa", Color.WHITE)
-
-
-        //TODO bundle 받기
-
-        isFileLoaded = true
-
+    private fun initCanvas(srcBmp: Bitmap) {
+        val walkRecord = intent.extras?.get("walkRecord")
+        if(walkRecord!=null) {
+            canvasView = CustomCanvas(this, null,0,srcBmp, walkRecord as WalkRecord)
+            val frameView = findViewById<FrameLayout>(R.id.canvas_container)
+            frameView.addView(canvasView)
+        } else {
+            Log.e("ERROR", "RECORD is Null!")
+        }
     }
 
     private fun initRecyclerView() {
         val recordedValue : Array<String> = intent.getStringArrayExtra("recordedValue") as Array<String>
         val shareSelectRv : RecyclerView = findViewById(R.id.share_selectRV)
         val mAdapter = ShareSelectRvAdapter(recordedValue) { v ->
-            mPhotoEditor.addText(v, Color.WHITE)
+            Log.e("FFF","[$v]")
         }
         shareSelectRv.adapter = mAdapter
     }
 
     private fun initButtons() {
         val cancelButton : Button = findViewById(R.id.share_buttons_cancel)
-
         cancelButton.setOnClickListener{
             finish()
         }
@@ -89,34 +85,27 @@ class ShareActivity : AppCompatActivity() {
         confirmButton.setOnClickListener{
             if(isFileLoaded) {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                    val saveSettings = SaveSettings.Builder()
-                            .setClearViewsEnabled(true)
-                            .setTransparencyEnabled(true)
-                            .build()
-                    mPhotoEditor.saveAsBitmap(saveSettings, object : OnSaveBitmap {
-                        override fun onBitmapReady(saveBitmap: Bitmap) {
-                            val imageUris: ArrayList<Uri> = arrayListOf(
-                                    getImageUriFromBitmap(this@ShareActivity, saveBitmap)
-                            )
-
-                            val shareIntent = Intent().apply {
-                                action = Intent.ACTION_SEND_MULTIPLE
-                                putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris)
-                                type = "image/*"
-                            }
-                            startActivity(Intent.createChooser(shareIntent, "Share images to.."))
-                        }
-
-                        override fun onFailure(exception: Exception) {
-                            Log.e("PhotoEditor", "Failed to save Image")
-                        }
-                    })
+                    val imageUris: ArrayList<Uri> = arrayListOf(
+                        getImageUriFromBitmap(this@ShareActivity, canvasView.saveCanvas())
+                    )
+                    val shareIntent = Intent().apply {
+                        action = Intent.ACTION_SEND_MULTIPLE
+                        putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris)
+                        type = "image/*"
+                    }
+                    startActivity(Intent.createChooser(shareIntent, "Share images to.."))
                 } else {
-                    //TODO 권한 비허가 시
                     Log.e("권한", "쓰기 권한을 허용해주세요")
                 }
             }
         }
+    }
+
+    private fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
+        return Uri.parse(path.toString())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -124,19 +113,10 @@ class ShareActivity : AppCompatActivity() {
         if(data!=null) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 val imageBitmap = data.extras!!.get("data") as Bitmap
-                val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
-                mPhotoEditorView.source.setImageBitmap(imageBitmap)
+                initCanvas(imageBitmap)
             }
         }
 
-    }
-
-
-    fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
-        val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
-        return Uri.parse(path.toString())
     }
 
 

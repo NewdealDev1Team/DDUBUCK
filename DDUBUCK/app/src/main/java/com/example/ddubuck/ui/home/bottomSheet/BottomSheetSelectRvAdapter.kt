@@ -12,8 +12,6 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.HomeFragment
-import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCourseDetailFragment
-import com.example.ddubuck.ui.home.bottomSheet.BottomSheetFreeDetailFragment
 import java.util.*
 import kotlin.collections.ArrayList
 
