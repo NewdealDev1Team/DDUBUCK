@@ -96,6 +96,7 @@
         android:layout_centerHorizontal="true">
 
         <CheckBox
+            android:id="@+id/auto_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:buttonTint="#1D8440" />

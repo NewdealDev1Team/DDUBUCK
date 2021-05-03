@@ -56,7 +56,31 @@ class LoginActivity : AppCompatActivity() {
         val actionBar: ActionBar? = supportActionBar
         actionBar?.hide()
 
+        mContext = this
 
+        if (UserSharedPreferences.getUserId(this).isBlank() || UserSharedPreferences.passUser(this)
+                .isBlank()
+        ) {
+            googleLogin()
+            naverLogin()
+            kakaoLogin()
+        } else {
+            if (UserSharedPreferences.getAutoLogin(this) == "true") {
+                val toMainActivity = Intent(this, MainActivity::class.java)
+                startActivity(toMainActivity)
+            } else {
+                googleLogin()
+                naverLogin()
+                kakaoLogin()
+            }
+        }
+
+
+    }
+
+
+    // 구글 로그인
+    private fun googleLogin() {
         auth = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.firebase_web_client_id))
@@ -65,10 +89,132 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         val googleSignInBtn: ImageButton = findViewById(R.id.google_login_button)
         googleSignInBtn.setOnClickListener {
-            signIn()
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, GOOGLE_REQUEST_CODE)
         }
+    }
 
-        val kakaoLogin: ImageButton = findViewById(R.id.kakao_login_button)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == GOOGLE_REQUEST_CODE) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                val account = task.getResult(ApiException::class.java)!!
+                val id = account.id!!.toString()
+                val name = if (account.familyName == null) {
+                    account.givenName?.toString()!!
+                } else {
+                    account.familyName?.toString()!! + account.givenName?.toString()
+                }
+                val birthday = "2000-01-01"
+                saveUserInfo(id, name, birthday, "Google")
+
+                firebaseAuthWithGoogle(account.idToken!!)
+
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+                Log.w(TAG, "Google sign in failed", e)
+                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth?.signInWithCredential(credential)
+            ?.addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.e(TAG, "Success")
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                }
+            }
+    }
+
+    // For naver login
+    private fun naverLogin() {
+        //초기화
+        mOAuthLoginInstance = OAuthLogin.getInstance()
+        mOAuthLoginInstance.init(
+            mContext,
+            getString(R.string.OAUTH_CLIENT_ID),
+            getString(R.string.OAUTH_CLIENT_SECRET),
+            getString(R.string.OAUTH_CLIENT_NAME)
+        )
+        val mOAuthLoginButton: OAuthLoginButton =
+            findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
+
+        mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler)
+
+        //custom img 변경시 사용
+        //mOAuthLoginButton.setBgResourceId(R.drawable.btn_naver_white_kor);
+    }
+
+    private val mOAuthLoginHandler: OAuthLoginHandler = @SuppressLint("HandlerLeak")
+    object : OAuthLoginHandler() {
+
+        override fun run(success: Boolean) {
+
+            if (success) {
+
+                val accessToken = mOAuthLoginInstance.getAccessToken(mContext)
+
+                var header = "Bearer $accessToken"
+                val baseURL = "https://openapi.naver.com/"
+
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(baseURL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                val api = retrofit.create(NaverAPI::class.java)
+                val callGetUserInfo = api.getUserInfo(header)
+
+                callGetUserInfo.enqueue(object : retrofit2.Callback<UserInfo> {
+                    override fun onResponse(
+                        call: Call<UserInfo>,
+                        response: Response<UserInfo>,
+                    ) {
+                        val user = response.body()?.response
+
+                        if (user != null) {
+                            // 네이버 삽입
+                            val id = user.id.toString()
+                            val name = user.nickname
+                            val birthday = user.birthyear + "-" + user.birthday
+
+                            saveUserInfo(id, name, birthday, "Naver")
+
+                        }
+
+                    }
+
+
+                    override fun onFailure(call: Call<UserInfo>, t: Throwable) {
+                        Log.d("실패", "Naver Login Fail")
+                    }
+                })
+
+
+            } else {
+                val errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).code
+                val errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext)
+                Toast.makeText(
+                    mContext, "errorCode:" + errorCode
+                            + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+
+    private fun kakaoLogin() {
+        val kakaoLoginButton: ImageButton = findViewById(R.id.kakao_login_button)
         val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
                 when {
@@ -127,146 +273,15 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        // 카톡 있냐 없냐!
-        kakaoLogin.setOnClickListener {
+        kakaoLoginButton.setOnClickListener {
             if (LoginClient.instance.isKakaoTalkLoginAvailable(this)) {
                 LoginClient.instance.loginWithKakaoTalk(this, callback = callback)
             } else {
                 LoginClient.instance.loginWithKakaoAccount(this, callback = callback)
             }
         }
-
-        mContext = this
-        initData()
-
     }
 
-    // For Google Login
-    private fun signIn() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, GOOGLE_REQUEST_CODE)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == GOOGLE_REQUEST_CODE) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)!!
-                val id = account.id!!.toString()
-                val name = if (account.familyName == null) {
-                    account.givenName?.toString()!!
-                } else {
-                    account.familyName?.toString()!! + account.givenName?.toString()
-                }
-                val birthday = "2000-01-01"
-                saveUserInfo(id, name, birthday, "Google")
-
-                firebaseAuthWithGoogle(account.idToken!!)
-
-            } catch (e: ApiException) {
-                // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
-                Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
-            }
-
-        }
-    }
-
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth?.signInWithCredential(credential)
-            ?.addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Log.e(TAG, "Success")
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                }
-            }
-    }
-
-    // For naver login
-    private fun initData() {
-        //초기화
-        mOAuthLoginInstance = OAuthLogin.getInstance()
-        mOAuthLoginInstance.init(
-            mContext,
-            getString(R.string.OAUTH_CLIENT_ID),
-            getString(R.string.OAUTH_CLIENT_SECRET),
-            getString(R.string.OAUTH_CLIENT_NAME)
-        )
-        val mOAuthLoginButton: OAuthLoginButton =
-            findViewById<View>(R.id.buttonOAuthLoginImg) as OAuthLoginButton
-
-        mOAuthLoginButton.setOAuthLoginHandler(mOAuthLoginHandler)
-
-        //custom img 변경시 사용
-        //mOAuthLoginButton.setBgResourceId(R.drawable.btn_naver_white_kor);
-    }
-
-    private val mOAuthLoginHandler: OAuthLoginHandler = @SuppressLint("HandlerLeak")
-    object : OAuthLoginHandler() {
-
-        override fun run(success: Boolean) {
-
-            if (success) {
-
-                val accessToken = mOAuthLoginInstance.getAccessToken(mContext)
-                val refreshToken = mOAuthLoginInstance.getRefreshToken(mContext)
-                val expiresAt = mOAuthLoginInstance.getExpiresAt(mContext)
-                val tokenType = mOAuthLoginInstance.getTokenType(mContext)
-
-                var header = "Bearer $accessToken"
-                val baseURL = "https://openapi.naver.com/"
-
-                val retrofit = Retrofit.Builder()
-                    .baseUrl(baseURL)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build()
-
-                val api = retrofit.create(NaverAPI::class.java)
-                val callGetUserInfo = api.getUserInfo(header)
-
-                callGetUserInfo.enqueue(object : retrofit2.Callback<UserInfo> {
-                    override fun onResponse(
-                        call: Call<UserInfo>,
-                        response: Response<UserInfo>,
-                    ) {
-                        val user = response.body()?.response
-
-                        if (user != null) {
-                            // 네이버 삽입
-                            val id = user.id.toString()
-                            val name = user.nickname
-                            val birthday = user.birthyear + "-" + user.birthday
-
-                            saveUserInfo(id, name, birthday, "Naver")
-
-                        }
-
-                    }
-
-
-                    override fun onFailure(call: Call<UserInfo>, t: Throwable) {
-                        Log.d("실패", "Naver Login Fail")
-                    }
-                })
-
-
-            } else {
-                val errorCode = mOAuthLoginInstance.getLastErrorCode(mContext).code
-                val errorDesc = mOAuthLoginInstance.getLastErrorDesc(mContext)
-                Toast.makeText(
-                    mContext, "errorCode:" + errorCode
-                            + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
 
     private fun loginSuccess(id: String) {
 
@@ -309,9 +324,10 @@ class LoginActivity : AppCompatActivity() {
 
     private fun saveUserInfo(id: String, name: String, birthday: String, diversion: String) {
 
-
+        val autoLoginCheckBox: CheckBox = findViewById(R.id.auto_login)
         // Shared Preference에 회원 id 저장
         UserSharedPreferences.setUserId(this, id)
+        UserSharedPreferences.setAutoLogin(this, autoLoginCheckBox)
 
         val userInfo: Retrofit = Retrofit.Builder()
             .baseUrl("http://3.37.6.181:3000/")
@@ -339,25 +355,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-//    private fun autoLogin(id: String) {
-//        val userValidation: Retrofit = Retrofit.Builder()
-//            .baseUrl("http://3.37.6.181:3000/get/")
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//        val userValidationServer: UserService = userValidation.create(UserService::class.java)
-//        val toMainActivity = Intent(this, MainActivity::class.java)
-//
-//        userValidationServer.getUserInfo(id).enqueue(object : Callback<UserValidationInfo> {
-//            override fun onResponse(call: Call<UserValidationInfo>, response: Response<UserValidationInfo>) {
-//                val successMessage = response.message()
-//
-//                Log.e("메시지", successMessage)
-//            }
-//
-//            override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {
-//                t.message?.let { Log.e("Failllll", it) }
-//            }
-//        })
-//    }
+
 
 }
