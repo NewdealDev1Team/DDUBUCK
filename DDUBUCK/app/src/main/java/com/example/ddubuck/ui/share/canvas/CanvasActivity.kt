@@ -51,6 +51,7 @@ class CanvasActivity : AppCompatActivity() {
     }
 
     private fun initCanvas(srcBmp: Bitmap) {
+        //TODO 경로가 안찍혔을때 캔버스 작동 불가능하게 설정할 것
         canvasView = CustomCanvas(this, null,0,srcBmp, record)
         val frameView = findViewById<FrameLayout>(R.id.canvas_container)
         frameView.addView(canvasView)
@@ -200,7 +201,6 @@ class CanvasActivity : AppCompatActivity() {
             360,
             3021,
             487.4403199747573,
-            Date()
         )
     }
 

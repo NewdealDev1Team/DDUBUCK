@@ -55,13 +55,13 @@ class BottomSheetSelectFragment : Fragment() {
                 true,
                 "자유산책",
                 "자유산책입니다",
-                WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0, Date())
+                WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)
             ),
             CourseItem(
                 false,
                 "코스산책",
                 "코스산책입니다",
-                WalkRecord(fooRoute, fooAltitude.average(), fooSpeed.average(), 325, 5683, 900.0, Date())
+                WalkRecord(fooRoute, fooAltitude.average(), fooSpeed.average(), 325, 5683, 900.0)
             ),
             CourseItem(
                     false,
@@ -148,7 +148,6 @@ class BottomSheetSelectFragment : Fragment() {
                             360,
                             3021,
                             487.4403199747573,
-                            Date()
                     )
             ),
         )

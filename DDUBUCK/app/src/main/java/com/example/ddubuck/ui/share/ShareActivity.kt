@@ -15,32 +15,31 @@ import android.widget.Button
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.share.canvas.CanvasActivity
 import com.example.ddubuck.ui.share.canvas.CustomCanvas
-import com.naver.maps.geometry.LatLng
-import ja.burhanrashid52.photoeditor.OnSaveBitmap
-import ja.burhanrashid52.photoeditor.PhotoEditor
-import ja.burhanrashid52.photoeditor.PhotoEditorView
-import ja.burhanrashid52.photoeditor.SaveSettings
 import java.io.ByteArrayOutputStream
 import java.util.*
 
 
 class ShareActivity : AppCompatActivity() {
     lateinit var canvasView : CustomCanvas
+    lateinit var walkRecord: WalkRecord
     private var isFileLoaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_share)
+        initData()
         dispatchTakePictureIntent()
         initToolBar()
         initButtons()
-        initRecyclerView()
+        //initRecyclerView()
+    }
+
+    private fun initData(){
+        walkRecord = intent.getParcelableExtra("walkRecord")!!
     }
 
     private fun initToolBar() {
@@ -55,14 +54,10 @@ class ShareActivity : AppCompatActivity() {
     }
 
     private fun initCanvas(srcBmp: Bitmap) {
-        val walkRecord = intent.extras?.get("walkRecord")
-        if(walkRecord!=null) {
-            canvasView = CustomCanvas(this, null,0,srcBmp, walkRecord as WalkRecord)
-            val frameView = findViewById<FrameLayout>(R.id.canvas_container)
-            frameView.addView(canvasView)
-        } else {
-            Log.e("ERROR", "RECORD is Null!")
-        }
+        canvasView = CustomCanvas(this, null,0,srcBmp, walkRecord)
+        val frameView = findViewById<FrameLayout>(R.id.share_canvas_container)
+        frameView.addView(canvasView)
+        Log.e("GET","COMPLETE")
     }
 
     private fun initRecyclerView() {
@@ -114,6 +109,7 @@ class ShareActivity : AppCompatActivity() {
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
                 val imageBitmap = data.extras!!.get("data") as Bitmap
                 initCanvas(imageBitmap)
+
             }
         }
 

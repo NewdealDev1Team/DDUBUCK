@@ -203,7 +203,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 walkTime,
                 stepCount,
                 distance,
-                Date()
         )
     }
 

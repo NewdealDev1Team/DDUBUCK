@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.HomeMapFragment
+import com.example.ddubuck.ui.share.ShareActivity
 import com.example.ddubuck.ui.share.canvas.CanvasActivity
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
@@ -46,16 +47,8 @@ class BottomSheetCompleteFragment(
         averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
         shareButton.setOnClickListener{
-            val intent = Intent(context, CanvasActivity::class.java)
-            val formatter = BottomSheetNumberFormat()
-            val pathValue : List<LatLng> = walkRecord.path
-            val recordedValue:Array<String> = arrayOf(
-                    DateUtils.formatElapsedTime(walkRecord.walkTime),
-                    formatter.getFormattedDistance(walkRecord.distance),
-                    DecimalFormat("#걸음").format(walkRecord.stepCount),
-                    formatter.getFormattedCalorie(walkRecord.getCalorie(65.0)))
-
-            intent.putExtra("recordedValue", recordedValue)
+            val intent = Intent(context, ShareActivity::class.java)
+            intent.putExtra("walkRecord", walkRecord)
             startActivity(intent)
         }
         val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
