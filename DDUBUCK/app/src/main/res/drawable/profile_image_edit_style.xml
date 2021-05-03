@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#4D4D4D">
+    <item android:id="@+id/profile_image_edit_button_style">
+        <shape
+            android:innerRadius="0dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            android:useLevel="false">
+            <solid android:color="@android:color/transparent" />
+
+            <stroke
+                android:width="2dp"
+                android:color="#C4C4C4" />
+        </shape>
+    </item>
+</ripple>
