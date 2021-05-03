@@ -30,7 +30,7 @@ import com.naver.maps.map.util.FusedLocationSource
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-interface APICallback {
+interface WeatherAPICallback {
     fun onSuccess(
             weatherResponse: WeatherResponse,
             uvRays: UVRays,
@@ -41,7 +41,7 @@ interface APICallback {
     )
 }
 
-class WeatherFragment : Fragment(), APICallback {
+class WeatherFragment : Fragment(), WeatherAPICallback {
 
     private val weatherViewModel: WeatherViewModel by activityViewModels()
     private val locationViewModel: HomeMapViewModel by activityViewModels()
@@ -64,7 +64,7 @@ class WeatherFragment : Fragment(), APICallback {
 
     // Coroutine 사용 필요
     private fun showWeatherInfo(
-            result: APICallback,
+            result: WeatherAPICallback,
             weatherText: TextView,
             tempAndDust: TextView,
             weatherImage: ImageView
