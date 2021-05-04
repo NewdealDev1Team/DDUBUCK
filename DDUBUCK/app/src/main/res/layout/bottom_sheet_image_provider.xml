@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingHorizontal="32dp"
+    android:paddingTop="24dp"
+    android:paddingBottom="40dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="사진 불러오기"
+        android:textColor="@android:color/black"
+        android:textSize="24sp" />
+
+    <android.widget.Button
+        android:id="@+id/share_sheet_cameraButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="#1c9d9e"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:text="카메라" />
+
+    <android.widget.Button
+        android:id="@+id/share_sheet_galleryButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="#1c9d9e"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:text="갤러리" />
+
+    <android.widget.Button
+        android:id="@+id/share_sheet_cancelButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1c9d9e"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:text="취소" />
+
+</LinearLayout>

@@ -2,12 +2,13 @@ package com.example.ddubuck.ui.share.canvas
 
 import android.content.Context
 import android.graphics.*
-import android.os.Handler
-import android.os.Looper
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.util.AttributeSet
-import android.util.Log
-import android.view.PixelCopy
 import android.view.View
+import androidx.core.view.drawToBitmap
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
@@ -62,9 +63,21 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     private val logoIcon = BitmapFactory.decodeResource(this.resources, R.drawable.icon_logo_white)
     private val logoMatrix = Matrix()
 
-    fun initialize(bm:Bitmap, record: WalkRecord) {
-        srcBmp = bm
+    fun initialize(uri: Uri, record: WalkRecord) {
         walkRecord = record
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            srcBmp = ImageDecoder.decodeBitmap(
+                ImageDecoder.createSource(context.contentResolver, uri)
+            ) { decoder: ImageDecoder, _: ImageDecoder.ImageInfo?, _: ImageDecoder.Source? ->
+                decoder.isMutableRequired = true
+                decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+            }
+        } else {
+            srcBmp = BitmapDrawable(
+                context.resources,
+                MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            ).bitmap
+        }
         invalidate()
     }
 
@@ -88,7 +101,7 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
                 srcBmp.width
             )
         }
-        this.srcBmp = Bitmap.createScaledBitmap(croppedBmp, width,height,false)
+        this.srcBmp = Bitmap.createScaledBitmap(croppedBmp, width, height, false)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -135,7 +148,7 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
             path.transform(translateMatrix)
             logoMatrix.setScale(0.15f,
                 0.15f,
-                (width - (logoIcon.width * 0.15f)/2 ),
+                (width - (logoIcon.width * 0.15f) / 2),
                 height * 0.05f)
             canvas.drawBitmap(logoIcon, logoMatrix, null)
             if(isBlack) {
@@ -191,29 +204,6 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     }
 
     fun saveCanvas() : Bitmap {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-            val location = IntArray(2)
-            getLocationInWindow(location)
-                /*
-                PixelCopy.request(window,
-                Rect(location[0], location[1], location[0] + width, location[1] + height),
-                bitmap,
-                {
-                    if (it == PixelCopy.SUCCESS) {
-
-                    }
-                },
-                Handler(Looper.getMainLooper()) )
-                 */
-        } else {
-            val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            this.draw(canvas)
-        }
-        val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        this.draw(canvas)
-        return bitmap
+        return this.drawToBitmap(Bitmap.Config.ARGB_8888)
     }
 }

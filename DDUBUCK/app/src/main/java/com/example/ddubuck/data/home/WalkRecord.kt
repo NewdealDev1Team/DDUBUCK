@@ -70,7 +70,7 @@ class WalkRecord(
         //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
         var met = when(speed) {
             in 0.0..0.09 -> 0.0
-            in 0.0..4.0 -> 2.0 // 느리게 걷기
+            in 0.09..4.0 -> 2.0 // 느리게 걷기
             in 4.0..8.0 -> 3.8 // 보통 걷기
             in 8.0..12.0 -> 4.0 // 빠르게 걷기
             else -> 5.0 // 전력질주
