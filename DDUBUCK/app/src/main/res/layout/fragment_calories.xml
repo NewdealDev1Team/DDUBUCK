@@ -8,19 +8,32 @@
     android:gravity="center"
     tools:context=".ui.mypage.mywalk.CaloriesFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/calorie_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="님, 최고에요!"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="16dp"
-        android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:text="@string/calories_title"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="11dp"
         android:textColor="@color/black"
         android:textSize="18dp"
         android:textStyle="bold"
@@ -42,20 +55,37 @@
 
         <TextView
             android:id="@+id/calories_mini_title"
-            android:layout_width="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:gravity="center"
             android:textStyle="bold"
             android:textSize="14dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:text="Kcal"
+            android:textSize="14dp" />
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="나 소모했어요!"
             android:textSize="14dp" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/share_capture"
+        android:layout_marginLeft="170dp"
+        android:layout_width="15dp"
+        android:layout_height="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/chart_share_icon" />
 
     <LinearLayout
         android:layout_width="match_parent"

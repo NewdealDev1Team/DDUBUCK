@@ -8,20 +8,33 @@
     android:gravity="center"
     tools:context=".ui.mypage.mywalk.CoseClearFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="16dp"
-        android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:text="@string/cose_title"/>
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/cose_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:text="님, 좋아요!"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="11dp"
         android:text="@string/cose_title_number"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -43,7 +56,8 @@
 
         <TextView
             android:id="@+id/cose_mini_title"
-            android:layout_width="30dp"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:gravity="center"
@@ -58,6 +72,14 @@
             android:textSize="14dp" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/share_capture"
+        android:layout_marginLeft="170dp"
+        android:layout_width="15dp"
+        android:layout_height="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/chart_share_icon" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,16 +93,38 @@
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 
-    <android.widget.Button
-        android:id="@+id/sheet_complete_shareButton"
-        android:text="이번주 총 5회 완주"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/green"
-        android:layout_weight="1"
-        android:layout_marginLeft="5dp"
-        android:background="@drawable/mypage_circle"
+    <LinearLayout
+        android:layout_gravity="center"
         android:layout_width="160dp"
-        android:layout_height="35dp"/>
+        android:layout_height="35dp"
+        android:background="@drawable/mypage_circle">
+
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이번주 총"
+            android:textSize="12dp"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/bottom_sheet_coseAllCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textSize="12dp" />
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회 완주"
+            android:textSize="12dp"
+            android:gravity="center"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
