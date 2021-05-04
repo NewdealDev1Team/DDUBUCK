@@ -16,9 +16,6 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.HomeMapFragment
 import com.example.ddubuck.ui.share.ShareActivity
-import com.example.ddubuck.ui.share.canvas.CanvasActivity
-import com.naver.maps.geometry.LatLng
-import java.text.DecimalFormat
 
 class BottomSheetCompleteFragment(
         private val owner: Activity,

@@ -12,6 +12,12 @@
 
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <application
         android:name=".login.GlobalApplication"
@@ -44,10 +50,6 @@
         <activity android:name=".ui.share.ShareActivity">
 
         </activity>
-        <activity android:name=".ui.share.canvas.CanvasActivity">
-
-        </activity>
-
         <activity android:name=".userinfo.UserInfoBirthdayActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".userinfo.UserInfoHeightWeightActivity"

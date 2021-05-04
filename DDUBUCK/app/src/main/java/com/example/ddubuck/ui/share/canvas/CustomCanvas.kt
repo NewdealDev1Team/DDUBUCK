@@ -3,10 +3,10 @@ package com.example.ddubuck.ui.share.canvas
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.share.canvas.CanvasActivity.Companion.record
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
 
@@ -15,16 +15,6 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     context,
     attrs,
     defStyleAttr), View.OnClickListener {
-    constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0,
-        bitmap: Bitmap,
-        walkRecord: WalkRecord,
-    ) : this(context, attrs, defStyleAttr) {
-        this.srcBmp = bitmap
-        this.walkRecord = walkRecord
-    }
 
     private val whitePathPaint = Paint().apply {
         isAntiAlias = true
@@ -69,16 +59,18 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     private val logoIcon = BitmapFactory.decodeResource(this.resources, R.drawable.icon_logo_white)
     private val logoMatrix = Matrix()
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        setOnClickListener(this)
-        cropBitmap()
+    fun initialize(bm:Bitmap, record: WalkRecord) {
+        srcBmp = bm
+        walkRecord = record
+        invalidate()
+        Log.e("INVALiD", "INVALID!!! ${walkRecord!!.path.size}")
     }
 
     private fun cropBitmap() {
         val srcBmp = srcBmp!!
+        val croppedBmp : Bitmap
         if(srcBmp.width >= srcBmp.height) {
-            this.srcBmp = Bitmap.createBitmap(
+            croppedBmp = Bitmap.createBitmap(
                 srcBmp,
                 srcBmp.width / 2 - srcBmp.height / 2,
                 0,
@@ -86,7 +78,7 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
                 srcBmp.height
             )
         } else {
-            this.srcBmp = Bitmap.createBitmap(
+            croppedBmp = Bitmap.createBitmap(
                 srcBmp,
                 0,
                 srcBmp.height / 2 - srcBmp.width / 2,
@@ -94,6 +86,7 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
                 srcBmp.width
             )
         }
+        this.srcBmp = Bitmap.createScaledBitmap(croppedBmp, width,height,false)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -113,7 +106,12 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
         super.onDraw(canvas)
         if (canvas != null) {
             this.canvas = canvas
-            initCanvas(isBlack)
+            if(srcBmp!=null && walkRecord!=null) {
+                cropBitmap()
+                setOnClickListener(this)
+                initCanvas(isBlack)
+            }
+
         }
     }
 
@@ -122,23 +120,21 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
             if(srcBmp!=null) {
                 val croppedBmp = srcBmp!!
                 canvas.drawBitmap(croppedBmp,
-                    (width - croppedBmp.width) / 2f,
-                    (height - croppedBmp.height) / 2f,
+                    0f,
+                    0f,
                     null)
             }
-            if(walkRecord!=null) {
-                val record = walkRecord!!
-                //사용자 이동경로 그리기
-                path = routeToPath(record.path, width)
-                path.computeBounds(boundRect, true)
-                translateMatrix.setTranslate((width * 0.05f) + boundRect.width() / 2,
-                    (height - boundRect.height() - (height * 0.005f)))
-                path.transform(translateMatrix)
-                logoMatrix.setScale(0.15f,
-                    0.15f,
-                    (width - (logoIcon.width * 0.15f)/2 ),
-                    height * 0.05f)
-            }
+            val record = walkRecord!!
+            //사용자 이동경로 그리기
+            path = routeToPath(record.path, width)
+            path.computeBounds(boundRect, true)
+            translateMatrix.setTranslate((width * 0.05f) + boundRect.width() / 2,
+                (height - boundRect.height() - (height * 0.005f)))
+            path.transform(translateMatrix)
+            logoMatrix.setScale(0.15f,
+                0.15f,
+                (width - (logoIcon.width * 0.15f)/2 ),
+                height * 0.05f)
             canvas.drawBitmap(logoIcon, logoMatrix, null)
             if(isBlack) {
                 canvas.drawPath(path, whitePathPaint)

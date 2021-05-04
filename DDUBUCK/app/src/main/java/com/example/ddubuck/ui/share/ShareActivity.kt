@@ -5,14 +5,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +40,7 @@ class ShareActivity : AppCompatActivity() {
         dispatchTakePictureIntent()
         initToolBar()
         initButtons()
-        //initRecyclerView()
+        initCanvas()
     }
 
     private fun initData(){
@@ -53,13 +58,13 @@ class ShareActivity : AppCompatActivity() {
 
     }
 
-    private fun initCanvas(srcBmp: Bitmap) {
-        canvasView = CustomCanvas(this, null,0,srcBmp, walkRecord)
+    private fun initCanvas() {
+        canvasView = CustomCanvas(this, null,0)
         val frameView = findViewById<FrameLayout>(R.id.share_canvas_container)
         frameView.addView(canvasView)
-        Log.e("GET","COMPLETE")
     }
 
+/*
     private fun initRecyclerView() {
         val recordedValue : Array<String> = intent.getStringArrayExtra("recordedValue") as Array<String>
         val shareSelectRv : RecyclerView = findViewById(R.id.share_selectRV)
@@ -68,6 +73,7 @@ class ShareActivity : AppCompatActivity() {
         }
         shareSelectRv.adapter = mAdapter
     }
+ */
 
     private fun initButtons() {
         val cancelButton : Button = findViewById(R.id.share_buttons_cancel)
@@ -99,6 +105,7 @@ class ShareActivity : AppCompatActivity() {
     private fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        //TODO 얘 바꾸기
         val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
         return Uri.parse(path.toString())
     }
@@ -107,9 +114,14 @@ class ShareActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(data!=null) {
             if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                val imageBitmap = data.extras!!.get("data") as Bitmap
-                initCanvas(imageBitmap)
-
+                //val imageBitmap = data.extras!!.get("data") as Bitmap
+                val imageBitmap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, data.data!!))
+                } else {
+                    BitmapFactory.decodeResource(resources, R.drawable.wide_aspect_ratio)
+                }
+                canvasView.initialize(imageBitmap,walkRecord)
+                isFileLoaded=true
             }
         }
 
@@ -117,10 +129,23 @@ class ShareActivity : AppCompatActivity() {
 
 
     private fun dispatchTakePictureIntent() {
+/*
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
             takePictureIntent.resolveActivity(packageManager)?.also {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
             }
+        }
+ */
+
+        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also { getPictureIntent ->
+            Log.e("Intent created","true")
+            /*
+            getPictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(getPictureIntent, REQUEST_IMAGE_CAPTURE)
+                Log.e("Intent created","true")
+            }
+             */
+            startActivityForResult(getPictureIntent, REQUEST_IMAGE_CAPTURE)
         }
     }
 

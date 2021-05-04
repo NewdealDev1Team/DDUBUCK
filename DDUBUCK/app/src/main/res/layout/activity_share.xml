@@ -23,11 +23,12 @@
         android:id="@+id/share_canvas_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/share_selectRV"
+        app:layout_constraintBottom_toTopOf="@+id/share_buttons"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/share_toolbar"/>
 
+    <!--
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/share_selectRV"
         android:layout_width="match_parent"
@@ -38,6 +39,7 @@
         tools:listitem="@layout/share_select_item"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/share_buttons" />
+    -->
 
     <LinearLayout
         android:id="@+id/share_buttons"
