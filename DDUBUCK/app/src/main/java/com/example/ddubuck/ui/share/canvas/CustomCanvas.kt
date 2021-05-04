@@ -2,8 +2,11 @@ package com.example.ddubuck.ui.share.canvas
 
 import android.content.Context
 import android.graphics.*
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
+import android.view.PixelCopy
 import android.view.View
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
@@ -188,6 +191,26 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     }
 
     fun saveCanvas() : Bitmap {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val location = IntArray(2)
+            getLocationInWindow(location)
+                /*
+                PixelCopy.request(window,
+                Rect(location[0], location[1], location[0] + width, location[1] + height),
+                bitmap,
+                {
+                    if (it == PixelCopy.SUCCESS) {
+
+                    }
+                },
+                Handler(Looper.getMainLooper()) )
+                 */
+        } else {
+            val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            this.draw(canvas)
+        }
         val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         this.draw(canvas)
