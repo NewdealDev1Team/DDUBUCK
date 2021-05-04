@@ -113,13 +113,25 @@ class ShareActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data!=null) {
-            if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-                //val imageBitmap = data.extras!!.get("data") as Bitmap
-                val imageBitmap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-                    ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, data.data!!))
-                } else {
-                    BitmapFactory.decodeResource(resources, R.drawable.wide_aspect_ratio)
+            if (resultCode == RESULT_OK) {
+                val imageBitmap = when(requestCode) {
+                    REQUEST_IMAGE_CAPTURE -> {
+                        data.extras!!.get("data") as Bitmap
+                    }
+                    REQUEST_IMAGE_SELECT -> {
+                        if (Build.VERSION.SDK_INT >=Build.VERSION_CODES.P) {
+                            ImageDecoder.decodeBitmap(ImageDecoder.createSource(contentResolver, data.data!!))
+                        } else {
+                            //TODO Change to PlaceHolder
+                            BitmapFactory.decodeResource(resources, R.drawable.wide_aspect_ratio)
+                        }
+                    }
+                    else -> {
+                        //TODO Change to PlaceHolder
+                        BitmapFactory.decodeResource(resources, R.drawable.wide_aspect_ratio)
+                    }
                 }
+
                 canvasView.initialize(imageBitmap,walkRecord)
                 isFileLoaded=true
             }
@@ -129,23 +141,12 @@ class ShareActivity : AppCompatActivity() {
 
 
     private fun dispatchTakePictureIntent() {
-/*
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(packageManager)?.also {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            }
-        }
- */
 
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+        }
         Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also { getPictureIntent ->
-            Log.e("Intent created","true")
-            /*
-            getPictureIntent.resolveActivity(packageManager)?.also {
-                startActivityForResult(getPictureIntent, REQUEST_IMAGE_CAPTURE)
-                Log.e("Intent created","true")
-            }
-             */
-            startActivityForResult(getPictureIntent, REQUEST_IMAGE_CAPTURE)
+            startActivityForResult(getPictureIntent, REQUEST_IMAGE_SELECT)
         }
     }
 
@@ -164,6 +165,7 @@ class ShareActivity : AppCompatActivity() {
 
     companion object{
         const val REQUEST_IMAGE_CAPTURE = 1
+        const val REQUEST_IMAGE_SELECT = 2
     }
 
 }

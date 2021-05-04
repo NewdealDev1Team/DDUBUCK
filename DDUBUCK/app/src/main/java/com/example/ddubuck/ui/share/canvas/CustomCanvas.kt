@@ -63,7 +63,6 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
         srcBmp = bm
         walkRecord = record
         invalidate()
-        Log.e("INVALiD", "INVALID!!! ${walkRecord!!.path.size}")
     }
 
     private fun cropBitmap() {
