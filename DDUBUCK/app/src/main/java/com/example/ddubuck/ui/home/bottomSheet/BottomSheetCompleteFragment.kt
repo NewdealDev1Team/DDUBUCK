@@ -2,6 +2,7 @@ package com.example.ddubuck.ui.home.bottomSheet
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
@@ -43,10 +45,15 @@ class BottomSheetCompleteFragment(
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
         averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
-        shareButton.setOnClickListener{
-            val intent = Intent(context, ShareActivity::class.java)
-            intent.putExtra("walkRecord", walkRecord)
-            startActivity(intent)
+        if(walkRecord.path.isNotEmpty()) {
+            shareButton.setOnClickListener{
+                val intent = Intent(context, ShareActivity::class.java)
+                intent.putExtra("walkRecord", walkRecord)
+                startActivity(intent)
+            }
+        } else {
+            shareButton.background = ResourcesCompat.getDrawable(resources, R.drawable.sheet_button_deactivated,null)
+            shareButton.setTextColor(Color.GRAY)
         }
         val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
         if(walkType == HomeMapFragment.WALK_COURSE) {
