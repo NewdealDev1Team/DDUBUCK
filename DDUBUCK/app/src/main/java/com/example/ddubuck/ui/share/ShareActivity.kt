@@ -93,6 +93,11 @@ class ShareActivity : AppCompatActivity() {
                 }
             }
         }
+
+        val photoSelectButton = findViewById<FrameLayout>(R.id.share_buttons_image)
+        photoSelectButton.setOnClickListener{
+            dispatchTakePictureIntent()
+        }
     }
 
     private fun getImageUriFromBitmap(context: Context, bitmap: Bitmap): Uri{
@@ -153,6 +158,9 @@ class ShareActivity : AppCompatActivity() {
 
                 canvasView.initialize(imageUri,walkRecord)
                 isFileLoaded=true
+                val photoSelectButton = findViewById<FrameLayout>(R.id.share_buttons_image)
+                val frameView = findViewById<FrameLayout>(R.id.share_canvas_container)
+                frameView.addView(photoSelectButton)
             }
         }
 

@@ -33,7 +33,7 @@
         </activity>
         <activity android:name=".ui.home.option.SelectOptionActivity">
         </activity>
-<!--        <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity"></activity>-->
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
@@ -56,10 +56,8 @@
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="oauth"
                     android:scheme="kakao77629a2e99409577163d7742096517e9" />
