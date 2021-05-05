@@ -2,6 +2,7 @@ package com.example.ddubuck
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 
@@ -30,6 +31,7 @@ import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_walk_time.*
 
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
@@ -82,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
+
 
 //    fun initMyPageFragment(){
 //        binding = ActivityMainBinding.inflate(layoutInflater)

@@ -81,7 +81,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                     val sum : Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
                             + result3!!.toInt() + result4!!.toInt() +result5!!.toInt())
 
-                    var calorieTitleName : String = response.body()?.totalStep?.get(0)?.name.toString()
+                    var calorieTitleName : String = response.body()?.totalStat?.get(0)?.name.toString()
 
                     val listData by lazy {
                         mutableListOf(

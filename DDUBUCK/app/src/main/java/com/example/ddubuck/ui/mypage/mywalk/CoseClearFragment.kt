@@ -79,7 +79,7 @@ class CoseClearFragment : Fragment() {
                     val sum : Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
                             + result3!!.toInt() + result4!!.toInt() + result5!!.toInt() + result6!!.toInt())
 
-                    var coseTitleName : String = response.body()?.totalStep?.get(0)?.name.toString()
+                    var coseTitleName : String = response.body()?.totalStat?.get(0)?.name.toString()
 
 
                     val listData by lazy {

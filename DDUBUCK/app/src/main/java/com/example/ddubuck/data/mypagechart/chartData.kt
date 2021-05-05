@@ -1,6 +1,6 @@
 package com.example.ddubuck.data.mypagechart
 
 data class chartData(
-    val totalStep: List<TotalStep>,
+    val totalStat: List<TotalStat>,
     val weekStat: List<WeekStat>
 )

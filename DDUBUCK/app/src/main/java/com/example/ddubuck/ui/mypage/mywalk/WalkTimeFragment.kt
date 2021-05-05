@@ -1,15 +1,24 @@
 package com.example.ddubuck.ui.mypage.mywalk
 
+import android.Manifest
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
+import androidx.fragment.app.Fragment
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
@@ -22,21 +31,33 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ViewPortHandler
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
+import com.tarek360.instacapture.Instacapture
+import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
-import org.w3c.dom.Text
+import kotlinx.android.synthetic.main.fragment_walk_time.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.*
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import kotlin.random.Random
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 //서버에 연결해서 데이터 입력
 //마이페이지에서 화면 연결하기 //api 정리하기!!
 @RequiresApi(Build.VERSION_CODES.O)
 class WalkTimeFragment : Fragment() {
+
     //현재 날짜/시간 가져오기
     val dateNow: LocalDateTime = LocalDateTime.now()
 
@@ -61,6 +82,7 @@ class WalkTimeFragment : Fragment() {
 
     private lateinit var chart: BarChart
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -82,7 +104,7 @@ class WalkTimeFragment : Fragment() {
                     Log.d("~~0번째 time~~~",
                         " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
 
-                    var timeTitleName : String = response.body()?.totalStep?.get(0)?.name.toString()
+                    var timeTitleName: String = response.body()?.totalStat?.get(0)?.name.toString()
 
                     val listData by lazy {
                         mutableListOf(
@@ -107,9 +129,10 @@ class WalkTimeFragment : Fragment() {
                         setDrawBarShadow(false)
                         setDrawValueAboveBar(false)
                         //차트 라운들 모양 커스텀
-                        val barChartRender = CustomBarChartRender(this, animator, viewPortHandler).apply {
-                            setRadius(20)
-                        }
+                        val barChartRender =
+                            CustomBarChartRender(this, animator, viewPortHandler).apply {
+                                setRadius(20)
+                            }
                         renderer = barChartRender
                     }
 
@@ -249,14 +272,88 @@ class WalkTimeFragment : Fragment() {
                     titleName.setText(timeTitleName.toString())
                 }
             }
+
             override fun onFailure(call: Call<chartData>, t: Throwable) {
                 Log.d("error", t.message.toString())
             }
         })
 
+        val button : Button = rootView.findViewById(R.id.button_screenshot)
+        button.setOnClickListener {
+            when (requestPermissions()) {
+                true -> takeAndShareScreenShot()
+                else -> showError()
+            }
+        }
         return rootView
     }
-}
+    private fun takeAndShareScreenShot() {
+        this.activity?.let {
+            Instacapture.capture(it, object : SimpleScreenCapturingListener() {
+                override fun onCaptureComplete(bitmap: Bitmap) {
+                    val uri = saveImageExternal(bitmap)
+                    uri?.let {
+                        shareImageURI(uri)
+                    } ?: showError()
+                }
+            }, button_screenshot)
+        }
+    }
 
+    private fun showError() {
+        Toast.makeText(
+            this.activity,
+            "승인이 필요합니다.",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    fun requestPermissions(): Boolean {
+        var permissions = false
+        Dexter.withActivity(this.activity)
+            .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                    permissions = true
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                    permissions = false
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest,
+                    token: PermissionToken
+                ) {
+                    token.continuePermissionRequest()
+                }
+            }).check()
+        return permissions
+    }
+
+    fun saveImageExternal(image: Bitmap): Uri? {
+        var uri: Uri? = null
+        try {
+            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "to-share.png")
+            val stream = FileOutputStream(file)
+            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
+            stream.close()
+            uri = FileProvider.getUriForFile(this.requireContext(), this.requireActivity().packageName + ".provider", file)
+        } catch (e: IOException) {
+            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
+        }
+        return uri
+    }
+
+    fun shareImageURI(uri: Uri){
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "message/rfc822"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Send to"))
+    }
+}
 
 

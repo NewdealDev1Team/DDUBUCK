@@ -76,14 +76,14 @@
 
     </LinearLayout>
 
-
-    <ImageView
-        android:id="@+id/profile_image"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_screenshot"
+        android:layout_width="28dp"
+        android:layout_height="15dp"
         android:layout_marginLeft="170dp"
-        android:layout_width="15dp"
-        android:layout_height="16dp"
+        android:background="@drawable/chart_share_icon"
         android:scaleType="centerCrop"
-        android:src="@drawable/chart_share_icon" />
+        android:textColor="@color/grey" />
 
     <LinearLayout
             android:layout_width="match_parent"
@@ -126,6 +126,7 @@
             android:layout_height="wrap_content"
             android:textSize="12dp" />
     </LinearLayout>
+
 
 
 </LinearLayout>
