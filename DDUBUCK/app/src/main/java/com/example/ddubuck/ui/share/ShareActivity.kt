@@ -51,7 +51,7 @@ class ShareActivity : AppCompatActivity() {
     private fun initPhotoEditor() {
         val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
 
-        mPhotoEditorView.source.setImageResource(R.drawable.weather_high)
+        mPhotoEditorView.source.setImageResource(R.drawable.ic_weather_high)
         dispatchTakePictureIntent()
         val mTextRobotoTf = ResourcesCompat.getFont(this, R.font.mapohongdaefreedom)
 
