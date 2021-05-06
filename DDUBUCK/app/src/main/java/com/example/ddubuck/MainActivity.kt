@@ -74,8 +74,8 @@ class MainActivity : AppCompatActivity() {
 
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
 
-        initFragmentManager()
         initToolBar()
+        initFragmentManager()
         initPermission()
 //        initMyPageFragment()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -85,22 +85,6 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-
-//    fun initMyPageFragment(){
-//        binding = ActivityMainBinding.inflate(layoutInflater)
-//        val view = binding.root
-//        setContentView(view)
-//    }
-//    // fragmentA 에서 frameLayoutB에 fragment 추가하기 위해 호출 하는 메서드
-//    fun openFragmentOnFrameLayoutB(int: Int){
-//    val transaction = supportFragmentManager.beginTransaction()
-//    when(int){
-//        1 -> transaction.replace(R.id.navigation_mypage,walktimFm)
-//        2 -> transaction.replace(R.id.navigation_mypage,coseClearFm)
-//        3 -> transaction.replace(R.id.navigation_mypage,caloriesfm)
-//    }
-//        transaction.commit()
-//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
