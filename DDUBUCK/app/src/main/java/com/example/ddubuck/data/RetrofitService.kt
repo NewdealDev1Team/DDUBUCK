@@ -3,8 +3,11 @@ package com.example.ddubuck.data
 
 import android.util.Log
 import com.example.ddubuck.data.home.WalkRecord
+import com.example.ddubuck.data.publicdata.PublicData
+import com.example.ddubuck.data.publicdata.PublicDataAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.naver.maps.geometry.LatLng
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +28,19 @@ object RetrofitClient{
                 .build()
 
         retrofit.create(MapAPI::class.java)
+    }
+
+    val publicDataInstance : PublicDataAPI by lazy {
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+        retrofit.create(PublicDataAPI::class.java)
     }
 }
 
@@ -52,7 +68,22 @@ class RetrofitService {
             override fun onFailure(call: Call<WalkRecord>, t: Throwable) {
                 Log.e("ERROR", t.localizedMessage)
             }
-
         })
+    }
+
+    fun getPublicData(x : Double, y : Double) {
+        RetrofitClient.publicDataInstance.getResult(x,y)
+            .enqueue(object : Callback<PublicData> {
+                override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
+                    val responseText = "Response code: ${response.code()}\n"+
+                            "body: ${response.body()}\n"
+                    Log.e("response", responseText)
+                }
+
+                override fun onFailure(call: Call<PublicData>, t: Throwable) {
+                    Log.e("ERROR", t.localizedMessage)
+                }
+
+            })
     }
 }

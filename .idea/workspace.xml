@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="573aa10d-9ced-4cab-8a8f-6f219a902878" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/MainActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MPChartActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MPChartActivity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MyPageFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/java/com/example/ddubuck/ui/mypage/MyPageFragment.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/layout/fragment_mypage.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/layout/fragment_mypage.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/DDUBUCK/app/src/main/res/values/strings.xml" afterDir="false" />
-    </list>
+    <list default="true" id="573aa10d-9ced-4cab-8a8f-6f219a902878" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1rMj6G3Qs8FgOsFKAS9Dht0hAp6" />
@@ -22,9 +21,12 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Git.Branch.Popup.ShowAllRemotes" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/DDUBUCK" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -38,5 +40,25 @@
       <updated>1618792675700</updated>
     </task>
     <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="721" y="287" key="FileChooserDialogImpl" timestamp="1619883223981">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="721" y="287" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1619883223981" />
+    <state width="717" height="457" key="Git.Branch.Popup" timestamp="1619883207784">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="717" height="457" key="Git.Branch.Popup/0.0.1920.1040@0.0.1920.1040" timestamp="1619883207784" />
+    <state x="746" y="445" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1619883211427">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="746" y="445" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1040@0.0.1920.1040" timestamp="1619883211427" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="603" y="209" key="FileChooserDialogImpl" timestamp="1620000373866">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="603" y="209" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1620000373866" />
   </component>
 </project>

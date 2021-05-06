@@ -2,13 +2,7 @@ package com.example.ddubuck.ui.home.option
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.example.ddubuck.R
-import com.example.ddubuck.data.publicdata.RetrofitClient
-import com.example.ddubuck.data.publicdata.publicData
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SelectOptionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

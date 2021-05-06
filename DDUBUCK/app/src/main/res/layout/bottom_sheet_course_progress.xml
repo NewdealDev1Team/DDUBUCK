@@ -119,7 +119,7 @@
                 android:textColor="@color/green"
                 android:layout_weight="1"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/sheet_button_activated"
+                android:background="@drawable/sheet_button_pressed"
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
@@ -129,7 +129,7 @@
                 android:textColor="@color/white"
                 android:layout_weight="1"
                 android:layout_marginLeft="5dp"
-                android:background="@drawable/sheet_button_deactivated"
+                android:background="@drawable/sheet_button_unpressed"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </LinearLayout>

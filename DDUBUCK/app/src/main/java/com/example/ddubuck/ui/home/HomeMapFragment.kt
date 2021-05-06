@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
+import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
@@ -93,7 +94,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                     fm.beginTransaction().add(R.id.map, it).commit()
                 }
         nMapFragment.getMapAsync(this)
-        locationButtonView = rootView.findViewById(R.id.location)
+//        locationButtonView = rootView.findViewById(R.id.location)
 
         model.isRecordStarted.observe(viewLifecycleOwner, { v ->
             if (v) {
@@ -203,7 +204,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 walkTime,
                 stepCount,
                 distance,
-                Date()
         )
     }
 
@@ -243,9 +243,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
-        map.uiSettings.isLocationButtonEnabled = false
+        //map.uiSettings.isLocationButtonEnabled = false
 
-        locationButtonView.map = this.map
+        //locationButtonView.map = this.map
 
         course.color = Color.parseColor("#2798E7")
         course.width = 15
@@ -268,6 +268,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 locationSource.lastLocation?.longitude!!
                         )
                 )
+                //RetrofitService().getPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
+                RetrofitService().getPublicData(37.546037, 126.955869)
                 isLocationFirstChanged=true
             }
 

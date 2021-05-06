@@ -3,7 +3,6 @@ package com.example.ddubuck.ui.home.bottomSheet
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,6 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import java.text.DecimalFormat
 
 class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : Fragment() {
     private val homeMapViewModel: HomeMapViewModel by activityViewModels()
@@ -38,7 +36,7 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
                 homeMapViewModel.pauseTrigger(false)
                 pauseButton.text="일시정지"
                 pauseButton.setTextColor(Color.parseColor("#3DAB5B"))
-                pauseButton.setBackgroundResource(R.drawable.sheet_button_activated)
+                pauseButton.setBackgroundResource(R.drawable.sheet_button_pressed)
                 //ui변경
                 false
             } else {
@@ -46,7 +44,7 @@ class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : F
                 homeMapViewModel.pauseTrigger(true)
                 pauseButton.text="시작하기"
                 pauseButton.setTextColor(Color.WHITE)
-                pauseButton.setBackgroundResource(R.drawable.sheet_button_deactivated)
+                pauseButton.setBackgroundResource(R.drawable.sheet_button_unpressed)
                 //ui변경
                 true
             }

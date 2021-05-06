@@ -10,9 +10,33 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
+    <!--카메라,갤러리 intent 사용 시 필요한 query-->
+    <queries>
+        <!-- Browser -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+
+        <!-- Gallery -->
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+        </intent>
+    </queries>
+
+    <uses-feature android:name="android.hardware.camera"
         android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <application
         android:name=".login.GlobalApplication"
@@ -28,25 +52,22 @@
         </activity>
         <activity android:name=".ui.home.option.SelectOptionActivity">
         </activity>
-<!--        <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity"></activity>-->
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DDUBUCK">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity">
         </activity>
         <activity android:name=".SecondActivity" />
 
-        <activity android:name=".ui.share.ShareActivity">
-
-        </activity>
-
-        <activity android:name=".ui.share.canvas.CanvasActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity android:name=".ui.share.ShareActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".userinfo.UserInfoBirthdayActivity"
             android:screenOrientation="portrait"/>
@@ -55,10 +76,8 @@
         <activity android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="oauth"
                     android:scheme="kakao77629a2e99409577163d7742096517e9" />
@@ -68,6 +87,16 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="lz0an3yhfn" />
-    </application>
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.ddubuck"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+    </application>
 </manifest>
