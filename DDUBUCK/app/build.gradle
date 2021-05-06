@@ -92,6 +92,9 @@ dependencies {
     //noinspection GradleCompatible
     //
 
+    // Circle Image View
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
     implementation 'com.burhanrashid52:photoeditor:1.1.1'
     //noinspection GradleCompatible
     implementation'com.android.support:design:28.0.0'
