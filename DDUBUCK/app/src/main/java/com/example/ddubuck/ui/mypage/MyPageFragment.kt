@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.MainActivityViewModel
@@ -32,17 +34,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MyPageFragment : Fragment() {
-    private lateinit var myPageViewModel: MyPageViewModel
     private lateinit var myPageBinding: FragmentMypageBinding
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
-
-    private val activityModel: MainActivityViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+
         val myPageView = inflater.inflate(R.layout.fragment_mypage, container, false)
 
         val profileImage: CircleImageView = myPageView.findViewById(R.id.profile_image)
@@ -56,6 +56,13 @@ class MyPageFragment : Fragment() {
         val calorieButton: ConstraintLayout = myPageView.findViewById(R.id.calorie_button)
 
         setUserInfo(userName)
+
+        profileImage.setOnClickListener {
+            mypageFragment = MyPageFragment()
+            myPageEditFragment = MyPageEditFragment()
+
+            toEditInfoPage()
+        }
 
         profileImageEditButton.setOnClickListener {
 
@@ -87,9 +94,11 @@ class MyPageFragment : Fragment() {
 
     private fun toEditInfoPage() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.nav_main_container, myPageEditFragment)
+            .replace(R.id.mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
+
+
 
     }
 
