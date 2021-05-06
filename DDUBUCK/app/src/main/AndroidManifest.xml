@@ -50,6 +50,12 @@
         android:theme="@style/Theme.DDUBUCK"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".ui.mypage.mywalk.MyWalkActivity" />
         <activity android:name=".ui.home.option.SelectOptionActivity" />
         <!--        <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity"></activity>-->
@@ -62,10 +68,7 @@
 
         </activity>
         <activity android:name=".login.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity android:name=".SecondActivity" />
 
