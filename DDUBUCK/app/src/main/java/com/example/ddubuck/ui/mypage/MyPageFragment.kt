@@ -22,6 +22,7 @@ import com.example.ddubuck.login.UserService
 import com.example.ddubuck.login.UserValidationInfo
 import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.HomeMapFragment
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_edit_userinfo.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import retrofit2.Call
@@ -44,8 +45,8 @@ class MyPageFragment : Fragment() {
     ): View? {
         val myPageView = inflater.inflate(R.layout.fragment_mypage, container, false)
 
-        val profileImage: ImageView = myPageView.findViewById(R.id.profile_image)
-        val profileImageEditButton: ImageButton = myPageView.findViewById(R.id.profile_edit_button)
+        val profileImage: CircleImageView = myPageView.findViewById(R.id.profile_image)
+        val profileImageEditButton: CircleImageView = myPageView.findViewById(R.id.profile_edit_button)
         val userName: TextView = myPageView.findViewById(R.id.user_name)
         val stepCount: TextView = myPageView.findViewById(R.id.step_count)
 
