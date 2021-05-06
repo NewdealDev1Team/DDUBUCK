@@ -84,9 +84,9 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
                 val day = birth[2]
 
                 if (year == "" ) {
-                    datePicker.init(1990, month!!.toInt() - 1, day!!.toInt(), null)
+                    datePicker.init(1990, month.toInt() - 1, day.toInt(), null)
                 } else {
-                    datePicker.init(year.toInt(), month!!.toInt() - 1, day!!.toInt(), null)
+                    datePicker.init(year.toInt(), month.toInt() - 1, day.toInt(), null)
                 }
 
             }
@@ -106,7 +106,20 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
     private fun toNextPage() {
 
         val datePicker: DatePicker = findViewById(R.id.birthdaySpinner)
-        val birthday = "${datePicker.year}-${datePicker.month+1}-${datePicker.dayOfMonth}"
+        var birthday = ""
+        if (datePicker.month+1 <= 9) {
+            birthday = "${datePicker.year}-0${datePicker.month+1}-"
+        } else {
+            birthday = "${datePicker.year}-${datePicker.month+1}-"
+        }
+
+        if (datePicker.dayOfMonth < 10) {
+            birthday += "0${datePicker.dayOfMonth}"
+        } else {
+            birthday += "${datePicker.dayOfMonth}"
+        }
+
+        Log.e("생일",birthday)
 
         val toBodyActivity = Intent(this, UserInfoHeightWeightActivity::class.java)
         toBodyActivity.putExtra("birthday", birthday)

@@ -95,7 +95,7 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
     // 생일과 키와 몸무게 정보 저장
     private fun saveHeightWeight(height: Double, weight: Double) {
         if (intent.hasExtra("birthday")) {
-            val birthday = intent.getStringExtra("birthday")
+            val birthday = intent.getStringExtra("birthday")!!
             val userKey = intent.getStringExtra("userKey")!!
             val userInfo: Retrofit = Retrofit.Builder()
                     .baseUrl("http://3.37.6.181:3000/")
@@ -103,7 +103,7 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
                     .build()
             val userMoreServer: UserInfoService = userInfo.create(UserInfoService::class.java)
 
-            userMoreServer.saveUserBodyInfo(userKey, height, weight).enqueue(object : Callback<UserBody> {
+            userMoreServer.saveUserBodyInfo(userKey, birthday, height, weight).enqueue(object : Callback<UserBody> {
                 override fun onResponse(call: Call<UserBody>, response: Response<UserBody>) {
                     Log.e("Success", response.message())
                 }
