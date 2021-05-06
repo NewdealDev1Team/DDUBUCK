@@ -45,11 +45,9 @@ class LoginActivity : AppCompatActivity() {
     val TAG = "googleLogin"
 
     private lateinit var googleSignInClient: GoogleSignInClient
-    private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.login_layout)
 
         // LoginView에서 상단바 제거
@@ -58,29 +56,6 @@ class LoginActivity : AppCompatActivity() {
 
         mContext = this
 
-        if (UserSharedPreferences.getUserId(this).isBlank() || UserSharedPreferences.passUser(this)
-                .isBlank()
-        ) {
-            googleLogin()
-            naverLogin()
-            kakaoLogin()
-        } else {
-            if (UserSharedPreferences.getAutoLogin(this) == "true") {
-                val toMainActivity = Intent(this, MainActivity::class.java)
-                startActivity(toMainActivity)
-            } else {
-                googleLogin()
-                naverLogin()
-                kakaoLogin()
-            }
-        }
-
-
-    }
-
-
-    // 구글 로그인
-    private fun googleLogin() {
         auth = FirebaseAuth.getInstance()
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.firebase_web_client_id))
@@ -92,6 +67,21 @@ class LoginActivity : AppCompatActivity() {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, GOOGLE_REQUEST_CODE)
         }
+
+        naverLogin()
+        kakaoLogin()
+
+        if (UserSharedPreferences.getUserId(this).isNotBlank() && UserSharedPreferences.getAutoLogin(this) == "true") {
+            val toMainActivity = Intent(this, MainActivity::class.java)
+            startActivity(toMainActivity)
+            finish()
+        }
+    }
+
+
+    // 구글 로그인
+    private fun googleLogin() {
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -103,16 +93,15 @@ class LoginActivity : AppCompatActivity() {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)!!
-                val id = account.id!!.toString()
-                val name = if (account.familyName == null) {
+                val googleId = account.id!!.toString()
+                val googleName = if (account.familyName == null) {
                     account.givenName?.toString()!!
                 } else {
                     account.familyName?.toString()!! + account.givenName?.toString()
                 }
-                val birthday = "2000-01-01"
-                saveUserInfo(id, name, birthday, "Google")
-
+                Log.e("구글","들어옴")
                 firebaseAuthWithGoogle(account.idToken!!)
+                saveUserInfo(googleId, googleName, "2000-01-01", "Google")
 
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
@@ -184,11 +173,17 @@ class LoginActivity : AppCompatActivity() {
 
                         if (user != null) {
                             // 네이버 삽입
-                            val id = user.id.toString()
-                            val name = user.nickname
-                            val birthday = user.birthyear + "-" + user.birthday
+                            val naverId = user.id.toString()
+                            val naverName = user.nickname
+                            var naverBirthday = ""
+                            naverBirthday = if (user.birthday.length == 3) {
+                                user.birthyear + "-0" + user.birthday
+                            } else {
+                                user.birthyear + "-" + user.birthday
+                            }
 
-                            saveUserInfo(id, name, birthday, "Naver")
+                            Log.e("네이버","들어옴")
+                            saveUserInfo(naverId, naverName, naverBirthday, "Naver")
 
                         }
 
@@ -255,9 +250,9 @@ class LoginActivity : AppCompatActivity() {
                     if (error != null) {
                         Log.e(TAG, "사용자 정보 요청 실패", error)
                     } else if (user != null) {
-                        val id = user.id.toString()
-                        val name = user.kakaoAccount?.profile?.nickname.toString()
-                        val birthday = if (user.kakaoAccount?.birthyear == null) {
+                        val kakaoId = user.id.toString()
+                        val kakaoName = user.kakaoAccount?.profile?.nickname.toString()
+                        val kakaoBirthday = if (user.kakaoAccount?.birthyear == null) {
                             "1990" + "-" + user.kakaoAccount?.birthday.toString()
                                 .substring(0, 2) + "-" + user.kakaoAccount?.birthday.toString()
                                 .substring(2, 4)
@@ -266,7 +261,9 @@ class LoginActivity : AppCompatActivity() {
                                 .substring(0, 2) + "-" + user.kakaoAccount?.birthday.toString()
                                 .substring(2, 4)
                         }
-                        saveUserInfo(id, name, birthday, "Kakao")
+                        Log.e("카카오","들어옴")
+
+                        saveUserInfo(kakaoId, kakaoName, kakaoBirthday, "Kakao")
                     }
                 }
             }
@@ -302,14 +299,16 @@ class LoginActivity : AppCompatActivity() {
                     val height = response.body()?.height
                     val weight = response.body()?.weight
 
-                    if (height!!.toInt() == 0 && weight!!.toInt() == 0) {
+                    if ((height!!.toInt() == 0 && weight!!.toInt() == 0)) {
                         startActivity(toBirthdayActivity)
-                        overridePendingTransition(R.anim.activity_slide_in,
-                            R.anim.activity_slide_out)
+                        overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out)
+                        finish()
                     } else {
+                        Log.e("ㅆㅆㅆㅆㅆㅆㅆ", response.body()?.birth.toString())
                         startActivity(toMainActivity)
                         overridePendingTransition(R.anim.activity_slide_in,
                             R.anim.activity_slide_out)
+                        finish()
 
                     }
                 }
@@ -322,7 +321,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun saveUserInfo(id: String, name: String, birthday: String, diversion: String) {
+    private fun saveUserInfo(id: String, name: String, birth: String, diversion: String) {
 
         val autoLoginCheckBox: CheckBox = findViewById(R.id.auto_login)
         // Shared Preference에 회원 id 저장
@@ -335,24 +334,16 @@ class LoginActivity : AppCompatActivity() {
             .build()
         val userServer: UserService = userInfo.create(UserService::class.java)
 
-        userServer.saveUserInfo(id, name, birthday, "0", "0", diversion)
+        userServer.saveUserInfo(id, name, birth, 0, 0, diversion)
             .enqueue(object : Callback<User> {
                 override fun onResponse(call: Call<User>, response: Response<User>) {
-                    Log.e("Success", response.message())
-                    loginViewModel.getResponseValue(true)
+                    loginSuccess(id)
                 }
 
                 override fun onFailure(call: Call<User>, t: Throwable) {
                     t.message?.let { Log.e("Fail", it) }
                 }
             })
-
-        loginViewModel.isSuccessfulLoginResponse.observe(this, { v ->
-            if (v == true) {
-                loginSuccess(id)
-            }
-        })
-
     }
 
 
