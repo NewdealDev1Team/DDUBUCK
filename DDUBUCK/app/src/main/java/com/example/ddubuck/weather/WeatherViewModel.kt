@@ -42,9 +42,13 @@ class WeatherViewModel : ViewModel() {
         emit(retrivedDustInfo)
     }
 
+    val isPetYes = MutableLiveData<Boolean>()
+    fun getPetValue(value: Boolean) {
+        isPetYes.value = value
+    }
+
     val isSuccessfulResponse = MutableLiveData<Boolean>()
     fun getResponseValue(value: Boolean) {
-        
         isSuccessfulResponse.value = value
 
     }
