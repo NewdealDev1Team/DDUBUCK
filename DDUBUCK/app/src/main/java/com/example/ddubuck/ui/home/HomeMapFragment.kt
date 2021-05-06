@@ -94,7 +94,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                     fm.beginTransaction().add(R.id.map, it).commit()
                 }
         nMapFragment.getMapAsync(this)
-//        locationButtonView = rootView.findViewById(R.id.location)
+        locationButtonView = rootView.findViewById(R.id.location)
 
         model.isRecordStarted.observe(viewLifecycleOwner, { v ->
             if (v) {
@@ -243,9 +243,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
-        //map.uiSettings.isLocationButtonEnabled = false
+        map.uiSettings.isLocationButtonEnabled = false
 
-        //locationButtonView.map = this.map
+        locationButtonView.map = this.map
 
         course.color = Color.parseColor("#2798E7")
         course.width = 15
