@@ -15,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.ui.home.HomeMapViewModel
-import java.text.DecimalFormat
 
 class BottomSheetFreeProgressFragment: Fragment() {
     //뷰모델
@@ -41,7 +40,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
                 homeMapViewModel.pauseTrigger(false)
                 pauseButton.text="일시정지"
                 pauseButton.setTextColor(Color.parseColor("#3DAB5B"))
-                pauseButton.setBackgroundResource(R.drawable.sheet_button_activated)
+                pauseButton.setBackgroundResource(R.drawable.sheet_button_pressed)
 
                 //ui변경
                 false
@@ -50,7 +49,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
                 homeMapViewModel.pauseTrigger(true)
                 pauseButton.text="시작하기"
                 pauseButton.setTextColor(Color.WHITE)
-                pauseButton.setBackgroundResource(R.drawable.sheet_button_deactivated)
+                pauseButton.setBackgroundResource(R.drawable.sheet_button_unpressed)
                 //ui변경
                 true
             }

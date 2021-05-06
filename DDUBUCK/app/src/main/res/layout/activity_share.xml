@@ -19,40 +19,44 @@
         app:layout_constraintTop_toTopOf="parent">
     </androidx.appcompat.widget.Toolbar>
 
-    <FrameLayout
-        android:id="@+id/frameLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/share_selectRV"
+        android:background="#333333"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/share_buttons"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/share_toolbar">
-
         <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#FFFFFF" />
-
-        <ja.burhanrashid52.photoeditor.PhotoEditorView
-            android:id="@+id/photoEditorView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toTopOf="@+id/share_buttons"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/share_toolbar" />
-    </FrameLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/share_selectRV"
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:background="#444444"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/share_select_item"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/share_buttons" />
+            android:id="@+id/share_buttons_image"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#939393"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#aaFFFFFF"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="사진 선택하기"/>
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/share_canvas_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/share_buttons"

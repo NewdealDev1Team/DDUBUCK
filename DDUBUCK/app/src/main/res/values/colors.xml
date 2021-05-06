@@ -11,5 +11,7 @@
 <!-- 컬러 색상 = 초록-->
     <color name ="green">#3DAB5B</color>
 
+    <color name="a">#CFAF05</color>
+
     <color name="colorBlack">#000000</color>
 </resources>
