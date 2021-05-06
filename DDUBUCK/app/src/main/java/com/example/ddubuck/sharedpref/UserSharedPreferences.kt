@@ -17,11 +17,11 @@ object UserSharedPreferences {
         val prefs : SharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE)
         return prefs.getString("ACCOUNT_ID", "").toString()
     }
-
-    fun passUser(context: Context): String {
-        val prefs : SharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE)
-        return prefs.getString("ACCOUNT_ID", "").toString()
-    }
+//
+//    fun passUser(context: Context): String {
+//        val prefs : SharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE)
+//        return prefs.getString("ACCOUNT_ID", "").toString()
+//    }
 
     fun setAutoLogin(context: Context, autoLoginCheckBox: CheckBox) {
         val prefs : SharedPreferences = context.getSharedPreferences("autoLogin", Context.MODE_PRIVATE)
@@ -33,5 +33,17 @@ object UserSharedPreferences {
     fun getAutoLogin(context: Context): String {
         val prefs : SharedPreferences = context.getSharedPreferences("autoLogin", Context.MODE_PRIVATE)
         return prefs.getString("AUTO_LOGIN", "").toString()
+    }
+
+    fun setPet(context: Context, input: Boolean) {
+        val prefs : SharedPreferences = context.getSharedPreferences("pet", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putString("PET", input.toString())
+        editor.commit()
+    }
+
+    fun getPet(context: Context): Boolean {
+        val prefs : SharedPreferences = context.getSharedPreferences("pet", Context.MODE_PRIVATE)
+        return prefs.getString("PET","").toBoolean()
     }
 }
