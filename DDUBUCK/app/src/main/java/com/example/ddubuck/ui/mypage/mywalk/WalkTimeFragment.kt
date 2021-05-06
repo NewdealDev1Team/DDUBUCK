@@ -1,6 +1,7 @@
 package com.example.ddubuck.ui.mypage.mywalk
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -18,6 +19,7 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
@@ -47,6 +49,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.*
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -278,7 +281,7 @@ class WalkTimeFragment : Fragment() {
             }
         })
 
-        val button : Button = rootView.findViewById(R.id.button_screenshot)
+        val button : Button = rootView.findViewById(R.id.time_button_screenshot)
         button.setOnClickListener {
             when (requestPermissions()) {
                 true -> takeAndShareScreenShot()
@@ -287,17 +290,21 @@ class WalkTimeFragment : Fragment() {
         }
         return rootView
     }
+
     private fun takeAndShareScreenShot() {
-        this.activity?.let {
-            Instacapture.capture(it, object : SimpleScreenCapturingListener() {
-                override fun onCaptureComplete(bitmap: Bitmap) {
-                    val uri = saveImageExternal(bitmap)
-                    uri?.let {
-                        shareImageURI(uri)
-                    } ?: showError()
-                }
-            }, button_screenshot)
-        }
+        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
+            override fun onCaptureComplete(captureview: Bitmap) {
+                val capture: LinearLayout = requireView().findViewById(R.id.walktime_sheet) as LinearLayout
+                val day = SimpleDateFormat("yyyyMMddHHmmss")
+                val date = Date()
+                capture.buildDrawingCache()
+                val captureview : Bitmap = capture.getDrawingCache()
+                val uri = saveImageExternal(captureview)
+                uri?.let {
+                    shareImageURI(uri)
+                } ?: showError()
+            }
+        }, time_button_screenshot)
     }
 
     private fun showError() {
@@ -332,9 +339,11 @@ class WalkTimeFragment : Fragment() {
     }
 
     fun saveImageExternal(image: Bitmap): Uri? {
+        val v : LinearLayout = requireView().findViewById(R.id.walktime_sheet) as LinearLayout
         var uri: Uri? = null
         try {
-            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "to-share.png")
+            //저장할 폴더 setting
+            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS), "Walking-Time-Chart.png")
             val stream = FileOutputStream(file)
             image.compress(Bitmap.CompressFormat.PNG, 90, stream)
             stream.close()
@@ -344,6 +353,7 @@ class WalkTimeFragment : Fragment() {
         }
         return uri
     }
+
 
     fun shareImageURI(uri: Uri){
         val shareIntent: Intent = Intent().apply {

@@ -106,10 +106,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    //https://github.com/Karumi/Dexter
+    //reqeust for permission
     implementation 'com.karumi:dexter:6.2.2'
-
-    //https://github.com/tarek360/Instacapture
+    //ScreenShot
     implementation "com.github.tarek360:instacapture:2.0.1"
 
 

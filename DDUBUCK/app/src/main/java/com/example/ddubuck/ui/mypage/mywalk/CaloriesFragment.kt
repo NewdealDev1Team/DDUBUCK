@@ -1,15 +1,25 @@
 package com.example.ddubuck.ui.mypage.mywalk
 
+import android.Manifest
+import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.FileProvider
+import androidx.core.view.drawToBitmap
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
@@ -22,47 +32,64 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.utils.ViewPortHandler
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionDeniedResponse
+import com.karumi.dexter.listener.PermissionGrantedResponse
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.single.PermissionListener
+import com.tarek360.instacapture.Instacapture
+import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
+import kotlinx.android.synthetic.main.fragment_calories.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
     val dateNow: LocalDateTime = LocalDateTime.now()
+
     //1 ~ 5일
-    val oneDaysAgo : LocalDateTime = dateNow.minusDays(1)
-    val twoDaysAgo : LocalDateTime = dateNow.minusDays(2)
-    val threeDaysAgo : LocalDateTime = dateNow.minusDays(3)
-    val fourDaysAgo : LocalDateTime = dateNow.minusDays(4)
-    val fiveDaysAgo : LocalDateTime = dateNow.minusDays(5)
-    val sixDaysAgo : LocalDateTime = dateNow.minusDays(6)
+    val oneDaysAgo: LocalDateTime = dateNow.minusDays(1)
+    val twoDaysAgo: LocalDateTime = dateNow.minusDays(2)
+    val threeDaysAgo: LocalDateTime = dateNow.minusDays(3)
+    val fourDaysAgo: LocalDateTime = dateNow.minusDays(4)
+    val fiveDaysAgo: LocalDateTime = dateNow.minusDays(5)
+    val sixDaysAgo: LocalDateTime = dateNow.minusDays(6)
 
 
     //LocalDate 문자열로 포맷
-    val formatter : DateTimeFormatter = DateTimeFormatter.ofPattern("E")
+    val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("E")
     val formatterString: String = dateNow.format(formatter)
 
-    val textformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("M/d")
-    val textformatterString : String = dateNow.format(textformatter)
+    val textformatter: DateTimeFormatter = DateTimeFormatter.ofPattern("M/d")
+    val textformatterString: String = dateNow.format(textformatter)
 
-    val calorieformatter : DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
-    val calorieformatterString : String = dateNow.format(calorieformatter)
+    val calorieformatter: DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
+    val calorieformatterString: String = dateNow.format(calorieformatter)
 
-    private lateinit var chart : BarChart
+    private lateinit var chart: BarChart
 
-    override fun onCreateView( //프래그먼트가 인터페이스를 처음 그릴때 사용함
+    override fun onCreateView(
+        //프래그먼트가 인터페이스를 처음 그릴때 사용함
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val rootView : View = inflater.inflate(R.layout.fragment_calories, container, false)
+        val rootView: View = inflater.inflate(R.layout.fragment_calories, container, false)
 
         RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
             override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
@@ -78,10 +105,11 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                     Log.d("~~0번째 time~~~",
                         " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
 
-                    val sum : Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
-                            + result3!!.toInt() + result4!!.toInt() +result5!!.toInt())
+                    val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
+                            + result3!!.toInt() + result4!!.toInt() + result5!!.toInt())
 
-                    var calorieTitleName : String = response.body()?.totalStat?.get(0)?.name.toString()
+                    var calorieTitleName: String =
+                        response.body()?.totalStat?.get(0)?.name.toString()
 
                     val listData by lazy {
                         mutableListOf(
@@ -107,9 +135,10 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                         setDrawBarShadow(false)
                         setDrawValueAboveBar(false)
                         //차트 라운들 모양 커스텀
-                        val barChartRender = CustomBarChartRender(this, animator, viewPortHandler).apply {
-                            setRadius(20)
-                        }
+                        val barChartRender =
+                            CustomBarChartRender(this, animator, viewPortHandler).apply {
+                                setRadius(20)
+                            }
                         renderer = barChartRender
                     }
                     fun setData(barData: List<ChartData>) {
@@ -123,21 +152,26 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                             //차트 색상
 
                             val colors = ArrayList<Int>()
-                            colors.add(Color.argb(55,250, 168, 46));
-                            colors.add(Color.argb(55,250, 168, 46));
-                            colors.add(Color.argb(55,250, 168, 46));
-                            colors.add(Color.argb(55,250, 168, 46));
-                            colors.add(Color.argb(55,250, 168, 46));
-                            colors.add(Color.argb(55,250, 168, 46));
-                            colors.add(Color.argb(200,250, 168, 46));
+                            colors.add(Color.argb(55, 250, 168, 46));
+                            colors.add(Color.argb(55, 250, 168, 46));
+                            colors.add(Color.argb(55, 250, 168, 46));
+                            colors.add(Color.argb(55, 250, 168, 46));
+                            colors.add(Color.argb(55, 250, 168, 46));
+                            colors.add(Color.argb(55, 250, 168, 46));
+                            colors.add(Color.argb(200, 250, 168, 46));
                             setColors(colors)
                             //투명,불투명
                             highLightAlpha = 0
                         }
                         //data 클릭 시 분으로 나오는 커스텀??????????
-                        barDataSet.valueFormatter = object : ValueFormatter(){
-                            private val mFormat : DecimalFormat = DecimalFormat("###")
-                            fun getFormattedValue(value:Int, entry: Entry, dataSetIndex : Int, viewPortHandler: ViewPortHandler) : String{
+                        barDataSet.valueFormatter = object : ValueFormatter() {
+                            private val mFormat: DecimalFormat = DecimalFormat("###")
+                            fun getFormattedValue(
+                                value: Int,
+                                entry: Entry,
+                                dataSetIndex: Int,
+                                viewPortHandler: ViewPortHandler,
+                            ): String {
                                 return mFormat.format(value) + "분"
                             }
                         }
@@ -172,15 +206,15 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                                 //cnr wjatjs
                                 gridLineWidth = 0.5F
                                 //선 길이, 조각 사이의 공간, 위상
-                                enableGridDashedLine(5f,5f,5f)
+                                enableGridDashedLine(5f, 5f, 5f)
 
                                 var count = 0
-                                barData.forEachIndexed{ index, chartData ->
-                                    while(chartData.value > axisMaximum){
+                                barData.forEachIndexed { index, chartData ->
+                                    while (chartData.value > axisMaximum) {
                                         count++
-                                        if(chartData.value > axisMaximum){
+                                        if (chartData.value > axisMaximum) {
                                             axisMaximum += 300F
-                                        }else{
+                                        } else {
                                             axisMaximum = 600F
                                         }
                                     }
@@ -196,12 +230,12 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                                 gridColor = R.color.black
 
                                 var count = 0
-                                barData.forEachIndexed{ index, chartData ->
-                                    while(chartData.value > axisMaximum){
+                                barData.forEachIndexed { index, chartData ->
+                                    while (chartData.value > axisMaximum) {
                                         count++
-                                        if(chartData.value > axisMaximum){
+                                        if (chartData.value > axisMaximum) {
                                             axisMaximum += 300F
-                                        }else{
+                                        } else {
                                             axisMaximum = 600F
                                         }
                                     }
@@ -218,9 +252,9 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                     setData(listData)
 
 
-                    val day : TextView = rootView.findViewById(R.id.calorie_bottom_title_text_day)
+                    val day: TextView = rootView.findViewById(R.id.calorie_bottom_title_text_day)
                     day.setText(textformatterString)
-                    val time : TextView = rootView.findViewById(R.id.calorie_bottom_title_text_time)
+                    val time: TextView = rootView.findViewById(R.id.calorie_bottom_title_text_time)
                     time.setText(calorieformatterString)
 
                     val miniTitleTime: Int = result6!!.toInt()
@@ -231,10 +265,96 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                     calorieName.setText(calorieTitleName.toString())
                 }
             }
+
             override fun onFailure(call: Call<chartData>, t: Throwable) {
                 Log.d("error", t.message.toString())
             }
         })
+        val button: Button = rootView.findViewById(R.id.calorie_button_screenshot)
+        button.setOnClickListener {
+            when (requestPermissions()) {
+                true -> takeAndShareScreenShot()
+                else -> showError()
+            }
+        }
         return rootView
+    }
+
+    private fun takeAndShareScreenShot() {
+        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
+            override fun onCaptureComplete(captureview: Bitmap) {
+                val capture: LinearLayout = requireView().findViewById(R.id.calorie_sheet) as LinearLayout
+                val day = SimpleDateFormat("yyyyMMddHHmmss")
+                val date = Date()
+                capture.buildDrawingCache()
+                val captureview : Bitmap = capture.getDrawingCache()
+                val uri = saveImageExternal(captureview)
+                uri?.let {
+                    shareImageURI(uri)
+                } ?: showError()
+            }
+        }, calorie_button_screenshot)
+    }
+
+    private fun showError() {
+        Toast.makeText(
+            this.activity,
+            "승인이 필요합니다.",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    fun requestPermissions(): Boolean {
+        var permissions = false
+        Dexter.withActivity(this.activity)
+            .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object : PermissionListener {
+                override fun onPermissionGranted(response: PermissionGrantedResponse) {
+                    permissions = true
+                }
+
+                override fun onPermissionDenied(response: PermissionDeniedResponse) {
+                    permissions = false
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    permission: PermissionRequest,
+                    token: PermissionToken,
+                ) {
+                    token.continuePermissionRequest()
+                }
+            }).check()
+        return permissions
+    }
+
+    fun saveImageExternal(image: Bitmap): Uri? {
+
+        var uri: Uri? = null
+        try {
+            //Bitmap으로 만든 이미지는 png 파일 형태로 만들기
+                //파일을 저장할 주소 + 파일 이름
+            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Calories-Chart.png")
+            //이미지 파일 생성
+            val stream = FileOutputStream(file)
+            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
+            stream.close()
+            uri = FileProvider.getUriForFile(this.requireContext(),
+                this.requireActivity().packageName + ".provider",
+                file)
+        } catch (e: IOException) {
+            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
+        }
+        return uri
+    }
+
+
+    fun shareImageURI(uri: Uri) {
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "message/rfc822"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Send to"))
     }
 }

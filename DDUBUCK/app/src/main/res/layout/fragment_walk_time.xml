@@ -1,132 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     tools:context=".ui.mypage.mywalk.WalkTimeFragment">
 
-
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/time_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:text="님, 잘하셨어요!"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-    </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="11dp"
-        android:textColor="@color/black"
-        android:textSize="18dp"
-        android:textStyle="bold"
-        android:text="@string/time_title_walk"/>
-
-
-    <LinearLayout
+        android:id="@+id/walktime_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/time_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="100dp"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="100dp"
+                android:text="님, 잘하셨어요!"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="14dp"
-            android:gravity="center"
-            android:text="오늘의 산책시간은"
-            android:textSize="14dp" />
-
-        <TextView
-            android:id="@+id/time_mini_title"
-            android:layout_marginLeft="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:gravity="center"
-            android:textSize="14dp"
+            android:layout_marginLeft="16dp"
+            android:text="@string/time_title_walk"
+            android:textColor="@color/black"
+            android:textSize="18dp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_marginLeft="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="분 입니다."
-            android:textSize="14dp" />
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/button_screenshot"
-        android:layout_width="28dp"
-        android:layout_height="15dp"
-        android:layout_marginLeft="170dp"
-        android:background="@drawable/chart_share_icon"
-        android:scaleType="centerCrop"
-        android:textColor="@color/grey" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="14dp"
+                android:gravity="center"
+                android:text="오늘의 산책시간은"
+                android:textSize="14dp" />
 
-    <LinearLayout
+            <TextView
+                android:id="@+id/time_mini_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="14dp"
+                android:gravity="center"
+                android:textSize="14dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="14dp"
+                android:text="분 입니다."
+                android:textSize="14dp" />
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/time_button_screenshot"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="350dp"
+            android:background="@drawable/chart_share_icon"
+            android:scaleType="centerCrop"
+            android:textColor="@color/grey" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_gradient">
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/time_bar_chart"
-                android:background="@drawable/background_gradient"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_margin="20dp"
+                android:background="@drawable/background_gradient"
                 android:tooltipText="@android:string/ok"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
 
-        <TextView
-            android:layout_marginLeft="108dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="마지막 업데이트 "
-            android:textSize="12dp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/time_bottom_title_text_day"
-            android:layout_width="30dp"
-            android:layout_height="wrap_content"
-            android:textSize="12dp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="108dp"
+                android:gravity="center"
+                android:text="마지막 업데이트 "
+                android:textSize="12dp" />
 
-        <TextView
-            android:id="@+id/time_bottom_title_text_time"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textSize="12dp" />
+            <TextView
+                android:id="@+id/time_bottom_title_text_day"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="12dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/time_bottom_title_text_time"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:textSize="12dp" />
+        </LinearLayout>
     </LinearLayout>
-
 
 
 </LinearLayout>
