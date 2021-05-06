@@ -68,7 +68,6 @@ class RetrofitService {
             override fun onFailure(call: Call<WalkRecord>, t: Throwable) {
                 Log.e("ERROR", t.localizedMessage)
             }
-
         })
     }
 

@@ -268,7 +268,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 locationSource.lastLocation?.longitude!!
                         )
                 )
-                RetrofitService().getPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
+                //RetrofitService().getPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
+                RetrofitService().getPublicData(37.546037, 126.955869)
                 isLocationFirstChanged=true
             }
 
