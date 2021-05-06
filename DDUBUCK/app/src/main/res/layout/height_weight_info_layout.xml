@@ -20,11 +20,11 @@
             android:src="@drawable/back_button" />
 
         <TextView
-            android:id="@+id/birthday_toobar_title"
+            android:id="@+id/bodyinfo_toobar_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="생체정보 입력"
+            android:text="상세정보 입력"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold" />
