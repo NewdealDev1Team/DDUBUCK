@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import androidx.core.view.drawToBitmap
 import com.example.ddubuck.R
@@ -55,7 +56,8 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     private lateinit var canvas : Canvas
     private lateinit var path : Path
     private val translateMatrix = Matrix()
-    private val boundRect = RectF()
+    private val pathBoundRect = RectF()
+    private val pathDestRect = RectF()
     private var srcBmp : Bitmap? = null
     private var walkRecord : WalkRecord? = null
     private var isBlack = true
@@ -142,10 +144,20 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
             val record = walkRecord!!
             //사용자 이동경로 그리기
             path = routeToPath(record.path, width)
-            path.computeBounds(boundRect, true)
-            translateMatrix.setTranslate((width * 0.05f) + boundRect.width() / 2,
-                (height - boundRect.height() - (height * 0.005f)))
+            path.computeBounds(pathBoundRect, true)
+            if(pathBoundRect.height() >= pathBoundRect.width()) {
+                translateMatrix.setTranslate(width * 0.05f,
+                    (height - pathBoundRect.height() - (height * 0.005f)))
+                Log.e("HEIGHT", " LONG")
+            } else {
+                translateMatrix.setTranslate(width * 0.05f,
+                    (height - pathBoundRect.height() - (height * 0.05f)))
+                Log.e("HEIGHT", " WIDE")
+            }
             path.transform(translateMatrix)
+            path.computeBounds(pathBoundRect, true)
+            Log.e("HEIGHT","$height ${pathBoundRect.top}, ${pathBoundRect.bottom}")
+            canvas.drawRect(pathBoundRect, whiteTextPaint)
             logoMatrix.setScale(0.15f,
                 0.15f,
                 (width - (logoIcon.width * 0.15f) / 2),
@@ -156,13 +168,13 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
                 canvas.drawText(
                     numberFormatter.format(walkRecord!!.distance / 1000),
                     width * 0.05f,
-                    (height - boundRect.height() - 100f), whiteTextPaint)
+                    (height - pathBoundRect.height() - 100f), whiteTextPaint)
             } else {
                 canvas.drawPath(path, blackPathPaint)
                 canvas.drawText(
                     numberFormatter.format(walkRecord!!.distance / 1000),
                     width * 0.05f,
-                    (height - boundRect.height() - 100f), blackTextPaint)
+                    (height - pathBoundRect.height() - 100f), blackTextPaint)
 
             }
         }
@@ -206,4 +218,5 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     fun saveCanvas() : Bitmap {
         return this.drawToBitmap(Bitmap.Config.ARGB_8888)
     }
+
 }
