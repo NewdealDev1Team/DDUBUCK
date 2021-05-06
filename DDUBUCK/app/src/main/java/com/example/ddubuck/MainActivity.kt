@@ -169,6 +169,20 @@ class MainActivity : AppCompatActivity() {
                     }
                 } else {
                     tbm.setDisplayHomeAsUpEnabled(false)
+                    when (activeFragment) {
+                        challengeFragment -> {
+                            tbm.title = "챌린지"
+                        }
+                        badgeFragment -> {
+                            tbm.title = "뱃지"
+                        }
+                        myPageFragment -> {
+                            tbm.title = "마이페이지"
+                        }
+                        else -> {
+
+                        }
+                    }
                 }
             }
         }
