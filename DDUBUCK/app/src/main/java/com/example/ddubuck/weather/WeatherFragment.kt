@@ -2,33 +2,20 @@ package com.example.ddubuck.weather
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.location.Location
-import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.R
-import com.example.ddubuck.ui.home.HomeMapFragment
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.HomeMapViewModel
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.naver.maps.geometry.LatLng
-import com.naver.maps.map.LocationTrackingMode
-import com.naver.maps.map.util.FusedLocationSource
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 interface WeatherAPICallback {
     fun onSuccess(
@@ -188,7 +175,11 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                         Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
-                weatherImage.setImageResource(R.drawable.weather_high)
+                if (context?.let { UserSharedPreferences.getPet(it) } == true) {
+                    weatherImage.setImageResource(R.drawable.ic_weather_high_pet)
+                } else {
+                    weatherImage.setImageResource(R.drawable.ic_weather_high)
+                }
             }
             in 6..9 -> {
                 weatherText.text = "산책하기 좋아요!"
@@ -206,7 +197,11 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                         Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
-                weatherImage.setImageResource(R.drawable.weather_middle)
+                if (context?.let { UserSharedPreferences.getPet(it) } == true) {
+                    weatherImage.setImageResource(R.drawable.ic_weather_middle_pet)
+                } else {
+                    weatherImage.setImageResource(R.drawable.ic_weather_middle)
+                }
             }
             in 3..5 -> {
                 weatherText.text = "주의하며 산책해요."
@@ -226,9 +221,13 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                         Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
-
-                weatherImage.setImageResource(R.drawable.weather_low)
+                if (context?.let { UserSharedPreferences.getPet(it) } == true) {
+                    weatherImage.setImageResource(R.drawable.ic_weather_low_pet)
+                } else {
+                    weatherImage.setImageResource(R.drawable.ic_weather_low)
+                }
             }
+
 
         }
     }
