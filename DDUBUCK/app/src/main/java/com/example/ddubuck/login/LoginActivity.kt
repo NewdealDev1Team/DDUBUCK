@@ -181,8 +181,6 @@ class LoginActivity : AppCompatActivity() {
                             } else {
                                 user.birthyear + "-" + user.birthday
                             }
-
-                            Log.e("네이버","들어옴")
                             saveUserInfo(naverId, naverName, naverBirthday, "Naver")
 
                         }
@@ -261,8 +259,6 @@ class LoginActivity : AppCompatActivity() {
                                 .substring(0, 2) + "-" + user.kakaoAccount?.birthday.toString()
                                 .substring(2, 4)
                         }
-                        Log.e("카카오","들어옴")
-
                         saveUserInfo(kakaoId, kakaoName, kakaoBirthday, "Kakao")
                     }
                 }
@@ -304,7 +300,6 @@ class LoginActivity : AppCompatActivity() {
                         overridePendingTransition(R.anim.activity_slide_in, R.anim.activity_slide_out)
                         finish()
                     } else {
-                        Log.e("ㅆㅆㅆㅆㅆㅆㅆ", response.body()?.birth.toString())
                         startActivity(toMainActivity)
                         overridePendingTransition(R.anim.activity_slide_in,
                             R.anim.activity_slide_out)
