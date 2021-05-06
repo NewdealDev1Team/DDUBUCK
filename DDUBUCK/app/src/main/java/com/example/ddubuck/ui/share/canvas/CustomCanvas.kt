@@ -14,6 +14,7 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
+import kotlin.math.absoluteValue
 
 
 class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(
@@ -144,20 +145,8 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
             val record = walkRecord!!
             //사용자 이동경로 그리기
             path = routeToPath(record.path, width)
-            path.computeBounds(pathBoundRect, true)
-            if(pathBoundRect.height() >= pathBoundRect.width()) {
-                translateMatrix.setTranslate(width * 0.05f,
-                    (height - pathBoundRect.height() - (height * 0.005f)))
-                Log.e("HEIGHT", " LONG")
-            } else {
-                translateMatrix.setTranslate(width * 0.05f,
-                    (height - pathBoundRect.height() - (height * 0.05f)))
-                Log.e("HEIGHT", " WIDE")
-            }
-            path.transform(translateMatrix)
-            path.computeBounds(pathBoundRect, true)
-            Log.e("HEIGHT","$height ${pathBoundRect.top}, ${pathBoundRect.bottom}")
-            canvas.drawRect(pathBoundRect, whiteTextPaint)
+            initPath()
+            //로고 그리기
             logoMatrix.setScale(0.15f,
                 0.15f,
                 (width - (logoIcon.width * 0.15f) / 2),
@@ -183,6 +172,24 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     override fun onClick(v: View?) {
         invalidate()
         isBlack=!isBlack
+    }
+
+    private fun initPath(){
+        path.computeBounds(pathBoundRect, true)
+        val initX = if(pathBoundRect.left<0) {
+            -pathBoundRect.left
+        } else {
+            -pathBoundRect.left
+        }
+        val initY = if(pathBoundRect.top<=0) {
+            -pathBoundRect.top
+        } else {
+            -pathBoundRect.top
+        }
+        val marginValue = 0.05f
+        translateMatrix.setTranslate(initX,initY)
+        translateMatrix.postTranslate(width*marginValue,height-pathBoundRect.height()-(height*marginValue))
+        path.transform(translateMatrix)
     }
 
     private fun routeToPath(
