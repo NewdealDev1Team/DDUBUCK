@@ -25,7 +25,8 @@
 
     <string name="time_title_name"> 김달려님, 잘하셨어요! </string>
     <string name="time_title_walk"> 완료한 나의 산책시간을 확인하세요. </string>
-    <string name="time_mini_title"> 오늘의 산책시간은 31분입니다.</string>
+    <string name="time_mini_title"> 오늘의 산책시간은 </string>
+    <string name="time1_mini_title">  분 입니다.</string>
     <string name="time_bottom_title"> 마지막 업데이트 4/9 오후 14:39</string>
     <string name="time_bottom_title_day"> </string>
     <string name="time_bottom_title_time"> </string>

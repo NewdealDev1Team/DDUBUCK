@@ -2,6 +2,7 @@ package com.example.ddubuck
 
 import android.Manifest
 import android.content.Context
+import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 
@@ -25,8 +26,12 @@ import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
+import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
+import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
+import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_walk_time.*
 
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
@@ -66,17 +71,36 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
-        initToolBar()
+
         initFragmentManager()
+        initToolBar()
         initPermission()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//        initMyPageFragment()
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             initVibrator()
         }
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
+
+//    fun initMyPageFragment(){
+//        binding = ActivityMainBinding.inflate(layoutInflater)
+//        val view = binding.root
+//        setContentView(view)
+//    }
+//    // fragmentA 에서 frameLayoutB에 fragment 추가하기 위해 호출 하는 메서드
+//    fun openFragmentOnFrameLayoutB(int: Int){
+//    val transaction = supportFragmentManager.beginTransaction()
+//    when(int){
+//        1 -> transaction.replace(R.id.navigation_mypage,walktimFm)
+//        2 -> transaction.replace(R.id.navigation_mypage,coseClearFm)
+//        3 -> transaction.replace(R.id.navigation_mypage,caloriesfm)
+//    }
+//        transaction.commit()
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
@@ -88,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initPermission() {
-        val list = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val list = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             listOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
