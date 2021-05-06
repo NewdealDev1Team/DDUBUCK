@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mypage"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="35dp"
@@ -10,30 +11,40 @@
 
     <LinearLayout
         android:id="@+id/mypage_profile_area"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="18dp"
         android:layout_marginRight="38dp"
         android:orientation="horizontal"
-        tools:ignore="MissingConstraints"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        tools:ignore="MissingConstraints">
 
-
-        <androidx.cardview.widget.CardView
+        <RelativeLayout
             android:layout_width="73dp"
-            android:layout_height="73dp"
-            app:cardCornerRadius="75dp"
-            app:cardElevation="0dp">
+            android:layout_height="73dp">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/rubik" />
-        </androidx.cardview.widget.CardView>
+                android:src="@drawable/ic_ddubuck_logo"
+                android:padding="2dp"
+                android:background="@drawable/mypage_image_layout" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_edit_button"
+                android:padding="5dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/profile_image_edit_style"
+                android:src="@drawable/ic_pencil"/>
+
+        </RelativeLayout>
 
 
         <TextView
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -148,7 +159,7 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/course_end_button"
+            android:id="@+id/course_complete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
@@ -262,5 +273,11 @@
         android:textSize="21dp"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/mypage_divider_big" />
+
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@id/edit_user_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

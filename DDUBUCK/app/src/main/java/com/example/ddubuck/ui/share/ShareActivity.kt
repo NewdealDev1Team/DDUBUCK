@@ -65,6 +65,34 @@ class ShareActivity : AppCompatActivity() {
 
     }
 
+    private fun initPhotoEditor() {
+        val mPhotoEditorView = findViewById<PhotoEditorView>(R.id.photoEditorView)
+
+        mPhotoEditorView.source.setImageResource(R.drawable.ic_weather_high)
+        dispatchTakePictureIntent()
+        val mTextRobotoTf = ResourcesCompat.getFont(this, R.font.mapohongdaefreedom)
+
+        mPhotoEditor = PhotoEditor.Builder(this, mPhotoEditorView)
+            .setPinchTextScalable(true)
+            .setDefaultTextTypeface(mTextRobotoTf)
+            .build()
+        mPhotoEditor.addText("aaaa", Color.WHITE)
+
+
+        //TODO bundle 받기
+
+        isFileLoaded = true
+
+    }
+
+    private fun initRecyclerView() {
+        val recordedValue : Array<String> = intent.getStringArrayExtra("recordedValue") as Array<String>
+        val shareSelectRv : RecyclerView = findViewById(R.id.share_selectRV)
+        val mAdapter = ShareSelectRvAdapter(recordedValue) { v ->
+            mPhotoEditor.addText(v, Color.WHITE)
+        }
+        shareSelectRv.adapter = mAdapter
+
     private fun initCanvas() {
         canvasView = CustomCanvas(this, null,0)
         val frameView = findViewById<FrameLayout>(R.id.share_canvas_container)

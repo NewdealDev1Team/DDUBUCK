@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:paddingVertical="12dp"
     android:paddingHorizontal="24dp"
+    android:elevation="20dp"
     android:background="@drawable/weather_border">
 
     <LinearLayout

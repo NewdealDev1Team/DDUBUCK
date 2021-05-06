@@ -12,6 +12,7 @@ interface UserInfoService {
     @POST("set/User/Status/InfoData")
     fun saveUserBodyInfo(
             @Field("userKey") userKey: String,
+            @Field("birth") birth: String,
             @Field("height") height: Double,
             @Field("weight") weight: Double,
     ): Call<UserBody>

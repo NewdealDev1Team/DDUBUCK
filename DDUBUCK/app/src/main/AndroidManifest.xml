@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!--카메라,갤러리 intent 사용 시 필요한 query-->
@@ -48,6 +49,10 @@
         android:theme="@style/Theme.DDUBUCK"
         android:usesCleartextTraffic="true"
         tools:targetApi="n">
+        <activity android:name=".ui.mypage.mywalk.MyWalkActivity"></activity>
+        <activity android:name=".ui.home.option.SelectOptionActivity"></activity>
+        <!--        <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity"></activity>-->
+
         <activity android:name=".ui.mypage.mywalk.MyWalkActivity">
         </activity>
         <activity android:name=".ui.home.option.SelectOptionActivity">
@@ -57,6 +62,26 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DDUBUCK">
+
+        </activity>
+        <activity android:name=".login.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".SecondActivity" />
+
+        <activity android:name=".ui.share.ShareActivity"></activity>
+        <activity
+            android:name=".userinfo.UserInfoBirthdayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".userinfo.UserInfoHeightWeightActivity"
+            android:screenOrientation="portrait" />
+=======
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

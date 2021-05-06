@@ -27,7 +27,10 @@ class WeatherViewModel : ViewModel() {
     @RequiresApi(Build.VERSION_CODES.O)
     val uvRaysInfo = liveData(Dispatchers.IO) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val date = LocalDateTime.now().format(ofPattern("yyyyMMddkk")).toString()
+            var date = LocalDateTime.now().format(ofPattern("yyyyMMddkk")).toString()
+            if (date.substring(8,10) == "24") {
+                date = date.substring(0,8) + "00"
+            }
             val retrivedUVRaysInfo = weatherRepository.getUVRaysInfo(OPENAPI_KEY, 1, 1,  "JSON", "1100000000", date)
             emit(retrivedUVRaysInfo)
         }
@@ -39,9 +42,13 @@ class WeatherViewModel : ViewModel() {
         emit(retrivedDustInfo)
     }
 
+    val isPetYes = MutableLiveData<Boolean>()
+    fun getPetValue(value: Boolean) {
+        isPetYes.value = value
+    }
+
     val isSuccessfulResponse = MutableLiveData<Boolean>()
     fun getResponseValue(value: Boolean) {
-        
         isSuccessfulResponse.value = value
 
     }

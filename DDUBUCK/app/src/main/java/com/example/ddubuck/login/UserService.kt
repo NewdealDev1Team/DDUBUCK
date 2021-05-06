@@ -11,8 +11,8 @@ interface UserService {
             @Field("userKey") userKey: String,
             @Field("name") name: String,
             @Field("birth") birth: String,
-            @Field("height") height: String,
-            @Field("weight") weight: String,
+            @Field("height") height: Int,
+            @Field("weight") weight: Int,
             @Field("division") division: String
     ): Call<User>
 
