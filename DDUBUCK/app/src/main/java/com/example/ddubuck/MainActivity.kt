@@ -75,8 +75,8 @@ class MainActivity : AppCompatActivity() {
 
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
 
-        initFragmentManager()
         initToolBar()
+        initFragmentManager()
         initPermission()
 //        initMyPageFragment()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -172,6 +172,7 @@ class MainActivity : AppCompatActivity() {
                             tb.setNavigationOnClickListener {
                                 fm.popBackStack(backStackTag,
                                     FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                tbm.title = "마이페이지"
                             }
                         }
                         else -> {
