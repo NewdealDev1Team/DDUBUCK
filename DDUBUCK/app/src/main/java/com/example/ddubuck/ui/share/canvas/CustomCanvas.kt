@@ -148,15 +148,15 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
             if(pathBoundRect.height() >= pathBoundRect.width()) {
                 translateMatrix.setTranslate(width * 0.05f,
                     (height - pathBoundRect.height() - (height * 0.005f)))
+                
+                //path.moveTo(width*0.05f,height-(height * 0.05f)-pathBoundRect.height())
                 Log.e("HEIGHT", " LONG")
             } else {
                 translateMatrix.setTranslate(width * 0.05f,
                     (height - pathBoundRect.height() - (height * 0.05f)))
                 Log.e("HEIGHT", " WIDE")
             }
-            path.transform(translateMatrix)
             path.computeBounds(pathBoundRect, true)
-            Log.e("HEIGHT","$height ${pathBoundRect.top}, ${pathBoundRect.bottom}")
             canvas.drawRect(pathBoundRect, whiteTextPaint)
             logoMatrix.setScale(0.15f,
                 0.15f,
