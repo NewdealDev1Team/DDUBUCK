@@ -25,9 +25,6 @@ import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
-import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
-import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
-import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -69,10 +66,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
-        initFragmentManager()
         initToolBar()
+        initFragmentManager()
         initPermission()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             initVibrator()

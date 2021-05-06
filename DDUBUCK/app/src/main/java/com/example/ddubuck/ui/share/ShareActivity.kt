@@ -45,7 +45,6 @@ class ShareActivity : AppCompatActivity() {
 
     private fun initData(){
         walkRecord = intent.getParcelableExtra("walkRecord")!!
-        //walkRecord = fooRecord
         imageProviderSheetViewModel.imageUri.observe(this, {v ->
             canvasView.initialize(v,walkRecord)
             isFileLoaded=true

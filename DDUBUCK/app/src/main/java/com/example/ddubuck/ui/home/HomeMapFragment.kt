@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
+import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
@@ -267,6 +268,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 locationSource.lastLocation?.longitude!!
                         )
                 )
+                //RetrofitService().getPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
+                RetrofitService().getPublicData(37.546037, 126.955869)
                 isLocationFirstChanged=true
             }
 
