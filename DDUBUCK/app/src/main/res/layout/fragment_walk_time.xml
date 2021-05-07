@@ -11,7 +11,7 @@
     <LinearLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="22dp"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints">
 
@@ -20,7 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="70dp"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold"
@@ -29,7 +28,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
             android:text="님, 잘하셨어요!"
             android:textColor="@color/black"
             android:textSize="18dp"

@@ -20,6 +20,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.view.drawToBitmap
+import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.MainActivityViewModel
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
@@ -83,6 +85,9 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
     private lateinit var chart: BarChart
 
+    private val mainViewModel : MainActivityViewModel by activityViewModels()
+
+
     override fun onCreateView(
         //프래그먼트가 인터페이스를 처음 그릴때 사용함
         inflater: LayoutInflater,
@@ -90,6 +95,8 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         savedInstanceState: Bundle?,
     ): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_calories, container, false)
+
+        mainViewModel.toolbarTitle.value = "칼로리"
 
         RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
             override fun onResponse(call: Call<chartData>, response: Response<chartData>) {

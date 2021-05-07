@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="25dp"
                 android:paddingRight="24dp"
-                android:text="산책 시간"
+                android:text="코스 완주"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16dp" />
@@ -215,7 +215,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="25dp"
                 android:paddingRight="24dp"
-                android:text="산책 시간"
+                android:text=" 칼로리"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="16dp" />
