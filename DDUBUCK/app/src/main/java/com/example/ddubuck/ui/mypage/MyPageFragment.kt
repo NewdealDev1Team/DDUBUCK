@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.MainActivityViewModel
 import com.example.ddubuck.R
@@ -25,6 +26,7 @@ import com.example.ddubuck.login.UserValidationInfo
 import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.HomeMapFragment
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_edit_userinfo.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import retrofit2.Call
@@ -37,12 +39,13 @@ class MyPageFragment : Fragment() {
     private lateinit var myPageBinding: FragmentMypageBinding
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
+    private lateinit var profileImageViewModel: ProfileImageViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-
+        profileImageViewModel = ProfileImageViewModel()
         val myPageView = inflater.inflate(R.layout.fragment_mypage, container, false)
 
         val profileImage: CircleImageView = myPageView.findViewById(R.id.profile_image)
@@ -55,7 +58,7 @@ class MyPageFragment : Fragment() {
             myPageView.findViewById(R.id.course_complete_button)
         val calorieButton: ConstraintLayout = myPageView.findViewById(R.id.calorie_button)
 
-        setUserInfo(userName)
+        setUserInfo(userName, profileImage)
 
         profileImage.setOnClickListener {
             mypageFragment = MyPageFragment()
@@ -97,12 +100,9 @@ class MyPageFragment : Fragment() {
             .replace(R.id.mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
-
-
-
     }
 
-    private fun setUserInfo(userName: TextView) {
+    private fun setUserInfo(userName: TextView, profileImage: CircleImageView) {
         val userValidation: Retrofit = Retrofit.Builder()
             .baseUrl("http://3.37.6.181:3000/get/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -117,11 +117,14 @@ class MyPageFragment : Fragment() {
                     response: Response<UserValidationInfo>,
                 ) {
                     val name = response.body()?.name
+                    val profileImageURL = response.body()?.picture
                     userName.text = name.toString()
+                    activity?.let { it1 -> Glide.with(it1).load(profileImageURL).into(profileImage) }
+
                 }
 
                 override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {
-                    Log.e("Error", "user 정보 가져오기 실패")
+                    Log.e("Error", t.message.toString())
                 }
             })
         }

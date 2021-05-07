@@ -6,7 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/edit_user_info"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="30dp"
     android:layout_gravity="center_horizontal"
     android:background="@color/white"
     tools:ignore="ScrollViewCount">
@@ -228,15 +229,15 @@
             android:layout_height="6dp"
             android:layout_below="@+id/edit_info_area"
             android:layout_marginTop="15dp"
-            android:background="@color/grey" />
+            android:background="#10767676" />
 
         <TextView
+            android:layout_marginLeft="16dp"
             android:id="@+id/pet_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/after_info_divider"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="30dp"
             android:text="반려동물 여부"
             android:textColor="@color/black"
@@ -247,7 +248,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="25dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="40dp"
             android:layout_below="@+id/pet_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -261,14 +262,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
+            <Switch
                 android:id="@+id/pet_switch"
-                app:thumbTint="#3DAB5B"
-                app:trackTint="#243DAB5B"
+                android:thumbTint="#3DAB5B"
+                android:trackTint="#3DAB5B"
                 android:layout_marginRight="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
         </RelativeLayout>
 
 
