@@ -19,7 +19,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
-import androidx.core.view.drawToBitmap
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
@@ -42,7 +41,7 @@ import com.tarek360.instacapture.Instacapture
 import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
-import kotlinx.android.synthetic.main.fragment_cose_clear.*
+import kotlinx.android.synthetic.main.fragment_course_clear.*
 import kotlinx.android.synthetic.main.fragment_walk_time.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -56,10 +55,9 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.random.Random
 
 @RequiresApi(Build.VERSION_CODES.O)
-class CoseClearFragment : Fragment() {
+class CourseClearFragment : Fragment() {
     //현재 날짜/시간 가져오기
     val dateNow: LocalDateTime = LocalDateTime.now()
 
@@ -77,8 +75,8 @@ class CoseClearFragment : Fragment() {
     val textformatter: DateTimeFormatter = DateTimeFormatter.ofPattern("M/d")
     val textformatterString: String = dateNow.format(textformatter)
 
-    val coseformatter: DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
-    val coseformatterString: String = dateNow.format(coseformatter)
+    val courseformatter: DateTimeFormatter = DateTimeFormatter.ofPattern("a HH:mm")
+    val courseformatterString: String = dateNow.format(courseformatter)
 
     private lateinit var chart: BarChart
 
@@ -88,7 +86,7 @@ class CoseClearFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_cose_clear, container, false)
+        val rootView: View = inflater.inflate(R.layout.fragment_course_clear, container, false)
 
         RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
             override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
@@ -107,7 +105,7 @@ class CoseClearFragment : Fragment() {
                     val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
                             + result3!!.toInt() + result4!!.toInt() + result5!!.toInt() + result6!!.toInt())
 
-                    var coseTitleName: String = response.body()?.totalStat?.get(0)?.name.toString()
+                    var courseTitleName: String = response.body()?.totalStat?.get(0)?.name.toString()
 
 
                     val listData by lazy {
@@ -122,7 +120,7 @@ class CoseClearFragment : Fragment() {
                         )
                     }
 
-                    chart = rootView.findViewById(R.id.cose_bar_chart)
+                    chart = rootView.findViewById(R.id.course_bar_chart)
                     //바 차트 커스텀
                     with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
                         description.isEnabled = false
@@ -260,21 +258,21 @@ class CoseClearFragment : Fragment() {
                     }
                     setData(listData)
 
-                    val day: TextView = rootView.findViewById(R.id.cose_bottom_title_text_day)
+                    val day: TextView = rootView.findViewById(R.id.course_bottom_title_text_day)
                     day.setText(textformatterString)
-                    val time: TextView = rootView.findViewById(R.id.cose_bottom_title_text_time)
-                    time.setText(coseformatterString)
+                    val time: TextView = rootView.findViewById(R.id.course_bottom_title_text_time)
+                    time.setText(courseformatterString)
 
                     val miniTitleTime: Int = result6!!.toInt()
-                    val miniTitle: TextView = rootView.findViewById(R.id.cose_mini_title)
+                    val miniTitle: TextView = rootView.findViewById(R.id.course_mini_title)
                     miniTitle.setText(miniTitleTime.toString())
 
-                    val AllCoseCount: TextView =
-                        rootView.findViewById(R.id.bottom_sheet_coseAllCount)
-                    AllCoseCount.setText(sum.toString())
+                    val AllCourseCount: TextView =
+                        rootView.findViewById(R.id.bottom_sheet_courseAllCount)
+                    AllCourseCount.setText(sum.toString())
 
-                    val coseName: TextView = rootView.findViewById(R.id.cose_name)
-                    coseName.setText(coseTitleName.toString())
+                    val courseName: TextView = rootView.findViewById(R.id.course_name)
+                    courseName.setText(courseTitleName.toString())
 
                 }
             }
@@ -284,7 +282,7 @@ class CoseClearFragment : Fragment() {
             }
         })
 
-        val button: Button = rootView.findViewById(R.id.cose_button_screenshot)
+        val button: Button = rootView.findViewById(R.id.course_button_screenshot)
 
         button.setOnClickListener {
             when (requestPermissions()) {
@@ -298,7 +296,7 @@ class CoseClearFragment : Fragment() {
     private fun takeAndShareScreenShot() {
         Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
             override fun onCaptureComplete(captureview: Bitmap) {
-                val capture: LinearLayout = requireView().findViewById(R.id.cose_sheet) as LinearLayout
+                val capture: LinearLayout = requireView().findViewById(R.id.course_sheet) as LinearLayout
                 val day = SimpleDateFormat("yyyyMMddHHmmss")
                 val date = Date()
                 capture.buildDrawingCache()
@@ -308,7 +306,7 @@ class CoseClearFragment : Fragment() {
                     shareImageURI(uri)
                 } ?: showError()
             }
-        }, cose_button_screenshot)
+        }, course_button_screenshot)
     }
 
     private fun showError() {
@@ -346,7 +344,7 @@ class CoseClearFragment : Fragment() {
         var uri: Uri? = null
         try {
             //저장할 폴더 setting
-            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Cose-Clear-Chart.png")
+            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Course-Clear-Chart.png")
             val stream = FileOutputStream(file)
             image.compress(Bitmap.CompressFormat.PNG, 90, stream)
             stream.close()

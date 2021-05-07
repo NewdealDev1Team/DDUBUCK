@@ -4,15 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/calorie"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".ui.mypage.mywalk.CaloriesFragment">
 
-    <LinearLayout
-        android:id="@+id/calorie_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -88,6 +86,9 @@
                 android:textSize="14dp" />
         </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/calorie_button_screenshot"
             android:layout_width="15dp"
@@ -97,6 +98,7 @@
             android:scaleType="centerCrop"
             android:textColor="@color/grey"
             tools:viewBindingIgnore="true"/>
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -138,5 +140,4 @@
                 android:layout_height="wrap_content"
                 android:textSize="12dp" />
         </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/courseclear"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ui.mypage.mywalk.CoseClearFragment">
+    android:background="@color/white"
+    tools:context=".ui.mypage.mywalk.CourseClearFragment">
 
     <LinearLayout
-        android:id="@+id/cose_sheet"
+        android:id="@+id/course_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -19,7 +21,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/cose_name"
+                android:id="@+id/course_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
@@ -42,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="@string/cose_title_number"
+            android:text="@string/course_title_number"
             android:textColor="@color/black"
             android:textSize="18dp"
             android:textStyle="bold" />
@@ -62,7 +64,7 @@
                 android:textSize="14dp" />
 
             <TextView
-                android:id="@+id/cose_mini_title"
+                android:id="@+id/course_mini_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -80,7 +82,7 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/cose_button_screenshot"
+            android:id="@+id/course_button_screenshot"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_marginLeft="350dp"
@@ -94,7 +96,7 @@
             android:background="@drawable/background_gradient">
 
             <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/cose_bar_chart"
+                android:id="@+id/course_bar_chart"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_margin="20dp"
@@ -117,7 +119,7 @@
                 android:textSize="12dp" />
 
             <TextView
-                android:id="@+id/bottom_sheet_coseAllCount"
+                android:id="@+id/bottom_sheet_courseAllCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -150,7 +152,7 @@
                 android:textSize="12dp" />
 
             <TextView
-                android:id="@+id/cose_bottom_title_text_day"
+                android:id="@+id/course_bottom_title_text_day"
                 android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -159,7 +161,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/cose_bottom_title_text_time"
+                android:id="@+id/course_bottom_title_text_time"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

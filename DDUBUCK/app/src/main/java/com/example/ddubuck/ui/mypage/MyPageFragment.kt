@@ -1,29 +1,24 @@
 package com.example.ddubuck.ui.mypage
 
-import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.*
 import com.example.ddubuck.MainActivity
-import com.example.ddubuck.MainActivityViewModel
 import com.example.ddubuck.R
 import com.example.ddubuck.databinding.FragmentMypageBinding
 import com.example.ddubuck.login.UserService
 import com.example.ddubuck.login.UserValidationInfo
 import com.example.ddubuck.sharedpref.UserSharedPreferences
-import com.example.ddubuck.ui.home.HomeMapFragment
+import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
+import com.example.ddubuck.ui.mypage.mywalk.CourseClearFragment
+import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_edit_userinfo.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
@@ -38,6 +33,11 @@ class MyPageFragment : Fragment() {
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
 
+    private lateinit var walkTimeFramgnet: WalkTimeFragment
+    private lateinit var courseClearFragment: CourseClearFragment
+    private lateinit var caloriesFragment: CaloriesFragment
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -46,7 +46,8 @@ class MyPageFragment : Fragment() {
         val myPageView = inflater.inflate(R.layout.fragment_mypage, container, false)
 
         val profileImage: CircleImageView = myPageView.findViewById(R.id.profile_image)
-        val profileImageEditButton: CircleImageView = myPageView.findViewById(R.id.profile_edit_button)
+        val profileImageEditButton: CircleImageView =
+            myPageView.findViewById(R.id.profile_edit_button)
         val userName: TextView = myPageView.findViewById(R.id.user_name)
         val stepCount: TextView = myPageView.findViewById(R.id.step_count)
 
@@ -65,7 +66,6 @@ class MyPageFragment : Fragment() {
         }
 
         profileImageEditButton.setOnClickListener {
-
             mypageFragment = MyPageFragment()
             myPageEditFragment = MyPageEditFragment()
 
@@ -75,21 +75,41 @@ class MyPageFragment : Fragment() {
 
         // 산책 시간 버튼 onClickListener
         walkingTimeButton.setOnClickListener {
-
+            walkTimeFramgnet = WalkTimeFragment()
+            toChartWalkTimePage()
         }
 
         // 코스 완주 버튼 onClickListener
         courseClearButton.setOnClickListener {
-
+            courseClearFragment = CourseClearFragment()
+            toChartCourseClearPage()
         }
 
         // 칼로리 버튼 onClickListener
         calorieButton.setOnClickListener {
-
+            caloriesFragment = CaloriesFragment()
+            toChartCaloriePage()
         }
-
-
         return myPageView
+    }
+
+    private fun toChartWalkTimePage() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.mypage, walkTimeFramgnet)
+            .addToBackStack(MainActivity.MYPAGE_TAG)
+            .commit()
+    }
+    private fun toChartCourseClearPage() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.mypage, courseClearFragment)
+            .addToBackStack(MainActivity.MYPAGE_TAG)
+            .commit()
+    }
+    private fun toChartCaloriePage() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.mypage, caloriesFragment)
+            .addToBackStack(MainActivity.MYPAGE_TAG)
+            .commit()
     }
 
     private fun toEditInfoPage() {
@@ -97,9 +117,6 @@ class MyPageFragment : Fragment() {
             .replace(R.id.mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
-
-
-
     }
 
     private fun setUserInfo(userName: TextView) {

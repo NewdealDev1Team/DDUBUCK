@@ -23,12 +23,12 @@
             android:text="@string/work_time" />
 
         <Button
-            android:id="@+id/button_cose_clear"
+            android:id="@+id/button_course_clear"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:text="@string/cose_clear" />
+            android:text="@string/course_clear" />
 
         <Button
             android:id="@+id/button_calories_walk"

@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.MainActivityViewModel
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
@@ -85,12 +87,14 @@ class WalkTimeFragment : Fragment() {
 
     private lateinit var chart: BarChart
 
+    private val mainViewModel : MainActivityViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        mainViewModel.toolbarTitle.value = "산책 시간"
         val rootView: View = inflater.inflate(R.layout.fragment_walk_time, container, false)
 
         RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
@@ -294,7 +298,7 @@ class WalkTimeFragment : Fragment() {
     private fun takeAndShareScreenShot() {
         Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
             override fun onCaptureComplete(captureview: Bitmap) {
-                val capture: LinearLayout = requireView().findViewById(R.id.walktime_sheet) as LinearLayout
+                val capture: LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
                 val day = SimpleDateFormat("yyyyMMddHHmmss")
                 val date = Date()
                 capture.buildDrawingCache()
@@ -339,7 +343,7 @@ class WalkTimeFragment : Fragment() {
     }
 
     fun saveImageExternal(image: Bitmap): Uri? {
-        val v : LinearLayout = requireView().findViewById(R.id.walktime_sheet) as LinearLayout
+        val v : LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
         var uri: Uri? = null
         try {
             //저장할 폴더 setting

@@ -283,7 +283,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
     private fun takeAndShareScreenShot() {
         Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
             override fun onCaptureComplete(captureview: Bitmap) {
-                val capture: LinearLayout = requireView().findViewById(R.id.calorie_sheet) as LinearLayout
+                val capture: LinearLayout = requireView().findViewById(R.id.calorie) as LinearLayout
                 val day = SimpleDateFormat("yyyyMMddHHmmss")
                 val date = Date()
                 capture.buildDrawingCache()
