@@ -27,6 +27,7 @@ import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageEditFragment
 import com.example.ddubuck.ui.mypage.MyPageFragment
+import com.example.ddubuck.ui.mypage.SettingFragment
 import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
 import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
@@ -41,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private val challengeFragment = ChallengeFragment()
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
+    private val settingFragment = SettingFragment()
 
     private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
@@ -226,7 +228,11 @@ class MainActivity : AppCompatActivity() {
 
             }
             R.id.action_settings -> {
-
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.mypage, settingFragment)
+                    .addToBackStack(MYPAGE_TAG)
+                    .commit()
+                activityModel.toolbarTitle.value = "설정"
             }
         }
         return super.onOptionsItemSelected(item)
