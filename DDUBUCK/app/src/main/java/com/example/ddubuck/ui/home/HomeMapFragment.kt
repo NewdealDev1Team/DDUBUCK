@@ -18,6 +18,7 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.RetrofitClient
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.data.publicdata.PublicData
+import com.example.ddubuck.ui.CommonDialog
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
@@ -291,8 +292,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.height = markerHeightSize
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
-                                marker.setOnClickListener { o->
-                                    //TODO show dialog
+                                marker.setOnClickListener {
+                                    CommonDialog(i.name, i.address, owner).show()
                                     true
                                 }
                                 markers["petCafe"] = marker
@@ -305,6 +306,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.height = markerHeightSize
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
+                                marker.setOnClickListener {
+                                    CommonDialog(i.name,  i.time, owner).show()
+                                    true
+                                }
                                 markers["carFreeRoad"] = marker
                             }
                             for (i in publicData.cafe) {
@@ -315,6 +320,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.height = markerHeightSize
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
+                                marker.setOnClickListener{
+                                    CommonDialog(i.name, i.address, owner).show()
+                                    true
+                                }
                                 markers["cafe"] = marker
                             }
                             for (i in publicData.petRestaurant) {
@@ -325,6 +334,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.height = markerHeightSize
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
+                                marker.setOnClickListener {
+                                    CommonDialog(i.name, i.address, owner).show()
+                                    true
+                                }
                                 markers["petRestaurant"] = marker
                             }
                             for (i in publicData.publicRestArea) {
@@ -335,6 +348,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.height = markerHeightSize
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
+                                marker.setOnClickListener {
+                                    CommonDialog(i.name, "공공쉼터입니다", owner).show()
+                                    true
+                                }
                                 markers["publicRestArea"] = marker
                             }
                             for (i in publicData.publicToilet) {
@@ -345,6 +362,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.height = markerHeightSize
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
+                                marker.setOnClickListener {
+                                    CommonDialog(i.name, "공공화장실 입니다", owner).show()
+                                    true
+                                }
                                 markers["publicToilet"] = marker
                             }
                         }
