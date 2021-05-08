@@ -275,7 +275,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val HOME_BACK_STACK_TAG = "HOME"
+        const val HOME_TAG = "HOME"
         const val HOME_RESULT_TAG = "HOME_RESULT"
         const val CHALLENGE_TAG = "CHALLENGE"
         const val BADGE_TAG = "BADGE"
