@@ -33,7 +33,6 @@ android {
     }
 
     viewBinding {
-        //뷰 바인딩 활성화
         enabled = true
     }
 }
