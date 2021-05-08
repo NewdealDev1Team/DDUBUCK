@@ -2,6 +2,7 @@ package com.example.ddubuck.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.ddubuck.data.publicdata.PublicData
 import com.naver.maps.geometry.LatLng
 
 
@@ -60,4 +61,6 @@ class HomeMapViewModel : ViewModel() {
 
     //값 반환
     val walkState = MutableLiveData<Int>()
+
+    val publicData = MutableLiveData<PublicData>()
 }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.hardware.*
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,19 +15,25 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
-import com.example.ddubuck.data.RetrofitService
+import com.example.ddubuck.data.RetrofitClient
 import com.example.ddubuck.data.home.WalkRecord
+import com.example.ddubuck.data.publicdata.PublicData
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
+import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
 import com.naver.maps.map.widget.LocationButtonView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
+import kotlin.collections.HashMap
 import kotlin.concurrent.timer
 
 
@@ -64,6 +71,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
+    private var markers:HashMap<String, Marker> = HashMap()
 
     private var isLocationFirstChanged = false
 
@@ -268,8 +276,84 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 locationSource.lastLocation?.longitude!!
                         )
                 )
-                //RetrofitService().getPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
-                RetrofitService().getPublicData(37.546037, 126.955869)
+
+                RetrofitClient.publicDataInstance.getResult( locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
+                    .enqueue(object : Callback<PublicData> {
+                        override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
+                            val publicData = response.body()!!
+                            val markerHeightSize = Marker.SIZE_AUTO
+                            val markerWidthSize = Marker.SIZE_AUTO
+                            for (i in publicData.petCafe) {
+                                val marker = Marker()
+                                marker.position = LatLng(i.x, i.y)
+                                marker.map = map
+                                marker.icon = MarkerIcons.BLUE
+                                marker.height = markerHeightSize
+                                marker.width = markerWidthSize
+                                marker.isHideCollidedMarkers = true
+                                marker.setOnClickListener { o->
+                                    //TODO show dialog
+                                    true
+                                }
+                                markers["petCafe"] = marker
+                            }
+                            for (i in publicData.carFreeRoad) {
+                                val marker = Marker()
+                                marker.position = LatLng(i.path[0].x, i.path[0].y)
+                                marker.map = map
+                                marker.icon = MarkerIcons.RED
+                                marker.height = markerHeightSize
+                                marker.width = markerWidthSize
+                                marker.isHideCollidedMarkers = true
+                                markers["carFreeRoad"] = marker
+                            }
+                            for (i in publicData.cafe) {
+                                val marker = Marker()
+                                marker.position = LatLng(i.x, i.y)
+                                marker.map = map
+                                marker.icon = MarkerIcons.GRAY
+                                marker.height = markerHeightSize
+                                marker.width = markerWidthSize
+                                marker.isHideCollidedMarkers = true
+                                markers["cafe"] = marker
+                            }
+                            for (i in publicData.petRestaurant) {
+                                val marker = Marker()
+                                marker.position = LatLng(i.x, i.y)
+                                marker.map = map
+                                marker.icon = MarkerIcons.BLACK
+                                marker.height = markerHeightSize
+                                marker.width = markerWidthSize
+                                marker.isHideCollidedMarkers = true
+                                markers["petRestaurant"] = marker
+                            }
+                            for (i in publicData.publicRestArea) {
+                                val marker = Marker()
+                                marker.position = LatLng(i.x, i.y)
+                                marker.map = map
+                                marker.icon = MarkerIcons.GREEN
+                                marker.height = markerHeightSize
+                                marker.width = markerWidthSize
+                                marker.isHideCollidedMarkers = true
+                                markers["publicRestArea"] = marker
+                            }
+                            for (i in publicData.publicToilet) {
+                                val marker = Marker()
+                                marker.position = LatLng(i.x, i.y)
+                                marker.map = map
+                                marker.icon = MarkerIcons.YELLOW
+                                marker.height = markerHeightSize
+                                marker.width = markerWidthSize
+                                marker.isHideCollidedMarkers = true
+                                markers["publicToilet"] = marker
+                            }
+                        }
+
+                        override fun onFailure(call: Call<PublicData>, t: Throwable) {
+                            Log.e("publicDataFetch", "FAILED!")
+                        }
+
+                    })
                 isLocationFirstChanged=true
             }
 
