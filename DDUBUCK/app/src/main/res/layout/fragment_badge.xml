@@ -17,4 +17,4 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:listitem="@layout/item_badge" />
 
-    /*</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

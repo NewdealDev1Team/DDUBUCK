@@ -16,7 +16,6 @@ class BadgeAdapter(
     inner class BadgeHolder(rowRoot: View) : RecyclerView.ViewHolder(rowRoot) {
         val title : TextView =  rowRoot.findViewById(R.id.badge_title)
         val bottomTitle : TextView =  rowRoot.findViewById(R.id.badge_title_bottom_content)
-//        val oneLine : LinearLayout = rowRoot.findViewById(R.id.challenge_layout_oneLine)
         val oneLineImage1 : ImageView = rowRoot.findViewById(R.id.badge_image_goodjob)
         val oneLineImage2 : ImageView = rowRoot.findViewById(R.id.badge_image_everyDay)
         val oneLineImage3 : ImageView = rowRoot.findViewById(R.id.badge_image_allClear)

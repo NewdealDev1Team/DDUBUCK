@@ -25,7 +25,7 @@ class BadgeFragment : Fragment() {
 //        badgeViewModel =
 //                ViewModelProvider(this).get(BadgeViewModel::class.java)
 //
-////        val textView: TextView = root.findViewById(R.id.text_badge)
+//        val textView: TextView = root.findViewById(R.id.text_badge)
 //        badgeViewModel.text.observe(viewLifecycleOwner, Observer {
 //            textView.text = it
 //        })
