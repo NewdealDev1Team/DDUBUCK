@@ -7,6 +7,14 @@
     tools:context=".ui.badge.BadgeFragment">
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/badgeRecyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/item_badge" />
 
-
-/*</androidx.constraintlayout.widget.ConstraintLayout>
+    /*</androidx.constraintlayout.widget.ConstraintLayout>
