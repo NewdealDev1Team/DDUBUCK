@@ -167,6 +167,14 @@
             android:gravity="center"
             android:text="10km" />
     </LinearLayout>
+    <View
+        android:id="@+id/mypage_divider"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="22dp"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@+id/mypage_profile_area"
+        tools:ignore="MissingConstraints" />
 </LinearLayout>
 
     <!--데이터가 어떻게 보이는지 확인하기 위해서이다-->
