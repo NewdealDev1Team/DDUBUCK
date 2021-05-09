@@ -293,19 +293,14 @@ class CourseClearFragment : Fragment() {
 
         button.setOnClickListener {
             when (requestPermissions()) {
-                true -> takeAndShareScreenShot()
-                else -> showError()
-            }
-        }
-        return rootView
-    }
-
-    private fun takeAndShareScreenShot() {
-        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
+                true ->  Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
             override fun onCaptureComplete(captureview: Bitmap) {
                 val capture: LinearLayout = requireView().findViewById(R.id.courseclear) as LinearLayout
                 val day = SimpleDateFormat("yyyyMMddHHmmss")
                 val date = Date()
+                //공유 버튼 제거
+                val remove : View = rootView.findViewById(R.id.course_share_button_layout)
+                remove.visibility = View.GONE
                 capture.buildDrawingCache()
                 val captureview : Bitmap = capture.getDrawingCache()
                 val uri = saveImageExternal(captureview)
@@ -314,7 +309,27 @@ class CourseClearFragment : Fragment() {
                 } ?: showError()
             }
         }, course_button_screenshot)
+                else -> showError()
+            }
+        }
+        return rootView
     }
+
+//    private fun takeAndShareScreenShot() {
+//        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
+//            override fun onCaptureComplete(captureview: Bitmap) {
+//                val capture: LinearLayout = requireView().findViewById(R.id.courseclear) as LinearLayout
+//                val day = SimpleDateFormat("yyyyMMddHHmmss")
+//                val date = Date()
+//                capture.buildDrawingCache()
+//                val captureview : Bitmap = capture.getDrawingCache()
+//                val uri = saveImageExternal(captureview)
+//                uri?.let {
+//                    shareImageURI(uri)
+//                } ?: showError()
+//            }
+//        }, course_button_screenshot)
+//    }
 
     private fun showError() {
         Toast.makeText(

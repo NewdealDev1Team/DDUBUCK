@@ -288,27 +288,28 @@ class WalkTimeFragment : Fragment() {
         val button : Button = rootView.findViewById(R.id.time_button_screenshot)
         button.setOnClickListener {
             when (requestPermissions()) {
-                true -> takeAndShareScreenShot()
-                else -> showError()
-            }
-        }
-        return rootView
-    }
-
-    private fun takeAndShareScreenShot() {
-        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
-            override fun onCaptureComplete(captureview: Bitmap) {
+                true ->  Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
+            override fun onCaptureComplete(bitmap: Bitmap) {
                 val capture: LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
                 val day = SimpleDateFormat("yyyyMMddHHmmss")
                 val date = Date()
+                val remove : View = rootView.findViewById(R.id.time_share_button_layout)
+                remove.visibility = View.GONE
+//                rootView.visibility = rootView.findViewById(R.id.time_share_button_layout)
                 capture.buildDrawingCache()
+                capture.removeViewInLayout(rootView.findViewById(R.id.time_share_button_layout))
                 val captureview : Bitmap = capture.getDrawingCache()
+
                 val uri = saveImageExternal(captureview)
                 uri?.let {
                     shareImageURI(uri)
                 } ?: showError()
             }
         }, time_button_screenshot)
+                else -> showError()
+            }
+        }
+        return rootView
     }
 
     private fun showError() {

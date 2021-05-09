@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/walktime"
+    android:background="@color/white"
+    android:layout_weight="1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".ui.mypage.mywalk.WalkTimeFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
     <LinearLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
@@ -82,13 +88,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/share_buttons_layout"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        tools:ignore="MissingConstraints"
-        app:layout_constraintTop_toBottomOf="@+id/mini_title_layout3">
 
+    <LinearLayout
+        android:id="@+id/time_share_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/time_button_screenshot"
             android:layout_width="15dp"
@@ -96,7 +100,8 @@
             android:layout_marginLeft="350dp"
             android:background="@drawable/chart_share_icon"
             android:scaleType="centerCrop"
-            android:textColor="@color/grey"/>
+            android:textColor="@color/grey"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -105,7 +110,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/background_gradient"
         tools:ignore="MissingConstraints"
-        app:layout_constraintTop_toBottomOf="@id/share_buttons_layout">
+        app:layout_constraintTop_toBottomOf="@id/mini_title_layout3">
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/time_bar_chart"
@@ -146,5 +151,6 @@
             android:textSize="12dp"
             />
     </LinearLayout>
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

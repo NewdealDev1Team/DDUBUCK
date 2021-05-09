@@ -14,7 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="22dp"
-        android:layout_marginLeft="16dp">
+        android:layout_marginLeft="16dp"
+        >
 
         <TextView
             android:id="@+id/course_name"
@@ -75,6 +76,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/course_share_button_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
