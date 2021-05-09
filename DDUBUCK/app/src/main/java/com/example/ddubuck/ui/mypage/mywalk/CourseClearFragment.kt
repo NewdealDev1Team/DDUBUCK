@@ -24,6 +24,9 @@ import com.example.ddubuck.MainActivityViewModel
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
+import com.example.ddubuck.login.UserService
+import com.example.ddubuck.login.UserValidationInfo
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -48,6 +51,8 @@ import kotlinx.android.synthetic.main.fragment_walk_time.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -82,7 +87,7 @@ class CourseClearFragment : Fragment() {
 
     private lateinit var chart: BarChart
 
-    private val mainViewModel : MainActivityViewModel by activityViewModels()
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -112,7 +117,8 @@ class CourseClearFragment : Fragment() {
                     val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
                             + result3!!.toInt() + result4!!.toInt() + result5!!.toInt() + result6!!.toInt())
 
-                    var courseTitleName: String = response.body()?.totalStat?.get(0)?.name.toString()
+                    var courseTitleName: String =
+                        response.body()?.totalStat?.get(0)?.name.toString()
 
 
                     val listData by lazy {
@@ -278,9 +284,8 @@ class CourseClearFragment : Fragment() {
                         rootView.findViewById(R.id.bottom_sheet_courseAllCount)
                     AllCourseCount.setText(sum.toString())
 
-                    val courseName: TextView = rootView.findViewById(R.id.course_name)
-                    courseName.setText(courseTitleName.toString())
-
+                    val courseUserName: TextView = rootView.findViewById(R.id.course_name)
+                    setUserInfo(courseUserName)
                 }
             }
 
@@ -293,43 +298,32 @@ class CourseClearFragment : Fragment() {
 
         button.setOnClickListener {
             when (requestPermissions()) {
-                true ->  Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
-            override fun onCaptureComplete(captureview: Bitmap) {
-                val capture: LinearLayout = requireView().findViewById(R.id.courseclear) as LinearLayout
-                val day = SimpleDateFormat("yyyyMMddHHmmss")
-                val date = Date()
-                //공유 버튼 제거
-                val remove : View = rootView.findViewById(R.id.course_share_button_layout)
-                remove.visibility = View.GONE
-                capture.buildDrawingCache()
-                val captureview : Bitmap = capture.getDrawingCache()
-                val uri = saveImageExternal(captureview)
-                uri?.let {
-                    shareImageURI(uri)
-                } ?: showError()
-            }
-        }, course_button_screenshot)
+                true -> Instacapture.capture(this.requireActivity(),
+                    object : SimpleScreenCapturingListener() {
+                        override fun onCaptureComplete(captureview: Bitmap) {
+                            val capture: LinearLayout =
+                                requireView().findViewById(R.id.courseclear) as LinearLayout
+                            val day = SimpleDateFormat("yyyyMMddHHmmss")
+                            val date = Date()
+                            //공유 버튼 제거
+                            val remove: View =
+                                rootView.findViewById(R.id.course_share_button_layout)
+                            remove.visibility = View.GONE
+                            capture.buildDrawingCache()
+                            val captureview: Bitmap = capture.getDrawingCache()
+                            val uri = saveImageExternal(captureview)
+                            uri?.let {
+                                shareImageURI(uri)
+                            } ?: showError()
+                        }
+                    },
+                    course_button_screenshot)
                 else -> showError()
             }
         }
         return rootView
     }
 
-//    private fun takeAndShareScreenShot() {
-//        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
-//            override fun onCaptureComplete(captureview: Bitmap) {
-//                val capture: LinearLayout = requireView().findViewById(R.id.courseclear) as LinearLayout
-//                val day = SimpleDateFormat("yyyyMMddHHmmss")
-//                val date = Date()
-//                capture.buildDrawingCache()
-//                val captureview : Bitmap = capture.getDrawingCache()
-//                val uri = saveImageExternal(captureview)
-//                uri?.let {
-//                    shareImageURI(uri)
-//                } ?: showError()
-//            }
-//        }, course_button_screenshot)
-//    }
 
     private fun showError() {
         Toast.makeText(
@@ -366,7 +360,8 @@ class CourseClearFragment : Fragment() {
         var uri: Uri? = null
         try {
             //저장할 폴더 setting
-            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Course-Clear-Chart.png")
+            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "Course-Clear-Chart.png")
             val stream = FileOutputStream(file)
             image.compress(Bitmap.CompressFormat.PNG, 90, stream)
             stream.close()
@@ -388,5 +383,30 @@ class CourseClearFragment : Fragment() {
         }
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
+    }
+
+    private fun setUserInfo(userName: TextView) {
+        val userValidation: Retrofit = Retrofit.Builder()
+            .baseUrl("http://3.37.6.181:3000/get/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val userValidationServer: UserService = userValidation.create(UserService::class.java)
+
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            userValidationServer.getUserInfo(it).enqueue(object : Callback<UserValidationInfo> {
+                override fun onResponse(
+                    call: Call<UserValidationInfo>,
+                    response: Response<UserValidationInfo>,
+                ) {
+                    val name = response.body()?.name
+                    userName.text = name.toString()
+                }
+
+                override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {
+                    Log.e("Error", "user 정보 가져오기 실패")
+                }
+            })
+        }
     }
 }

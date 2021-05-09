@@ -25,6 +25,9 @@ import com.example.ddubuck.MainActivityViewModel
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
+import com.example.ddubuck.login.UserService
+import com.example.ddubuck.login.UserValidationInfo
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -48,6 +51,8 @@ import kotlinx.android.synthetic.main.fragment_calories.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -85,7 +90,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
     private lateinit var chart: BarChart
 
-    private val mainViewModel : MainActivityViewModel by activityViewModels()
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
 
 
     override fun onCreateView(
@@ -268,8 +273,8 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                     val miniTitle: TextView = rootView.findViewById(R.id.calories_mini_title)
                     miniTitle.setText(miniTitleTime.toString())
 
-                    val calorieName: TextView = rootView.findViewById(R.id.calorie_name)
-                    calorieName.setText(calorieTitleName.toString())
+                    val calorieUserName: TextView = rootView.findViewById(R.id.calorie_name)
+                    setUserInfo(calorieUserName)
                 }
             }
 
@@ -280,43 +285,31 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         val button: Button = rootView.findViewById(R.id.calorie_button_screenshot)
         button.setOnClickListener {
             when (requestPermissions()) {
-                true ->  Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
-            override fun onCaptureComplete(captureview: Bitmap) {
-                val capture: LinearLayout = requireView().findViewById(R.id.calorie) as LinearLayout
-                val day = SimpleDateFormat("yyyyMMddHHmmss")
-                val date = Date()
-                //공유 버튼 제
-                val remove : View = rootView.findViewById(R.id.calorie_share_button_layout)
-                remove.visibility = View.GONE
-                capture.buildDrawingCache()
-                val captureview : Bitmap = capture.getDrawingCache()
-                val uri = saveImageExternal(captureview)
-                uri?.let {
-                    shareImageURI(uri)
-                } ?: showError()
-            }
-        }, calorie_button_screenshot)
+                true -> Instacapture.capture(this.requireActivity(),
+                    object : SimpleScreenCapturingListener() {
+                        override fun onCaptureComplete(captureview: Bitmap) {
+                            val capture: LinearLayout =
+                                requireView().findViewById(R.id.calorie) as LinearLayout
+                            val day = SimpleDateFormat("yyyyMMddHHmmss")
+                            val date = Date()
+                            //공유 버튼 제
+                            val remove: View =
+                                rootView.findViewById(R.id.calorie_share_button_layout)
+                            remove.visibility = View.GONE
+                            capture.buildDrawingCache()
+                            val captureview: Bitmap = capture.getDrawingCache()
+                            val uri = saveImageExternal(captureview)
+                            uri?.let {
+                                shareImageURI(uri)
+                            } ?: showError()
+                        }
+                    },
+                    calorie_button_screenshot)
                 else -> showError()
             }
         }
         return rootView
     }
-
-//    private fun takeAndShareScreenShot() {
-//        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
-//            override fun onCaptureComplete(captureview: Bitmap) {
-//                val capture: LinearLayout = requireView().findViewById(R.id.calorie) as LinearLayout
-//                val day = SimpleDateFormat("yyyyMMddHHmmss")
-//                val date = Date()
-//                capture.buildDrawingCache()
-//                val captureview : Bitmap = capture.getDrawingCache()
-//                val uri = saveImageExternal(captureview)
-//                uri?.let {
-//                    shareImageURI(uri)
-//                } ?: showError()
-//            }
-//        }, calorie_button_screenshot)
-//    }
 
     private fun showError() {
         Toast.makeText(
@@ -354,8 +347,9 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         var uri: Uri? = null
         try {
             //Bitmap으로 만든 이미지는 png 파일 형태로 만들기
-                //파일을 저장할 주소 + 파일 이름
-            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "Calories-Chart.png")
+            //파일을 저장할 주소 + 파일 이름
+            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                "Calories-Chart.png")
             //이미지 파일 생성
             val stream = FileOutputStream(file)
             image.compress(Bitmap.CompressFormat.PNG, 90, stream)
@@ -378,5 +372,30 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         }
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
+    }
+
+    private fun setUserInfo(userName: TextView) {
+        val userValidation: Retrofit = Retrofit.Builder()
+            .baseUrl("http://3.37.6.181:3000/get/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val userValidationServer: UserService = userValidation.create(UserService::class.java)
+
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            userValidationServer.getUserInfo(it).enqueue(object : Callback<UserValidationInfo> {
+                override fun onResponse(
+                    call: Call<UserValidationInfo>,
+                    response: Response<UserValidationInfo>,
+                ) {
+                    val name = response.body()?.name
+                    userName.text = name.toString()
+                }
+
+                override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {
+                    Log.e("Error", "user 정보 가져오기 실패")
+                }
+            })
+        }
     }
 }

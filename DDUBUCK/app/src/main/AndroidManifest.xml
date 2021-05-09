@@ -62,8 +62,6 @@
         </provider>
         <activity android:name=".ui.mypage.mywalk.MyWalkActivity"></activity>
         <!--        <activity android:name=".ui.home.option.SelectOptionActivity" />-->
-        <!--        <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity"></activity>-->
-
 
         <activity
             android:name=".MainActivity"
