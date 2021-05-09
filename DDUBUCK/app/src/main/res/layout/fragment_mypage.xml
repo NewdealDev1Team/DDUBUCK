@@ -192,6 +192,7 @@
                 android:id="@+id/course_end_button_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:text="코스 완주"
                 android:textAlignment="center"
                 android:textColor="@color/white"
@@ -201,24 +202,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
                 app:layout_constraintTop_toBottomOf="@id/course_end_button_title">
 
                 <TextView
                     android:id="@+id/course_end_button_record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
                     android:paddingLeft="31dp"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="20dp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@+id/course_end_button_title" />
+                     />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_mrginTop="4dp"
                     android:text="번"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -258,15 +259,16 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal"
+                android:layout_marginTop="4dp"
                 app:layout_constraintTop_toBottomOf="@id/calorie_button_title">
 
                 <TextView
                     android:id="@+id/calorie_button_record"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
                     android:paddingLeft="31dp"
                     android:textAlignment="center"
+                    android:gravity="center"
                     android:textColor="@color/white"
                     android:textSize="20dp"
                     android:textStyle="bold"
@@ -275,7 +277,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_mrginTop="4dp"
                     android:text="kcal"
                     android:textAlignment="center"
                     android:textColor="@color/white"
@@ -329,7 +330,7 @@
         android:id="@id/edit_user_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
