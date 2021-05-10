@@ -4,26 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/calorie"
     android:gravity="center"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".ui.mypage.mywalk.CaloriesFragment">
 
-    <LinearLayout
-        android:id="@+id/calorie_sheet"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="22dp"
+            android:layout_marginLeft="16dp">
 
             <TextView
                 android:id="@+id/calorie_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="100dp"
+                android:layout_height="30dp"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -31,7 +28,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
                 android:text="님, 최고에요!"
                 android:textColor="@color/black"
                 android:textSize="18dp"
@@ -88,6 +84,10 @@
                 android:textSize="14dp" />
         </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/calorie_share_button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/calorie_button_screenshot"
             android:layout_width="15dp"
@@ -97,6 +97,7 @@
             android:scaleType="centerCrop"
             android:textColor="@color/grey"
             tools:viewBindingIgnore="true"/>
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -113,8 +114,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            android:layout_marginBottom="270dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -138,5 +141,4 @@
                 android:layout_height="wrap_content"
                 android:textSize="12dp" />
         </LinearLayout>
-    </LinearLayout>
 </LinearLayout>

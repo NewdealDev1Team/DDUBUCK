@@ -2,28 +2,30 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/walktime"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@color/white"
     tools:context=".ui.mypage.mywalk.WalkTimeFragment">
 
     <LinearLayout
-        android:id="@+id/walktime_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/title_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="22dp"
+            android:orientation="horizontal"
+            tools:ignore="MissingConstraints">
 
             <TextView
                 android:id="@+id/time_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="100dp"
                 android:textColor="@color/black"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -31,7 +33,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="100dp"
                 android:text="님, 잘하셨어요!"
                 android:textColor="@color/black"
                 android:textSize="18dp"
@@ -39,19 +40,23 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/title_bottom_layout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="@string/time_title_walk"
             android:textColor="@color/black"
             android:textSize="18dp"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/title_layout"
+            tools:ignore="MissingConstraints" />
 
         <LinearLayout
+            android:id="@+id/mini_title_layout3"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/title_bottom_layout2">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -82,19 +87,29 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/time_button_screenshot"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginLeft="350dp"
-            android:background="@drawable/chart_share_icon"
-            android:scaleType="centerCrop"
-            android:textColor="@color/grey" />
 
         <LinearLayout
+            android:id="@+id/time_share_button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/time_button_screenshot"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="350dp"
+                android:background="@drawable/chart_share_icon"
+                android:scaleType="centerCrop"
+                android:textColor="@color/grey" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/time_bar_chart_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_gradient">
+            android:background="@drawable/background_gradient"
+            app:layout_constraintTop_toBottomOf="@id/mini_title_layout3"
+            tools:ignore="MissingConstraints">
 
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/time_bar_chart"
@@ -102,14 +117,15 @@
                 android:layout_height="200dp"
                 android:layout_margin="20dp"
                 android:background="@drawable/background_gradient"
-                android:tooltipText="@android:string/ok"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:tooltipText="@android:string/ok" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/time_bar_chart_layout"
+            android:background="@color/white">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,6 +150,5 @@
                 android:textSize="12dp" />
         </LinearLayout>
     </LinearLayout>
-
 
 </LinearLayout>

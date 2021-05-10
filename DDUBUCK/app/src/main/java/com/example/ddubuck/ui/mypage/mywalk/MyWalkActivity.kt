@@ -3,13 +3,11 @@ package com.example.ddubuck.ui.mypage.mywalk
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import com.example.ddubuck.R
 import kotlinx.android.synthetic.main.activity_my_walk.*
-import kotlinx.android.synthetic.main.fragment_mypage.*
+
 //import kotlinx.android.synthetic.main.mypage_sheet_button.*
 
 class MyWalkActivity : AppCompatActivity() {
@@ -27,12 +25,12 @@ class MyWalkActivity : AppCompatActivity() {
 
         }
 
-        button_cose_clear.setOnClickListener{
-            val cose : CoseClearFragment = CoseClearFragment()
+        button_course_clear.setOnClickListener{
+            val course : CourseClearFragment = CourseClearFragment()
             val fmManager : FragmentManager = supportFragmentManager
 
             val fragmentTransaction = fmManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragment_container,cose).commit()
+            fragmentTransaction.replace(R.id.fragment_container,course).commit()
         }
 
         button_calories_walk.setOnClickListener{
