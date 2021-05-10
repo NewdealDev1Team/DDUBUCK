@@ -80,18 +80,21 @@ class MyPageFragment : Fragment() {
                 if (response.isSuccessful) {
                     Log.d("text", "연결성공")
                     var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
-                    val walkingTimeButtonRecordFormat : Int = timeRecordt6!!.toInt()
-                    val walkingTimeButtonRecord : TextView = myPageView.findViewById(R.id.walking_time_button_record)
+                    val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
+                    val walkingTimeButtonRecord: TextView =
+                        myPageView.findViewById(R.id.walking_time_button_record)
                     walkingTimeButtonRecord.setText(timeRecordt6.toString())
 
                     var courseRecord6 = response.body()?.weekStat?.get(6)?.completedCount?.toInt()
-                    val courseEndButtonRecordFormat : Int = courseRecord6!!.toInt()
-                    val courseEndButtonRecord : TextView = myPageView.findViewById(R.id.course_end_button_record)
+                    val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
+                    val courseEndButtonRecord: TextView =
+                        myPageView.findViewById(R.id.course_end_button_record)
                     courseEndButtonRecord.setText(courseRecord6.toString())
 
                     var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
-                    val walkingtimeButtonRecordFormat : Int = calorieRecord6!!.toInt()
-                    val calorieButtonRecord : TextView = myPageView.findViewById(R.id.calorie_button_record)
+                    val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
+                    val calorieButtonRecord: TextView =
+                        myPageView.findViewById(R.id.calorie_button_record)
                     calorieButtonRecord.setText(calorieRecord6.toString())
                 }
             }
@@ -101,6 +104,8 @@ class MyPageFragment : Fragment() {
             }
         })
 
+//        val backStackTag = MainActivity.MYPAGE_TAG
+//        childFragmentManager.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         // 산책 시간 버튼 onClickListener
         walkingTimeButton.setOnClickListener {
             walkTimeFramgnet = WalkTimeFragment()
@@ -127,12 +132,14 @@ class MyPageFragment : Fragment() {
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }
+
     private fun toChartCourseClearPage() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.mypage, courseClearFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }
+
     private fun toChartCaloriePage() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.mypage, caloriesFragment)
