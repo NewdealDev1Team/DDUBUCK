@@ -142,6 +142,4 @@
             android:layout_height="wrap_content"
             android:textSize="12dp" />
     </LinearLayout>
-    <View>
-    </View>
 </LinearLayout>
