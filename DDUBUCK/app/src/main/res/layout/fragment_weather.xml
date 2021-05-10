@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/weather_text"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Weather Text"
             android:textColor="#000000"
@@ -26,8 +26,8 @@
 
         <TextView
             android:id="@+id/temp_and_dust"
-            android:layout_width="150dp"
-            android:layout_height="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:bufferType="spannable"
             android:text="temp and dust"
