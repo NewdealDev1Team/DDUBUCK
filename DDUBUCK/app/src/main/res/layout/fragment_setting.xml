@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:layout_marginTop="18dp"
     android:id="@+id/setting_fragment"
     android:background="@color/white"
     tools:context=".ui.mypage.SettingFragment">
@@ -38,7 +40,6 @@
     <View
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_below="@id/push_alarm"
         android:id="@+id/setting_divider1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -77,7 +78,6 @@
         tools:ignore="MissingConstraints" />
 
     <RelativeLayout
-        android:layout_below="@id/setting_divider2"
         android:id="@+id/version_info"
         android:layout_marginTop="18dp"
         android:layout_marginLeft="20dp"
@@ -106,7 +106,6 @@
     </RelativeLayout>
 
     <View
-        android:layout_below="@id/version_info"
         android:id="@+id/setting_divider3"
         android:layout_width="match_parent"
         android:layout_height="6dp"
@@ -119,7 +118,6 @@
         android:layout_marginTop="18dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_below="@id/setting_divider3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="10dp"
@@ -128,4 +126,4 @@
         android:textColor="@color/black"
         android:text="로그아웃"/>
 
-</RelativeLayout>
+</LinearLayout>
