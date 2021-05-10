@@ -23,6 +23,7 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
 import com.example.ddubuck.databinding.FragmentMypageBinding
+
 import com.example.ddubuck.login.UserService
 import com.example.ddubuck.login.UserValidationInfo
 import com.example.ddubuck.sharedpref.UserSharedPreferences
@@ -166,7 +167,7 @@ class MyPageFragment : Fragment() {
 
     private fun toChartWalkTimePage() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.scrollview_mypage, myPageEditFragment)
+            .replace(R.id.scrollview_mypage, walkTimeFramgnet)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }
