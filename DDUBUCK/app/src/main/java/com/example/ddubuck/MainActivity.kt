@@ -225,11 +225,10 @@ class MainActivity : AppCompatActivity() {
 
             }
             R.id.action_settings -> {
-                supportFragmentManager.commit {
-                    replace<SettingFragment>(R.id.scrollview_mypage)
-                    setReorderingAllowed(true)
-                    addToBackStack(MYPAGE_TAG)
-                }
+                val fragmentTransaction = supportFragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.scrollview_mypage, settingFragment)
+                    .setReorderingAllowed(true)
+                    .addToBackStack(MYPAGE_TAG).commit()
 //                supportFragmentManager.beginTransaction()
 //                    .replace(R.id.scrollview_mypage, settingFragment)
 //                    .addToBackStack(MYPAGE_TAG)
