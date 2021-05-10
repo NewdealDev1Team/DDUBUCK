@@ -94,7 +94,6 @@ class MyPageFragment : Fragment() {
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
             val userKey: Int = it.toInt()
             RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
-                //나의 산책 기록
                 override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                     if (response.isSuccessful) {
                         Log.d("text", "연결성공")
@@ -107,8 +106,15 @@ class MyPageFragment : Fragment() {
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
                         val walkingTimeButtonRecord: TextView =
                             myPageView.findViewById(R.id.walking_time_button_record)
-                        val miniteName : String = "분"
-                        walkingTimeButtonRecord.setText(timeRecordt6.toString()+miniteName)
+                        if(60 <= timeRecordt6.toInt()){
+                            val hour: Int = timeRecordt6/60
+                            val hourName : String = "시"
+                            walkingTimeButtonRecord.setText(hour.toString()+hourName)
+                        }else{
+                            val miniteName : String = "분"
+                            walkingTimeButtonRecord.setText(timeRecordt6.toString()+miniteName)
+                        }
+
 
                         var courseRecord6 =
                             response.body()?.weekStat?.get(6)?.completedCount?.toInt()
