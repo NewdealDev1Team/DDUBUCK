@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 
 import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.bottomSheet.*
@@ -228,10 +230,15 @@ class MainActivity : AppCompatActivity() {
 
             }
             R.id.action_settings -> {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.mypage, settingFragment)
-                    .addToBackStack(MYPAGE_TAG)
-                    .commit()
+                supportFragmentManager.commit {
+                    replace<SettingFragment>(R.id.scrollview_mypage)
+                    setReorderingAllowed(true)
+                    addToBackStack(MYPAGE_TAG)
+                }
+//                supportFragmentManager.beginTransaction()
+//                    .replace(R.id.scrollview_mypage, settingFragment)
+//                    .addToBackStack(MYPAGE_TAG)
+//                    .commit()
                 activityModel.toolbarTitle.value = "설정"
             }
         }
