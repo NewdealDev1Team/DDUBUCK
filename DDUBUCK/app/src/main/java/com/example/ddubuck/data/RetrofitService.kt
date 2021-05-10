@@ -46,6 +46,8 @@ object RetrofitClient{
 
 
 class RetrofitService {
+
+
     fun createRecordPost(walkRecord: WalkRecord){
         val map = hashMapOf<String, Any>()
         map["altitude"] = walkRecord.altitude
@@ -62,7 +64,7 @@ class RetrofitService {
             ) {
                 val responseText = "Response code: ${response.code()}\n"+
                     "body: ${response.body()}\n"
-                Log.e("response", responseText)
+                println(responseText)
             }
 
             override fun onFailure(call: Call<WalkRecord>, t: Throwable) {
@@ -71,19 +73,4 @@ class RetrofitService {
         })
     }
 
-    fun getPublicData(x : Double, y : Double) {
-        RetrofitClient.publicDataInstance.getResult(x,y)
-            .enqueue(object : Callback<PublicData> {
-                override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
-                    val responseText = "Response code: ${response.code()}\n"+
-                            "body: ${response.body()}\n"
-                    Log.e("response", responseText)
-                }
-
-                override fun onFailure(call: Call<PublicData>, t: Throwable) {
-                    Log.e("ERROR", t.localizedMessage)
-                }
-
-            })
-    }
 }

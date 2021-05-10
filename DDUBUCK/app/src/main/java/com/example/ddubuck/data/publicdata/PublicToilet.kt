@@ -1,6 +1,7 @@
 package com.example.ddubuck.data.publicdata
 
 data class PublicToilet(
-    val x: Double,
-    val y: Double
-)
+    override val name : String,
+    override val x: Double,
+    override val y: Double
+) : PublicDataForm

@@ -56,7 +56,7 @@ class BottomSheetFreeProgressFragment: Fragment() {
         }
 
         endButton.setOnClickListener{
-            parentFragmentManager.popBackStack(MainActivity.HOME_BACK_STACK_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            parentFragmentManager.popBackStack(MainActivity.HOME_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
 
 

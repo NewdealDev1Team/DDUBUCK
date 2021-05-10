@@ -1,5 +1,6 @@
 package com.example.ddubuck.ui.home.bottomSheet
 
+import android.text.format.DateUtils
 import java.text.DecimalFormat
 
 class BottomSheetNumberFormat {
@@ -17,6 +18,10 @@ class BottomSheetNumberFormat {
 
     fun getFormattedCalorie(v : Double) : String {
         return DecimalFormat("#.##kcal").format(v)
+    }
+
+    fun getFormattedTime(v : Long) : String {
+        return DateUtils.formatElapsedTime(v)
     }
 
 }

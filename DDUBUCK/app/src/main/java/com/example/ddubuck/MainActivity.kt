@@ -2,7 +2,6 @@ package com.example.ddubuck
 
 import android.Manifest
 import android.content.Context
-import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 
@@ -27,12 +26,12 @@ import com.example.ddubuck.ui.badge.BadgeFragment
 import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
-import com.example.ddubuck.ui.mypage.MyPageEditFragment
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.example.ddubuck.ui.mypage.SettingFragment
 import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
 import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
+
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
@@ -68,8 +67,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.navigation_mypage -> {
                     replaceFragment(myPageFragment)
-//                val fm:FragmentManager = supportFragmentManager
-//                fm.beginTransaction().add(R.id.navigation_mypage,myPageFragment).commit()
                     return@OnNavigationItemSelectedListener true
                 }
                 else -> false
@@ -85,7 +82,6 @@ class MainActivity : AppCompatActivity() {
         initToolBar()
         initFragmentManager()
         initPermission()
-//        initMyPageFragment()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             initVibrator()
         }
@@ -288,7 +284,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val HOME_BACK_STACK_TAG = "HOME"
+        const val HOME_TAG = "HOME"
         const val HOME_RESULT_TAG = "HOME_RESULT"
         const val CHALLENGE_TAG = "CHALLENGE"
         const val BADGE_TAG = "BADGE"

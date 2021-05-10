@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/badge_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="30dp"
+        android:text="챌린지 도전"
+        android:textColor="@color/black"
+        android:textSize="21dp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/badge_title_bottom_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="챌린지를 도전하면서 얻을 수 있는\n배지입니다. 지금 도전해볼까요?"
+        app:layout_constraintTop_toBottomOf="@+id/badge_title" />
+<LinearLayout
+    android:id="@+id/challenge_layout_oneLine"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    app:layout_constraintTop_toBottomOf="@+id/badge_title_bottom_content"
+    tools:ignore="MissingConstraints">
+    <LinearLayout
+        android:id="@+id/challenge_layout_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        app:layout_constraintTop_toBottomOf="@+id/badge_title_bottom_content"
+        tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/badge_image_goodjob"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/ic_badge_challenge_goodjob" />
+
+        <ImageView
+            android:id="@+id/badge_image_everyDay"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="26dp"
+            android:src="@drawable/ic_badge_challenge_everyday" />
+
+        <ImageView
+            android:id="@+id/badge_image_allClear"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="26dp"
+            android:src="@drawable/ic_badge_challenge_allclear" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/challenge_layout_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/challenge_layout_1"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/badge_text_goodjob"
+            android:layout_width="89dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="23dp"
+            android:gravity="center"
+            android:text="첫 산책" />
+
+        <TextView
+            android:id="@+id/badge_text_everyday"
+            android:layout_width="89dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="23dp"
+            android:gravity="center"
+            android:text="연속 출석" />
+
+        <TextView
+            android:id="@+id/badge_text_allclear"
+            android:layout_width="89dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="23dp"
+            android:gravity="center"
+            android:text="올 클리어" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/challenge_layout_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        app:layout_constraintTop_toBottomOf="@+id/challenge_layout_2">
+
+        <ImageView
+            android:id="@+id/badge_image_1km"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:layout_marginTop="26dp"
+            android:src="@drawable/ic_badge_challenge_1km" />
+
+        <ImageView
+            android:id="@+id/badge_image_5km"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="26dp"
+            android:src="@drawable/ic_badge_challenge_5km" />
+
+        <ImageView
+            android:id="@+id/badge_image_10km"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="26dp"
+            android:src="@drawable/ic_badge_challenge_10km" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/challenge_layout_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/challenge_layout_3"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/badge_text_1km"
+            android:layout_width="89dp"
+            android:layout_height="23dp"
+            android:layout_marginTop="23dp"
+            android:gravity="center"
+            android:text="1km" />
+
+        <TextView
+            android:id="@+id/badge_text_5km"
+            android:layout_width="89dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="23dp"
+            android:gravity="center"
+            android:text="5km" />
+
+        <TextView
+            android:id="@+id/badge_text_10km"
+            android:layout_width="89dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginTop="23dp"
+            android:gravity="center"
+            android:text="10km" />
+    </LinearLayout>
+    <View
+        android:id="@+id/mypage_divider"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="22dp"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@+id/mypage_profile_area"
+        tools:ignore="MissingConstraints" />
+</LinearLayout>
+
+    <!--데이터가 어떻게 보이는지 확인하기 위해서이다-->
+</androidx.constraintlayout.widget.ConstraintLayout>
