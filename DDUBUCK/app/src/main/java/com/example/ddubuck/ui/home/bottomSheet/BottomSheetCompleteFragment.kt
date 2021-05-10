@@ -5,27 +5,35 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
+import com.example.ddubuck.ui.home.CourseAddDialog
 import com.example.ddubuck.ui.home.HomeMapFragment
 import com.example.ddubuck.ui.share.ShareActivity
 
+
 class BottomSheetCompleteFragment(
-        private val owner: Activity,
-        private val walkRecord: WalkRecord,
-        private val walkType:Int) : Fragment() {
+    private val owner: Activity,
+    private val walkRecord: WalkRecord,
+    private val walkType: Int,
+) : Fragment() {
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val rootView = inflater.inflate(R.layout.bottom_sheet_complete, container, false)
         val titleTv : TextView = rootView.findViewById(R.id.sheet_complete_titleTv)
         val formatter = BottomSheetNumberFormat()
@@ -45,14 +53,16 @@ class BottomSheetCompleteFragment(
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
         averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
-        if(walkRecord.path.isNotEmpty()) {
+        if(walkRecord.path.size >= 2) {
             shareButton.setOnClickListener{
                 val intent = Intent(context, ShareActivity::class.java)
                 intent.putExtra("walkRecord", walkRecord)
                 startActivity(intent)
             }
         } else {
-            shareButton.background = ResourcesCompat.getDrawable(resources, R.drawable.sheet_button_deactivated,null)
+            shareButton.background = ResourcesCompat.getDrawable(resources,
+                R.drawable.sheet_button_deactivated,
+                null)
             shareButton.setTextColor(Color.GRAY)
         }
         val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
@@ -61,7 +71,8 @@ class BottomSheetCompleteFragment(
             buttonLayout.removeView(addToMyPathButton)
         } else {
             addToMyPathButton.setOnClickListener{
-                Log.e("내경로추가버튼", "누르지마!")
+                val dialog = CourseAddDialog(walkRecord)
+                dialog.show(parentFragmentManager, MainActivity.HOME_TAG)
             }
         }
         return rootView

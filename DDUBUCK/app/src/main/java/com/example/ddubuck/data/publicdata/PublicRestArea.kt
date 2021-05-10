@@ -1,8 +1,7 @@
 package com.example.ddubuck.data.publicdata
 
-data class Cafe(
+data class PublicRestArea(
     override val name : String,
     override val x: Double,
-    override val y: Double,
-    val address : String,
+    override val y: Double
 ) : PublicDataForm
