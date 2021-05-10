@@ -6,23 +6,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.login.LoginActivity
 import com.example.ddubuck.sharedpref.UserSharedPreferences
 
 class SettingFragment : Fragment() {
+    // ("내 정보 수정페이지에서 setting 넘어가면 앱 튕김 현상")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-        val settingView = inflater.inflate(R.layout.fragment_setting, container, false)
+        val settingViewGroup: ViewGroup = inflater.inflate(R.layout.fragment_setting,
+            container, false) as ViewGroup
 
-        val versionView: TextView = settingView.findViewById(R.id.version_info_textview)
-        val logoutButton: TextView = settingView.findViewById(R.id.logout_button)
+        val versionView: TextView = settingViewGroup.findViewById(R.id.version_info_textview)
+        val logoutButton: TextView = settingViewGroup.findViewById(R.id.logout_button)
 
         versionView.text = context?.let { getVersion(it) }
 
@@ -30,7 +32,7 @@ class SettingFragment : Fragment() {
             logout()
         }
 
-        return settingView
+        return settingViewGroup
 
     }
 
