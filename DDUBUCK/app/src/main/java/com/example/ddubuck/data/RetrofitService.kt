@@ -46,8 +46,6 @@ object RetrofitClient{
 
 
 class RetrofitService {
-
-
     fun createRecordPost(walkRecord: WalkRecord){
         val map = hashMapOf<String, Any>()
         map["altitude"] = walkRecord.altitude

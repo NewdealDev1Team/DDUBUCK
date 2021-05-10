@@ -47,7 +47,6 @@ import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
 import kotlinx.android.synthetic.main.fragment_course_clear.*
-import kotlinx.android.synthetic.main.fragment_walk_time.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -88,8 +87,8 @@ class CourseClearFragment : Fragment() {
     private lateinit var chart: BarChart
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
-
-
+    //개인 UserID
+    private var UserId : Int = -1
     override fun onCreateView(
         //프래그먼트가 인터페이스를 처음 그릴때 사용함
         inflater: LayoutInflater,
@@ -99,8 +98,9 @@ class CourseClearFragment : Fragment() {
         val rootView: View = inflater.inflate(R.layout.fragment_course_clear, container, false)
 
         mainViewModel.toolbarTitle.value = "코스 완주"
-
-        RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            var userKey : Int = it.toInt()
+        RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
             override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                 if (response.isSuccessful) {
                     Log.d("text", "연결성공")
@@ -293,6 +293,7 @@ class CourseClearFragment : Fragment() {
                 Log.d("error", t.message.toString())
             }
         })
+    }
 
         val button: Button = rootView.findViewById(R.id.course_button_screenshot)
 
@@ -394,6 +395,7 @@ class CourseClearFragment : Fragment() {
         val userValidationServer: UserService = userValidation.create(UserService::class.java)
 
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            Log.d("UserKey-------","$it")
             userValidationServer.getUserInfo(it).enqueue(object : Callback<UserValidationInfo> {
                 override fun onResponse(
                     call: Call<UserValidationInfo>,

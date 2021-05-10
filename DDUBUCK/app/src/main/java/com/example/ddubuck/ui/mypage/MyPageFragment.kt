@@ -1,7 +1,6 @@
 package com.example.ddubuck.ui.mypage
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 
@@ -27,15 +26,11 @@ import com.example.ddubuck.databinding.FragmentMypageBinding
 import com.example.ddubuck.login.UserService
 import com.example.ddubuck.login.UserValidationInfo
 import com.example.ddubuck.sharedpref.UserSharedPreferences
-import com.example.ddubuck.ui.home.HomeMapFragment
 import com.example.ddubuck.userinfo.NextTimeDialog
 import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
 import com.example.ddubuck.ui.mypage.mywalk.CourseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_edit_userinfo.*
-import kotlinx.android.synthetic.main.fragment_mypage.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -95,34 +90,39 @@ class MyPageFragment : Fragment() {
 
         }
         //나의 산책 기록
-        RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
-            override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
-                if (response.isSuccessful) {
-                    Log.d("text", "연결성공")
-                    var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
-                    val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
-                    val walkingTimeButtonRecord: TextView =
-                        myPageView.findViewById(R.id.walking_time_button_record)
-                    walkingTimeButtonRecord.setText(timeRecordt6.toString())
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            val userKey : Int = it.toInt()
+            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
+                //나의 산책 기록
+                override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
+                    if (response.isSuccessful) {
+                        Log.d("text", "연결성공")
+                        var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
+                        val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
+                        val walkingTimeButtonRecord: TextView =
+                            myPageView.findViewById(R.id.walking_time_button_record)
+                        walkingTimeButtonRecord.setText(timeRecordt6.toString())
 
-                    var courseRecord6 = response.body()?.weekStat?.get(6)?.completedCount?.toInt()
-                    val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
-                    val courseEndButtonRecord: TextView =
-                        myPageView.findViewById(R.id.course_end_button_record)
-                    courseEndButtonRecord.setText(courseRecord6.toString())
+                        var courseRecord6 =
+                            response.body()?.weekStat?.get(6)?.completedCount?.toInt()
+                        val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
+                        val courseEndButtonRecord: TextView =
+                            myPageView.findViewById(R.id.course_end_button_record)
+                        courseEndButtonRecord.setText(courseRecord6.toString())
 
-                    var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
-                    val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
-                    val calorieButtonRecord: TextView =
-                        myPageView.findViewById(R.id.calorie_button_record)
-                    calorieButtonRecord.setText(calorieRecord6.toString())
+                        var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
+                        val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
+                        val calorieButtonRecord: TextView =
+                            myPageView.findViewById(R.id.calorie_button_record)
+                        calorieButtonRecord.setText(calorieRecord6.toString())
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<chartData>, t: Throwable) {
-                Log.d("error", t.message.toString())
-            }
-        })
+                override fun onFailure(call: Call<chartData>, t: Throwable) {
+                    Log.d("error", t.message.toString())
+                }
+            })
+        }
 
 //        val backStackTag = MainActivity.MYPAGE_TAG
 //        childFragmentManager.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
@@ -223,6 +223,7 @@ class MyPageFragment : Fragment() {
             .commit()
     }
 
+
     private fun setUserInfo(userName: TextView, profileImage: CircleImageView) {
         val userValidation: Retrofit = Retrofit.Builder()
             .baseUrl("http://3.37.6.181:3000/get/")
@@ -243,7 +244,6 @@ class MyPageFragment : Fragment() {
                     activity?.let { it1 ->
                         Glide.with(it1).load(profileImageURL).into(profileImage)
                     }
-
                 }
 
                 override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {
