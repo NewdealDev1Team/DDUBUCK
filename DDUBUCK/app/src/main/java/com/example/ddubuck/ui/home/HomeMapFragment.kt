@@ -42,6 +42,8 @@ import kotlin.concurrent.timer
 class HomeMapFragment(private val fm: FragmentManager, private val owner: Activity) : Fragment(),
         OnMapReadyCallback, SensorEventListener {
 
+    //TODO memory issue
+
 
     //산책 시작 여부
     //TODO background operation

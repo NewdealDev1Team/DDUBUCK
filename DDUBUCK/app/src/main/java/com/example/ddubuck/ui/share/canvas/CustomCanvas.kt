@@ -58,7 +58,6 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     private lateinit var path : Path
     private val translateMatrix = Matrix()
     private val pathBoundRect = RectF()
-    private val pathDestRect = RectF()
     private var srcBmp : Bitmap? = null
     private var walkRecord : WalkRecord? = null
     private var isBlack = true

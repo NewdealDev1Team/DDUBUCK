@@ -29,8 +29,8 @@ import java.io.OutputStream
 
 class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogFragment() {
     private val imageProviderSheetViewModel : ImageProviderSheetViewModel by activityViewModels()
-    lateinit var currentPhotoPath : String
-    lateinit var cameraPhotoUri : Uri
+    private lateinit var currentPhotoPath : String
+    private lateinit var cameraPhotoUri : Uri
 
     override fun onCreateView(
         inflater: LayoutInflater,
