@@ -51,7 +51,7 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
                     photoFile?.also {
                         cameraPhotoUri = FileProvider.getUriForFile(
                             owner,
-                            "com.example.ddubuck",
+                            "com.example.ddubuck.provider",
                             it
                         )
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraPhotoUri)

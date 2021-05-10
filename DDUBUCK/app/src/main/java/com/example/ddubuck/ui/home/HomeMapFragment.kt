@@ -4,11 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.hardware.*
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -18,6 +20,7 @@ import com.example.ddubuck.R
 import com.example.ddubuck.data.RetrofitClient
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.data.publicdata.PublicData
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.CommonDialog
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
@@ -47,10 +50,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     //산책 시작 여부
     //TODO background operation
-    var allowRecording = false
-    var isRestarted = false
-    var isCourseSelected = false
-    var isCourseInitialized = false
+    private var allowRecording = false
+    private var isRestarted = false
+    private var isCourseSelected = false
+    private var isCourseInitialized = false
 
     //TODO STATE로 운용할 것
     companion object {
@@ -67,6 +70,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private val model: HomeMapViewModel by activityViewModels()
 
     //환경설정 변수
+    private val userKey : String = UserSharedPreferences.getUserId(owner)
     private lateinit var map: NaverMap
     private lateinit var timer: Timer
     private lateinit var locationButtonView: LocationButtonView
@@ -185,11 +189,13 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             WALK_COURSE
         else
             WALK_FREE
+
+        //RetrofitService().createPost(getWalkResult())
+
         parentFragmentManager.beginTransaction()
-                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
+                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(),userKey,"", walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
                 .commit()
-        //RetrofitService().createPost(getWalkResult())
 
         model.walkTime.value = 0
         model.walkCalorie.value = 0.0
@@ -295,7 +301,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog(i.name, i.address, owner).show()
+                                    CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).show()
                                     true
                                 }
                                 markers["petCafe"] = marker
@@ -309,7 +315,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog(i.name,  i.time, owner).show()
+                                    CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner).show()
                                     true
                                 }
                                 markers["carFreeRoad"] = marker
@@ -323,7 +329,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener{
-                                    CommonDialog(i.name, i.address, owner).show()
+                                    CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).show()
                                     true
                                 }
                                 markers["cafe"] = marker
@@ -337,7 +343,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog(i.name, i.address, owner).show()
+                                    CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner).show()
                                     true
                                 }
                                 markers["petRestaurant"] = marker
@@ -351,7 +357,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog(i.name, "공공쉼터입니다", owner).show()
+                                    CommonDialog("공공쉼터",i.name, owner).show()
                                     true
                                 }
                                 markers["publicRestArea"] = marker
@@ -365,7 +371,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog(i.name, "공공화장실 입니다", owner).show()
+                                    CommonDialog("공공화장실",i.name, owner).show()
                                     true
                                 }
                                 markers["publicToilet"] = marker

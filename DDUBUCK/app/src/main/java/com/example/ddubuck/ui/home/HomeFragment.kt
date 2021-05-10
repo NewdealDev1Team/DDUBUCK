@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetSelectFragment
 import com.example.ddubuck.weather.WeatherFragment
 import com.example.ddubuck.weather.WeatherViewModel
@@ -20,7 +21,7 @@ class HomeFragment(private val owner: Activity) : Fragment() {
     private val weatherViewModel: WeatherViewModel by activityViewModels()
     private val mapViewModel : HomeMapViewModel by activityViewModels()
     private lateinit var homeMapFragment: HomeMapFragment
-    lateinit var weatherFragment: WeatherFragment
+    private lateinit var weatherFragment: WeatherFragment
     private var isWeatherDataReady=false
 
     override fun onCreateView(
@@ -31,7 +32,7 @@ class HomeFragment(private val owner: Activity) : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         val fm = parentFragmentManager
-        homeMapFragment = HomeMapFragment(fm, owner)
+        homeMapFragment = HomeMapFragment(fm,owner)
         fm.beginTransaction().add(R.id.home_map_container, homeMapFragment, BOTTOM_SHEET_CONTAINER_TAG).commit()
 
         weatherFragment = WeatherFragment()
