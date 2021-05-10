@@ -13,22 +13,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.*
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
@@ -52,19 +41,18 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class MyPageFragment : Fragment() {
     private lateinit var myPageBinding: FragmentMypageBinding
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
 
-    @RequiresApi(Build.VERSION_CODES.Q)
 
     private lateinit var walkTimeFramgnet: WalkTimeFragment
     private lateinit var courseClearFragment: CourseClearFragment
     private lateinit var caloriesFragment: CaloriesFragment
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -84,8 +72,7 @@ class MyPageFragment : Fragment() {
         getAllPhotos(galleryGrid)
 
         val walkingTimeButton: ConstraintLayout = myPageView.findViewById(R.id.walking_time_button)
-        val courseClearButton: ConstraintLayout =
-            myPageView.findViewById(R.id.course_complete_button)
+        val courseClearButton: ConstraintLayout = myPageView.findViewById(R.id.course_complete_button)
         val calorieButton: ConstraintLayout = myPageView.findViewById(R.id.calorie_button)
 
         val routeInfoButton: ImageView = myPageView.findViewById(R.id.user_route_info_button)
@@ -180,7 +167,6 @@ class MyPageFragment : Fragment() {
     private fun toChartWalkTimePage() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.scrollview_mypage, myPageEditFragment)
-            .replace(R.id.mypage, walkTimeFramgnet)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }
@@ -213,24 +199,25 @@ class MyPageFragment : Fragment() {
         val adapter = context?.let { GalleryAdapter(it, uriArr) }
         gridView.numColumns = 4 // 한 줄에 4개씩
         gridView.adapter = adapter
+    }
 
     private fun toChartCourseClearPage() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.mypage, courseClearFragment)
+            .replace(R.id.scrollview_mypage, courseClearFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }
 
     private fun toChartCaloriePage() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.mypage, caloriesFragment)
+            .replace(R.id.scrollview_mypage, caloriesFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }
 
     private fun toEditInfoPage() {
         parentFragmentManager.beginTransaction()
-            .replace(R.id.mypage, myPageEditFragment)
+            .replace(R.id.scrollview_mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }

@@ -28,8 +28,6 @@ import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.example.ddubuck.ui.mypage.SettingFragment
-import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
-import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -38,6 +36,7 @@ import kotlinx.android.synthetic.main.fragment_mypage.*
 
 import kotlinx.android.synthetic.main.fragment_walk_time.*
 
+@RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
     private val challengeFragment = ChallengeFragment()
