@@ -17,6 +17,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.commit
+import androidx.fragment.app.replace
 
 import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.bottomSheet.*
@@ -25,6 +27,11 @@ import com.example.ddubuck.ui.challenge.ChallengeFragment
 import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
+import com.example.ddubuck.ui.mypage.SettingFragment
+import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
+import com.example.ddubuck.ui.mypage.mywalk.CoseClearFragment
+import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
+
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
@@ -36,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     private val challengeFragment = ChallengeFragment()
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
+    private val settingFragment = SettingFragment()
 
     private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
@@ -218,7 +226,16 @@ class MainActivity : AppCompatActivity() {
 
             }
             R.id.action_settings -> {
-
+                supportFragmentManager.commit {
+                    replace<SettingFragment>(R.id.scrollview_mypage)
+                    setReorderingAllowed(true)
+                    addToBackStack(MYPAGE_TAG)
+                }
+//                supportFragmentManager.beginTransaction()
+//                    .replace(R.id.scrollview_mypage, settingFragment)
+//                    .addToBackStack(MYPAGE_TAG)
+//                    .commit()
+                activityModel.toolbarTitle.value = "설정"
             }
         }
         return super.onOptionsItemSelected(item)

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginTop="18dp"
+    android:id="@+id/setting_fragment"
+    android:background="@color/white"
+    tools:context=".ui.mypage.SettingFragment">
+
+    <RelativeLayout
+        android:id="@+id/push_alarm"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="푸쉬 알림"
+            android:textSize="16dp"
+            android:textColor="@color/black" />
+        <Switch
+
+            android:layout_marginRight="16dp"
+            android:id="@+id/push_switch"
+            android:thumbTint="#3DAB5B"
+            android:trackTint="#3DAB5B"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:id="@+id/setting_divider1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/grey"
+        tools:ignore="MissingConstraints" />
+
+    <RelativeLayout
+        android:layout_below="@id/setting_divider1"
+        android:id="@+id/private_law"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="개인정보 취급방침"
+            android:textSize="16dp"
+            android:textColor="@color/black" />
+
+
+    </RelativeLayout>
+
+    <View
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_below="@id/private_law"
+        android:id="@+id/setting_divider2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/grey"
+        tools:ignore="MissingConstraints" />
+
+    <RelativeLayout
+        android:id="@+id/version_info"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="버전 정보"
+            android:textSize="16dp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/version_info_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="22dp"
+            android:text="1.0.0"
+            android:textColor="#767676"
+            android:textSize="14dp"/>
+
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/setting_divider3"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_marginTop="18dp"
+        android:background="@color/grey"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/logout_button"
+        android:layout_marginTop="18dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="16dp"
+        android:textColor="@color/black"
+        android:text="로그아웃"/>
+
+</LinearLayout>
