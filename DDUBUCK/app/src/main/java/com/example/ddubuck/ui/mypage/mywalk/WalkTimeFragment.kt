@@ -398,8 +398,6 @@ class WalkTimeFragment : Fragment() {
                 ) {
                     val name = response.body()?.name
                     userName.text = name.toString()
-                    val UserId = response.body()?.id
-                    Log.d("UserID -----","$UserId")
                 }
 
                 override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {

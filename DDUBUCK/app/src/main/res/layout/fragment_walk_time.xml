@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/walktime"
@@ -7,11 +8,13 @@
     android:layout_height="wrap_content"
     android:layout_weight="1"
     android:background="@color/white"
-    tools:context=".ui.mypage.mywalk.WalkTimeFragment">
+    tools:context=".ui.mypage.mywalk.WalkTimeFragment"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="30dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -56,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/title_bottom_layout2">
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -104,7 +107,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/time_bar_chart_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/background_gradient"
@@ -124,8 +126,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/time_bar_chart_layout"
-            android:background="@color/white">
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/time_bar_chart_layout">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -150,5 +152,9 @@
                 android:textSize="12dp" />
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 
 </LinearLayout>

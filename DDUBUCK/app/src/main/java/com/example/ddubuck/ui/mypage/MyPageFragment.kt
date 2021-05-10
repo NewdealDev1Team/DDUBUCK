@@ -68,7 +68,8 @@ class MyPageFragment : Fragment() {
         getAllPhotos(galleryGrid)
 
         val walkingTimeButton: ConstraintLayout = myPageView.findViewById(R.id.walking_time_button)
-        val courseClearButton: ConstraintLayout = myPageView.findViewById(R.id.course_complete_button)
+        val courseClearButton: ConstraintLayout =
+            myPageView.findViewById(R.id.course_complete_button)
         val calorieButton: ConstraintLayout = myPageView.findViewById(R.id.calorie_button)
 
         val routeInfoButton: ImageView = myPageView.findViewById(R.id.user_route_info_button)
@@ -91,30 +92,38 @@ class MyPageFragment : Fragment() {
         }
         //나의 산책 기록
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
-            val userKey : Int = it.toInt()
+            val userKey: Int = it.toInt()
             RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
                 //나의 산책 기록
                 override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                     if (response.isSuccessful) {
                         Log.d("text", "연결성공")
+                        var setCount = response.body()?.totalStat?.get(0)?.stepCount?.toInt()
+                        val setCountRecordFormat: Int = setCount!!.toInt()
+                        val setCountRecordText: TextView = myPageView.findViewById(R.id.step_count)
+                        setCountRecordText.setText(setCount.toString())
+
                         var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
                         val walkingTimeButtonRecord: TextView =
                             myPageView.findViewById(R.id.walking_time_button_record)
-                        walkingTimeButtonRecord.setText(timeRecordt6.toString())
+                        val miniteName : String = "분"
+                        walkingTimeButtonRecord.setText(timeRecordt6.toString()+miniteName)
 
                         var courseRecord6 =
                             response.body()?.weekStat?.get(6)?.completedCount?.toInt()
                         val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
                         val courseEndButtonRecord: TextView =
                             myPageView.findViewById(R.id.course_end_button_record)
-                        courseEndButtonRecord.setText(courseRecord6.toString())
+                        val countName : String = "번"
+                        courseEndButtonRecord.setText(courseRecord6.toString()+countName)
 
                         var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
                         val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
                         val calorieButtonRecord: TextView =
                             myPageView.findViewById(R.id.calorie_button_record)
-                        calorieButtonRecord.setText(calorieRecord6.toString())
+                        val calorieName : String = "kcal"
+                        calorieButtonRecord.setText(calorieRecord6.toString()+calorieName)
                     }
                 }
 
@@ -145,7 +154,8 @@ class MyPageFragment : Fragment() {
         }
 
         routeInfoButton.setOnClickListener {
-            val dialog = NextTimeDialog("사용자 지정 경로란?", "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
+            val dialog = NextTimeDialog("사용자 지정 경로란?",
+                "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
                 context as Activity)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
