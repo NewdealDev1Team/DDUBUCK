@@ -87,8 +87,9 @@ class CourseClearFragment : Fragment() {
     private lateinit var chart: BarChart
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
+
     //개인 UserID
-    private var UserId : Int = -1
+    private var UserId: Int = -1
     override fun onCreateView(
         //프래그먼트가 인터페이스를 처음 그릴때 사용함
         inflater: LayoutInflater,
@@ -99,217 +100,220 @@ class CourseClearFragment : Fragment() {
 
         mainViewModel.toolbarTitle.value = "코스 완주"
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
-            var userKey : Int = it.toInt()
-        RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
-            override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
-                if (response.isSuccessful) {
-                    Log.d("text", "연결성공")
-                    var result0 = response.body()?.weekStat?.get(0)?.completedCount?.toFloat()
-                    var result1 = response.body()?.weekStat?.get(1)?.completedCount?.toFloat()
-                    var result2 = response.body()?.weekStat?.get(2)?.completedCount?.toFloat()
-                    var result3 = response.body()?.weekStat?.get(3)?.completedCount?.toFloat()
-                    var result4 = response.body()?.weekStat?.get(4)?.completedCount?.toFloat()
-                    var result5 = response.body()?.weekStat?.get(5)?.completedCount?.toFloat()
-                    var result6 = response.body()?.weekStat?.get(6)?.completedCount?.toFloat()
-                    Log.d("~~0번째 time~~~",
-                        " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
+            var userKey: Int = it.toInt()
+            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
+                override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
+                    if (response.isSuccessful) {
+                        Log.d("text", "연결성공")
+                        var result0 = response.body()?.weekStat?.get(0)?.completedCount?.toFloat()
+                        var result1 = response.body()?.weekStat?.get(1)?.completedCount?.toFloat()
+                        var result2 = response.body()?.weekStat?.get(2)?.completedCount?.toFloat()
+                        var result3 = response.body()?.weekStat?.get(3)?.completedCount?.toFloat()
+                        var result4 = response.body()?.weekStat?.get(4)?.completedCount?.toFloat()
+                        var result5 = response.body()?.weekStat?.get(5)?.completedCount?.toFloat()
+                        var result6 = response.body()?.weekStat?.get(6)?.completedCount?.toFloat()
+                        Log.d("~~0번째 time~~~",
+                            " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
 
-                    val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
-                            + result3!!.toInt() + result4!!.toInt() + result5!!.toInt() + result6!!.toInt())
+                        val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
+                                + result3!!.toInt() + result4!!.toInt() + result5!!.toInt() + result6!!.toInt())
 
-                    var courseTitleName: String =
-                        response.body()?.totalStat?.get(0)?.name.toString()
+                        var courseTitleName: String =
+                            response.body()?.totalStat?.get(0)?.name.toString()
 
 
-                    val listData by lazy {
-                        mutableListOf(
-                            ChartData(sixDaysAgo.format(formatter).toString(), result0!!),
-                            ChartData(fiveDaysAgo.format(formatter).toString(), result1!!),
-                            ChartData(fourDaysAgo.format(formatter).toString(), result2!!),
-                            ChartData(threeDaysAgo.format(formatter).toString(), result3!!),
-                            ChartData(twoDaysAgo.format(formatter).toString(), result4!!),
-                            ChartData(oneDaysAgo.format(formatter).toString(), result5!!),
-                            ChartData(dateNow.format(formatter).toString(), result6!!)
-                        )
-                    }
+                        val listData by lazy {
+                            mutableListOf(
+                                ChartData(sixDaysAgo.format(formatter).toString(), result0!!),
+                                ChartData(fiveDaysAgo.format(formatter).toString(), result1!!),
+                                ChartData(fourDaysAgo.format(formatter).toString(), result2!!),
+                                ChartData(threeDaysAgo.format(formatter).toString(), result3!!),
+                                ChartData(twoDaysAgo.format(formatter).toString(), result4!!),
+                                ChartData(oneDaysAgo.format(formatter).toString(), result5!!),
+                                ChartData(dateNow.format(formatter).toString(), result6!!)
+                            )
+                        }
 
-                    chart = rootView.findViewById(R.id.course_bar_chart)
-                    //바 차트 커스텀
-                    with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
-                        description.isEnabled = false
-                        legend.isEnabled = false
-                        isDoubleTapToZoomEnabled = false
+                        chart = rootView.findViewById(R.id.course_bar_chart)
+                        //바 차트 커스텀
+                        with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
+                            description.isEnabled = false
+                            legend.isEnabled = false
+                            isDoubleTapToZoomEnabled = false
 
-                        setPinchZoom(false)
-                        setDrawBarShadow(false)
-                        setDrawValueAboveBar(false)
-                        //차트 라운들 모양 커스텀
-                        val barChartRender =
-                            CustomBarChartRender(this, animator, viewPortHandler).apply {
-                                setRadius(20)
+                            setPinchZoom(false)
+                            setDrawBarShadow(false)
+                            setDrawValueAboveBar(false)
+                            //차트 라운들 모양 커스텀
+                            val barChartRender =
+                                CustomBarChartRender(this, animator, viewPortHandler).apply {
+                                    setRadius(20)
+                                }
+                            renderer = barChartRender
+                        }
+
+                        fun setData(barData: List<ChartData>) {
+                            val values = mutableListOf<BarEntry>()
+                            barData.forEachIndexed { index, chartData ->
+                                values.add(BarEntry(index.toFloat(), chartData.value))
                             }
-                        renderer = barChartRender
-                    }
 
-                    fun setData(barData: List<ChartData>) {
-                        val values = mutableListOf<BarEntry>()
-                        barData.forEachIndexed { index, chartData ->
-                            values.add(BarEntry(index.toFloat(), chartData.value))
-                        }
+                            val barDataSet = BarDataSet(values, "").apply {
+                                setDrawValues(false)
+                                //차트 색
+                                val colors = ArrayList<Int>()
+                                colors.add(Color.argb(55, 31, 117, 60));
+                                colors.add(Color.argb(55, 31, 117, 60));
+                                colors.add(Color.argb(55, 31, 117, 60));
+                                colors.add(Color.argb(55, 31, 117, 60));
+                                colors.add(Color.argb(55, 31, 117, 60));
+                                colors.add(Color.argb(55, 31, 117, 60));
+                                colors.add(Color.argb(200, 31, 117, 60));
+                                setColors(colors)
 
-                        val barDataSet = BarDataSet(values, "").apply {
-                            setDrawValues(false)
-                            //차트 색
-                            val colors = ArrayList<Int>()
-                            colors.add(Color.argb(55, 31, 117, 60));
-                            colors.add(Color.argb(55, 31, 117, 60));
-                            colors.add(Color.argb(55, 31, 117, 60));
-                            colors.add(Color.argb(55, 31, 117, 60));
-                            colors.add(Color.argb(55, 31, 117, 60));
-                            colors.add(Color.argb(55, 31, 117, 60));
-                            colors.add(Color.argb(200, 31, 117, 60));
-                            setColors(colors)
-
-                            //투명,불투명
-                            highLightAlpha = 0
-                        }
-                        //data 클릭 시 분으로 나오는 커스텀
-                        barDataSet.valueFormatter = object : ValueFormatter() {
-                            private val mFormat: DecimalFormat = DecimalFormat("###")
-                            fun getFormattedValue(
-                                value: Int,
-                                entry: Entry,
-                                dataSetIndex: Int,
-                                viewPortHandler: ViewPortHandler,
-                            ): String {
-                                return mFormat.format(value) + "분"
+                                //투명,불투명
+                                highLightAlpha = 0
                             }
-                        }
+                            //data 클릭 시 분으로 나오는 커스텀
+                            barDataSet.valueFormatter = object : ValueFormatter() {
+                                private val mFormat: DecimalFormat = DecimalFormat("###")
+                                fun getFormattedValue(
+                                    value: Int,
+                                    entry: Entry,
+                                    dataSetIndex: Int,
+                                    viewPortHandler: ViewPortHandler,
+                                ): String {
+                                    return mFormat.format(value) + "분"
+                                }
+                            }
 
-                        //막대 그래프 너비 설정
-                        val dataSets = mutableListOf(barDataSet)
-                        val data = BarData(dataSets as List<IBarDataSet>?).apply {
+                            //막대 그래프 너비 설정
+                            val dataSets = mutableListOf(barDataSet)
+                            val data = BarData(dataSets as List<IBarDataSet>?).apply {
 //                         setValueTextSize(30F)
-                            barWidth = 0.3F
-                        }
-                        //애니메이션 효과 0.1초
-                        with(chart) {
-                            animateY(1000)
-                            xAxis.apply {
-                                position = XAxis.XAxisPosition.BOTTOM
-                                setDrawGridLines(false)
-                                //그래프
-                                textColor = R.color.colorBlack
-                                //월 ~ 일
-                                valueFormatter = object : ValueFormatter() {
-                                    override fun getFormattedValue(value: Float): String {
-                                        return barData[value.toInt()].date
+                                barWidth = 0.3F
+                            }
+                            //애니메이션 효과 0.1초
+                            with(chart) {
+                                animateY(1000)
+                                xAxis.apply {
+                                    position = XAxis.XAxisPosition.BOTTOM
+                                    setDrawGridLines(false)
+                                    //그래프
+                                    textColor = R.color.colorBlack
+                                    //월 ~ 일
+                                    valueFormatter = object : ValueFormatter() {
+                                        override fun getFormattedValue(value: Float): String {
+                                            return barData[value.toInt()].date
+                                        }
                                     }
                                 }
-                            }
-                            //차트 왼쪽 축, Y방향 ( 수치 최소값,최대값 )
-                            axisRight.apply {
-                                //아래,왼쪽 제목 색깔
-                                textColor = R.color.black
-                                setDrawAxisLine(false) //격자
-                                //그래프 가로 축,선 (점선으로 변경)
-                                gridColor = R.color.black
-                                //cnr wjatjs
-                                gridLineWidth = 0.5F
-                                //선 길이, 조각 사이의 공간, 위상
-                                enableGridDashedLine(5f, 5f, 5f)
+                                //차트 왼쪽 축, Y방향 ( 수치 최소값,최대값 )
+                                axisRight.apply {
+                                    //아래,왼쪽 제목 색깔
+                                    textColor = R.color.black
+                                    setDrawAxisLine(false) //격자
+                                    //그래프 가로 축,선 (점선으로 변경)
+                                    gridColor = R.color.black
+                                    //cnr wjatjs
+                                    gridLineWidth = 0.5F
+                                    //선 길이, 조각 사이의 공간, 위상
+                                    enableGridDashedLine(5f, 5f, 5f)
 
-                                var count = 0
-                                barData.forEachIndexed { index, chartData ->
-                                    while (chartData.value > axisMaximum) {
-                                        count++
-                                        if (chartData.value > axisMaximum) {
-                                            axisMaximum += 1F
-                                        } else {
-                                            axisMaximum = 3F
+                                    var count = 0
+                                    barData.forEachIndexed { index, chartData ->
+                                        while (chartData.value > axisMaximum) {
+                                            count++
+                                            if (chartData.value > axisMaximum) {
+                                                axisMaximum += 1F
+                                            } else {
+                                                axisMaximum = 3F
+                                            }
+                                        }
+                                    }
+
+                                    granularity = 1F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                                    axisMinimum = 0F
+//                              axisMaximum = 3F
+                                    //y축 제목 커스텀
+                                    valueFormatter = object : ValueFormatter() {
+                                        private val mFormat: DecimalFormat = DecimalFormat("###")
+                                        override fun getFormattedValue(value: Float): String {
+                                            return mFormat.format(value) + "번"
                                         }
                                     }
                                 }
 
-                                granularity = 1F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
-                                axisMinimum = 0F
-//                              axisMaximum = 3F
-                                //y축 제목 커스텀
-                                valueFormatter = object : ValueFormatter() {
-                                    private val mFormat: DecimalFormat = DecimalFormat("###")
-                                    override fun getFormattedValue(value: Float): String {
-                                        return mFormat.format(value) + "번"
-                                    }
-                                }
-                            }
+                                //차트 오른쪽 축, Y방향 false처리, 최소,최대
+                                axisLeft.apply {
+                                    isEnabled = false
+                                    //그래프 가로 축,선 (점선으로 변경)
+                                    gridColor = R.color.black
 
-                            //차트 오른쪽 축, Y방향 false처리, 최소,최대
-                            axisLeft.apply {
-                                isEnabled = false
-                                //그래프 가로 축,선 (점선으로 변경)
-                                gridColor = R.color.black
-
-                                var count = 0
-                                barData.forEachIndexed { index, chartData ->
-                                    while (chartData.value > axisMaximum) {
-                                        count++
-                                        if (chartData.value > axisMaximum) {
-                                            axisMaximum += 1F
-                                        } else {
-                                            axisMaximum = 3F
+                                    var count = 0
+                                    barData.forEachIndexed { index, chartData ->
+                                        while (chartData.value > axisMaximum) {
+                                            count++
+                                            if (chartData.value > axisMaximum) {
+                                                axisMaximum += 1F
+                                            } else {
+                                                axisMaximum = 3F
+                                            }
                                         }
                                     }
-                                }
-                                granularity = 1F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
-                                axisMinimum = 0F
+                                    granularity = 1F //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                                    axisMinimum = 0F
 //                              axisMaximum = 3F
-                            }
+                                }
 //                          notifyDataSetChanged()
-                            this.data = data
-                            invalidate()
+                                this.data = data
+                                invalidate()
+                            }
                         }
+                        setData(listData)
+
+                        val day: TextView = rootView.findViewById(R.id.course_bottom_title_text_day)
+                        day.setText(textformatterString)
+                        val time: TextView =
+                            rootView.findViewById(R.id.course_bottom_title_text_time)
+                        time.setText(courseformatterString)
+
+                        val miniTitleTime: Int = result6!!.toInt()
+                        val miniTitle: TextView = rootView.findViewById(R.id.course_mini_title)
+                        miniTitle.setText(miniTitleTime.toString())
+
+                        val AllCourseCount: TextView =
+                            rootView.findViewById(R.id.bottom_sheet_courseAllCount)
+                        AllCourseCount.setText(sum.toString())
+
+                        val courseUserName: TextView = rootView.findViewById(R.id.course_name)
+                        setUserInfo(courseUserName)
                     }
-                    setData(listData)
-
-                    val day: TextView = rootView.findViewById(R.id.course_bottom_title_text_day)
-                    day.setText(textformatterString)
-                    val time: TextView = rootView.findViewById(R.id.course_bottom_title_text_time)
-                    time.setText(courseformatterString)
-
-                    val miniTitleTime: Int = result6!!.toInt()
-                    val miniTitle: TextView = rootView.findViewById(R.id.course_mini_title)
-                    miniTitle.setText(miniTitleTime.toString())
-
-                    val AllCourseCount: TextView =
-                        rootView.findViewById(R.id.bottom_sheet_courseAllCount)
-                    AllCourseCount.setText(sum.toString())
-
-                    val courseUserName: TextView = rootView.findViewById(R.id.course_name)
-                    setUserInfo(courseUserName)
                 }
-            }
 
-            override fun onFailure(call: Call<chartData>, t: Throwable) {
-                Log.d("error", t.message.toString())
-            }
-        })
-    }
-
+                override fun onFailure(call: Call<chartData>, t: Throwable) {
+                    Log.d("error", t.message.toString())
+                }
+            })
+        }
+//공유 버튼 제거
+        val remove: View =
+            rootView.findViewById(R.id.course_share_button_layout)
+//        remove.visibility = View.GONE
         val button: Button = rootView.findViewById(R.id.course_button_screenshot)
+
+        val isClickOn : Boolean = false
 
         button.setOnClickListener {
             when (requestPermissions()) {
-                true -> Instacapture.capture(this.requireActivity(),
+                true ->
+                    Instacapture.capture(this.requireActivity(),
                     object : SimpleScreenCapturingListener() {
                         override fun onCaptureComplete(captureview: Bitmap) {
                             val capture: LinearLayout =
                                 requireView().findViewById(R.id.courseclear) as LinearLayout
                             val day = SimpleDateFormat("yyyyMMddHHmmss")
                             val date = Date()
-                            //공유 버튼 제거
-                            val remove: View =
-                                rootView.findViewById(R.id.course_share_button_layout)
-                            remove.visibility = View.GONE
                             capture.buildDrawingCache()
                             val captureview: Bitmap = capture.getDrawingCache()
                             val uri = saveImageExternal(captureview)
@@ -317,8 +321,7 @@ class CourseClearFragment : Fragment() {
                                 shareImageURI(uri)
                             } ?: showError()
                         }
-                    },
-                    course_button_screenshot)
+                    }, course_button_screenshot)
                 else -> showError()
             }
         }
@@ -375,12 +378,12 @@ class CourseClearFragment : Fragment() {
         return uri
     }
 
-
+    //공유하기 (intent)  //uri:캡처이미
     fun shareImageURI(uri: Uri) {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
-            type = "message/rfc822"
+            type = "message/*"
         }
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
@@ -395,7 +398,7 @@ class CourseClearFragment : Fragment() {
         val userValidationServer: UserService = userValidation.create(UserService::class.java)
 
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
-            Log.d("UserKey-------","$it")
+            Log.d("UserKey-------", "$it")
             userValidationServer.getUserInfo(it).enqueue(object : Callback<UserValidationInfo> {
                 override fun onResponse(
                     call: Call<UserValidationInfo>,
