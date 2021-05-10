@@ -21,9 +21,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.MainActivityViewModel
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
 import com.example.ddubuck.data.mypagechart.chartData
+import com.example.ddubuck.login.UserService
+import com.example.ddubuck.login.UserValidationInfo
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -47,6 +52,8 @@ import kotlinx.android.synthetic.main.fragment_walk_time.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -85,12 +92,14 @@ class WalkTimeFragment : Fragment() {
 
     private lateinit var chart: BarChart
 
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        mainViewModel.toolbarTitle.value = "산책 시간"
         val rootView: View = inflater.inflate(R.layout.fragment_walk_time, container, false)
 
         RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
@@ -271,8 +280,9 @@ class WalkTimeFragment : Fragment() {
                     val miniTitle: TextView = rootView.findViewById(R.id.time_mini_title)
                     miniTitle.setText(miniTitleTime.toString())
 
-                    val titleName: TextView = rootView.findViewById(R.id.time_name)
-                    titleName.setText(timeTitleName.toString())
+                    val titleUserName: TextView = rootView.findViewById(R.id.time_name)
+
+                    setUserInfo(titleUserName)
                 }
             }
 
@@ -281,30 +291,34 @@ class WalkTimeFragment : Fragment() {
             }
         })
 
-        val button : Button = rootView.findViewById(R.id.time_button_screenshot)
+        val button: Button = rootView.findViewById(R.id.time_button_screenshot)
         button.setOnClickListener {
             when (requestPermissions()) {
-                true -> takeAndShareScreenShot()
+                true -> Instacapture.capture(this.requireActivity(),
+                    object : SimpleScreenCapturingListener() {
+                        override fun onCaptureComplete(bitmap: Bitmap) {
+                            val capture: LinearLayout =
+                                requireView().findViewById(R.id.walktime) as LinearLayout
+                            val day = SimpleDateFormat("yyyyMMddHHmmss")
+                            val date = Date()
+                            val remove: View = rootView.findViewById(R.id.time_share_button_layout)
+                            remove.visibility = View.GONE
+                            capture.buildDrawingCache()
+                            capture.removeViewInLayout(rootView.findViewById(R.id.time_share_button_layout))
+                            val captureview: Bitmap = capture.getDrawingCache()
+
+                            val uri = saveImageExternal(captureview)
+                            uri?.let {
+                                shareImageURI(uri)
+                            } ?: showError()
+                        }
+                    },
+                    time_button_screenshot)
                 else -> showError()
             }
         }
-        return rootView
-    }
 
-    private fun takeAndShareScreenShot() {
-        Instacapture.capture(this.requireActivity(), object : SimpleScreenCapturingListener() {
-            override fun onCaptureComplete(captureview: Bitmap) {
-                val capture: LinearLayout = requireView().findViewById(R.id.walktime_sheet) as LinearLayout
-                val day = SimpleDateFormat("yyyyMMddHHmmss")
-                val date = Date()
-                capture.buildDrawingCache()
-                val captureview : Bitmap = capture.getDrawingCache()
-                val uri = saveImageExternal(captureview)
-                uri?.let {
-                    shareImageURI(uri)
-                } ?: showError()
-            }
-        }, time_button_screenshot)
+        return rootView
     }
 
     private fun showError() {
@@ -330,7 +344,7 @@ class WalkTimeFragment : Fragment() {
 
                 override fun onPermissionRationaleShouldBeShown(
                     permission: PermissionRequest,
-                    token: PermissionToken
+                    token: PermissionToken,
                 ) {
                     token.continuePermissionRequest()
                 }
@@ -339,15 +353,18 @@ class WalkTimeFragment : Fragment() {
     }
 
     fun saveImageExternal(image: Bitmap): Uri? {
-        val v : LinearLayout = requireView().findViewById(R.id.walktime_sheet) as LinearLayout
+        val v: LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
         var uri: Uri? = null
         try {
             //저장할 폴더 setting
-            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS), "Walking-Time-Chart.png")
+            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS),
+                "Walking-Time-Chart.png")
             val stream = FileOutputStream(file)
             image.compress(Bitmap.CompressFormat.PNG, 90, stream)
             stream.close()
-            uri = FileProvider.getUriForFile(this.requireContext(), this.requireActivity().packageName + ".provider", file)
+            uri = FileProvider.getUriForFile(this.requireContext(),
+                this.requireActivity().packageName + ".provider",
+                file)
         } catch (e: IOException) {
             Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
         }
@@ -355,7 +372,7 @@ class WalkTimeFragment : Fragment() {
     }
 
 
-    fun shareImageURI(uri: Uri){
+    fun shareImageURI(uri: Uri) {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
@@ -363,6 +380,31 @@ class WalkTimeFragment : Fragment() {
         }
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
+    }
+
+    private fun setUserInfo(userName: TextView) {
+        val userValidation: Retrofit = Retrofit.Builder()
+            .baseUrl("http://3.37.6.181:3000/get/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val userValidationServer: UserService = userValidation.create(UserService::class.java)
+
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            userValidationServer.getUserInfo(it).enqueue(object : Callback<UserValidationInfo> {
+                override fun onResponse(
+                    call: Call<UserValidationInfo>,
+                    response: Response<UserValidationInfo>,
+                ) {
+                    val name = response.body()?.name
+                    userName.text = name.toString()
+                }
+
+                override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {
+                    Log.e("Error", "user 정보 가져오기 실패")
+                }
+            })
+        }
     }
 }
 
