@@ -4,11 +4,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/edit_user_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="30dp"
-    android:layout_gravity="center_horizontal"
+    android:fillViewport="true"
+    android:id="@+id/edit_user_info"
     android:background="@color/white"
     tools:ignore="ScrollViewCount">
 
@@ -248,7 +247,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginStart="20dp"
             android:layout_marginTop="25dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="30dp"
             android:layout_below="@+id/pet_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
