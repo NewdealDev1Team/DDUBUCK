@@ -261,15 +261,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <Switch
+            <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/pet_switch"
-                android:thumbTint="#3DAB5B"
-                android:trackTint="#3DAB5B"
+                app:useMaterialThemeColors="true"
+                app:theme="@style/SwitchStyle"
                 android:layout_marginRight="20dp"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
         </RelativeLayout>
 
 

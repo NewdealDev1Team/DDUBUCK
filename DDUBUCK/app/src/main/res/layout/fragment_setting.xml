@@ -23,12 +23,10 @@
             android:text="푸쉬 알림"
             android:textSize="16dp"
             android:textColor="@color/black" />
-        <Switch
-
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:layout_marginRight="16dp"
             android:id="@+id/push_switch"
-            android:thumbTint="#3DAB5B"
-            android:trackTint="#3DAB5B"
+            android:theme="@style/SwitchStyle"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
