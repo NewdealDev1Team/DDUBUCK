@@ -149,11 +149,11 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                     dustString = "보통"
                 }
                 in 101..250 -> {
-                    weatherScore += 2
+                    weatherScore -= 3
                     dustString = "나쁨"
                 }
                 in 251..500 -> {
-                    weatherScore += 1
+                    weatherScore -= 4
                     dustString = "아주 나쁨"
                 }
 
@@ -181,7 +181,7 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                 })
 
             }
-            in 6..9 -> {
+            in 8..9 -> {
                 weatherText.text = "산책하기 좋아요!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
                 spanText.setSpan(
@@ -205,7 +205,7 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
 
 
             }
-            in 3..5 -> {
+            else -> {
                 weatherText.text = "주의하며 산책해요."
 
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
