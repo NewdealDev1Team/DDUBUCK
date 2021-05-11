@@ -4,13 +4,11 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.hardware.*
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -18,6 +16,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.RetrofitClient
+import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.data.publicdata.PublicData
 import com.example.ddubuck.sharedpref.UserSharedPreferences
@@ -27,7 +26,6 @@ import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
@@ -190,10 +188,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         else
             WALK_FREE
 
-        //RetrofitService().createPost(getWalkResult())
+        val walkRecord = getWalkResult()
+
+        RetrofitService().createRecord(userKey, walkRecord)
+
+        //여기서 createdDate 받고 경로기록으로 ㄱㄱ
 
         parentFragmentManager.beginTransaction()
-                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(),userKey,"", walkTag),
+                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
                 .commit()
 
@@ -301,7 +303,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).show()
+                                    CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner)
+                                        .show()
                                     true
                                 }
                                 markers["petCafe"] = marker
@@ -315,7 +318,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner).show()
+                                    CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner)
+                                        .show()
                                     true
                                 }
                                 markers["carFreeRoad"] = marker
@@ -329,7 +333,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener{
-                                    CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).show()
+                                    CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner)
+                                        .show()
                                     true
                                 }
                                 markers["cafe"] = marker
@@ -343,7 +348,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner).show()
+                                    CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner)
+                                        .show()
                                     true
                                 }
                                 markers["petRestaurant"] = marker
@@ -357,7 +363,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("공공쉼터",i.name, owner).show()
+                                    CommonDialog("공공쉼터",i.name, owner)
+                                        .show()
                                     true
                                 }
                                 markers["publicRestArea"] = marker
@@ -371,7 +378,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("공공화장실",i.name, owner).show()
+                                    CommonDialog("공공화장실",i.name, owner)
+                                        .show()
                                     true
                                 }
                                 markers["publicToilet"] = marker

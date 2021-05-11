@@ -1,27 +1,31 @@
 package com.example.ddubuck.ui.home
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import com.example.ddubuck.data.RetrofitService
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.databinding.DialogCourseAddBinding
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetNumberFormat
 import com.example.ddubuck.ui.share.ImageProviderSelectDialog
 import com.example.ddubuck.ui.share.ImageProviderSheetViewModel
+import java.io.File
 
 class CourseAddDialog(private val walkRecord: WalkRecord,
                       private val userKey : String,
-                      private val createdDate : String,
                       private val owner: Activity) : DialogFragment() {
     private lateinit var binding : DialogCourseAddBinding
     private val imageProviderSheetViewModel : ImageProviderSheetViewModel by activityViewModels()
@@ -33,12 +37,13 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
     ): View? {
         binding = DialogCourseAddBinding.inflate(inflater)
         val numberFormatter = BottomSheetNumberFormat()
+        var bitmapUri : Uri? = null
         binding.dialogCourseAddTimeTv.text = numberFormatter.getFormattedTime(walkRecord.walkTime)
         binding.dialogCourseAddDistanceTv.text = numberFormatter.getFormattedDistance(walkRecord.distance)
         binding.dialogCourseAddElevationTv.text = numberFormatter.getFormattedAltitude(walkRecord.altitude)
 
         binding.dialogCourseAddConfirmButton.setOnClickListener {
-            var isValid : Boolean = true
+            var isValid = true
             if(binding.dialogCourseAddTitle.text.isEmpty()) {
                 Toast.makeText(owner, "제목을 입력해주세요!", Toast.LENGTH_SHORT).show()
                 isValid = false
@@ -54,9 +59,13 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
             }
 
             if(isValid) {
-                val bitmap = binding.dialogCourseAddImageContainer.drawable
-                val title = binding.dialogCourseAddTitle
-                val description = binding.dialogCourseAddEditText.text
+                val title = binding.dialogCourseAddTitle.text.toString()
+                val description = binding.dialogCourseAddEditText.text.toString()
+                val bitmap = getRealPathFromURI(bitmapUri!!)!!
+
+                RetrofitService().addAdditionalInfo(userKey,title,description,bitmap)
+
+                dismiss()
             }
 
         }
@@ -70,6 +79,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
         }
 
         imageProviderSheetViewModel.imageUri.observe(viewLifecycleOwner, {v ->
+            bitmapUri = v
             val srcBmp : Bitmap = ImageDecoder.decodeBitmap(
                 ImageDecoder.createSource(owner.contentResolver, v)
             ) { decoder: ImageDecoder, _: ImageDecoder.ImageInfo?, _: ImageDecoder.Source? ->
@@ -79,5 +89,22 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
             binding.dialogCourseAddImageContainer.setImageBitmap(srcBmp)
         })
         return binding.root
+    }
+
+    @SuppressLint("Recycle")
+    private fun getRealPathFromURI(uri: Uri): String? {
+        val buildName = Build.MANUFACTURER
+        if (buildName.equals("Xiaomi")) {
+            return uri.path
+        }
+        var columnIndex = 0
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = activity?.contentResolver?.query(uri, proj, null, null, null)
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            }
+        }
+        return cursor?.getString(columnIndex)
     }
 }

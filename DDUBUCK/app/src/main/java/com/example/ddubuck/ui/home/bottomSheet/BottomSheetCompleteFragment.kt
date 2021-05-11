@@ -26,7 +26,6 @@ class BottomSheetCompleteFragment(
     private val owner: Activity,
     private val walkRecord: WalkRecord,
     private val userKey : String,
-    private val createdDate : String,
     private val walkType: Int,
 ) : Fragment() {
 
@@ -73,7 +72,7 @@ class BottomSheetCompleteFragment(
             buttonLayout.removeView(addToMyPathButton)
         } else {
             addToMyPathButton.setOnClickListener{
-                val dialog = CourseAddDialog(walkRecord,userKey,createdDate, owner)
+                val dialog = CourseAddDialog(walkRecord,userKey,owner)
                 dialog.show(parentFragmentManager, MainActivity.HOME_TAG)
             }
         }

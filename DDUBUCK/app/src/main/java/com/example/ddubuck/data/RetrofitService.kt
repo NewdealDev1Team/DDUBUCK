@@ -1,6 +1,7 @@
 package com.example.ddubuck.data
 
 
+import android.graphics.Bitmap
 import android.util.Log
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.data.publicdata.PublicData
@@ -8,11 +9,15 @@ import com.example.ddubuck.data.publicdata.PublicDataAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.naver.maps.geometry.LatLng
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 
 object RetrofitClient{
     private const val BASE_URL = "http://3.37.6.181:3000/"
@@ -48,13 +53,15 @@ object RetrofitClient{
 class RetrofitService {
 
 
-    fun createRecordPost(walkRecord: WalkRecord){
+    fun createRecord(userKey : String, walkRecord: WalkRecord){
         val map = hashMapOf<String, Any>()
+        map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
         map["speed"] = walkRecord.speed
         map["stepCount"] = walkRecord.stepCount
         map["distance"] = walkRecord.distance
         map["path"] = Gson().toJson(walkRecord.pathToMap())
+        map["calorie"] = walkRecord.getCalorie(65.0)
 
         RetrofitClient.mapInstance.createPost(map)
                 .enqueue(object : Callback<WalkRecord> {
@@ -63,7 +70,7 @@ class RetrofitService {
                 response: Response<WalkRecord>
             ) {
                 val responseText = "Response code: ${response.code()}\n"+
-                    "body: ${response.body()}\n"
+                    "body: ${response.body()}\n" + response.message() + "${response.headers()}"
                 println(responseText)
             }
 
@@ -71,6 +78,37 @@ class RetrofitService {
                 Log.e("ERROR", t.localizedMessage)
             }
         })
+    }
+
+    fun addAdditionalInfo(userKey:String,title:String, description:String, imgPath: String) {
+        val file = File(imgPath)
+        var fileName = imgPath.replace("@", "").replace(".", "")
+
+        fileName = "$fileName.png"
+
+        val requestBody: RequestBody = RequestBody.create(MediaType.parse("image/*"), file)
+        val imgFile: MultipartBody.Part =
+            MultipartBody.Part.createFormData("imgFile", fileName, requestBody)
+
+        RetrofitClient.mapInstance.addAdditionalInfo(
+            userKey,
+            title,
+            description,
+            imgFile,
+        ).enqueue(object : Callback<String> {
+                override fun onResponse(
+                    call: Call<String>,
+                    response: Response<String>
+                ) {
+                    val responseText = "Response code: ${response.code()}\n"+
+                            "body: ${response.body()}\n" + response.message() + "${response.headers()}"
+                    println(responseText)
+                }
+
+                override fun onFailure(call: Call<String>, t: Throwable) {
+                    Log.e("ERROR", t.localizedMessage)
+                }
+            })
     }
 
 }

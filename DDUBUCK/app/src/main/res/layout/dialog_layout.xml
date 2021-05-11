@@ -6,8 +6,6 @@
     android:layout_width="280dp"
     android:layout_height="wrap_content"
     app:cardCornerRadius="10dp">
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"
             android:text="제목"
             android:textColor="@color/black"
             android:textSize="18sp"
