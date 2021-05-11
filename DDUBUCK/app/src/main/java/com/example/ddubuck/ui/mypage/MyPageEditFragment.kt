@@ -65,6 +65,7 @@ import kotlin.collections.ArrayList
 class MyPageEditFragment : Fragment() {
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
+    private val weatherViewModel: WeatherViewModel by activityViewModels()
     private lateinit var profileImageViewModel: ProfileImageViewModel
     private var selectedImage: Uri? = null
 
@@ -282,8 +283,16 @@ class MyPageEditFragment : Fragment() {
 
     private fun savePetInfo(@SuppressLint("UseSwitchCompatOrMaterialCode") petSwitcher: Switch) {
         petSwitcher.setOnCheckedChangeListener { _, isChecked ->
-            context?.let { UserSharedPreferences.setPet(it, isChecked) }
+            if (isChecked) {
+                context?.let { UserSharedPreferences.setPet(it, true) }
+                weatherViewModel.setPetValue(true)
+            } else {
+                weatherViewModel.setPetValue(false)
+                context?.let { UserSharedPreferences.setPet(it, false) }
+
+            }
         }
+
     }
 
     private fun setPetInfo(@SuppressLint("UseSwitchCompatOrMaterialCode") petSwitcher: Switch) {

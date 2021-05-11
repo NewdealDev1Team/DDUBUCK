@@ -43,7 +43,7 @@ class WeatherViewModel : ViewModel() {
     }
 
     val isPetYes = MutableLiveData<Boolean>()
-    fun getPetValue(value: Boolean) {
+    fun setPetValue(value: Boolean) {
         isPetYes.value = value
     }
 
