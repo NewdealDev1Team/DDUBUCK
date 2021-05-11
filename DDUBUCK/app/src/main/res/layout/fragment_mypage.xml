@@ -133,7 +133,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/walking_time_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_weight="1"
@@ -174,7 +174,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/course_complete_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
@@ -216,7 +216,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/calorie_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_weight="1"
