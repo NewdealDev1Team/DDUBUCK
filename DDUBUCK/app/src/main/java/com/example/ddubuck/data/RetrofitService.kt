@@ -17,6 +17,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.File
 
 object RetrofitClient{
@@ -34,6 +35,17 @@ object RetrofitClient{
 
         retrofit.create(MapAPI::class.java)
     }
+    //ScalarsConverterFactory.create()
+
+    val recordInstance: MapAPI by lazy {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .build()
+
+        retrofit.create(MapAPI::class.java)
+    }
+
 
     val publicDataInstance : PublicDataAPI by lazy {
         val gson = GsonBuilder()
@@ -92,7 +104,7 @@ class RetrofitService {
 
         Log.d("DATA", "$title, $description, $imgPath, ${imgFile.body()}")
 
-        RetrofitClient.mapInstance.addAdditionalInfo(
+        RetrofitClient.recordInstance.addAdditionalInfo(
             userKey,
             title,
             description,

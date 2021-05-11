@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.data.RetrofitService
@@ -23,7 +22,7 @@ import com.example.ddubuck.databinding.DialogCourseAddBinding
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetNumberFormat
 import com.example.ddubuck.ui.share.ImageProviderSelectDialog
 import com.example.ddubuck.ui.share.ImageProviderSheetViewModel
-import java.io.File
+import java.lang.IllegalArgumentException
 
 class CourseAddDialog(private val walkRecord: WalkRecord,
                       private val userKey : String,
@@ -62,10 +61,9 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
             if(isValid) {
                 val title = binding.dialogCourseAddTitle.text.toString()
                 val description = binding.dialogCourseAddEditText.text.toString()
-                //TODO 카메라 사용할때는 다른방식으로 uri 받아오기
-                val bitmap = getRealPathFromURI(bitmapUri!!).toString()
+                val imageUri = getRealPathFromURI(bitmapUri!!)!!
 
-                RetrofitService().addAdditionalInfo(userKey,title,description,bitmap)
+                //RetrofitService().addAdditionalInfo(userKey,title,description,imageUri)
 
                 dismiss()
             }
@@ -105,7 +103,12 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
         val cursor = activity?.contentResolver?.query(uri, proj, null, null, null)
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                try {
+                    columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                } catch (e:IllegalArgumentException) {
+
+                    return uri.path
+                }
             }
         }
         return cursor?.getString(columnIndex)

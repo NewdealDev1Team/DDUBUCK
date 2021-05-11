@@ -5,16 +5,20 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -22,10 +26,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import com.example.ddubuck.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
-import java.io.OutputStream
+import java.io.*
 
 class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogFragment() {
     private val imageProviderSheetViewModel : ImageProviderSheetViewModel by activityViewModels()
@@ -76,6 +77,7 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
             if (resultCode == AppCompatActivity.RESULT_OK) {
                 val imageUri : Uri = when(requestCode) {
                     REQUEST_IMAGE_CAPTURE -> {
+                        galleryAddPic()
                         cameraPhotoUri
                     }
                     REQUEST_IMAGE_SELECT -> {
@@ -93,15 +95,24 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
     @Throws(IOException::class)
     private fun createImageFile(): File {
         val storageDir: File = owner.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        storageDir.mkdirs()
         return File.createTempFile(
             "DDUBUCK_${System.currentTimeMillis()}", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
             currentPhotoPath = absolutePath
+
         }
     }
 
+    private fun galleryAddPic() {
+        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
+            val f = File(currentPhotoPath)
+            mediaScanIntent.data = Uri.fromFile(f)
+            owner.sendBroadcast(mediaScanIntent)
+        }
+    }
 
 
     companion object{
