@@ -190,7 +190,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         val walkRecord = getWalkResult()
 
-        RetrofitService().createRecord(userKey, walkRecord)
+        //RetrofitService().createRecord(userKey, walkRecord)
 
         //여기서 createdDate 받고 경로기록으로 ㄱㄱ
 

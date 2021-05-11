@@ -90,6 +90,8 @@ class RetrofitService {
         val imgFile: MultipartBody.Part =
             MultipartBody.Part.createFormData("imgFile", fileName, requestBody)
 
+        Log.d("DATA", "$title, $description, $imgPath, ${imgFile.body()}")
+
         RetrofitClient.mapInstance.addAdditionalInfo(
             userKey,
             title,

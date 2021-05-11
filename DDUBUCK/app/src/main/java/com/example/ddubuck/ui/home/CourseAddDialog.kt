@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,7 +62,8 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
             if(isValid) {
                 val title = binding.dialogCourseAddTitle.text.toString()
                 val description = binding.dialogCourseAddEditText.text.toString()
-                val bitmap = getRealPathFromURI(bitmapUri!!)!!
+                //TODO 카메라 사용할때는 다른방식으로 uri 받아오기
+                val bitmap = getRealPathFromURI(bitmapUri!!).toString()
 
                 RetrofitService().addAdditionalInfo(userKey,title,description,bitmap)
 
@@ -93,6 +95,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
 
     @SuppressLint("Recycle")
     private fun getRealPathFromURI(uri: Uri): String? {
+        Log.e("uri", "${uri.path}")
         val buildName = Build.MANUFACTURER
         if (buildName.equals("Xiaomi")) {
             return uri.path
