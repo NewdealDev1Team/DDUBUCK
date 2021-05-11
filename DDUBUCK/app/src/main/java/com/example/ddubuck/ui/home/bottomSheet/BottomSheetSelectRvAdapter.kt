@@ -1,5 +1,6 @@
 package com.example.ddubuck.ui.home.bottomSheet
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
@@ -41,6 +43,7 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                 itemView.setOnClickListener{selectItem(fm,
                         CourseItem(
                                 true,
+                                Uri.parse("https://newsimg.hankookilbo.com/cms/articlerelease/2019/04/29/201904291390027161_3.jpg"),
                                 "자유산책",
                                 "자유산책입니다",
                                 WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)),)}
@@ -51,7 +54,15 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                 itemView.setOnClickListener{selectItem(fm,i)}
                 title?.text = i.title
                 body?.text = i.description
-                picture?.setImageResource(R.mipmap.ic_launcher)
+                /*
+                activity?.let { it1 ->
+                        Glide.with(it1).load(profileImageURL).into(profileImage)
+                    }
+                 */
+                picture?.let { v ->
+                    Glide.with(itemView).load(i.imgFile).into(v)
+                }
+                picture?.setImageURI(i.imgFile)
             }
         }
 

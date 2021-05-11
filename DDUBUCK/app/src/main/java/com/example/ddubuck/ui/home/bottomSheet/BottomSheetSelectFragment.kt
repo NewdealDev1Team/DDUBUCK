@@ -1,6 +1,7 @@
 package com.example.ddubuck.ui.home.bottomSheet
 
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -53,18 +54,21 @@ class BottomSheetSelectFragment : Fragment() {
         private val fooArray = arrayListOf(
             CourseItem(
                 true,
+                Uri.parse("https://newsimg.hankookilbo.com/cms/articlerelease/2019/04/29/201904291390027161_3.jpg"),
                 "자유산책",
                 "자유산책입니다",
                 WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)
             ),
             CourseItem(
                 false,
+                Uri.parse("https://newsimg.hankookilbo.com/cms/articlerelease/2019/04/29/201904291390027161_3.jpg"),
                 "코스산책",
                 "코스산책입니다",
                 WalkRecord(fooRoute, fooAltitude.average(), fooSpeed.average(), 325, 5683, 900.0)
             ),
             CourseItem(
                     false,
+                Uri.parse("https://newsimg.hankookilbo.com/cms/articlerelease/2019/04/29/201904291390027161_3.jpg"),
                     "성산로4안길 테스트 코스",
             "경사가 좀 있지만 거리는 짧은 간단한 코스입니다. ",
                     WalkRecord(

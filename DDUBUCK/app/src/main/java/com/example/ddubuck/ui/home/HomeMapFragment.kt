@@ -291,6 +291,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 RetrofitClient.publicDataInstance.getResult( locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
                     .enqueue(object : Callback<PublicData> {
                         override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
+                            println(response.body()!!.toString())
                             val publicData = response.body()!!
                             val markerHeightSize = Marker.SIZE_AUTO
                             val markerWidthSize = Marker.SIZE_AUTO

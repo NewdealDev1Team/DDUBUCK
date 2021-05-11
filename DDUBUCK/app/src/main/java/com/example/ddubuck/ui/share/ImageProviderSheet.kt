@@ -102,12 +102,12 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
             storageDir /* directory */
         ).apply {
             currentPhotoPath = absolutePath
-
         }
     }
 
     private fun galleryAddPic() {
         Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
+            Log.e("진입","asd")
             val f = File(currentPhotoPath)
             mediaScanIntent.data = Uri.fromFile(f)
             owner.sendBroadcast(mediaScanIntent)
