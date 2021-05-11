@@ -73,12 +73,14 @@ class MyPageFragment : Fragment() {
         getAllPhotos(galleryGrid)
 
         val walkingTimeButton: ConstraintLayout = myPageView.findViewById(R.id.walking_time_button)
-        val courseClearButton: ConstraintLayout = myPageView.findViewById(R.id.course_complete_button)
+        val courseClearButton: ConstraintLayout =
+            myPageView.findViewById(R.id.course_complete_button)
         val calorieButton: ConstraintLayout = myPageView.findViewById(R.id.calorie_button)
 
         val routeInfoButton: ImageView = myPageView.findViewById(R.id.user_route_info_button)
 
         setUserInfo(userName, profileImage)
+
 
         profileImage.setOnClickListener {
             mypageFragment = MyPageFragment()
@@ -98,7 +100,7 @@ class MyPageFragment : Fragment() {
         RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
             override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                 if (response.isSuccessful) {
-                    Log.d("text", "연결성공")
+
                     var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
                     val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
                     val walkingTimeButtonRecord: TextView =
@@ -124,8 +126,6 @@ class MyPageFragment : Fragment() {
             }
         })
 
-//        val backStackTag = MainActivity.MYPAGE_TAG
-//        childFragmentManager.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         // 산책 시간 버튼 onClickListener
         walkingTimeButton.setOnClickListener {
             walkTimeFramgnet = WalkTimeFragment()
@@ -145,7 +145,8 @@ class MyPageFragment : Fragment() {
         }
 
         routeInfoButton.setOnClickListener {
-            val dialog = NextTimeDialog("사용자 지정 경로란?", "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
+            val dialog = NextTimeDialog("사용자 지정 경로란?",
+                "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
                 context as Activity)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
@@ -217,10 +218,12 @@ class MyPageFragment : Fragment() {
     }
 
     private fun toEditInfoPage() {
-        parentFragmentManager.beginTransaction()
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction
             .replace(R.id.scrollview_mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
+
     }
 
     private fun setUserInfo(userName: TextView, profileImage: CircleImageView) {

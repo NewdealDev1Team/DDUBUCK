@@ -6,10 +6,7 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -79,9 +76,10 @@ class MyPageEditFragment : Fragment() {
         profileImageViewModel = ProfileImageViewModel()
 
         val myPageEditView = inflater.inflate(R.layout.fragment_edit_userinfo, container, false)
+        val myPageView = inflater.inflate(R.layout.fragment_mypage, container, false)
 
-        val mypageProfileImage: CircleImageView =
-            myPageEditView.findViewById(R.id.profile_image_edit)
+        val mypageEditProfileImage: CircleImageView = myPageEditView.findViewById(R.id.profile_image_edit)
+        val mypageProfileImage : CircleImageView = myPageView.findViewById(R.id.profile_image)
 
         val mypageNickname: TextView = myPageEditView.findViewById(R.id.edit_info_name)
 
@@ -93,7 +91,7 @@ class MyPageEditFragment : Fragment() {
 
         val editButton: Button = myPageEditView.findViewById(R.id.mypage_edit_button)
 
-        val petSwitcher: Switch = myPageEditView.findViewById(R.id.pet_switch)
+        val petSwitcher: SwitchMaterial = myPageEditView.findViewById(R.id.pet_switch)
 
 
         editButton.isEnabled = false
@@ -139,14 +137,14 @@ class MyPageEditFragment : Fragment() {
         dayAutoCompleteTextView.setAdapter(dayAdapter)
 
         setUserInfo(mypageNickname,
-            mypageProfileImage,
+            mypageEditProfileImage,
             yearAutoCompleteTextView,
             monthAutoCompleteTextView,
             dayAutoCompleteTextView,
             height,
             weight)
 
-        recognizeChange(mypageProfileImage, yearAutoCompleteTextView,
+        recognizeChange( yearAutoCompleteTextView,
             monthAutoCompleteTextView,
             dayAutoCompleteTextView,
             height,
@@ -177,7 +175,7 @@ class MyPageEditFragment : Fragment() {
         setPetInfo(petSwitcher)
         savePetInfo(petSwitcher)
 
-        mypageProfileImage.setOnClickListener {
+        mypageEditProfileImage.setOnClickListener {
             openImageChooser()
         }
 
@@ -187,7 +185,7 @@ class MyPageEditFragment : Fragment() {
 
     private fun setUserInfo(
         userName: TextView,
-        mypageProfileImage: CircleImageView,
+        mypageEditProfileImage: CircleImageView,
         year: AutoCompleteTextView,
         month: AutoCompleteTextView,
         day: AutoCompleteTextView,
@@ -221,7 +219,7 @@ class MyPageEditFragment : Fragment() {
                     userName.text = name.toString()
 
                     activity?.let { it1 ->
-                        Glide.with(it1).load(profileImageUrl).into(mypageProfileImage)
+                        Glide.with(it1).load(profileImageUrl).into(mypageEditProfileImage)
                     }
 
                     year.setText(yearGet)
@@ -241,7 +239,6 @@ class MyPageEditFragment : Fragment() {
     }
 
     private fun recognizeChange(
-        profileImage: CircleImageView,
         year: AutoCompleteTextView,
         month: AutoCompleteTextView,
         day: AutoCompleteTextView,
@@ -281,7 +278,7 @@ class MyPageEditFragment : Fragment() {
 
     }
 
-    private fun savePetInfo(@SuppressLint("UseSwitchCompatOrMaterialCode") petSwitcher: Switch) {
+    private fun savePetInfo(@SuppressLint("UseSwitchCompatOrMaterialCode") petSwitcher: SwitchMaterial) {
         petSwitcher.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 context?.let { UserSharedPreferences.setPet(it, true) }
@@ -295,7 +292,7 @@ class MyPageEditFragment : Fragment() {
 
     }
 
-    private fun setPetInfo(@SuppressLint("UseSwitchCompatOrMaterialCode") petSwitcher: Switch) {
+    private fun setPetInfo(@SuppressLint("UseSwitchCompatOrMaterialCode") petSwitcher: SwitchMaterial) {
         petSwitcher.isChecked = context?.let { UserSharedPreferences.getPet(it) } == true
     }
 
@@ -365,6 +362,7 @@ class MyPageEditFragment : Fragment() {
             imageServer.sendProfileImage(userKey, body).enqueue(object : Callback<String> {
                 override fun onResponse(call: Call<String>, response: Response<String>) {
                     profileImageViewModel.setisChangedValue(true)
+
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {

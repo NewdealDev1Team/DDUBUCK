@@ -158,8 +158,7 @@ class MainActivity : AppCompatActivity() {
                             val backStackTag = MYPAGE_TAG
                             tbm.setDisplayHomeAsUpEnabled(true)
                             tb.setNavigationOnClickListener {
-                                fm.popBackStack(backStackTag,
-                                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                                 tbm.title = "마이페이지"
                             }
                         }
@@ -178,6 +177,10 @@ class MainActivity : AppCompatActivity() {
                         }
                         myPageFragment -> {
                             tbm.title = "마이페이지"
+                            fm.beginTransaction()
+                                .detach(activeFragment)
+                                .attach(myPageFragment)
+                                .commit()
                         }
                         else -> {
 
