@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, challengeFragment).hide(challengeFragment)
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
+            add(R.id.nav_main_container, settingFragment).hide(settingFragment)
         }.commit()
         activeFragment = homeFragment
         val tbm = supportActionBar
@@ -226,13 +227,11 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_settings -> {
                 val fragmentTransaction = supportFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.scrollview_mypage, settingFragment)
-                    .setReorderingAllowed(true)
+                fragmentTransaction
+                    .hide(activeFragment)
+                    .show(settingFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
-//                supportFragmentManager.beginTransaction()
-//                    .replace(R.id.scrollview_mypage, settingFragment)
-//                    .addToBackStack(MYPAGE_TAG)
-//                    .commit()
+
                 activityModel.toolbarTitle.value = "설정"
             }
         }

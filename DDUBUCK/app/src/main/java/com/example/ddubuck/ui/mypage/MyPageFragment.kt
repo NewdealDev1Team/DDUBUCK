@@ -198,7 +198,7 @@ class MyPageFragment : Fragment() {
         }
 
         val adapter = context?.let { GalleryAdapter(it, uriArr) }
-        gridView.numColumns = 4 // 한 줄에 4개씩
+        gridView.numColumns = 4 // 한 줄에 4개
         gridView.adapter = adapter
     }
 
