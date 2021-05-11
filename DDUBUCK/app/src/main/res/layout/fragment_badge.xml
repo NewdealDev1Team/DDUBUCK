@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ui.badge.BadgeFragment">
+    tools:context=".ui.badge.BadgeFragment"
+    android:overScrollMode="never">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,6 +40,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/badgeChallengeRecyclerview"
+                android:overScrollMode="never"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -85,6 +87,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/badgeAnniversaryRecyclerview"
+                android:overScrollMode="never"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -122,6 +125,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/badgeLimitRecyclerview"
+                android:overScrollMode="never"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
