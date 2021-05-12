@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -103,11 +104,18 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                 (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
 
         // 자외선 지수
-        val uvRays = uvRays.response.body.items.item[0].today
+        val uvRays = if (uvRays.response.header.resultCode != "00") {
+            "-1"
+        } else {
+            uvRays.response.body.items.item[0].today
+        }
 
         // 통합 대기 환경 지수
-        val dustInfo = dust.response.body.items[0].khaiValue
-
+        val dustInfo = if (dust.response.header.resultCode != "00") {
+            "-1"
+        } else {
+            dust.response.body.items[0].khaiValue.toString()
+        }
 
 
         var dustString = ""
@@ -155,6 +163,9 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                 in 251..500 -> {
                     weatherScore -= 4
                     dustString = "아주 나쁨"
+                }
+                else -> {
+                    dustString = "점검중"
                 }
 
             }
