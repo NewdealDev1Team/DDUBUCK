@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
@@ -44,7 +45,6 @@ class MyPageFragment : Fragment() {
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
 
-
     private lateinit var walkTimeFramgnet: WalkTimeFragment
     private lateinit var courseClearFragment: CourseClearFragment
     private lateinit var caloriesFragment: CaloriesFragment
@@ -62,7 +62,7 @@ class MyPageFragment : Fragment() {
         val profileImageEditButton: CircleImageView =
             myPageView.findViewById(R.id.profile_edit_button)
         val userName: TextView = myPageView.findViewById(R.id.user_name)
-        val stepCount: TextView = myPageView.findViewById(R.id.step_count)
+        val stepCountInMypage: TextView = myPageView.findViewById(R.id.step_count)
 
         val galleryGrid: GridView = myPageView.findViewById(R.id.gallery_grid)
         getAllPhotos(galleryGrid)
@@ -97,10 +97,10 @@ class MyPageFragment : Fragment() {
                 override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                     if (response.isSuccessful) {
                         Log.d("text", "연결성공")
-                        var setCount = response.body()?.totalStat?.get(0)?.stepCount?.toInt()
-                        val setCountRecordFormat: Int = setCount!!.toInt()
-                        val setCountRecordText: TextView = myPageView.findViewById(R.id.step_count)
-                        setCountRecordText.setText(setCount.toString())
+                        var stepCount = response.body()?.weekStat?.get(0)?.stepCount?.toInt()
+                        val setCountRecordText: TextView = stepCountInMypage //TextView
+                        setCountRecordText.setText(stepCount.toString())
+
 
                         var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
@@ -112,7 +112,7 @@ class MyPageFragment : Fragment() {
                             walkingTimeButtonRecord.setText(hour.toString()+hourName)
                         }else{
                             val miniteName : String = "분"
-                            walkingTimeButtonRecord.setText(timeRecordt6.toString()+miniteName)
+                            walkingTimeButtonRecord.setText(timeRecordt6.toString() + miniteName)
                         }
 
 
@@ -129,7 +129,7 @@ class MyPageFragment : Fragment() {
                         val calorieButtonRecord: TextView =
                             myPageView.findViewById(R.id.calorie_button_record)
                         val calorieName : String = "kcal"
-                        calorieButtonRecord.setText(calorieRecord6.toString()+calorieName)
+                        calorieButtonRecord.setText(calorieRecord6.toString() + calorieName)
                     }
                 }
 
@@ -139,25 +139,39 @@ class MyPageFragment : Fragment() {
             })
         }
 
-//        val backStackTag = MainActivity.MYPAGE_TAG
-//        childFragmentManager.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//        val backStackTag = MainActivity.MYPAGE_TAGFragmentManager
+//        childFragmentManager.popBackStack(backStackTag, .POP_BACK_STACK_INCLUSIVE)
         // 산책 시간 버튼 onClickListener
         walkingTimeButton.setOnClickListener {
             walkTimeFramgnet = WalkTimeFragment()
-            toChartWalkTimePage()
+//            supportFragmen.popBackStack(backStackTag,
+//                FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            parentFragmentManager.beginTransaction()
+                .add(R.id.scrollview_mypage,walkTimeFramgnet)
+                .remove(myPageEditFragment)
+//                .replace(R.id.scrollview_mypage, walkTimeFramgnet)
+                .addToBackStack(MainActivity.MYPAGE_TAG)
+                .commit()
         }
 
         // 코스 완주 버튼 onClickListener
         courseClearButton.setOnClickListener {
             courseClearFragment = CourseClearFragment()
-            toChartCourseClearPage()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.scrollview_mypage, courseClearFragment)
+                .addToBackStack(MainActivity.MYPAGE_TAG)
+                .commit()
         }
 
         // 칼로리 버튼 onClickListener
         calorieButton.setOnClickListener {
             caloriesFragment = CaloriesFragment()
-            toChartCaloriePage()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.scrollview_mypage, caloriesFragment)
+                .addToBackStack(MainActivity.MYPAGE_TAG)
+                .commit()
         }
+
 
         routeInfoButton.setOnClickListener {
             val dialog = NextTimeDialog("사용자 지정 경로란?",
@@ -180,13 +194,7 @@ class MyPageFragment : Fragment() {
 
         return myPageView
     }
-
-    private fun toChartWalkTimePage() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.scrollview_mypage, walkTimeFramgnet)
-            .addToBackStack(MainActivity.MYPAGE_TAG)
-            .commit()
-    }
+    //---~~~~~~~~~~~~~~~~~~~~~Mmpllika\\\\\\\\\\\\\\\\\\\\=============5%%%%%%%%%$$$$$$$
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getAllPhotos(gridView: GridView) {
@@ -216,20 +224,6 @@ class MyPageFragment : Fragment() {
         val adapter = context?.let { GalleryAdapter(it, uriArr) }
         gridView.numColumns = 4 // 한 줄에 4개씩
         gridView.adapter = adapter
-    }
-
-    private fun toChartCourseClearPage() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.scrollview_mypage, courseClearFragment)
-            .addToBackStack(MainActivity.MYPAGE_TAG)
-            .commit()
-    }
-
-    private fun toChartCaloriePage() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.scrollview_mypage, caloriesFragment)
-            .addToBackStack(MainActivity.MYPAGE_TAG)
-            .commit()
     }
 
     private fun toEditInfoPage() {

@@ -115,7 +115,7 @@ class WalkTimeFragment : Fragment() {
                             " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
 
                         var timeTitleName: String =
-                            response.body()?.totalStat?.get(0)?.name.toString()
+                            response.body()?.user?.get(0)?.name.toString()
 
                         val listData by lazy {
                             mutableListOf(

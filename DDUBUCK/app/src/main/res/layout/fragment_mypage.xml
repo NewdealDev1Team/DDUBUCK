@@ -161,13 +161,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_marginTop="4dp"
+                        android:paddingBottom="19dp"
                         android:text="30분"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="20dp"
                         android:textStyle="bold"
                         app:layout_constraintTop_toBottomOf="@+id/walking_time_title"
-                        tools:layout_editor_absoluteX="5dp" />
+                        tools:layout_editor_absoluteX="0dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -201,6 +202,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:layout_marginTop="4dp"
+                        android:paddingBottom="19dp"
                         android:text="30분"
                         android:textAlignment="center"
                         android:textColor="@color/white"
@@ -236,7 +238,9 @@
                         android:id="@+id/calorie_button_record"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
+                        android:paddingBottom="19dp"
                         android:layout_marginTop="4dp"
+                        android:gravity="center"
                         android:text="30분"
                         android:textAlignment="center"
                         android:textColor="@color/white"

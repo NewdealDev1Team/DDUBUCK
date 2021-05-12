@@ -119,7 +119,7 @@ class CourseClearFragment : Fragment() {
                                 + result3!!.toInt() + result4!!.toInt() + result5!!.toInt() + result6!!.toInt())
 
                         var courseTitleName: String =
-                            response.body()?.totalStat?.get(0)?.name.toString()
+                            response.body()?.user?.get(0)?.name.toString()
 
 
                         val listData by lazy {

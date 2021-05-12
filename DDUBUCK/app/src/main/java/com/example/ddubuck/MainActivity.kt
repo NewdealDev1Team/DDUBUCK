@@ -1,17 +1,20 @@
 package com.example.ddubuck
 
 import android.Manifest
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.view.Menu
-import android.view.MenuItem
 import android.widget.TextView
 import android.util.Log
+import android.view.*
 import androidx.activity.viewModels
+import androidx.annotation.LayoutRes
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -19,7 +22,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import androidx.fragment.app.replace
-
 import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.bottomSheet.*
 import com.example.ddubuck.ui.badge.BadgeFragment
@@ -28,6 +30,8 @@ import com.example.ddubuck.ui.home.HomeFragment
 import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.mypage.MyPageFragment
 import com.example.ddubuck.ui.mypage.SettingFragment
+import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
+import com.example.ddubuck.ui.mypage.mywalk.CourseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -43,6 +47,10 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
+    //myWalk
+    private val walkTimeFragment = WalkTimeFragment()
+    private val courseClearFragment = CourseClearFragment()
+    private val caloriesFragment = CaloriesFragment()
 
     private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
@@ -76,6 +84,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        onCoachMark()
+
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
 
         initToolBar()
@@ -88,6 +98,27 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
+//레이아웃, fragmentTransaction 위에 올라오는 것 fragment
+//마이페이지 부모 뷰에서 어떻게 되어을 지 모르겠다.그냥 다양한 경우의 수를 따져서 사용하기!!
+
+    fun onCoachMark() {
+        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+        //최상의보기로 사용
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+        dialog.setContentView(R.layout.coach_mark) //drawable, coah_mark.xml - 레이아웃 리소스 확장
+        dialog.setCanceledOnTouchOutside(true)
+
+
+        //코치마크 어디든 터치 시 창이 닫힌다.
+        val masterView : View = dialog.findViewById(R.id.coach_mark_master_view)//최상의 뷰
+        masterView.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(view:View) {
+                dialog.dismiss()
+            }
+        })
+        dialog.show()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {

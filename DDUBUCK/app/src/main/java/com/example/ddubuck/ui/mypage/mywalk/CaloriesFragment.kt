@@ -120,7 +120,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                                 + result3!!.toInt() + result4!!.toInt() + result5!!.toInt())
 
                         var calorieTitleName: String =
-                            response.body()?.totalStat?.get(0)?.name.toString()
+                            response.body()?.user?.get(0)?.name.toString()
 
                         val listData by lazy {
                             mutableListOf(
