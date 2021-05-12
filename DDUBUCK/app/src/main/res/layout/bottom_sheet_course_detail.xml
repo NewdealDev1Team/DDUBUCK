@@ -25,6 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <ImageView
+            android:scaleType="center"
             android:id="@+id/sheet_course_detail_pictureIv"
             android:layout_width="100dp"
             android:layout_height="110dp"
@@ -109,7 +110,7 @@
             <Button
                 android:id="@+id/sheet_course_detail_startButton"
                 android:text="시작하기"
-                android:layout_marginVertical="8dp"
+                android:layout_marginTop="14dp"
                 android:layout_marginHorizontal="8dp"
                 android:background="@drawable/bottom_sheet_detail_start_button"
                 android:textColor="@color/white"
