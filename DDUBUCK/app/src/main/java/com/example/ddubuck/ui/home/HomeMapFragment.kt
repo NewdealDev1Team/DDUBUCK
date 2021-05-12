@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.hardware.*
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.RetrofitClient
 import com.example.ddubuck.data.RetrofitService
+import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.data.publicdata.PublicData
 import com.example.ddubuck.sharedpref.UserSharedPreferences
@@ -295,6 +297,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             val publicData = response.body()!!
                             val markerHeightSize = Marker.SIZE_AUTO
                             val markerWidthSize = Marker.SIZE_AUTO
+                            //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!!
                             for (i in publicData.petCafe) {
                                 val marker = Marker()
                                 marker.position = LatLng(i.x, i.y)
@@ -385,6 +388,15 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 markers["publicToilet"] = marker
                             }
+                            if(publicData.recommendPath.isNotEmpty()) {
+                                val courseData = mutableListOf<CourseItem>()
+                                for (i in publicData.recommendPath) {
+                                    courseData.add(i.toCourseItem())
+                                    model.recommendPath.value = courseData
+                                }
+                                //home에다가 보내기
+                            }
+
                         }
 
                         override fun onFailure(call: Call<PublicData>, t: Throwable) {

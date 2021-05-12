@@ -1,23 +1,10 @@
 package com.example.ddubuck.data.publicdata
 
+import android.net.Uri
 import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
-
-interface PublicDataForm {
-    val name : String
-    val x : Double
-    val y : Double
-}
-
-data class PublicData(
-    val cafe: List<Cafe>,
-    val carFreeRoad: List<CarFreeRoad>,
-    val petCafe: List<PetCafe>,
-    val petRestaurant: List<PetRestaurant>,
-    val publicToilet: List<PublicToilet>,
-    val publicRestArea: List<PublicRestArea>,
-    val recommendPath : List<RecommendPathDTO>,
-)
+import com.naver.maps.geometry.Coord
+import com.naver.maps.geometry.LatLng
 
 /*
 "recommendPath": [
@@ -66,3 +53,44 @@ data class PublicData(
         }
     ]
  */
+
+
+data class RecommendPathDTO(
+    val name : String,
+    val description:String,
+    val picture : String,
+    val walkTime : Long,
+    val distance : Double,
+    val altitudes : Double,
+    val path : List<PathPoint>
+) {
+    fun toWalkRecord() : WalkRecord{
+        val latLngPath = mutableListOf<LatLng>()
+        for (point in path) {
+            latLngPath.add(LatLng(point.x, point.y))
+        }
+        return WalkRecord(
+            latLngPath,
+            altitudes,
+            0.0,
+            walkTime,
+            0,
+            distance
+        )
+    }
+
+    fun toCourseItem() : CourseItem{
+        return CourseItem(
+            false,
+            Uri.parse(picture),
+            name,
+            description,
+            this.toWalkRecord()
+        )
+    }
+}
+
+data class PathPoint(
+    val x:Double,
+    val y:Double
+)

@@ -29,6 +29,31 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
         holder.bind(itemList[position], fm)
     }
 
+    fun addItem(courseItem: CourseItem) {
+        itemList.add(courseItem)
+        this.notifyDataSetChanged()
+    }
+
+    fun setItems(items : List<CourseItem>) {
+        itemList.clear()
+        //자유산책 추가
+        itemList.add(CourseItem(
+            true,
+            null,
+            "자유산책",
+            "자유산책입니다",
+            WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)
+        ))
+        //전달받은 요소 추가
+        itemList.addAll(items)
+        this.notifyDataSetChanged()
+    }
+
+    fun removeItem(position: Int) {
+        itemList.removeAt(position)
+        this.notifyDataSetChanged()
+    }
+
     override fun getItemCount(): Int {
         return itemList.size
     }
@@ -40,13 +65,17 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
 
         fun bind(i: CourseItem, fm: FragmentManager) {
             if(i.isFreeWalk) {
-                itemView.setOnClickListener{selectItem(fm,
+                itemView.setOnClickListener{
+                    selectItem(fm,
                         CourseItem(
-                                true,
-                                Uri.parse("https://newsimg.hankookilbo.com/cms/articlerelease/2019/04/29/201904291390027161_3.jpg"),
-                                "자유산책",
-                                "자유산책입니다",
-                                WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)),)}
+                            true,
+                            null,
+                            "자유산책",
+                            "자유산책입니다",
+                            WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)
+                        ),
+                    )
+                }
                 title?.text = "자유산책"
                 body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
                 picture?.setImageResource(R.mipmap.ic_launcher)
@@ -54,15 +83,11 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                 itemView.setOnClickListener{selectItem(fm,i)}
                 title?.text = i.title
                 body?.text = i.description
-                /*
-                activity?.let { it1 ->
-                        Glide.with(it1).load(profileImageURL).into(profileImage)
-                    }
-                 */
                 picture?.let { v ->
                     Glide.with(itemView).load(i.imgFile).into(v)
                 }
-                picture?.setImageURI(i.imgFile)
+                picture?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
+                picture?.clipToOutline = true
             }
         }
 
