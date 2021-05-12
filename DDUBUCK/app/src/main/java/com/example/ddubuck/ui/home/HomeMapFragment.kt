@@ -3,6 +3,7 @@ package com.example.ddubuck.ui.home
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.hardware.*
 import android.net.Uri
 import android.os.Bundle
@@ -193,9 +194,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         val walkRecord = getWalkResult()
 
         //RetrofitService().createRecord(userKey, walkRecord)
-
-        //여기서 createdDate 받고 경로기록으로 ㄱㄱ
-
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
@@ -282,6 +280,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         model.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener {
+            //TODO 현재위치에서 재탐색 기능
             if(!isLocationFirstChanged) {
                 model.recordPosition(
                         LatLng(
@@ -295,8 +294,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
                             println(response.body()!!.toString())
                             val publicData = response.body()!!
-                            val markerHeightSize = Marker.SIZE_AUTO
-                            val markerWidthSize = Marker.SIZE_AUTO
+                            val markerHeightSize = 80
+                            val markerWidthSize = 60
                             //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!!
                             for (i in publicData.petCafe) {
                                 val marker = Marker()
@@ -307,8 +306,11 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner)
-                                        .show()
+                                    //dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                        it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                        it.show()
+                                    }
                                     true
                                 }
                                 markers["petCafe"] = marker
@@ -322,8 +324,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner)
-                                        .show()
+                                    CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner).let {
+                                        it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                        it.show()
+                                    }
                                     true
                                 }
                                 markers["carFreeRoad"] = marker
@@ -337,8 +341,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener{
-                                    CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner)
-                                        .show()
+                                    CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                        it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                        it.show()
+                                    }
                                     true
                                 }
                                 markers["cafe"] = marker
@@ -347,13 +353,15 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 val marker = Marker()
                                 marker.position = LatLng(i.x, i.y)
                                 marker.map = map
-                                marker.icon = MarkerIcons.BLACK
+                                marker.icon = MarkerIcons.PINK
                                 marker.height = markerHeightSize
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner)
-                                        .show()
+                                    CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                        it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                        it.show()
+                                    }
                                     true
                                 }
                                 markers["petRestaurant"] = marker
@@ -367,8 +375,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("공공쉼터",i.name, owner)
-                                        .show()
+                                    CommonDialog("공공쉼터",i.name, owner).let {
+                                        it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                        it.show()
+                                    }
                                     true
                                 }
                                 markers["publicRestArea"] = marker
@@ -382,8 +392,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 marker.width = markerWidthSize
                                 marker.isHideCollidedMarkers = true
                                 marker.setOnClickListener {
-                                    CommonDialog("공공화장실",i.name, owner)
-                                        .show()
+                                    CommonDialog("공공화장실",i.name, owner).let {
+                                        it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                        it.show()
+                                    }
                                     true
                                 }
                                 markers["publicToilet"] = marker
