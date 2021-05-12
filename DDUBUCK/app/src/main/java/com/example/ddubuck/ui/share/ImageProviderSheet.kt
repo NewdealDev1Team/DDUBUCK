@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -64,20 +65,20 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
         val galleryButton = root.findViewById<LinearLayout>(R.id.share_sheet_galleryButton)
         galleryButton.setOnClickListener {
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also { getPictureIntent ->
-                //TODO 실패시 처리
                 startActivityForResult(getPictureIntent, REQUEST_IMAGE_SELECT)
             }
         }
         return root
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data!=null) {
             if (resultCode == AppCompatActivity.RESULT_OK) {
                 val imageUri : Uri = when(requestCode) {
                     REQUEST_IMAGE_CAPTURE -> {
-                        galleryAddPic()
+                        cameraPhotoUri = galleryAddPic()
                         cameraPhotoUri
                     }
                     REQUEST_IMAGE_SELECT -> {
@@ -95,7 +96,6 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
     @Throws(IOException::class)
     private fun createImageFile(): File {
         val storageDir: File = owner.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
-        storageDir.mkdirs()
         return File.createTempFile(
             "DDUBUCK_${System.currentTimeMillis()}", /* prefix */
             ".jpg", /* suffix */
@@ -105,14 +105,48 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
         }
     }
 
-    private fun galleryAddPic() {
-        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
-            Log.e("진입","asd")
-            val f = File(currentPhotoPath)
-            mediaScanIntent.data = Uri.fromFile(f)
-            owner.sendBroadcast(mediaScanIntent)
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun galleryAddPic():Uri{
+        val bytes = ByteArrayOutputStream()
+        val bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveImageInQ(bitmap)
+        } else {
+            MediaStore.Images.Media.insertImage(owner.contentResolver, bitmap, "DDUBUCK_${System.currentTimeMillis()}", null)
         }
+        return Uri.parse(path.toString())
     }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun saveImageInQ(bitmap: Bitmap):Uri {
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream?
+        var imageUri: Uri?
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
+        }
+
+        val contentResolver = owner.application.contentResolver
+
+        contentResolver.also { resolver ->
+            imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = imageUri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { bitmap.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(imageUri!!, contentValues, null, null)
+
+        return imageUri!!
+
+    }
+
 
 
     companion object{
