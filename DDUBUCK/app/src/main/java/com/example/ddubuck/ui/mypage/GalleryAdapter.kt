@@ -68,9 +68,4 @@ class GalleryAdapter(val context: Context, uriArr: ArrayList<String>) : BaseAdap
         return imageView
     }
 
-    fun toGallery() {
-
-
-    }
-
 }
