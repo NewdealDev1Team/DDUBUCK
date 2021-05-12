@@ -15,7 +15,6 @@
         android:layout_height="22dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="30dp">
-
         <TextView
             android:id="@+id/time_name"
             android:layout_width="wrap_content"
@@ -91,7 +90,7 @@
             android:textColor="@color/grey"
             tools:viewBindingIgnore="true" />
     </LinearLayout>
-
+//         차
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -102,7 +101,8 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_margin="20dp"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+           />
     </LinearLayout>
 
     <LinearLayout

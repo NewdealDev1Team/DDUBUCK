@@ -16,7 +16,7 @@
                     android:layout_height="match_parent"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_coach_mark" />
+                    android:src="@drawable/ic_coach_marks" />
         </RelativeLayout>
 </FrameLayout>
 <!--<?xml version="1.0" encoding="utf-8"?>-->

@@ -42,19 +42,19 @@
                     android:text="챌린지를 도전하면서 얻을 수 있는\n배지입니다. 지금 도전해볼까요?"
                     app:layout_constraintTop_toBottomOf="@+id/badge_title" />
 
-
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/badgeChallengeRecyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:overScrollMode="never"
+                    android:layout_marginLeft="16dp"
+                    android:layout_gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:listitem="@layout/item_badge" />
-
 
             </LinearLayout>
 
@@ -97,6 +97,8 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:overScrollMode="never"
+                    android:layout_marginLeft="16dp"
+                    android:layout_gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -144,6 +146,8 @@
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:overScrollMode="never"
+                    android:layout_marginLeft="16dp"
+                    android:layout_gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"

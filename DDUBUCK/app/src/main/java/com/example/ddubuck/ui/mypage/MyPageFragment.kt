@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
@@ -143,8 +144,9 @@ class MyPageFragment : Fragment() {
 //        childFragmentManager.popBackStack(backStackTag, .POP_BACK_STACK_INCLUSIVE)
         // 산책 시간 버튼 onClickListener
         walkingTimeButton.setOnClickListener {
+            mypageFragment = MyPageFragment()
             walkTimeFramgnet = WalkTimeFragment()
-//            supportFragmen.popBackStack(backStackTag,
+//            supportFragmen.popBackStack(mypage,
 //                FragmentManager.POP_BACK_STACK_INCLUSIVE)
             parentFragmentManager.beginTransaction()
                 .add(R.id.scrollview_mypage,walkTimeFramgnet)
@@ -156,6 +158,7 @@ class MyPageFragment : Fragment() {
 
         // 코스 완주 버튼 onClickListener
         courseClearButton.setOnClickListener {
+            mypageFragment = MyPageFragment()
             courseClearFragment = CourseClearFragment()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.scrollview_mypage, courseClearFragment)
@@ -165,6 +168,7 @@ class MyPageFragment : Fragment() {
 
         // 칼로리 버튼 onClickListener
         calorieButton.setOnClickListener {
+            mypageFragment = MyPageFragment()
             caloriesFragment = CaloriesFragment()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.scrollview_mypage, caloriesFragment)
@@ -194,7 +198,6 @@ class MyPageFragment : Fragment() {
 
         return myPageView
     }
-    //---~~~~~~~~~~~~~~~~~~~~~Mmpllika\\\\\\\\\\\\\\\\\\\\=============5%%%%%%%%%$$$$$$$
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getAllPhotos(gridView: GridView) {
