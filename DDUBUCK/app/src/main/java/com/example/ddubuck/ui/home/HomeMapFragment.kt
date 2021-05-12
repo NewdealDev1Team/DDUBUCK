@@ -76,7 +76,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private lateinit var timer: Timer
     private lateinit var locationButtonView: LocationButtonView
     private lateinit var locationSource: FusedLocationSource
-    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
+    private val sensorManager by lazy {
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
     private var markers:HashMap<String, Marker> = HashMap()
