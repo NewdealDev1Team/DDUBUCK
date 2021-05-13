@@ -59,6 +59,7 @@ class BottomSheetCompleteFragment(
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
         averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
+        //a
         if(walkRecord.path.size > 2) {
             shareButton.setOnClickListener{
                 val intent = Intent(context, ShareActivity::class.java)
