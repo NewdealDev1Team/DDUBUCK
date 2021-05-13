@@ -1,108 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:id="@+id/coach_mark_master_view"
     >
-        <RelativeLayout
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/coach_marks_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/coach_marks"
+            />
+    </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/coach_marks_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_coach_marks" />
-        </RelativeLayout>
-</FrameLayout>
-<!--<?xml version="1.0" encoding="utf-8"?>-->
-<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:id="@+id/coach_mark_master_view"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:background="@color/black"-->
-<!--    android:orientation="vertical">-->
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:layout_width="56dp"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="right|top"-->
-<!--            >-->
-<!--                        <ImageView-->
-<!--                            android:id="@+id/image_1"-->
-<!--                            android:layout_alignParentLeft="true"-->
-<!--                            android:layout_width="56dp"-->
-<!--                            android:layout_height="56dp"-->
-<!--                            android:background="#00ffffff"-->
-<!--                            android:src="@drawable/coach_mark_sheet"-->
-<!--                            tools:ignore="MissingConstraints" />-->
-
-<!--                        <ImageView-->
-<!--                            android:layout_width="56dp"-->
-<!--                            android:layout_height="56dp"-->
-<!--                            android:layout_marginTop="30dp"-->
-<!--                            android:src="@drawable/ic_coach_mark_line1"-->
-<!--                            tools:ignore="MissingConstraints" />-->
-
-
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--        <RelativeLayout-->
-<!--            android:layout_width="56dp"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="bottom|center"-->
-<!--            >-->
-<!--                <ImageView-->
-<!--                    android:layout_alignParentLeft="true"-->
-<!--                    android:layout_width="56dp"-->
-<!--                    android:layout_height="56dp"-->
-<!--                    android:background="#00ffffff"-->
-<!--                    android:src="@drawable/coach_mark_sheet"-->
-<!--                    tools:ignore="MissingConstraints" />-->
-
-
-<!--        </RelativeLayout>-->
-
-<!--        <RelativeLayout-->
-<!--            android:layout_width="56dp"-->
-<!--            android:layout_height="56dp"-->
-<!--            android:layout_gravity="bottom|center"-->
-<!--            >-->
-<!--                <ImageView-->
-<!--                    android:layout_alignParentLeft="true"-->
-<!--                    android:layout_width="56dp"-->
-<!--                    android:layout_height="56dp"-->
-<!--                    android:background="#00ffffff"-->
-<!--                    android:src="@drawable/coach_mark_sheet"-->
-<!--                    tools:ignore="MissingConstraints" />-->
-
-
-<!--        </RelativeLayout>-->
-
-
-
-
-<!--        &lt;!&ndash;        <ImageView&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_width="56dp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_height="56dp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_marginTop="30dp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:src="@drawable/ic_coach_mark_line1"&ndash;&gt;-->
-<!--&lt;!&ndash;            tools:ignore="MissingConstraints" />&ndash;&gt;-->
-
-<!--&lt;!&ndash;        <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_width="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:layout_marginTop="86dp"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:text="산책에서 필요한 옵션을\n 선택할 수 있습니다."&ndash;&gt;-->
-<!--&lt;!&ndash;            android:textAlignment="center"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:textColor="@color/white"&ndash;&gt;-->
-<!--&lt;!&ndash;            android:textStyle="bold"&ndash;&gt;-->
-<!--&lt;!&ndash;            tools:ignore="MissingConstraints" />&ndash;&gt;-->
-
-<!--</FrameLayout>-->
+</LinearLayout>

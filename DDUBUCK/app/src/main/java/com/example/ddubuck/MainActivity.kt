@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onCoachMark() {
-        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+        val dialog : Dialog = Dialog(this,R.style.ThemeOverlay_MaterialComponents_MaterialCalendar_Fullscreen)
         //최상의보기로 사용
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
