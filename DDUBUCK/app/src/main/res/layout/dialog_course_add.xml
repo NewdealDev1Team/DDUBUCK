@@ -22,18 +22,18 @@
             android:layout_marginBottom="17dp"
             android:orientation="horizontal">
 
-            <TextView
+            <EditText
+                android:background="@drawable/edit_no_border"
                 android:id="@+id/dialog_course_add_title"
+                android:hint="내 경로 추가하기"
+                android:maxLength="20"
+                android:textSize="16dp"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:text="내 경로 추가하기"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"/>
 
             <ImageView
+                android:id="@+id/dialog_course_add_closeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -60,21 +60,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
                 <TextView
-                    android:textSize="10sp"
+                    android:textSize="14sp"
                     android:textColor="#FFFFFF"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="사진을 추가해주세요"/>
+                <ImageView
+                    android:id="@+id/dialog_course_add_image_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </FrameLayout>
-            <ImageView
-                android:id="@+id/dialog_course_add_image_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <EditText
@@ -82,6 +83,7 @@
             android:background="@drawable/edit_rounded_border"
             android:hint="내용 설명을 입력해주세요."
             android:textSize="14dp"
+            android:maxLines="3"
             android:layout_marginTop="11dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

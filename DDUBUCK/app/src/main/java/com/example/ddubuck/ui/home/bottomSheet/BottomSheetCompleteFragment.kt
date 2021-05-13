@@ -14,31 +14,38 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.CourseAddDialog
 import com.example.ddubuck.ui.home.HomeMapFragment
+import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.share.ShareActivity
 
 
 class BottomSheetCompleteFragment(
     private val owner: Activity,
     private val walkRecord: WalkRecord,
+    private val userKey : String,
     private val walkType: Int,
 ) : Fragment() {
 
+    private val homeMapViewModel : HomeMapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        homeMapViewModel.bottomSheetHeight.value = 100
         val rootView = inflater.inflate(R.layout.bottom_sheet_complete, container, false)
         val titleTv : TextView = rootView.findViewById(R.id.sheet_complete_titleTv)
         val formatter = BottomSheetNumberFormat()
         if(walkType == HomeMapFragment.WALK_COURSE) {
-            //TODO
+            titleTv.text = "코스 산책"
+        } else {
+            titleTv.text = "자유 산책"
         }
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_complete_walTimeTv)
         walkTimeTv.text = DateUtils.formatElapsedTime(walkRecord.walkTime)
@@ -53,7 +60,7 @@ class BottomSheetCompleteFragment(
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
         averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
-        if(walkRecord.path.size >= 2) {
+        if(walkRecord.path.size > 2) {
             shareButton.setOnClickListener{
                 val intent = Intent(context, ShareActivity::class.java)
                 intent.putExtra("walkRecord", walkRecord)
@@ -71,10 +78,16 @@ class BottomSheetCompleteFragment(
             buttonLayout.removeView(addToMyPathButton)
         } else {
             addToMyPathButton.setOnClickListener{
-                val dialog = CourseAddDialog(walkRecord)
+                val dialog = CourseAddDialog(walkRecord,userKey,owner)
                 dialog.show(parentFragmentManager, MainActivity.HOME_TAG)
             }
         }
         return rootView
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        homeMapViewModel.bottomSheetHeight.value = -100
     }
 }

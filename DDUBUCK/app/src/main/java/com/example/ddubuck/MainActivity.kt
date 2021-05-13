@@ -117,8 +117,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         ActivityCompat.requestPermissions(this, list.toTypedArray(), 1000)
-        //TODO 권한 거절 시 대응
-
     }
 
 
