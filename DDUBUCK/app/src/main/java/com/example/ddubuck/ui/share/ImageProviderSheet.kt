@@ -5,16 +5,21 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -22,10 +27,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModel
 import com.example.ddubuck.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
-import java.io.OutputStream
+import java.io.*
 
 class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogFragment() {
     private val imageProviderSheetViewModel : ImageProviderSheetViewModel by activityViewModels()
@@ -51,7 +53,7 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
                     photoFile?.also {
                         cameraPhotoUri = FileProvider.getUriForFile(
                             owner,
-                            "com.example.ddubuck",
+                            "com.example.ddubuck.provider",
                             it
                         )
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraPhotoUri)
@@ -63,19 +65,20 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
         val galleryButton = root.findViewById<LinearLayout>(R.id.share_sheet_galleryButton)
         galleryButton.setOnClickListener {
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also { getPictureIntent ->
-                //TODO 실패시 처리
                 startActivityForResult(getPictureIntent, REQUEST_IMAGE_SELECT)
             }
         }
         return root
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(data!=null) {
             if (resultCode == AppCompatActivity.RESULT_OK) {
                 val imageUri : Uri = when(requestCode) {
                     REQUEST_IMAGE_CAPTURE -> {
+                        cameraPhotoUri = galleryAddPic()
                         cameraPhotoUri
                     }
                     REQUEST_IMAGE_SELECT -> {
@@ -100,6 +103,48 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
         ).apply {
             currentPhotoPath = absolutePath
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
+    private fun galleryAddPic():Uri{
+        val bytes = ByteArrayOutputStream()
+        val bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveImageInQ(bitmap)
+        } else {
+            MediaStore.Images.Media.insertImage(owner.contentResolver, bitmap, "DDUBUCK_${System.currentTimeMillis()}", null)
+        }
+        return Uri.parse(path.toString())
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun saveImageInQ(bitmap: Bitmap):Uri {
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream?
+        var imageUri: Uri?
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
+        }
+
+        val contentResolver = owner.application.contentResolver
+
+        contentResolver.also { resolver ->
+            imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = imageUri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { bitmap.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(imageUri!!, contentValues, null, null)
+
+        return imageUri!!
+
     }
 
 

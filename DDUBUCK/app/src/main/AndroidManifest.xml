@@ -56,11 +56,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.mypage.mywalk.MyWalkActivity" />
         <activity android:name=".ui.home.option.SelectOptionActivity" />
-        <!--        <activity android:name=".ui.mypage.mpandroidchart.BarChartActivity"></activity>-->
-
-
         <!--    ScreenShot    -->
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -71,18 +67,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name=".ui.mypage.mywalk.MyWalkActivity"></activity>
-        <!--        <activity android:name=".ui.home.option.SelectOptionActivity" />-->
+
 
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/Theme.DDUBUCK">
-        </activity>
-        <activity android:name=".login.LoginActivity">
 
         </activity>
         <activity android:name=".login.LoginActivity">
+
 
         </activity>
         <activity android:name=".SecondActivity" />

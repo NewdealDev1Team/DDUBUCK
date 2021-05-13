@@ -1,11 +1,10 @@
 package com.example.ddubuck.data.home
 
+import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
 import com.naver.maps.geometry.LatLng
 import java.util.*
-
-//var 로 바꿔놓은건 임시용이라서 그럼
 
 class WalkRecord(
     //경로 정보 모음
@@ -24,14 +23,6 @@ class WalkRecord(
     //이름
     //바디
     //해시태그
-    /*
-        paths=[
-            {x:123,y:123},{x:123,y:123}
-        ]
-        이 형식으로 보내기
-
-         */
-
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.createTypedArrayList(LatLng.CREATOR)!!,
@@ -91,5 +82,4 @@ class WalkRecord(
         }
         return list
     }
-
 }

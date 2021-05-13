@@ -3,8 +3,10 @@ package com.example.ddubuck.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
+import android.view.Window
 import android.widget.TextView
 import com.example.ddubuck.R
 
