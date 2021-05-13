@@ -64,5 +64,6 @@ class HomeMapViewModel : ViewModel() {
 
     val walkState = MutableLiveData<Int>()
 
+    //dp대응
     val bottomSheetHeight = MutableLiveData<Int>()
 }

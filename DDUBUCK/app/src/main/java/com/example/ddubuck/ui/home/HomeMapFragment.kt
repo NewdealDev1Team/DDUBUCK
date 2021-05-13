@@ -8,6 +8,7 @@ import android.hardware.*
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +75,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private val userKey : String = UserSharedPreferences.getUserId(owner)
     private lateinit var map: NaverMap
     private lateinit var timer: Timer
-    private lateinit var locationButtonView: LocationButtonView
     private lateinit var locationSource: FusedLocationSource
     private val sensorManager by lazy {
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -110,7 +110,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                     fm.beginTransaction().add(R.id.map, it).commit()
                 }
         nMapFragment.getMapAsync(this)
-        locationButtonView = rootView.findViewById(R.id.location)
 
         model.isRecordStarted.observe(viewLifecycleOwner, { v ->
             if (v) {
@@ -393,14 +392,22 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
-        map.uiSettings.isLocationButtonEnabled = false
-
-        locationButtonView.map = this.map
+        map.uiSettings.isLocationButtonEnabled = true
 
         course.color = Color.parseColor("#2798E7")
         course.width = 15
         course.capType = PolylineOverlay.LineCap.Round
         course.joinType = PolylineOverlay.LineJoin.Round
+
+
+
+        var contentPaddingBottom = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 190f, resources.displayMetrics).toInt()
+        map.setContentPadding(0,0,0,contentPaddingBottom)
+
+        model.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
+            contentPaddingBottom += TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()
+            map.setContentPadding(0,0,0,contentPaddingBottom)
+        })
 
         //courseMarker.iconTintColor = Color.parseColor("#2798E7")
         courseMarker.icon = MarkerIcons.BLUE

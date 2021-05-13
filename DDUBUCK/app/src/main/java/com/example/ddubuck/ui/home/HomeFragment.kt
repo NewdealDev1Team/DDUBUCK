@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,14 +72,18 @@ class HomeFragment(private val owner: Activity) : Fragment() {
             }
         })
 
-        val bottomSheetFrame = root.findViewById<FrameLayout>(R.id.bottom_sheet_container)
-        val mapFrame = root.findViewById<CoordinatorLayout>(R.id.home_map_frame)
+        val bottomSheetFrame = root.findViewById<ConstraintLayout>(R.id.bottom_sheet_frame)
+        val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetFrame)
         val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment()
         fm.beginTransaction().add(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
 
+        /*
+        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65f, resources.displayMetrics)
+         */
+
         mapViewModel.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
-            bottomSheetFrame.layoutParams.height += v
-            mapFrame.requestLayout()
+            bottomSheetFrame.layoutParams.height += TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()
+            bottomSheetBehavior.setPeekHeight(bottomSheetFrame.layoutParams.height, false)
         })
 
         return root

@@ -38,7 +38,7 @@ class BottomSheetCompleteFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        homeMapViewModel.bottomSheetHeight.value = 400
+        homeMapViewModel.bottomSheetHeight.value = 100
         val rootView = inflater.inflate(R.layout.bottom_sheet_complete, container, false)
         val titleTv : TextView = rootView.findViewById(R.id.sheet_complete_titleTv)
         val formatter = BottomSheetNumberFormat()
@@ -60,7 +60,7 @@ class BottomSheetCompleteFragment(
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
         averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
-        if(walkRecord.path.size >= 2) {
+        if(walkRecord.path.size > 2) {
             shareButton.setOnClickListener{
                 val intent = Intent(context, ShareActivity::class.java)
                 intent.putExtra("walkRecord", walkRecord)
@@ -88,6 +88,6 @@ class BottomSheetCompleteFragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        homeMapViewModel.bottomSheetHeight.value = -400
+        homeMapViewModel.bottomSheetHeight.value = -100
     }
 }
