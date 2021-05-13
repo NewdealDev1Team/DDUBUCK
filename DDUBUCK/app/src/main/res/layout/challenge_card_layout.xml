@@ -2,26 +2,74 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/challenge_card_view"
-    android:layout_margin="5dp"
+    android:layout_marginTop="18dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
     card_view:cardBackgroundColor="#FFFFFF"
-    card_view:cardCornerRadius="12dp"
-    android:layout_weight="1"
-    card_view:cardElevation="3dp"
-    >
+    card_view:cardCornerRadius="10dp"
+    card_view:cardElevation="3dp">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="174dp">
+
+        <FrameLayout
+            android:background="@color/purple_500"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/challenge_item_image" />
+
+            <LinearLayout
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_marginBottom="3dp"
+                    android:textAlignment="viewStart"
+                    android:id="@+id/challenge_card_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:id="@+id/challenge_card_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="viewStart"
+                    android:textColor="@color/white"
+                    android:textSize="12dp"
+                    tools:ignore="RtlCompat" />
+
+
+            </LinearLayout>
+
+        </FrameLayout>
+
 
         <ImageView
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="8dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/challenge_item_image"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
+            android:src="@drawable/ic_bookmark_empty" />
+
 
 
     </RelativeLayout>
