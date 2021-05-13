@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:orientation="vertical"
-    tools:context=".ui.mypage.mpchart.MPChartActivity">
+    tools:context=".mypage.mpchart.MPChartActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGraph"

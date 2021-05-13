@@ -8,7 +8,7 @@
     android:layout_marginTop="18dp"
     android:id="@+id/setting_fragment"
     android:background="@color/white"
-    tools:context=".ui.mypage.SettingFragment">
+    tools:context=".mypage.SettingFragment">
 
     <RelativeLayout
         android:id="@+id/push_alarm"

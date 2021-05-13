@@ -19,13 +19,13 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
-import com.mapo.ddubuck.ui.home.bottomSheet.*
-import com.mapo.ddubuck.ui.badge.BadgeFragment
-import com.mapo.ddubuck.ui.challenge.ChallengeFragment
-import com.mapo.ddubuck.ui.home.HomeFragment
-import com.mapo.ddubuck.ui.home.HomeMapViewModel
-import com.mapo.ddubuck.ui.mypage.MyPageFragment
-import com.mapo.ddubuck.ui.mypage.SettingFragment
+import com.mapo.ddubuck.home.bottomSheet.*
+import com.mapo.ddubuck.badge.BadgeFragment
+import com.mapo.ddubuck.challenge.ChallengeFragment
+import com.mapo.ddubuck.home.HomeFragment
+import com.mapo.ddubuck.home.HomeMapViewModel
+import com.mapo.ddubuck.mypage.MyPageFragment
+import com.mapo.ddubuck.mypage.SettingFragment
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*

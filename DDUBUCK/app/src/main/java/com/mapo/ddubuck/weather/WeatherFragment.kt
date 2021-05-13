@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
-import com.mapo.ddubuck.ui.home.HomeMapViewModel
+import com.mapo.ddubuck.home.HomeMapViewModel
 
 interface WeatherAPICallback {
     fun onSuccess(

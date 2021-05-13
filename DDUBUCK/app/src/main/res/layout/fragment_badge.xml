@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:overScrollMode="never"
-    tools:context=".ui.badge.BadgeFragment">
+    tools:context=".badge.BadgeFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

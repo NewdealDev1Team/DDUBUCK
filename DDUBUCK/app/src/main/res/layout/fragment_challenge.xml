@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            tools:context=".ui.challenge.ChallengeFragment">
+            tools:context=".challenge.ChallengeFragment">
 
             <LinearLayout
                 android:id="@+id/ddubuck_challenge_textArea"

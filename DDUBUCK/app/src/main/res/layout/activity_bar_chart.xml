@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context=".ui.mypage.mpandroidchart.BarChartActivity">
+    tools:context=".mypage.mpandroidchart.BarChartActivity">
 
 
     <TextView
