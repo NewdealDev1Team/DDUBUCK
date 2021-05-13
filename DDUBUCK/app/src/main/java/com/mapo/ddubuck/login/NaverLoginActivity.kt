@@ -1,4 +1,4 @@
-package com.example.ddubuck.login
+package com.mapo.ddubuck.login
 
 class NaverLoginActivity {
 }

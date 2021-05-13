@@ -1,17 +1,12 @@
-package com.example.ddubuck.ui.challenge.detail
+package com.mapo.ddubuck.ui.challenge.detail
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ddubuck.MainActivity
-import com.example.ddubuck.R
-import com.example.ddubuck.ui.challenge.HiddenChallengeAdapter
-import kotlinx.android.synthetic.main.challenge_card_layout.view.*
+import com.mapo.ddubuck.R
 import kotlinx.android.synthetic.main.challenge_detail_layout.view.*
 
 class ChallengeDetailAdapter() :

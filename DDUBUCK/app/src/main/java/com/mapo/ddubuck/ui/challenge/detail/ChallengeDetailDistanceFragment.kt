@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.challenge.detail
+package com.mapo.ddubuck.ui.challenge.detail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,11 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ddubuck.R
-import com.example.ddubuck.ui.challenge.ChallengeViewModel
-import com.example.ddubuck.ui.challenge.DDUBUCKChallengeAdapter
-import com.example.ddubuck.ui.challenge.HiddenChallengeAdapter
-import com.example.ddubuck.ui.challenge.PetChallengeAdapter
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.ui.challenge.ChallengeViewModel
 
 class ChallengeDetailDistanceFragment: Fragment() {
     private lateinit var challengeViewModel: ChallengeViewModel

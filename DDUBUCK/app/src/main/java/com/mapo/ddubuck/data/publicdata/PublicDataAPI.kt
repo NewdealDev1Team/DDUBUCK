@@ -1,4 +1,4 @@
-package com.example.ddubuck.data.publicdata
+package com.mapo.ddubuck.data.publicdata
 
 import retrofit2.Call
 import retrofit2.http.*

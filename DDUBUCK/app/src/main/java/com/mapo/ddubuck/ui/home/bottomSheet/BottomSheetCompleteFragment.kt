@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.ui.home.bottomSheet
 
 import android.app.Activity
 import android.content.Intent
@@ -8,20 +8,19 @@ import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.example.ddubuck.MainActivity
-import com.example.ddubuck.R
-import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.home.CourseAddDialog
-import com.example.ddubuck.ui.home.HomeMapFragment
-import com.example.ddubuck.ui.home.HomeMapViewModel
-import com.example.ddubuck.ui.share.ShareActivity
+import com.mapo.ddubuck.MainActivity
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.ui.home.CourseAddDialog
+import com.mapo.ddubuck.ui.home.HomeMapFragment
+import com.mapo.ddubuck.ui.home.HomeMapViewModel
+import com.mapo.ddubuck.ui.share.ShareActivity
 
 
 class BottomSheetCompleteFragment(

@@ -1,4 +1,4 @@
-package com.example.ddubuck.data.home
+package com.mapo.ddubuck.data.home
 
 import android.net.Uri
 

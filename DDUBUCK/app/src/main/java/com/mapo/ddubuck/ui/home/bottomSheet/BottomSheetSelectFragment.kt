@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.ui.home.bottomSheet
 
 
 import android.os.Bundle
@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
-import com.example.ddubuck.R
-import com.example.ddubuck.data.home.CourseItem
-import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.home.HomeMapViewModel
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.data.home.CourseItem
+import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.ui.home.HomeMapViewModel
 import com.naver.maps.geometry.LatLng
 
 class BottomSheetSelectFragment : Fragment() {

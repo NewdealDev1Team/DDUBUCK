@@ -1,6 +1,5 @@
-package com.example.ddubuck.data.home
+package com.mapo.ddubuck.data.home
 
-import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
 import com.naver.maps.geometry.LatLng

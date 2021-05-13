@@ -1,6 +1,4 @@
-package com.example.ddubuck.login
-
-import android.net.Uri
+package com.mapo.ddubuck.login
 
 data class UserValidationInfo(
         var id: Int?,

@@ -1,4 +1,4 @@
-package com.example.ddubuck.sharedpref
+package com.mapo.ddubuck.sharedpref
 
 import android.content.Context
 import android.content.SharedPreferences

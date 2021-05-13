@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.mypage.mywalk
+package com.mapo.ddubuck.ui.mypage.mywalk
 
 import android.Manifest
 import android.content.Intent
@@ -17,13 +17,13 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
-import com.example.ddubuck.MainActivityViewModel
-import com.example.ddubuck.R
-import com.example.ddubuck.data.mypagechart.RetrofitChart
-import com.example.ddubuck.data.mypagechart.chartData
-import com.example.ddubuck.login.UserService
-import com.example.ddubuck.login.UserValidationInfo
-import com.example.ddubuck.sharedpref.UserSharedPreferences
+import com.mapo.ddubuck.MainActivityViewModel
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.data.mypagechart.RetrofitChart
+import com.mapo.ddubuck.data.mypagechart.chartData
+import com.mapo.ddubuck.login.UserService
+import com.mapo.ddubuck.login.UserValidationInfo
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData

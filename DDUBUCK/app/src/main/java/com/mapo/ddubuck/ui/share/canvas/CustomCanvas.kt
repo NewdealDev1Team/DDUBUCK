@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.share.canvas
+package com.mapo.ddubuck.ui.share.canvas
 
 import android.content.Context
 import android.graphics.*
@@ -7,14 +7,12 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import androidx.core.view.drawToBitmap
-import com.example.ddubuck.R
-import com.example.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
 import java.text.DecimalFormat
-import kotlin.math.absoluteValue
 
 
 class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(

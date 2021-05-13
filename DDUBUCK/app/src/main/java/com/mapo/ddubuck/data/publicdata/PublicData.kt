@@ -1,7 +1,4 @@
-package com.example.ddubuck.data.publicdata
-
-import com.example.ddubuck.data.home.CourseItem
-import com.example.ddubuck.data.home.WalkRecord
+package com.mapo.ddubuck.data.publicdata
 
 interface PublicDataForm {
     val name : String

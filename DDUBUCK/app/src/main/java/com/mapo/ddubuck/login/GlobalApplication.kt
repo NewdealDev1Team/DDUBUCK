@@ -1,4 +1,4 @@
-package com.example.ddubuck.login
+package com.mapo.ddubuck.login
 
 import android.app.Application
 import com.kakao.sdk.common.KakaoSdk

@@ -1,4 +1,4 @@
-package com.example.ddubuck.login
+package com.mapo.ddubuck.login
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,13 +9,12 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import com.example.ddubuck.MainActivity
-import com.example.ddubuck.R
-import com.example.ddubuck.sharedpref.UserSharedPreferences
-import com.example.ddubuck.userinfo.UserInfoBirthdayActivity
+import com.mapo.ddubuck.MainActivity
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
+import com.mapo.ddubuck.userinfo.UserInfoBirthdayActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions

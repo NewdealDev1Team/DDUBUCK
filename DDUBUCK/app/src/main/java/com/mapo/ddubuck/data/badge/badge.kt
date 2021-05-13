@@ -1,4 +1,4 @@
-package com.example.ddubuck.data.badge
+package com.mapo.ddubuck.data.badge
 
 data class badge(
     val anniversary: List<Anniversary>,

@@ -1,15 +1,12 @@
-package com.example.ddubuck.ui.challenge
+package com.mapo.ddubuck.ui.challenge
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ddubuck.MainActivity
-import com.example.ddubuck.R
+import com.mapo.ddubuck.R
 import kotlinx.android.synthetic.main.challenge_card_layout.view.*
 
 class DDUBUCKChallengeAdapter() :

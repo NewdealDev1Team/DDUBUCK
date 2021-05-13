@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.badge
+package com.mapo.ddubuck.ui.badge
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.ddubuck.R
+import com.mapo.ddubuck.R
 import kotlinx.android.synthetic.main.item_badge.view.*
 
 class BadgeAdapter(

@@ -1,5 +1,5 @@
 
-package com.example.ddubuck.data.mypagechart
+package com.mapo.ddubuck.data.mypagechart
 
 import retrofit2.Call
 import retrofit2.Retrofit

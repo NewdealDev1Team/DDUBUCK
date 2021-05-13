@@ -1,4 +1,4 @@
-package com.example.ddubuck.data.publicdata
+package com.mapo.ddubuck.data.publicdata
 
 data class PublicToilet(
     override val name : String,

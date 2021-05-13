@@ -1,6 +1,5 @@
-package com.example.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.ui.home.bottomSheet
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,11 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.ddubuck.MainActivity
-import com.example.ddubuck.R
-import com.example.ddubuck.data.home.CourseItem
-import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.ui.home.HomeFragment
+import com.mapo.ddubuck.MainActivity
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.data.home.CourseItem
+import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.ui.home.HomeFragment
 import kotlin.collections.ArrayList
 
 class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,

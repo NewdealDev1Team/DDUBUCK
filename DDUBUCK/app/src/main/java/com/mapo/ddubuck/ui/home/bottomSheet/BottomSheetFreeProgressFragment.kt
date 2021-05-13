@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.ui.home.bottomSheet
 
 import android.content.Context
 import android.graphics.Color
@@ -12,9 +12,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import com.example.ddubuck.MainActivity
-import com.example.ddubuck.R
-import com.example.ddubuck.ui.home.HomeMapViewModel
+import com.mapo.ddubuck.MainActivity
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.ui.home.HomeMapViewModel
 
 class BottomSheetFreeProgressFragment: Fragment() {
     //뷰모델

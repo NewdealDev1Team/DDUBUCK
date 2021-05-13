@@ -1,4 +1,4 @@
-package com.example.ddubuck.data.publicdata
+package com.mapo.ddubuck.data.publicdata
 
 data class Cafe(
     override val name : String,

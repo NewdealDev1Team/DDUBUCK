@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.challenge
+package com.mapo.ddubuck.ui.challenge
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.example.ddubuck.login
+package com.mapo.ddubuck.login
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

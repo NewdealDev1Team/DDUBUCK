@@ -1,9 +1,8 @@
-package com.example.ddubuck.data.publicdata
+package com.mapo.ddubuck.data.publicdata
 
 import android.net.Uri
-import com.example.ddubuck.data.home.CourseItem
-import com.example.ddubuck.data.home.WalkRecord
-import com.naver.maps.geometry.Coord
+import com.mapo.ddubuck.data.home.CourseItem
+import com.mapo.ddubuck.data.home.WalkRecord
 import com.naver.maps.geometry.LatLng
 
 /*

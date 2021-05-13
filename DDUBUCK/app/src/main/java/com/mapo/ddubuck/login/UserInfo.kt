@@ -1,6 +1,4 @@
-package com.example.ddubuck.login
-
-import android.provider.ContactsContract
+package com.mapo.ddubuck.login
 
 
 // For naver login user info

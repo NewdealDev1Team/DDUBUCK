@@ -1,4 +1,4 @@
-package com.example.ddubuck.ui.badge
+package com.mapo.ddubuck.ui.badge
 
 
 data class Badge(

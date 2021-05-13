@@ -1,14 +1,11 @@
-package com.example.ddubuck.data
+package com.mapo.ddubuck.data
 
 
-import android.graphics.Bitmap
 import android.util.Log
-import com.example.ddubuck.data.home.WalkRecord
-import com.example.ddubuck.data.publicdata.PublicData
-import com.example.ddubuck.data.publicdata.PublicDataAPI
+import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.data.publicdata.PublicDataAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.naver.maps.geometry.LatLng
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
