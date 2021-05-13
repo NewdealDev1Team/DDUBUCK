@@ -43,7 +43,9 @@ class BottomSheetCompleteFragment(
         val titleTv : TextView = rootView.findViewById(R.id.sheet_complete_titleTv)
         val formatter = BottomSheetNumberFormat()
         if(walkType == HomeMapFragment.WALK_COURSE) {
-            //TODO
+            titleTv.text = "코스 산책"
+        } else {
+            titleTv.text = "자유 산책"
         }
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_complete_walTimeTv)
         walkTimeTv.text = DateUtils.formatElapsedTime(walkRecord.walkTime)
