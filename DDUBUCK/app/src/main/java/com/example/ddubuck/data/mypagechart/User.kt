@@ -1,6 +1,5 @@
 package com.example.ddubuck.data.mypagechart
 
-data class TotalStat(
-    val stepCount: Int,
+data class User(
     val name: String
 )

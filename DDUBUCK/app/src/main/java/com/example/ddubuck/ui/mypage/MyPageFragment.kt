@@ -1,7 +1,6 @@
 package com.example.ddubuck.ui.mypage
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 
@@ -18,6 +17,8 @@ import com.bumptech.glide.Glide
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.mypagechart.RetrofitChart
@@ -27,15 +28,11 @@ import com.example.ddubuck.databinding.FragmentMypageBinding
 import com.example.ddubuck.login.UserService
 import com.example.ddubuck.login.UserValidationInfo
 import com.example.ddubuck.sharedpref.UserSharedPreferences
-import com.example.ddubuck.ui.home.HomeMapFragment
 import com.example.ddubuck.userinfo.NextTimeDialog
 import com.example.ddubuck.ui.mypage.mywalk.CaloriesFragment
 import com.example.ddubuck.ui.mypage.mywalk.CourseClearFragment
 import com.example.ddubuck.ui.mypage.mywalk.WalkTimeFragment
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_edit_userinfo.*
-import kotlinx.android.synthetic.main.fragment_mypage.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,11 +46,12 @@ class MyPageFragment : Fragment() {
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
 
-
+    private lateinit var activeFragment: Fragment
     private lateinit var walkTimeFramgnet: WalkTimeFragment
     private lateinit var courseClearFragment: CourseClearFragment
     private lateinit var caloriesFragment: CaloriesFragment
 
+//    private lateinit var v : View
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -62,18 +60,19 @@ class MyPageFragment : Fragment() {
 
         profileImageViewModel = ProfileImageViewModel()
         val myPageView = inflater.inflate(R.layout.fragment_mypage, container, false)
-
+//        v = myPageView
         val profileImage: CircleImageView = myPageView.findViewById(R.id.profile_image)
         val profileImageEditButton: CircleImageView =
             myPageView.findViewById(R.id.profile_edit_button)
         val userName: TextView = myPageView.findViewById(R.id.user_name)
-        val stepCount: TextView = myPageView.findViewById(R.id.step_count)
+        val stepCountInMypage: TextView = myPageView.findViewById(R.id.step_count)
 
         val galleryGrid: GridView = myPageView.findViewById(R.id.gallery_grid)
         getAllPhotos(galleryGrid)
 
         val walkingTimeButton: ConstraintLayout = myPageView.findViewById(R.id.walking_time_button)
-        val courseClearButton: ConstraintLayout = myPageView.findViewById(R.id.course_complete_button)
+        val courseClearButton: ConstraintLayout =
+            myPageView.findViewById(R.id.course_complete_button)
         val calorieButton: ConstraintLayout = myPageView.findViewById(R.id.calorie_button)
 
         val routeInfoButton: ImageView = myPageView.findViewById(R.id.user_route_info_button)
@@ -95,57 +94,88 @@ class MyPageFragment : Fragment() {
 
         }
         //나의 산책 기록
-        RetrofitChart.instance.getRestsMypage().enqueue(object : Callback<chartData> {
-            override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
-                if (response.isSuccessful) {
-                    Log.d("text", "연결성공")
-                    var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
-                    val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
-                    val walkingTimeButtonRecord: TextView =
-                        myPageView.findViewById(R.id.walking_time_button_record)
-                    walkingTimeButtonRecord.setText(timeRecordt6.toString())
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            val userKey: Int = it.toInt()
+            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
+                override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
+                    if (response.isSuccessful) {
+                        Log.d("text", "연결성공")
+                        var stepCount = response.body()?.weekStat?.get(6)?.stepCount?.toInt()
+                        val setCountRecordText: TextView = stepCountInMypage //TextView
+                        setCountRecordText.setText(stepCount.toString())
 
-                    var courseRecord6 = response.body()?.weekStat?.get(6)?.completedCount?.toInt()
-                    val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
-                    val courseEndButtonRecord: TextView =
-                        myPageView.findViewById(R.id.course_end_button_record)
-                    courseEndButtonRecord.setText(courseRecord6.toString())
 
-                    var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
-                    val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
-                    val calorieButtonRecord: TextView =
-                        myPageView.findViewById(R.id.calorie_button_record)
-                    calorieButtonRecord.setText(calorieRecord6.toString())
+                        var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
+                        val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
+                        val walkingTimeButtonRecord: TextView =
+                            myPageView.findViewById(R.id.walking_time_button_record)
+                        if(60 <= timeRecordt6.toInt()){
+                            val hour: Int = timeRecordt6/60
+                            val hourName : String = "시"
+                            walkingTimeButtonRecord.setText(hour.toString()+hourName)
+                        }else{
+                            val miniteName : String = "분"
+                            walkingTimeButtonRecord.setText(timeRecordt6.toString() + miniteName)
+                        }
+
+
+                        var courseRecord6 =
+                            response.body()?.weekStat?.get(6)?.completedCount?.toInt()
+                        val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
+                        val courseEndButtonRecord: TextView =
+                            myPageView.findViewById(R.id.course_end_button_record)
+                        val countName : String = "번"
+                        courseEndButtonRecord.setText(courseRecord6.toString()+countName)
+
+                        var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
+                        val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
+                        val calorieButtonRecord: TextView =
+                            myPageView.findViewById(R.id.calorie_button_record)
+                        val calorieName : String = "kcal"
+                        calorieButtonRecord.setText(calorieRecord6.toString() + calorieName)
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<chartData>, t: Throwable) {
-                Log.d("error", t.message.toString())
-            }
-        })
+                override fun onFailure(call: Call<chartData>, t: Throwable) {
+                    Log.d("error", t.message.toString())
+                }
+            })
+        }
 
-//        val backStackTag = MainActivity.MYPAGE_TAG
-//        childFragmentManager.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         // 산책 시간 버튼 onClickListener
         walkingTimeButton.setOnClickListener {
+            mypageFragment = MyPageFragment()
             walkTimeFramgnet = WalkTimeFragment()
-            toChartWalkTimePage()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.scrollview_mypage,walkTimeFramgnet)
+                .addToBackStack(MainActivity.MYPAGE_TAG)
+                .commit()
         }
 
         // 코스 완주 버튼 onClickListener
         courseClearButton.setOnClickListener {
+            mypageFragment = MyPageFragment()
             courseClearFragment = CourseClearFragment()
-            toChartCourseClearPage()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.scrollview_mypage, courseClearFragment)
+                .addToBackStack(MainActivity.MYPAGE_TAG)
+                .commit()
         }
 
         // 칼로리 버튼 onClickListener
         calorieButton.setOnClickListener {
+            mypageFragment = MyPageFragment()
             caloriesFragment = CaloriesFragment()
-            toChartCaloriePage()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.scrollview_mypage, caloriesFragment)
+                .addToBackStack(MainActivity.MYPAGE_TAG)
+                .commit()
         }
 
+
         routeInfoButton.setOnClickListener {
-            val dialog = NextTimeDialog("사용자 지정 경로란?", "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
+            val dialog = NextTimeDialog("사용자 지정 경로란?",
+                "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
                 context as Activity)
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.show()
@@ -165,12 +195,6 @@ class MyPageFragment : Fragment() {
         return myPageView
     }
 
-    private fun toChartWalkTimePage() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.scrollview_mypage, walkTimeFramgnet)
-            .addToBackStack(MainActivity.MYPAGE_TAG)
-            .commit()
-    }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getAllPhotos(gridView: GridView) {
@@ -202,26 +226,13 @@ class MyPageFragment : Fragment() {
         gridView.adapter = adapter
     }
 
-    private fun toChartCourseClearPage() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.scrollview_mypage, courseClearFragment)
-            .addToBackStack(MainActivity.MYPAGE_TAG)
-            .commit()
-    }
-
-    private fun toChartCaloriePage() {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.scrollview_mypage, caloriesFragment)
-            .addToBackStack(MainActivity.MYPAGE_TAG)
-            .commit()
-    }
-
     private fun toEditInfoPage() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.scrollview_mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
     }
+
 
     private fun setUserInfo(userName: TextView, profileImage: CircleImageView) {
         val userValidation: Retrofit = Retrofit.Builder()
@@ -243,7 +254,6 @@ class MyPageFragment : Fragment() {
                     activity?.let { it1 ->
                         Glide.with(it1).load(profileImageURL).into(profileImage)
                     }
-
                 }
 
                 override fun onFailure(call: Call<UserValidationInfo>, t: Throwable) {
@@ -252,7 +262,6 @@ class MyPageFragment : Fragment() {
             })
         }
     }
-
 
 }
 

@@ -21,8 +21,8 @@ object RetrofitChart{
 }
 
 interface chartService{
-    @GET("get/User/Status/RecordData?userKey=1677486124")
-    fun getRestsMypage(
-    ) : Call<chartData>
+//    http://3.37.6.181:3000/get/User/Status/RecordData?userKey=1677486124
+    @GET("get/User/Status/RecordData")
+    fun getRestsMypage(@Query("userKey") userKey : Int) : Call<chartData>
 
 }

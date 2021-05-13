@@ -64,7 +64,6 @@ object RetrofitClient{
 
 class RetrofitService {
 
-
     fun createRecord(userKey : String, walkRecord: WalkRecord){
         val map = hashMapOf<String, Any>()
         map["userKey"] = userKey
