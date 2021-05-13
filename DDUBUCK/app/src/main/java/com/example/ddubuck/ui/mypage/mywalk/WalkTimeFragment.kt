@@ -60,6 +60,7 @@ import kotlin.collections.ArrayList
 
 //서버에 연결해서 데이터 입력
 //마이페이지에서 화면 연결하기 //api 정리하기!!
+
 @RequiresApi(Build.VERSION_CODES.O)
 class WalkTimeFragment : Fragment() {
 
@@ -352,6 +353,7 @@ class WalkTimeFragment : Fragment() {
         return permissions
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     fun saveImageExternal(image: Bitmap): Uri? {
 //        val v: LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
         var uri: Uri? = null

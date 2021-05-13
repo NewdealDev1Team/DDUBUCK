@@ -47,10 +47,6 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
-    //마이페이지 나의 산책 기
-    private val walkTimeFragment = WalkTimeFragment()
-    private val courseClearFragment = CourseClearFragment()
-    private val caloriesFragment = CaloriesFragment()
 
     private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
@@ -84,7 +80,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        onCoachMark()
+//        onCoachMark()
 
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
 
@@ -156,10 +152,7 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, challengeFragment).hide(challengeFragment)
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
-
             add(R.id.nav_main_container, settingFragment).hide(settingFragment)
-
-
 //            add(R.id.nav_main_container,walkTimeFragment).hide(walkTimeFragment)
 //            add(R.id.nav_main_container,courseClearFragment).hide(courseClearFragment)
 //            add(R.id.nav_main_container,caloriesFragment).hide(caloriesFragment)
