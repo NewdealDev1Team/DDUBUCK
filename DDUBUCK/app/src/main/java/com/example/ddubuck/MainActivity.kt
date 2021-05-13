@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity() {
                                 .detach(activeFragment)
                                 .attach(myPageFragment)
                                 .commit()
+
                         }
                         else -> {
 
@@ -243,6 +244,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStackImmediate()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
         supportFragmentManager.popBackStackImmediate()
