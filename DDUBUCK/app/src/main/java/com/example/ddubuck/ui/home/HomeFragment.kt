@@ -1,11 +1,16 @@
 package com.example.ddubuck.ui.home
 
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +20,8 @@ import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetSelectFragment
 import com.example.ddubuck.weather.WeatherFragment
 import com.example.ddubuck.weather.WeatherViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment(private val owner: Activity) : Fragment() {
 
@@ -64,9 +71,15 @@ class HomeFragment(private val owner: Activity) : Fragment() {
             }
         })
 
-
+        val bottomSheetFrame = root.findViewById<FrameLayout>(R.id.bottom_sheet_container)
+        val mapFrame = root.findViewById<CoordinatorLayout>(R.id.home_map_frame)
         val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment()
         fm.beginTransaction().add(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
+
+        mapViewModel.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
+            bottomSheetFrame.layoutParams.height += v
+            mapFrame.requestLayout()
+        })
 
         return root
     }

@@ -14,11 +14,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.ui.home.CourseAddDialog
 import com.example.ddubuck.ui.home.HomeMapFragment
+import com.example.ddubuck.ui.home.HomeMapViewModel
 import com.example.ddubuck.ui.share.ShareActivity
 
 
@@ -29,12 +31,14 @@ class BottomSheetCompleteFragment(
     private val walkType: Int,
 ) : Fragment() {
 
+    private val homeMapViewModel : HomeMapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        homeMapViewModel.bottomSheetHeight.value = 400
         val rootView = inflater.inflate(R.layout.bottom_sheet_complete, container, false)
         val titleTv : TextView = rootView.findViewById(R.id.sheet_complete_titleTv)
         val formatter = BottomSheetNumberFormat()
@@ -77,5 +81,11 @@ class BottomSheetCompleteFragment(
             }
         }
         return rootView
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        homeMapViewModel.bottomSheetHeight.value = -400
     }
 }
