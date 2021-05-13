@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
-    //myWalk
+    //마이페이지 나의 산책 기
     private val walkTimeFragment = WalkTimeFragment()
     private val courseClearFragment = CourseClearFragment()
     private val caloriesFragment = CaloriesFragment()
@@ -98,8 +98,6 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
-//레이아웃, fragmentTransaction 위에 올라오는 것 fragment
-//마이페이지 부모 뷰에서 어떻게 되어을 지 모르겠다.그냥 다양한 경우의 수를 따져서 사용하기!!
 
     fun onCoachMark() {
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
@@ -160,6 +158,10 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, challengeFragment).hide(challengeFragment)
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
+
+//            add(R.id.nav_main_container,walkTimeFragment).hide(walkTimeFragment)
+//            add(R.id.nav_main_container,courseClearFragment).hide(courseClearFragment)
+//            add(R.id.nav_main_container,caloriesFragment).hide(caloriesFragment)
         }.commit()
         activeFragment = homeFragment
         val tbm = supportActionBar

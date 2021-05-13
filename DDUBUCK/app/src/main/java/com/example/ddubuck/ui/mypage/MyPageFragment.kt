@@ -46,10 +46,12 @@ class MyPageFragment : Fragment() {
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
 
+    private lateinit var activeFragment: Fragment
     private lateinit var walkTimeFramgnet: WalkTimeFragment
     private lateinit var courseClearFragment: CourseClearFragment
     private lateinit var caloriesFragment: CaloriesFragment
 
+//    private lateinit var v : View
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -58,7 +60,7 @@ class MyPageFragment : Fragment() {
 
         profileImageViewModel = ProfileImageViewModel()
         val myPageView = inflater.inflate(R.layout.fragment_mypage, container, false)
-
+//        v = myPageView
         val profileImage: CircleImageView = myPageView.findViewById(R.id.profile_image)
         val profileImageEditButton: CircleImageView =
             myPageView.findViewById(R.id.profile_edit_button)
@@ -98,7 +100,7 @@ class MyPageFragment : Fragment() {
                 override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                     if (response.isSuccessful) {
                         Log.d("text", "연결성공")
-                        var stepCount = response.body()?.weekStat?.get(0)?.stepCount?.toInt()
+                        var stepCount = response.body()?.weekStat?.get(6)?.stepCount?.toInt()
                         val setCountRecordText: TextView = stepCountInMypage //TextView
                         setCountRecordText.setText(stepCount.toString())
 
@@ -140,18 +142,12 @@ class MyPageFragment : Fragment() {
             })
         }
 
-//        val backStackTag = MainActivity.MYPAGE_TAGFragmentManager
-//        childFragmentManager.popBackStack(backStackTag, .POP_BACK_STACK_INCLUSIVE)
         // 산책 시간 버튼 onClickListener
         walkingTimeButton.setOnClickListener {
             mypageFragment = MyPageFragment()
             walkTimeFramgnet = WalkTimeFragment()
-//            supportFragmen.popBackStack(mypage,
-//                FragmentManager.POP_BACK_STACK_INCLUSIVE)
             parentFragmentManager.beginTransaction()
-                .add(R.id.scrollview_mypage,walkTimeFramgnet)
-                .remove(myPageEditFragment)
-//                .replace(R.id.scrollview_mypage, walkTimeFramgnet)
+                .replace(R.id.scrollview_mypage,walkTimeFramgnet)
                 .addToBackStack(MainActivity.MYPAGE_TAG)
                 .commit()
         }
@@ -198,6 +194,7 @@ class MyPageFragment : Fragment() {
 
         return myPageView
     }
+
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getAllPhotos(gridView: GridView) {
@@ -265,7 +262,6 @@ class MyPageFragment : Fragment() {
             })
         }
     }
-
 
 }
 

@@ -10,6 +10,8 @@
         android:layout_width="89dp"
         android:layout_height="89dp"
         android:src="@drawable/ic_badge_challenge_goodjob"
+        android:layout_marginRight="12dp"
+        android:layout_marginLeft="12dp"
         android:layout_centerHorizontal="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

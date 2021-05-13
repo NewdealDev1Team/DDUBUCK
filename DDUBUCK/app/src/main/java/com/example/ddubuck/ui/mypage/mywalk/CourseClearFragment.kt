@@ -13,10 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
@@ -310,8 +307,8 @@ class CourseClearFragment : Fragment() {
                     Instacapture.capture(this.requireActivity(),
                     object : SimpleScreenCapturingListener() {
                         override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: LinearLayout =
-                                requireView().findViewById(R.id.courseclear) as LinearLayout
+                            val capture: ScrollView =
+                                requireView().findViewById(R.id.courseclear) as ScrollView
                             val day = SimpleDateFormat("yyyyMMddHHmmss")
                             val date = Date()
                             capture.buildDrawingCache()

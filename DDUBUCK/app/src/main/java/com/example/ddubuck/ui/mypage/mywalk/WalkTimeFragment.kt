@@ -296,15 +296,15 @@ class WalkTimeFragment : Fragment() {
             when (requestPermissions()) {
                 true -> Instacapture.capture(this.requireActivity(),
                     object : SimpleScreenCapturingListener() {
-                        override fun onCaptureComplete(bitmap: Bitmap) {
-                            val capture: LinearLayout =
-                                requireView().findViewById(R.id.walktime) as LinearLayout
+                        override fun onCaptureComplete(captureview: Bitmap) {
+                            val capture: ScrollView =
+                                requireView().findViewById(R.id.walktime) as ScrollView
                             val day = SimpleDateFormat("yyyyMMddHHmmss")
                             val date = Date()
                             val remove: View = rootView.findViewById(R.id.time_share_button_layout)
                             remove.visibility = View.GONE
                             capture.buildDrawingCache()
-                            capture.removeViewInLayout(rootView.findViewById(R.id.time_share_button_layout))
+//                            capture.removeViewInLayout(rootView.findViewById(R.id.time_share_button_layout))
                             val captureview: Bitmap = capture.getDrawingCache()
 
                             val uri = saveImageExternal(captureview)
@@ -353,7 +353,7 @@ class WalkTimeFragment : Fragment() {
     }
 
     fun saveImageExternal(image: Bitmap): Uri? {
-        val v: LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
+//        val v: LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
         var uri: Uri? = null
         try {
             //저장할 폴더 setting

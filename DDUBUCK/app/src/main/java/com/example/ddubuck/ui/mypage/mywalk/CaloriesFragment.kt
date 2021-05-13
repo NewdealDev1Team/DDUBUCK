@@ -13,10 +13,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
@@ -290,13 +287,13 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                 true -> Instacapture.capture(this.requireActivity(),
                     object : SimpleScreenCapturingListener() {
                         override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: LinearLayout =
-                                requireView().findViewById(R.id.calorie) as LinearLayout
+                            val capture: ScrollView =
+                                requireView().findViewById(R.id.calorie) as ScrollView
                             val day = SimpleDateFormat("yyyyMMddHHmmss")
                             val date = Date()
                             //공유 버튼 제
                             val remove: View =
-                                rootView.findViewById(R.id.calorie_share_button_layout)
+                                rootView.findViewById(R.id.calorie_button_screenshot)
                             remove.visibility = View.GONE
                             capture.buildDrawingCache()
                             val captureview: Bitmap = capture.getDrawingCache()
