@@ -3,145 +3,152 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <FrameLayout
+        android:id="@+id/challenge_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        tools:context=".ui.challenge.ChallengeFragment">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/ddubuck_challenge_textArea"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/ddubuck_challenge_title"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:layout_marginBottom="15dp"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/ddubuck_challenge_text"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14dp"/>
-
-
-        </LinearLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@+id/ddubuck_challenge_textArea"
-            android:id="@+id/challenge_recyclerView"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"/>
-
-        <View
-            android:id="@+id/challenge_divider1"
+        <RelativeLayout
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_below="@+id/challenge_recyclerView"
-            android:layout_marginTop="15dp"
-            android:background="#10767676" />
-
-        <LinearLayout
-            android:layout_marginTop="30dp"
-            android:layout_below="@id/challenge_divider1"
-            android:id="@+id/hidden_challenge_textArea"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/hidden_challenge_title"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:layout_marginBottom="15dp"
-                android:textColor="@color/black"/>
-
-            <TextView
-                android:id="@+id/hidden_challenge_text"
-                android:layout_marginStart="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14dp"/>
-
-
-        </LinearLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@+id/hidden_challenge_textArea"
-            android:id="@+id/hidden_challenge_recyclerView"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"/>
-
-        <View
-            android:id="@+id/challenge_divider2"
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_below="@+id/hidden_challenge_recyclerView"
-            android:layout_marginTop="15dp"
-            android:background="#10767676" />
-
-        <LinearLayout
             android:layout_marginTop="30dp"
-            android:layout_below="@id/challenge_divider2"
-            android:id="@+id/pet_challenge_textArea"
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            tools:context=".ui.challenge.ChallengeFragment">
 
-            <TextView
-                android:id="@+id/pet_challenge_title"
+            <LinearLayout
+                android:id="@+id/ddubuck_challenge_textArea"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ddubuck_challenge_title"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/ddubuck_challenge_text"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"/>
+
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_below="@+id/ddubuck_challenge_textArea"
+                android:id="@+id/challenge_recyclerView"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"/>
+
+            <View
+                android:id="@+id/challenge_divider1"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_below="@+id/challenge_recyclerView"
+                android:layout_marginTop="15dp"
+                android:background="#10767676" />
+
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/challenge_divider1"
+                android:id="@+id/hidden_challenge_textArea"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/hidden_challenge_title"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/hidden_challenge_text"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"/>
+
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_below="@+id/hidden_challenge_textArea"
+                android:id="@+id/hidden_challenge_recyclerView"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                android:layout_marginBottom="15dp"
-                android:textColor="@color/black"/>
+                android:layout_centerHorizontal="true"/>
 
-            <TextView
-                android:id="@+id/pet_challenge_text"
+            <View
+                android:id="@+id/challenge_divider2"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_below="@+id/hidden_challenge_recyclerView"
+                android:layout_marginTop="15dp"
+                android:background="#10767676" />
+
+            <LinearLayout
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/challenge_divider2"
+                android:id="@+id/pet_challenge_textArea"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/pet_challenge_title"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/pet_challenge_text"
+                    android:layout_marginStart="16dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14dp"/>
+
+
+            </LinearLayout>
+
+
+            <androidx.recyclerview.widget.RecyclerView
+
+                android:layout_marginBottom="50dp"
+                android:layout_below="@+id/pet_challenge_textArea"
+                android:id="@+id/pet_challenge_recyclerView"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"/>
+                android:layout_centerHorizontal="true"/>
+
+        </RelativeLayout>
 
 
-        </LinearLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-
-            android:layout_marginBottom="50dp"
-            android:layout_below="@+id/pet_challenge_textArea"
-            android:id="@+id/pet_challenge_recyclerView"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"/>
-
-    </RelativeLayout>
+    </FrameLayout>
 
 </ScrollView>
