@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.challenge.detail
+package com.mapo.ddubuck.challenge.detail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapo.ddubuck.R
-import com.mapo.ddubuck.ui.challenge.ChallengeViewModel
+import com.mapo.ddubuck.challenge.ChallengeViewModel
 
 class ChallengeDetailDistanceFragment: Fragment() {
     private lateinit var challengeViewModel: ChallengeViewModel

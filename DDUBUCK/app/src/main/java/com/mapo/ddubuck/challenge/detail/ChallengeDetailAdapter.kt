@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.challenge.detail
+package com.mapo.ddubuck.challenge.detail
 
 import android.view.LayoutInflater
 import android.view.View

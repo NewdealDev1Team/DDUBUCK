@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.home.bottomSheet
 
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +12,7 @@ import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
-import com.mapo.ddubuck.ui.home.HomeFragment
+import com.mapo.ddubuck.home.HomeFragment
 import kotlin.collections.ArrayList
 
 class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,

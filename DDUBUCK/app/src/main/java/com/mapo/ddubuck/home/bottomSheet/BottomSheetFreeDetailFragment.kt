@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.home.bottomSheet
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
-import com.mapo.ddubuck.ui.home.HomeFragment
+import com.mapo.ddubuck.home.HomeFragment
 
 class BottomSheetFreeDetailFragment : Fragment() {
 

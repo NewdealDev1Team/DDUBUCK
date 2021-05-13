@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.home.bottomSheet
 
 import android.text.format.DateUtils
 import java.text.DecimalFormat

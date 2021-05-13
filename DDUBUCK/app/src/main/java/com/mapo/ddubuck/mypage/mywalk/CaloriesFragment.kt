@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.mypage.mywalk
+package com.mapo.ddubuck.mypage.mywalk
 
 import android.Manifest
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.home.bottomSheet
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,7 +14,7 @@ import androidx.fragment.app.activityViewModels
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
-import com.mapo.ddubuck.ui.home.HomeMapViewModel
+import com.mapo.ddubuck.home.HomeMapViewModel
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class BottomSheetCourseProgressFragment(private val courseInfo : CourseItem) : Fragment() {

@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.home.bottomSheet
 
 import android.os.Bundle
 import android.text.format.DateUtils
@@ -14,7 +14,7 @@ import com.bumptech.glide.Glide
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
-import com.mapo.ddubuck.ui.home.HomeFragment
+import com.mapo.ddubuck.home.HomeFragment
 
 class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Fragment() {
 

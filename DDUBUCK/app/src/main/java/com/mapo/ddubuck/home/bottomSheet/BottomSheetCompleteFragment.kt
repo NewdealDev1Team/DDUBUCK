@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.home.bottomSheet
+package com.mapo.ddubuck.home.bottomSheet
 
 import android.app.Activity
 import android.content.Intent
@@ -17,10 +17,10 @@ import androidx.fragment.app.activityViewModels
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.WalkRecord
-import com.mapo.ddubuck.ui.home.CourseAddDialog
-import com.mapo.ddubuck.ui.home.HomeMapFragment
-import com.mapo.ddubuck.ui.home.HomeMapViewModel
-import com.mapo.ddubuck.ui.share.ShareActivity
+import com.mapo.ddubuck.home.CourseAddDialog
+import com.mapo.ddubuck.home.HomeMapFragment
+import com.mapo.ddubuck.home.HomeMapViewModel
+import com.mapo.ddubuck.share.ShareActivity
 
 
 class BottomSheetCompleteFragment(

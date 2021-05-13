@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.ui.share.canvas
+package com.mapo.ddubuck.share.canvas
 
 import android.content.Context
 import android.graphics.*
