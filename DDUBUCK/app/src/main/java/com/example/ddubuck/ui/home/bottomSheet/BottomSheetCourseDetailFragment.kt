@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.bumptech.glide.Glide
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.home.CourseItem
@@ -33,7 +34,14 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         val elevationTv : TextView = rootView.findViewById(R.id.sheet_course_detail_elevationTv)
         elevationTv.text = formatter.getFormattedAltitude(courseItem.walkRecord.altitude)
         val pictureIv : ImageView = rootView.findViewById(R.id.sheet_course_detail_pictureIv)
-        pictureIv.setImageResource(R.mipmap.ic_launcher)
+        Glide.with(this).load(courseItem.imgFile).into(pictureIv)
+        pictureIv.setBackgroundResource(R.drawable.sheet_select_item_rounded)
+        pictureIv.clipToOutline = true
+        /*
+        picture?.let { v ->
+                    Glide.with(itemView).load(i.imgFile).into(v)
+                }
+         */
         val startButton : Button = rootView.findViewById(R.id.sheet_course_detail_startButton)
         startButton.setOnClickListener{
             val fm = parentFragmentManager

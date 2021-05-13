@@ -2,6 +2,7 @@ package com.example.ddubuck.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.publicdata.PublicData
 import com.naver.maps.geometry.LatLng
 
@@ -54,13 +55,15 @@ class HomeMapViewModel : ViewModel() {
         position.value = v
     }
 
+    val recommendPath = MutableLiveData<List<CourseItem>>()
+
     val vibrationControl = MutableLiveData<Boolean>()
     fun vibrate(v:Boolean) {
         vibrationControl.value = v
     }
 
-    //값 반환
     val walkState = MutableLiveData<Int>()
 
-    val publicData = MutableLiveData<PublicData>()
+    //dp대응
+    val bottomSheetHeight = MutableLiveData<Int>()
 }

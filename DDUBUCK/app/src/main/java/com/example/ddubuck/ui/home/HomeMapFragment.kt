@@ -3,9 +3,12 @@ package com.example.ddubuck.ui.home
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.hardware.*
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +19,17 @@ import androidx.fragment.app.activityViewModels
 import com.example.ddubuck.MainActivity
 import com.example.ddubuck.R
 import com.example.ddubuck.data.RetrofitClient
+import com.example.ddubuck.data.RetrofitService
+import com.example.ddubuck.data.home.CourseItem
 import com.example.ddubuck.data.home.WalkRecord
 import com.example.ddubuck.data.publicdata.PublicData
+import com.example.ddubuck.sharedpref.UserSharedPreferences
 import com.example.ddubuck.ui.CommonDialog
 import com.example.ddubuck.ui.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
-import com.naver.maps.map.overlay.Overlay
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
@@ -47,10 +52,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     //산책 시작 여부
     //TODO background operation
-    var allowRecording = false
-    var isRestarted = false
-    var isCourseSelected = false
-    var isCourseInitialized = false
+    private var allowRecording = false
+    private var isRestarted = false
+    private var isCourseSelected = false
+    private var isCourseInitialized = false
 
     //TODO STATE로 운용할 것
     companion object {
@@ -67,11 +72,11 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private val model: HomeMapViewModel by activityViewModels()
 
     //환경설정 변수
+    private val userKey : String = UserSharedPreferences.getUserId(owner)
     private lateinit var map: NaverMap
     private lateinit var timer: Timer
-    private lateinit var locationButtonView: LocationButtonView
     private lateinit var locationSource: FusedLocationSource
-    private val sensorManager by lazy { // 지연된 초기화는 딱 한 번 실행됨
+    private val sensorManager by lazy {
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
     private var markers:HashMap<String, Marker> = HashMap()
@@ -105,7 +110,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                     fm.beginTransaction().add(R.id.map, it).commit()
                 }
         nMapFragment.getMapAsync(this)
-        locationButtonView = rootView.findViewById(R.id.location)
 
         model.isRecordStarted.observe(viewLifecycleOwner, { v ->
             if (v) {
@@ -154,6 +158,137 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+
+    private fun initPublicData(x:Double, y:Double) {
+        RetrofitClient.publicDataInstance.getResult(x,y)
+            .enqueue(object : Callback<PublicData> {
+                override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
+                    println(response.body()!!.toString())
+                    val publicData = response.body()!!
+                    val markerHeightSize = 80
+                    val markerWidthSize = 60
+                    //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!!
+                    for (i in publicData.petCafe) {
+                        val marker = Marker()
+                        marker.position = LatLng(i.x, i.y)
+                        marker.map = map
+                        marker.icon = MarkerIcons.BLUE
+                        marker.height = markerHeightSize
+                        marker.width = markerWidthSize
+                        marker.isHideCollidedMarkers = true
+                        marker.setOnClickListener {
+                            //dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                it.show()
+                            }
+                            true
+                        }
+                        markers["petCafe"] = marker
+                    }
+                    for (i in publicData.carFreeRoad) {
+                        val marker = Marker()
+                        marker.position = LatLng(i.path[0].x, i.path[0].y)
+                        marker.map = map
+                        marker.icon = MarkerIcons.RED
+                        marker.height = markerHeightSize
+                        marker.width = markerWidthSize
+                        marker.isHideCollidedMarkers = true
+                        marker.setOnClickListener {
+                            CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner).let {
+                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                it.show()
+                            }
+                            true
+                        }
+                        markers["carFreeRoad"] = marker
+                    }
+                    for (i in publicData.cafe) {
+                        val marker = Marker()
+                        marker.position = LatLng(i.x, i.y)
+                        marker.map = map
+                        marker.icon = MarkerIcons.GRAY
+                        marker.height = markerHeightSize
+                        marker.width = markerWidthSize
+                        marker.isHideCollidedMarkers = true
+                        marker.setOnClickListener{
+                            CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                it.show()
+                            }
+                            true
+                        }
+                        markers["cafe"] = marker
+                    }
+                    for (i in publicData.petRestaurant) {
+                        val marker = Marker()
+                        marker.position = LatLng(i.x, i.y)
+                        marker.map = map
+                        marker.icon = MarkerIcons.PINK
+                        marker.height = markerHeightSize
+                        marker.width = markerWidthSize
+                        marker.isHideCollidedMarkers = true
+                        marker.setOnClickListener {
+                            CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                it.show()
+                            }
+                            true
+                        }
+                        markers["petRestaurant"] = marker
+                    }
+                    for (i in publicData.publicRestArea) {
+                        val marker = Marker()
+                        marker.position = LatLng(i.x, i.y)
+                        marker.map = map
+                        marker.icon = MarkerIcons.GREEN
+                        marker.height = markerHeightSize
+                        marker.width = markerWidthSize
+                        marker.isHideCollidedMarkers = true
+                        marker.setOnClickListener {
+                            CommonDialog("공공쉼터",i.name, owner).let {
+                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                it.show()
+                            }
+                            true
+                        }
+                        markers["publicRestArea"] = marker
+                    }
+                    for (i in publicData.publicToilet) {
+                        val marker = Marker()
+                        marker.position = LatLng(i.x, i.y)
+                        marker.map = map
+                        marker.icon = MarkerIcons.YELLOW
+                        marker.height = markerHeightSize
+                        marker.width = markerWidthSize
+                        marker.isHideCollidedMarkers = true
+                        marker.setOnClickListener {
+                            CommonDialog("공공화장실",i.name, owner).let {
+                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                it.show()
+                            }
+                            true
+                        }
+                        markers["publicToilet"] = marker
+                    }
+                    if(publicData.recommendPath.isNotEmpty()) {
+                        val courseData = mutableListOf<CourseItem>()
+                        for (i in publicData.recommendPath) {
+                            courseData.add(i.toCourseItem())
+                            model.recommendPath.value = courseData
+                        }
+                        //home에다가 보내기
+                    }
+
+                }
+
+                override fun onFailure(call: Call<PublicData>, t: Throwable) {
+                    Log.e("publicDataFetch", "FAILED!")
+                }
+
+            })
+    }
+
     //버튼 텍스트 바꾸고 산책시작
     private fun startRecording() {
         timer = timer(period = 1000) {
@@ -185,11 +320,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             WALK_COURSE
         else
             WALK_FREE
+
+        val walkRecord = getWalkResult()
+
+        //RetrofitService().createRecord(userKey, walkRecord)
         parentFragmentManager.beginTransaction()
-                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,getWalkResult(), walkTag),
+                .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
                 .commit()
-        //RetrofitService().createPost(getWalkResult())
 
         model.walkTime.value = 0
         model.walkCalorie.value = 0.0
@@ -254,14 +392,22 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         map.locationSource = locationSource
         map.locationTrackingMode = LocationTrackingMode.Face
-        map.uiSettings.isLocationButtonEnabled = false
-
-        locationButtonView.map = this.map
+        map.uiSettings.isLocationButtonEnabled = true
 
         course.color = Color.parseColor("#2798E7")
         course.width = 15
         course.capType = PolylineOverlay.LineCap.Round
         course.joinType = PolylineOverlay.LineJoin.Round
+
+
+
+        var contentPaddingBottom = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 190f, resources.displayMetrics).toInt()
+        map.setContentPadding(0,0,0,contentPaddingBottom)
+
+        model.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
+            contentPaddingBottom += TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()
+            map.setContentPadding(0,0,0,contentPaddingBottom)
+        })
 
         //courseMarker.iconTintColor = Color.parseColor("#2798E7")
         courseMarker.icon = MarkerIcons.BLUE
@@ -272,6 +418,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         model.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener {
+            //TODO 현재위치에서 재탐색 기능
             if(!isLocationFirstChanged) {
                 model.recordPosition(
                         LatLng(
@@ -279,104 +426,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 locationSource.lastLocation?.longitude!!
                         )
                 )
-
-                RetrofitClient.publicDataInstance.getResult( locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
-                    .enqueue(object : Callback<PublicData> {
-                        override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
-                            val publicData = response.body()!!
-                            val markerHeightSize = Marker.SIZE_AUTO
-                            val markerWidthSize = Marker.SIZE_AUTO
-                            for (i in publicData.petCafe) {
-                                val marker = Marker()
-                                marker.position = LatLng(i.x, i.y)
-                                marker.map = map
-                                marker.icon = MarkerIcons.BLUE
-                                marker.height = markerHeightSize
-                                marker.width = markerWidthSize
-                                marker.isHideCollidedMarkers = true
-                                marker.setOnClickListener {
-                                    CommonDialog(i.name, i.address, owner).show()
-                                    true
-                                }
-                                markers["petCafe"] = marker
-                            }
-                            for (i in publicData.carFreeRoad) {
-                                val marker = Marker()
-                                marker.position = LatLng(i.path[0].x, i.path[0].y)
-                                marker.map = map
-                                marker.icon = MarkerIcons.RED
-                                marker.height = markerHeightSize
-                                marker.width = markerWidthSize
-                                marker.isHideCollidedMarkers = true
-                                marker.setOnClickListener {
-                                    CommonDialog(i.name,  i.time, owner).show()
-                                    true
-                                }
-                                markers["carFreeRoad"] = marker
-                            }
-                            for (i in publicData.cafe) {
-                                val marker = Marker()
-                                marker.position = LatLng(i.x, i.y)
-                                marker.map = map
-                                marker.icon = MarkerIcons.GRAY
-                                marker.height = markerHeightSize
-                                marker.width = markerWidthSize
-                                marker.isHideCollidedMarkers = true
-                                marker.setOnClickListener{
-                                    CommonDialog(i.name, i.address, owner).show()
-                                    true
-                                }
-                                markers["cafe"] = marker
-                            }
-                            for (i in publicData.petRestaurant) {
-                                val marker = Marker()
-                                marker.position = LatLng(i.x, i.y)
-                                marker.map = map
-                                marker.icon = MarkerIcons.BLACK
-                                marker.height = markerHeightSize
-                                marker.width = markerWidthSize
-                                marker.isHideCollidedMarkers = true
-                                marker.setOnClickListener {
-                                    CommonDialog(i.name, i.address, owner).show()
-                                    true
-                                }
-                                markers["petRestaurant"] = marker
-                            }
-                            for (i in publicData.publicRestArea) {
-                                val marker = Marker()
-                                marker.position = LatLng(i.x, i.y)
-                                marker.map = map
-                                marker.icon = MarkerIcons.GREEN
-                                marker.height = markerHeightSize
-                                marker.width = markerWidthSize
-                                marker.isHideCollidedMarkers = true
-                                marker.setOnClickListener {
-                                    CommonDialog(i.name, "공공쉼터입니다", owner).show()
-                                    true
-                                }
-                                markers["publicRestArea"] = marker
-                            }
-                            for (i in publicData.publicToilet) {
-                                val marker = Marker()
-                                marker.position = LatLng(i.x, i.y)
-                                marker.map = map
-                                marker.icon = MarkerIcons.YELLOW
-                                marker.height = markerHeightSize
-                                marker.width = markerWidthSize
-                                marker.isHideCollidedMarkers = true
-                                marker.setOnClickListener {
-                                    CommonDialog(i.name, "공공화장실 입니다", owner).show()
-                                    true
-                                }
-                                markers["publicToilet"] = marker
-                            }
-                        }
-
-                        override fun onFailure(call: Call<PublicData>, t: Throwable) {
-                            Log.e("publicDataFetch", "FAILED!")
-                        }
-
-                    })
+                //initPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
                 isLocationFirstChanged=true
             }
 
