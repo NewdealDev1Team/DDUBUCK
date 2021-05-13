@@ -79,6 +79,7 @@ class MyPageFragment : Fragment() {
 
         setUserInfo(userName, profileImage)
 
+
         profileImage.setOnClickListener {
             mypageFragment = MyPageFragment()
             myPageEditFragment = MyPageEditFragment()
@@ -222,15 +223,17 @@ class MyPageFragment : Fragment() {
         }
 
         val adapter = context?.let { GalleryAdapter(it, uriArr) }
-        gridView.numColumns = 4 // 한 줄에 4개씩
+        gridView.numColumns = 4 // 한 줄에 4개
         gridView.adapter = adapter
     }
 
     private fun toEditInfoPage() {
-        parentFragmentManager.beginTransaction()
+        val fragmentTransaction = parentFragmentManager.beginTransaction()
+        fragmentTransaction
             .replace(R.id.scrollview_mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
+
     }
 
 

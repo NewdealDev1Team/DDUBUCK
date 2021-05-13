@@ -36,26 +36,27 @@ class GalleryAdapter(val context: Context, uriArr: ArrayList<String>) : BaseAdap
         val display = context.resources.displayMetrics
 
         Glide.with(context).load(items[p]).into(imageView)
-        if (p == 3) {
-            Glide.with(context).clear(imageView)
-            imageView.setImageResource(R.drawable.ic_icon_plus)
-            imageView.adjustViewBounds = true
-            imageView.layoutParams =
-                LinearLayout.LayoutParams(display.widthPixels / 5, display.widthPixels / 5)
-            imageView.scaleType = ImageView.ScaleType.CENTER
+        imageView.adjustViewBounds = true
+        imageView.scaleType = ImageView.ScaleType.CENTER_CROP
 
-
-
-        } else {
-
-            imageView.adjustViewBounds = true
-            imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-
-            imageView.layoutParams =
-                LinearLayout.LayoutParams(display.widthPixels / 5, display.widthPixels / 5)
-
-
-        }
+        imageView.layoutParams =
+            LinearLayout.LayoutParams(display.widthPixels / 5, display.widthPixels / 5)
+//        if (p == 3) {
+//            Glide.with(context).clear(imageView)
+//            imageView.setImageResource(R.drawable.ic_icon_plus)
+//            imageView.adjustViewBounds = true
+//            imageView.layoutParams =
+//                LinearLayout.LayoutParams(display.widthPixels / 5, display.widthPixels / 5)
+//            imageView.scaleType = ImageView.ScaleType.CENTER
+//
+//
+//
+//        } else {
+//
+//
+//
+//
+//        }
 
         imageView.setOnClickListener {
             val intent =  Intent()
@@ -66,11 +67,6 @@ class GalleryAdapter(val context: Context, uriArr: ArrayList<String>) : BaseAdap
         }
 
         return imageView
-    }
-
-    fun toGallery() {
-
-
     }
 
 }

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,8 +44,8 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
         val tempAndDust: TextView = weatherView.findViewById(R.id.temp_and_dust)
         val weatherImage: ImageView = weatherView.findViewById(R.id.weather_image)
 
-//        weatherViewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         showWeatherInfo(this, weatherText, tempAndDust, weatherImage)
+        context?.let { UserSharedPreferences.getPet(it) }?.let { weatherViewModel.setPetValue(it) }
 
         return weatherView
     }
@@ -103,11 +104,18 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                 (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
 
         // 자외선 지수
-        val uvRays = uvRays.response.body.items.item[0].today
+        val uvRays = if (uvRays.response.header.resultCode != "00") {
+            "-1"
+        } else {
+            uvRays.response.body.items.item[0].today
+        }
 
         // 통합 대기 환경 지수
-        val dustInfo = dust.response.body.items[0].khaiValue
-
+        val dustInfo = if (dust.response.header.resultCode != "00") {
+            "-1"
+        } else {
+            dust.response.body.items[0].khaiValue.toString()
+        }
 
 
         var dustString = ""
@@ -149,12 +157,15 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                     dustString = "보통"
                 }
                 in 101..250 -> {
-                    weatherScore += 2
+                    weatherScore -= 3
                     dustString = "나쁨"
                 }
                 in 251..500 -> {
-                    weatherScore += 1
+                    weatherScore -= 4
                     dustString = "아주 나쁨"
+                }
+                else -> {
+                    dustString = "점검중"
                 }
 
             }
@@ -162,7 +173,6 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
         } else {
             dustString += "점검중"
         }
-
 
         when (weatherScore) {
             in 10..12 -> {
@@ -175,13 +185,14 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                         Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
-                if (context?.let { UserSharedPreferences.getPet(it) } == true) {
-                    weatherImage.setImageResource(R.drawable.ic_weather_high_pet)
-                } else {
-                    weatherImage.setImageResource(R.drawable.ic_weather_high)
-                }
+
+                weatherViewModel.isPetYes.observe(viewLifecycleOwner, { pet ->
+                    if (pet) weatherImage.setImageResource(R.drawable.ic_weather_high_pet)
+                    else weatherImage.setImageResource(R.drawable.ic_weather_high)
+                })
+
             }
-            in 6..9 -> {
+            in 8..9 -> {
                 weatherText.text = "산책하기 좋아요!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
                 spanText.setSpan(
@@ -197,13 +208,15 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                         Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
-                if (context?.let { UserSharedPreferences.getPet(it) } == true) {
-                    weatherImage.setImageResource(R.drawable.ic_weather_middle_pet)
-                } else {
-                    weatherImage.setImageResource(R.drawable.ic_weather_middle)
-                }
+
+                weatherViewModel.isPetYes.observe(viewLifecycleOwner, { pet ->
+                    if (pet) weatherImage.setImageResource(R.drawable.ic_weather_middle_pet)
+                    else weatherImage.setImageResource(R.drawable.ic_weather_middle)
+                })
+
+
             }
-            in 3..5 -> {
+            else -> {
                 weatherText.text = "주의하며 산책해요."
 
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
@@ -221,11 +234,11 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                         Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
-                if (context?.let { UserSharedPreferences.getPet(it) } == true) {
-                    weatherImage.setImageResource(R.drawable.ic_weather_low_pet)
-                } else {
-                    weatherImage.setImageResource(R.drawable.ic_weather_low)
-                }
+
+                weatherViewModel.isPetYes.observe(viewLifecycleOwner, { pet ->
+                    if (pet) weatherImage.setImageResource(R.drawable.ic_weather_low_pet)
+                    else weatherImage.setImageResource(R.drawable.ic_weather_low)
+                })
             }
 
 

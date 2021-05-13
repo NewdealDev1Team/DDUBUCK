@@ -157,6 +157,9 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
 
+            add(R.id.nav_main_container, settingFragment).hide(settingFragment)
+
+
 //            add(R.id.nav_main_container,walkTimeFragment).hide(walkTimeFragment)
 //            add(R.id.nav_main_container,courseClearFragment).hide(courseClearFragment)
 //            add(R.id.nav_main_container,caloriesFragment).hide(caloriesFragment)
@@ -188,8 +191,7 @@ class MainActivity : AppCompatActivity() {
                             val backStackTag = MYPAGE_TAG
                             tbm.setDisplayHomeAsUpEnabled(true)
                             tb.setNavigationOnClickListener {
-                                fm.popBackStack(backStackTag,
-                                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                                 tbm.title = "마이페이지"
                             }
                         }
@@ -208,6 +210,11 @@ class MainActivity : AppCompatActivity() {
                         }
                         myPageFragment -> {
                             tbm.title = "마이페이지"
+                            fm.beginTransaction()
+                                .detach(activeFragment)
+                                .attach(myPageFragment)
+                                .commit()
+
                         }
                         else -> {
 
@@ -257,13 +264,11 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_settings -> {
                 val fragmentTransaction = supportFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.scrollview_mypage, settingFragment)
-                    .setReorderingAllowed(true)
+                fragmentTransaction
+                    .hide(activeFragment)
+                    .show(settingFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
-//                supportFragmentManager.beginTransaction()
-//                    .replace(R.id.scrollview_mypage, settingFragment)
-//                    .addToBackStack(MYPAGE_TAG)
-//                    .commit()
+
                 activityModel.toolbarTitle.value = "설정"
             }
         }
@@ -272,6 +277,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStackImmediate()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
         supportFragmentManager.popBackStackImmediate()
