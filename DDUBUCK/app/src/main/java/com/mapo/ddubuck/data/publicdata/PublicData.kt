@@ -13,7 +13,8 @@ data class PublicData(
     val petRestaurant: List<PetRestaurant>,
     val publicToilet: List<PublicToilet>,
     val publicRestArea: List<PublicRestArea>,
-    val recommendPath : List<RecommendPathDTO>,
+    val recommendPathMaster : List<RecommendPathDTO>,
+    val recommendPathUser : List<RecommendPathDTO>,
 )
 
 /*

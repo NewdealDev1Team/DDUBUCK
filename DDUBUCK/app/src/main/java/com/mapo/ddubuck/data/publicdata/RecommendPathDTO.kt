@@ -55,7 +55,7 @@ import com.naver.maps.geometry.LatLng
 
 
 data class RecommendPathDTO(
-    val name : String,
+    val title : String,
     val description:String,
     val picture : String,
     val walkTime : Long,
@@ -83,7 +83,7 @@ data class RecommendPathDTO(
         return CourseItem(
             false,
             Uri.parse(picture),
-            name,
+            title,
             description,
             this.toWalkRecord()
         )

@@ -18,9 +18,11 @@ import androidx.fragment.app.activityViewModels
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitClient
+import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.data.publicdata.PublicData
+import com.mapo.ddubuck.data.publicdata.RecommendPathDTO
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.mapo.ddubuck.ui.CommonDialog
 import com.mapo.ddubuck.home.bottomSheet.BottomSheetCompleteFragment
@@ -54,6 +56,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var isCourseSelected = false
     private var isCourseInitialized = false
 
+    private var walkTag = WALK_FREE
+
     //TODO STATE로 운용할 것
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
@@ -63,6 +67,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         const val WALK_PAUSE = 302 //산책일시중지
         const val WALK_COURSE = 400 // 코스산책
         const val WALK_FREE = 100 //자유산책
+        const val WALK_COURSE_COMPLETE = 401
     }
 
     //뷰모델
@@ -160,123 +165,127 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         RetrofitClient.publicDataInstance.getResult(x,y)
             .enqueue(object : Callback<PublicData> {
                 override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
-                    println(response.body()!!.toString())
-                    val publicData = response.body()!!
-                    val markerHeightSize = 80
-                    val markerWidthSize = 60
-                    //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!!
-                    for (i in publicData.petCafe) {
-                        val marker = Marker()
-                        marker.position = LatLng(i.x, i.y)
-                        marker.map = map
-                        marker.icon = MarkerIcons.BLUE
-                        marker.height = markerHeightSize
-                        marker.width = markerWidthSize
-                        marker.isHideCollidedMarkers = true
-                        marker.setOnClickListener {
-                            //dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                            CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
-                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                it.show()
+                    if(response.body() != null) {
+                        val publicData = response.body()!!
+                        val markerHeightSize = 80
+                        val markerWidthSize = 60
+                        //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!!
+                        for (i in publicData.petCafe) {
+                            val marker = Marker()
+                            marker.position = LatLng(i.x, i.y)
+                            marker.map = map
+                            marker.icon = MarkerIcons.BLUE
+                            marker.height = markerHeightSize
+                            marker.width = markerWidthSize
+                            marker.isHideCollidedMarkers = true
+                            marker.setOnClickListener {
+                                //dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                CommonDialog("반려견 출입가능 카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                    it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    it.show()
+                                }
+                                true
                             }
-                            true
+                            markers["petCafe"] = marker
                         }
-                        markers["petCafe"] = marker
-                    }
-                    for (i in publicData.carFreeRoad) {
-                        val marker = Marker()
-                        marker.position = LatLng(i.path[0].x, i.path[0].y)
-                        marker.map = map
-                        marker.icon = MarkerIcons.RED
-                        marker.height = markerHeightSize
-                        marker.width = markerWidthSize
-                        marker.isHideCollidedMarkers = true
-                        marker.setOnClickListener {
-                            CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner).let {
-                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                it.show()
+                        for (i in publicData.carFreeRoad) {
+                            val marker = Marker()
+                            marker.position = LatLng(i.path[0].x, i.path[0].y)
+                            marker.map = map
+                            marker.icon = MarkerIcons.RED
+                            marker.height = markerHeightSize
+                            marker.width = markerWidthSize
+                            marker.isHideCollidedMarkers = true
+                            marker.setOnClickListener {
+                                CommonDialog("차없는 도로", "도로명 : ${i.name}\n운영시간 : ${i.time}", owner).let {
+                                    it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    it.show()
+                                }
+                                true
                             }
-                            true
+                            markers["carFreeRoad"] = marker
                         }
-                        markers["carFreeRoad"] = marker
-                    }
-                    for (i in publicData.cafe) {
-                        val marker = Marker()
-                        marker.position = LatLng(i.x, i.y)
-                        marker.map = map
-                        marker.icon = MarkerIcons.GRAY
-                        marker.height = markerHeightSize
-                        marker.width = markerWidthSize
-                        marker.isHideCollidedMarkers = true
-                        marker.setOnClickListener{
-                            CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
-                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                it.show()
+                        for (i in publicData.cafe) {
+                            val marker = Marker()
+                            marker.position = LatLng(i.x, i.y)
+                            marker.map = map
+                            marker.icon = MarkerIcons.GRAY
+                            marker.height = markerHeightSize
+                            marker.width = markerWidthSize
+                            marker.isHideCollidedMarkers = true
+                            marker.setOnClickListener{
+                                CommonDialog("카페","업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                    it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    it.show()
+                                }
+                                true
                             }
-                            true
+                            markers["cafe"] = marker
                         }
-                        markers["cafe"] = marker
-                    }
-                    for (i in publicData.petRestaurant) {
-                        val marker = Marker()
-                        marker.position = LatLng(i.x, i.y)
-                        marker.map = map
-                        marker.icon = MarkerIcons.PINK
-                        marker.height = markerHeightSize
-                        marker.width = markerWidthSize
-                        marker.isHideCollidedMarkers = true
-                        marker.setOnClickListener {
-                            CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
-                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                it.show()
+                        for (i in publicData.petRestaurant) {
+                            val marker = Marker()
+                            marker.position = LatLng(i.x, i.y)
+                            marker.map = map
+                            marker.icon = MarkerIcons.PINK
+                            marker.height = markerHeightSize
+                            marker.width = markerWidthSize
+                            marker.isHideCollidedMarkers = true
+                            marker.setOnClickListener {
+                                CommonDialog("반려견 출입가능 식당", "업체명 : ${i.name}\n주소 : ${i.address}", owner).let {
+                                    it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    it.show()
+                                }
+                                true
                             }
-                            true
+                            markers["petRestaurant"] = marker
                         }
-                        markers["petRestaurant"] = marker
-                    }
-                    for (i in publicData.publicRestArea) {
-                        val marker = Marker()
-                        marker.position = LatLng(i.x, i.y)
-                        marker.map = map
-                        marker.icon = MarkerIcons.GREEN
-                        marker.height = markerHeightSize
-                        marker.width = markerWidthSize
-                        marker.isHideCollidedMarkers = true
-                        marker.setOnClickListener {
-                            CommonDialog("공공쉼터",i.name, owner).let {
-                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                it.show()
+                        for (i in publicData.publicRestArea) {
+                            val marker = Marker()
+                            marker.position = LatLng(i.x, i.y)
+                            marker.map = map
+                            marker.icon = MarkerIcons.GREEN
+                            marker.height = markerHeightSize
+                            marker.width = markerWidthSize
+                            marker.isHideCollidedMarkers = true
+                            marker.setOnClickListener {
+                                CommonDialog("공공쉼터",i.name, owner).let {
+                                    it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    it.show()
+                                }
+                                true
                             }
-                            true
+                            markers["publicRestArea"] = marker
                         }
-                        markers["publicRestArea"] = marker
-                    }
-                    for (i in publicData.publicToilet) {
-                        val marker = Marker()
-                        marker.position = LatLng(i.x, i.y)
-                        marker.map = map
-                        marker.icon = MarkerIcons.YELLOW
-                        marker.height = markerHeightSize
-                        marker.width = markerWidthSize
-                        marker.isHideCollidedMarkers = true
-                        marker.setOnClickListener {
-                            CommonDialog("공공화장실",i.name, owner).let {
-                                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                                it.show()
+                        for (i in publicData.publicToilet) {
+                            val marker = Marker()
+                            marker.position = LatLng(i.x, i.y)
+                            marker.map = map
+                            marker.icon = MarkerIcons.YELLOW
+                            marker.height = markerHeightSize
+                            marker.width = markerWidthSize
+                            marker.isHideCollidedMarkers = true
+                            marker.setOnClickListener {
+                                CommonDialog("공공화장실",i.name, owner).let {
+                                    it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                                    it.show()
+                                }
+                                true
                             }
-                            true
+                            markers["publicToilet"] = marker
                         }
-                        markers["publicToilet"] = marker
-                    }
-                    if(publicData.recommendPath.isNotEmpty()) {
-                        val courseData = mutableListOf<CourseItem>()
-                        for (i in publicData.recommendPath) {
-                            courseData.add(i.toCourseItem())
-                            model.recommendPath.value = courseData
+                        val recommendPath = mutableListOf<RecommendPathDTO>()
+                        recommendPath.addAll(publicData.recommendPathMaster)
+                        recommendPath.addAll(publicData.recommendPathUser)
+                        if(recommendPath.isNotEmpty()) {
+                            val courseData = mutableListOf<CourseItem>()
+                            for (i in recommendPath) {
+                                println(i.toString())
+                                courseData.add(i.toCourseItem())
+                                model.recommendPath.value = courseData
+                            }
+                            //home에다가 보내기
                         }
-                        //home에다가 보내기
                     }
-
                 }
 
                 override fun onFailure(call: Call<PublicData>, t: Throwable) {
@@ -313,14 +322,11 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         course.map = null
         courseMarker.map = null
         //기록 및 반환 코드
-        val walkTag = if(isCourseSelected)
-            WALK_COURSE
-        else
-            WALK_FREE
+
 
         val walkRecord = getWalkResult()
 
-        //RetrofitService().createRecord(userKey, walkRecord)
+        RetrofitService().createRecord(userKey, walkRecord, walkTag)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
@@ -423,7 +429,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 locationSource.lastLocation?.longitude!!
                         )
                 )
-                //initPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
+                initPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
                 isLocationFirstChanged=true
             }
 
@@ -449,6 +455,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                         }
                         if (isCourseSelected) {
+                            walkTag = WALK_COURSE
                             if(isCourseInitialized) {
                                 //TODO 다음 경로 위치 알 수 있는 방법 고민 할 것
                                 if (course.map != null) {
@@ -549,7 +556,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             //코스완료
             this.course.map = null
             //bottom sheet pop 해서 코스선택 메뉴로 이동시키기
-            parentFragmentManager.popBackStack()
+            walkTag = WALK_COURSE_COMPLETE
+            stopRecording()
         }
     }
 
