@@ -18,7 +18,7 @@
         android:layout_height="174dp">
 
         <FrameLayout
-            android:background="@color/purple_500"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
