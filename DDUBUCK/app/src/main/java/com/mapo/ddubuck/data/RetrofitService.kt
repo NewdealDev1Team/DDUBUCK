@@ -77,7 +77,7 @@ class RetrofitService {
             map["walkType"] = "WALK_FREE"
         }
 
-        if(walkType >= 400) {
+        if(walkType == 401) {
             map["walkType"] = "WALK_COURSE"
         }
 
