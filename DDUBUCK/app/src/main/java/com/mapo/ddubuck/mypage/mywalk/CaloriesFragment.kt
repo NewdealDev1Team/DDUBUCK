@@ -374,28 +374,6 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         return uri!!
     }
 
-//    fun saveImageExternal(image: Bitmap): Uri? {
-//
-//        var uri: Uri? = null
-//        try {
-//            //Bitmap으로 만든 이미지는 png 파일 형태로 만들기
-//            //파일을 저장할 주소 + 파일 이름
-//            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-//                "Calories-Chart.png")
-//            //이미지 파일 생성
-//            val stream = FileOutputStream(file)
-//            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
-//            stream.close()
-//            uri = FileProvider.getUriForFile(this.requireContext(),
-//                this.requireActivity().packageName + ".provider",
-//                file)
-//        } catch (e: IOException) {
-//            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
-//        }
-//        return uri
-//    }
-
-
     fun shareImageURI(uri: Uri) :Boolean {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
