@@ -109,15 +109,5 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="lz0an3yhfn" />
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.mapo.ddubuck"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths" />
-        </provider>
-
     </application>
 </manifest>

@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,13 +41,12 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
                     val photoFile: File? = try {
                         createImageFile()
                     } catch (ex: IOException) {
-
                         null
                     }
                     photoFile?.also {
                         cameraPhotoUri = FileProvider.getUriForFile(
                             owner,
-                            "com.example.ddubuck.provider",
+                            "${owner.packageName}.provider",
                             it
                         )
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraPhotoUri)
@@ -67,28 +67,30 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(data!=null) {
-            if (resultCode == AppCompatActivity.RESULT_OK) {
-                val imageUri : Uri = when(requestCode) {
-                    REQUEST_IMAGE_CAPTURE -> {
-                        cameraPhotoUri = galleryAddPic()
-                        cameraPhotoUri
-                    }
-                    REQUEST_IMAGE_SELECT -> {
-                        data.data!!
-                    }
-                    else -> Uri.EMPTY
+        if (resultCode == AppCompatActivity.RESULT_OK) {
+            val imageUri : Uri = when(requestCode) {
+                REQUEST_IMAGE_CAPTURE -> {
+                    cameraPhotoUri = galleryAddPic()
+                    cameraPhotoUri
                 }
-                imageProviderSheetViewModel.imageUri.value = imageUri
-                dismiss()
+                REQUEST_IMAGE_SELECT -> {
+                    if(data!=null) {
+                        data.data!!
+                    } else {
+                        Uri.EMPTY
+                    }
+                }
+                else -> Uri.EMPTY
             }
+            imageProviderSheetViewModel.imageUri.value = imageUri
+            dismiss()
         }
     }
 
 
     @Throws(IOException::class)
     private fun createImageFile(): File {
-        val storageDir: File = owner.getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        val storageDir: File = owner.getExternalFilesDir(getString(R.string.app_content_path))!!
         return File.createTempFile(
             "DDUBUCK_${System.currentTimeMillis()}", /* prefix */
             ".jpg", /* suffix */
@@ -119,7 +121,7 @@ class ImageProviderSelectDialog(private val owner:Activity) : BottomSheetDialogF
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, getString(R.string.app_content_path))
             put(MediaStore.Video.Media.IS_PENDING, 1)
         }
 
