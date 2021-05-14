@@ -61,7 +61,7 @@ object RetrofitClient{
 
 class RetrofitService {
 
-    fun createRecord(userKey : String, walkRecord: WalkRecord){
+    fun createRecord(userKey : String, walkRecord: WalkRecord, walkType : Int){
         val map = hashMapOf<String, Any>()
         map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
@@ -70,6 +70,15 @@ class RetrofitService {
         map["distance"] = walkRecord.distance
         map["path"] = Gson().toJson(walkRecord.pathToMap())
         map["calorie"] = walkRecord.getCalorie(65.0)
+        //walkType = FREE_WALK / COURSE_WALK
+        if(walkType == 100) {
+            map["walkType"] = "WALK_FREE"
+        }
+
+        if(walkType == 400) {
+            map["walkType"] = "WALK_COURSE"
+        }
+        map["walkType"] = ""
 
         RetrofitClient.mapInstance.createPost(map)
                 .enqueue(object : Callback<WalkRecord> {

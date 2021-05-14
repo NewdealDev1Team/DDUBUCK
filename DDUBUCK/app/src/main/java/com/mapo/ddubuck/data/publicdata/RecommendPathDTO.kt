@@ -74,7 +74,8 @@ data class RecommendPathDTO(
             0.0,
             walkTime,
             0,
-            distance
+            distance,
+
         )
     }
 

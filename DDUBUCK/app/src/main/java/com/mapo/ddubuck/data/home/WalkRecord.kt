@@ -19,9 +19,7 @@ class WalkRecord(
     val stepCount: Int,
     //거리 (m)
     val distance: Double,
-    //이름
-    //바디
-    //해시태그
+
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.createTypedArrayList(LatLng.CREATOR)!!,
