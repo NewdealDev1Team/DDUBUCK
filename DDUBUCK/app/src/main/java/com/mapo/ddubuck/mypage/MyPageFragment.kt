@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.activityViewModels
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.mypagechart.RetrofitChart
@@ -30,6 +31,7 @@ import com.mapo.ddubuck.userinfo.NextTimeDialog
 import com.mapo.ddubuck.mypage.mywalk.CaloriesFragment
 import com.mapo.ddubuck.mypage.mywalk.CourseClearFragment
 import com.mapo.ddubuck.mypage.mywalk.WalkTimeFragment
+import com.mapo.ddubuck.weather.WeatherViewModel
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,7 +41,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class MyPageFragment : Fragment() {
-    private lateinit var myPageBinding: FragmentMypageBinding
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
@@ -48,6 +49,8 @@ class MyPageFragment : Fragment() {
     private lateinit var walkTimeFramgnet: WalkTimeFragment
     private lateinit var courseClearFragment: CourseClearFragment
     private lateinit var caloriesFragment: CaloriesFragment
+
+    private val userViewModel: MypageViewModel by activityViewModels()
 
 //    private lateinit var v : View
     override fun onCreateView(
@@ -251,6 +254,9 @@ class MyPageFragment : Fragment() {
                 ) {
                     val name = response.body()?.name
                     val profileImageURL = response.body()?.picture
+
+                    userViewModel.setUserValue(name.toString())
+
                     userName.text = name.toString()
                     activity?.let { it1 ->
                         Glide.with(it1).load(profileImageURL).into(profileImage)
