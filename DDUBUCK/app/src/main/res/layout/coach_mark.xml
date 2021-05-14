@@ -7,7 +7,7 @@
     android:id="@+id/coach_mark_master_view"
     >
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -19,6 +19,14 @@
             android:layout_gravity="center_horizontal"
             android:src="@drawable/coach_marks"
             />
-    </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/coach_mark_exit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_coach_mark_exit"
+            android:layout_gravity="bottom|right"
+            />
+    </FrameLayout>
 
 </LinearLayout>

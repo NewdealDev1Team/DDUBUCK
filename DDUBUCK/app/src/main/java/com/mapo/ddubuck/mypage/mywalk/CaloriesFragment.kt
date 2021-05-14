@@ -281,7 +281,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                 }
             })
         }
-        val button: Button = rootView.findViewById(R.id.calorie_button_screenshot)
+        val button: Button = rootView.findViewById(R.id.calorie_share_button)
         button.setOnClickListener {
             when (requestPermissions()) {
                 true -> Instacapture.capture(this.requireActivity(),
@@ -293,7 +293,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                             val date = Date()
                             //공유 버튼 제
                             val remove: View =
-                                rootView.findViewById(R.id.calorie_button_screenshot)
+                                rootView.findViewById(R.id.calorie_share_button)
                             remove.visibility = View.GONE
                             capture.buildDrawingCache()
                             val captureview: Bitmap = capture.getDrawingCache()
@@ -303,7 +303,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                             } ?: showError()
                         }
                     },
-                    calorie_button_screenshot)
+                    calorie_share_button)
                 else -> showError()
             }
         }

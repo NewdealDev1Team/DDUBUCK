@@ -295,9 +295,9 @@ class CourseClearFragment : Fragment() {
         }
 //공유 버튼 제거
         val remove: View =
-            rootView.findViewById(R.id.course_share_button_layout)
+            rootView.findViewById(R.id.course_share_button)
 //        remove.visibility = View.GONE
-        val button: Button = rootView.findViewById(R.id.course_button_screenshot)
+        val button: Button = rootView.findViewById(R.id.course_share_button)
 
         val isClickOn : Boolean = false
 
@@ -318,7 +318,7 @@ class CourseClearFragment : Fragment() {
                                 shareImageURI(uri)
                             } ?: showError()
                         }
-                    }, course_button_screenshot)
+                    }, course_share_button)
                 else -> showError()
             }
         }

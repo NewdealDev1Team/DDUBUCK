@@ -3,6 +3,7 @@ package com.mapo.ddubuck
 import android.Manifest
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.os.Vibrator
 import android.widget.TextView
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -73,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        onCoachMark()
+        onCoachMark()
 
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
 
@@ -89,22 +91,34 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onCoachMark() {
-        val dialog : Dialog = Dialog(this,R.style.ThemeOverlay_MaterialComponents_MaterialCalendar_Fullscreen)
-        //최상의보기로 사용
+        val dialog : Dialog = Dialog(this,R.style.ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Window_Fullscreen)
+        //최상의 보기로 사용
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.setContentView(R.layout.coach_mark) //drawable, coah_mark.xml - 레이아웃 리소스 확장
+        dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
+        dialog.show()
+
+//        val exitButtonView : ImageView = dialog.findViewById(R.id.coach_mark_exit_button)
+//        exitButtonView.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(v: View) {
+//                if(UserSharedPreferences.getCoachMarkExit(this)){
+//                    val toMainActivity = Intent(this,MainActivity::class.java)
+//                    startActivity(toMainActivity)
+//                    finish()
+//                }
+//            }
+//        })
 
 
         //코치마크 어디든 터치 시 창이 닫힌다.
-        val masterView : View = dialog.findViewById(R.id.coach_mark_master_view)//최상의 뷰
-        masterView.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view:View) {
-                dialog.dismiss()
-            }
-        })
-        dialog.show()
+//        val masterView : View = dialog.findViewById(R.id.coach_mark_master_view)//최상의 뷰
+//        masterView.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(view:View) {
+//                dialog.dismiss()
+//            }
+//        })
+//        dialog.show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
