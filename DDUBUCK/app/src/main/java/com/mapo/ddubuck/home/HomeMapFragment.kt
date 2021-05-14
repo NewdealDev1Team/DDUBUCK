@@ -279,7 +279,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         if(recommendPath.isNotEmpty()) {
                             val courseData = mutableListOf<CourseItem>()
                             for (i in recommendPath) {
-                                println(i.toString())
                                 courseData.add(i.toCourseItem())
                                 model.recommendPath.value = courseData
                             }
