@@ -28,6 +28,7 @@ import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
+
 
     private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
