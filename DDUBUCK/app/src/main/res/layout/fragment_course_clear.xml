@@ -83,15 +83,15 @@
             </LinearLayout>
 
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/course_share_button"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="right"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/course_share_button"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
                 android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-                    android:background="@drawable/chart_share_icon"
-                    android:scaleType="centerCrop"
-                    android:textColor="@color/grey" />
+                android:background="@drawable/chart_share_icon"
+                android:scaleType="centerCrop"
+                android:textColor="@color/grey" />
 
             <LinearLayout
                 android:id="@+id/course_bar_chart_layout"

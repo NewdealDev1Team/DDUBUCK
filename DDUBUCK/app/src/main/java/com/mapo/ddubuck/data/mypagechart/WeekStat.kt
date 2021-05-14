@@ -1,6 +1,7 @@
 package com.mapo.ddubuck.data.mypagechart
 
 data class WeekStat(
+    val name: String,
     val calorie: Int,
     val completedCount: Int,
     val created_at: String,
