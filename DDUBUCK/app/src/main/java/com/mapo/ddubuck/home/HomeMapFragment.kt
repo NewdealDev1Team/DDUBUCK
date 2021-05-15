@@ -83,7 +83,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     }
     private var markers:HashMap<String, Marker> = HashMap()
 
-    private var isLocationFirstChanged = false
+    private var isLocationDataInitialized = false
 
     //측정 관련 변수
     private var userPath = PathOverlay()
@@ -94,6 +94,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var stepCount: Int = 0
     private var distance: Double = 0.0
     private var burnedCalorie: Double = 0.0
+    private var initialPosition : LatLng = LatLng(0.0,0.0)
 
     //코스
     private var course = PolylineOverlay()
@@ -118,6 +119,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 //start
                 startRecording()
                 allowRecording = true
+                isRestarted = true
                 model.walkState.value = WALK_PROGRESS
             } else {
                 //stop
@@ -420,38 +422,29 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         model.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener {
-            //TODO 현재위치에서 재탐색 기능
-            if(!isLocationFirstChanged) {
-                model.recordPosition(
-                        LatLng(
-                                locationSource.lastLocation?.latitude!!,
-                                locationSource.lastLocation?.longitude!!
-                        )
-                )
-                initPublicData(locationSource.lastLocation?.latitude!!, locationSource.lastLocation?.longitude!!)
-                isLocationFirstChanged=true
-            }
+            locationSource.lastLocation?.let {
+                val lat = it.latitude
+                val lng = it.longitude
+                val point = LatLng(lat, lng)
+                val speed = it.speed
+                val alt = it.altitude
+                if(!isLocationDataInitialized) {
+                    model.recordPosition(point)
+                    initPublicData(lat,lng)
+                    initialPosition = point
+                    isLocationDataInitialized=true
+                }
 
-            if (allowRecording) {
-                val lat = locationSource.lastLocation?.latitude
-                val lng = locationSource.lastLocation?.longitude
-                //https://developer.android.com/reference/android/location/Location#getSpeed()
-                val speed = locationSource.lastLocation?.speed
-                //https://developer.android.com/reference/android/location/Location#getAltitude()
-                val alt = locationSource.lastLocation?.accuracy
-                if (lat != null && lng != null) {
+                if (allowRecording) {
                     if (isRestarted) {
                         //초기 점이 비어있을 때
-                        initUserPath(LatLng(lat, lng))
+                        initUserPath(point)
                         isRestarted = false
                     }
-                    val point = LatLng(lat, lng)
                     if (userPath.coords.isNotEmpty() && userPath.map != null) {
                         val lastPoint = userPath.coords.last()
                         if (!isUserReachedToTarget(point, lastPoint)) {
-                            if (speed != null && alt != null) {
-                                addUserPath(point, lastPoint, userPath.coords, speed, alt)
-                            }
+                            addUserPath(point, lastPoint, userPath.coords, speed, alt.toFloat())
                         }
                         if (isCourseSelected) {
                             walkTag = WALK_COURSE
@@ -475,9 +468,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         }
                     } else {
                         //초기 점이 비어있을 때
-                        initUserPath(LatLng(lat, lng))
+                        initUserPath(point)
                     }
-
                 }
             }
         }
@@ -556,7 +548,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             this.course.map = null
             //bottom sheet pop 해서 코스선택 메뉴로 이동시키기
             walkTag = WALK_COURSE_COMPLETE
-            stopRecording()
         }
     }
 
