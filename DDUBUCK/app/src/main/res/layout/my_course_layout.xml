@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/user_route_item_style"
+    android:elevation="10dp"
+    android:layout_height="60dp">
+
+    <TextView
+        android:id="@+id/user_route_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="21dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginBottom="21dp"
+        android:layout_centerVertical="true"
+        android:text="망리단길 투어"
+        android:textSize="16dp"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/user_route_judge"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/user_route_judge_style"
+        android:textColor="@color/white"
+        android:text="심사중"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginRight="16dp"
+        android:textSize="12dp"/>
+
+    <TextView
+        android:id="@+id/user_route_judge_done"
+        android:visibility="invisible"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/user_route_judge_done_style"
+        android:textColor="@color/white"
+        android:text="심사완료"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginRight="16dp"
+        android:textSize="12dp"/>
+
+</RelativeLayout>
