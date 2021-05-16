@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/dialog_course_add"
+    android:id="@+id/dialog_hidden"
     android:layout_width="286dp"
     android:layout_height="wrap_content"
     app:cardCornerRadius="15dp">
@@ -16,7 +16,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
-            android:id="@+id/dialog_course_add_header"
+            android:id="@+id/dialog_hidden_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="17dp"
@@ -24,7 +24,7 @@
 
             <TextView
                 android:background="@drawable/edit_no_border"
-                android:id="@+id/dialog_course_add_title"
+                android:id="@+id/dialog_hidden_title"
                 android:text="히든 챌린지 힌트!"
                 android:maxLength="20"
                 android:textSize="16dp"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"/>
 
             <ImageView
-                android:id="@+id/dialog_course_add_closeButton"
+                android:id="@+id/dialog_hidden_closeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -43,6 +43,7 @@
         </RelativeLayout>
 
         <ImageView
+            android:id="@+id/dialog_hidden_imageView"
             android:layout_width="match_parent"
             android:layout_height="153dp"
             android:orientation="vertical"
