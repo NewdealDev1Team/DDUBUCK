@@ -171,7 +171,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         val publicData = response.body()!!
                         val markerHeightSize = 80
                         val markerWidthSize = 60
-                        //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!!
+                        //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!! - 민재
                         for (i in publicData.petCafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
