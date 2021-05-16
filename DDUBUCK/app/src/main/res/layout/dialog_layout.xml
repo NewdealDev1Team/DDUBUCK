@@ -46,13 +46,13 @@
                 android:id="@+id/dialog_cancel_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/common_dialog_text_ripple"
+                android:background="@drawable/common_ripple"
                 android:paddingVertical="4dp"
                 android:paddingHorizontal="8dp"
                 android:text="취소" />
 
             <TextView
-                android:background="@drawable/common_dialog_text_ripple"
+                android:background="@drawable/common_ripple"
                 android:id="@+id/dialog_ok_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

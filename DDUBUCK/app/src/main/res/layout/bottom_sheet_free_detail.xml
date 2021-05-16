@@ -15,6 +15,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/sheet_free_detail_backButton"
+            android:background="@drawable/common_ripple"
             android:src="@drawable/back_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
