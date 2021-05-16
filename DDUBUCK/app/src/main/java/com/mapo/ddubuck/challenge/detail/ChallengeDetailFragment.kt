@@ -97,7 +97,7 @@ class ChallengeDetailFragment : Fragment() {
         return challengeDetailView
     }
 
-
+    // 수정해야 할 부분 -> Server 연동
     private val challengeDetail: MutableList<ChallengeDetail> = mutableListOf(
         ChallengeDetail("1km", R.drawable.ic_a1),
         ChallengeDetail("5km", R.drawable.ic_a1),

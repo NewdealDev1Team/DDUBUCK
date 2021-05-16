@@ -62,6 +62,7 @@
 
 
         <ImageView
+            android:id="@+id/challenge_bookmark"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="20dp"
