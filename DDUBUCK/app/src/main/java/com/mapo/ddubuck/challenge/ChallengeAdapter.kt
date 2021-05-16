@@ -30,6 +30,7 @@ class ChallengeAdapter(private val challenge: MutableList<Challenge>) :
         var challengeItemImage: ImageView = itemView.challenge_item_image
         var challengeItemTitle: TextView = itemView.challenge_card_title
         var challengeItemText: TextView = itemView.challenge_card_text
+        var bookmarkButton: ImageView = itemView.challenge_bookmark
 
     }
 
@@ -47,6 +48,10 @@ class ChallengeAdapter(private val challenge: MutableList<Challenge>) :
 
         holder.itemView.setOnClickListener {
             itemClickListner.onClick(it, position)
+        }
+
+        holder.bookmarkButton.setOnClickListener {
+            holder.bookmarkButton.setImageResource(R.drawable.ic_bookmark_color)
         }
 
         holder.challengeItemTitle.text = challenge[position].title
