@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.mapo.ddubuck.MainActivity
@@ -19,6 +20,11 @@ class BottomSheetFreeDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView  = inflater.inflate(R.layout.bottom_sheet_free_detail,container, false)
+        val backButton : ImageView = rootView.findViewById(R.id.sheet_free_detail_backButton)
+        backButton.setOnClickListener {
+            val fm = parentFragmentManager
+            fm.popBackStack(MainActivity.HOME_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
         val startButton : Button = rootView.findViewById(R.id.sheet_free_detail_startButton)
         startButton.setOnClickListener{
             val fm = parentFragmentManager

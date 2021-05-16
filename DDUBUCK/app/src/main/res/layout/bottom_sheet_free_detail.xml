@@ -7,16 +7,28 @@
     android:id="@+id/bottom_sheet_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/sheet_free_detail_titleTv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+
+    <LinearLayout
         android:layout_marginTop="30dp"
-        android:text="자유 산책"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_marginHorizontal="22.5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/sheet_free_detail_backButton"
+            android:src="@drawable/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/sheet_free_detail_titleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="33dp"
+            android:text="자유 산책"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:orientation="vertical"
