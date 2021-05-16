@@ -292,8 +292,8 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                 true -> Instacapture.capture(this.requireActivity(),
                     object : SimpleScreenCapturingListener() {
                         override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: ScrollView =
-                                requireView().findViewById(R.id.calorie) as ScrollView
+                            val capture: FrameLayout =
+                                requireView().findViewById(R.id.calorie) as FrameLayout
                             val shareButtonView: View = rootView.findViewById(R.id.calorie_share_button)
                             shareButtonView.visibility = View.GONE
                             capture.buildDrawingCache()

@@ -410,7 +410,8 @@ class CourseClearFragment : Fragment() {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
-            type = "message/*"
+            type = "message/rfc822"
+            type = "image/*"
         }
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))

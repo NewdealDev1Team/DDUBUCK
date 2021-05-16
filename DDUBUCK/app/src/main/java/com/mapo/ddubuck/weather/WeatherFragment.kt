@@ -56,7 +56,12 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
             tempAndDust: TextView,
             weatherImage: ImageView
     ) {
-
+//산책 기록할 때 viewModel를 쏴주는 것!! 민재님꺼 참고하기!!
+        //mapViewModel 한 번 공부하기!!
+        //뱃지 서버 연동
+        //산책 기록하시는 동안 ViewModeldm
+        //Listmener //HomeMapViewModel
+        //담주, //observe가 없어진다. ~~!!~~!! //이중 리스트 //총 7가지의 각각의 3가지
         locationViewModel.position.observe(viewLifecycleOwner, {location ->
             val lat = location.latitude.toString()
             val lon = location.longitude.toString()
@@ -71,6 +76,10 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
         })
 
     }
+
+    //local에서 처리하는 것
+    //이미지 리스트 object를 비교해서 팝업을 띄어서
+    //알람 뛰우기!! viewModel을 만들어서 띄우기
 
 
     @SuppressLint("SetTextI18n", "ResourceType")

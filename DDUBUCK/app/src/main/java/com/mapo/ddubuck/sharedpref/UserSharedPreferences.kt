@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.view.View
 import android.widget.CheckBox
+import android.widget.ImageButton
 import kotlinx.android.synthetic.main.coach_mark.view.*
 
 object UserSharedPreferences {
@@ -37,16 +38,17 @@ object UserSharedPreferences {
         return prefs.getString("AUTO_LOGIN", "").toString()
     }
 
-//    fun setCoachMarkExit(context: Context, input: Boolean){
-//        val prefs : SharedPreferences = context.getSharedPreferences("coachMarkExit", Context.MODE_PRIVATE)
-//        val editor : SharedPreferences.Editor = prefs.edit()
-//        editor.putString("COACH_MARK_EXIT", input.toString())
-//        editor.apply()
-//    }
-//    fun getCoachMarkExit(context: View.OnClickListener): Boolean {
-//        val prefs: SharedPreferences = context.getSharedPreferences("coachMarkExit", Context.MODE_PRIVATE)
-//        return prefs.getString("COACH_MARK_EXIT", "").toBoolean()
-//    }
+    fun setCoachMarkExit(context: Context, input: Boolean){
+        val prefs : SharedPreferences = context.getSharedPreferences("coachMarkExit", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putString("COACH_MARK_EXIT", input.toString())
+        editor.commit()
+    }
+
+    fun getCoachMarkExit(context: Context): Boolean {
+        val prefs: SharedPreferences = context.getSharedPreferences("coachMarkExit", Context.MODE_PRIVATE)
+        return prefs.getString("COACH_MARK_EXIT", "").toBoolean()
+    }
 
 
     fun setPet(context: Context, input: Boolean) {

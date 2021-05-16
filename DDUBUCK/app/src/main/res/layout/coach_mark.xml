@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coach_mark_master_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/coach_mark_master_view"
-    >
+    android:orientation="vertical">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/coach_marks_image"
@@ -17,16 +12,51 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/coach_marks"
-            />
+            android:src="@drawable/coach_marks" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/coach_mark_exit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_coach_mark_exit"
             android:layout_gravity="bottom|right"
-            />
-    </FrameLayout>
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+            android:layout_marginVertical="@dimen/activity_vertical_margin"
+            android:background="#00000000"
+            android:src="@drawable/ic_coach_mark_exit" />
+</FrameLayout>
 
-</LinearLayout>
+<!--<LinearLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:id="@+id/coach_mark_master_view"-->
+<!--    >-->
+
+<!--<FrameLayout-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
+
+<!--    <ImageView-->
+<!--        android:id="@+id/coach_marks_image"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:src="@drawable/coach_marks"-->
+<!--        />-->
+
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/coach_mark_exit_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:src="@drawable/ic_coach_mark_exit"-->
+<!--        android:layout_marginHorizontal="@dimen/activity_vertical_margin"-->
+<!--        android:layout_marginVertical="@dimen/activity_vertical_margin"-->
+<!--        android:layout_gravity="bottom|right"-->
+<!--        android:background="#00000000"/>-->
+
+<!--</FrameLayout>-->
+
+<!--</LinearLayout>-->

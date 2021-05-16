@@ -146,7 +146,7 @@ class MyPageFragment : Fragment() {
             mypageFragment = MyPageFragment()
             walkTimeFramgnet = WalkTimeFragment()
             parentFragmentManager.beginTransaction()
-                .replace(R.id.scrollview_mypage,walkTimeFramgnet)
+                .replace(R.id.scrollview_mypage, walkTimeFramgnet)
                 .addToBackStack(MainActivity.MYPAGE_TAG)
                 .commit()
         }
@@ -187,9 +187,7 @@ class MyPageFragment : Fragment() {
             val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
             cancelButton.visibility = View.INVISIBLE
 
-
         }
-
 
         return myPageView
     }

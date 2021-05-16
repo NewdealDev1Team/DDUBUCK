@@ -3,7 +3,7 @@ package com.mapo.ddubuck
 import android.Manifest
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +13,7 @@ import android.os.Vibrator
 import android.widget.TextView
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
+import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -75,8 +75,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        onCoachMark()
-
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
 
         initToolBar()
@@ -87,40 +85,36 @@ class MainActivity : AppCompatActivity() {
         }
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+        val isCoachMarkOn : Boolean = UserSharedPreferences.getCoachMarkExit(this)
+        if (!isCoachMarkOn) {
+            onCoachMark()
+        }
+        Log.d("dd","${isCoachMarkOn}")
     }
 
 
     fun onCoachMark() {
-        val dialog : Dialog = Dialog(this,R.style.ShapeAppearanceOverlay_MaterialComponents_MaterialCalendar_Window_Fullscreen)
-        //최상의 보기로 사용
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-        dialog.setContentView(R.layout.coach_mark)
-        dialog.setCanceledOnTouchOutside(true)
-        dialog.show()
-
-//        val exitButtonView : ImageView = dialog.findViewById(R.id.coach_mark_exit_button)
-//        exitButtonView.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(v: View) {
-//                if(UserSharedPreferences.getCoachMarkExit(this)){
-//                    val toMainActivity = Intent(this,MainActivity::class.java)
-//                    startActivity(toMainActivity)
-//                    finish()
-//                }
-//            }
-//        })
+            val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+            //최상의 보기로 사용
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            dialog.setContentView(R.layout.coach_mark)
+            dialog.setCanceledOnTouchOutside(true)
 
 
-        //코치마크 어디든 터치 시 창이 닫힌다.
-//        val masterView : View = dialog.findViewById(R.id.coach_mark_master_view)//최상의 뷰
-//        masterView.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(view:View) {
-//                dialog.dismiss()
-//            }
-//        })
-//        dialog.show()
+            //코치마크 어디든 터치 시 창이 닫힌다.
+            val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
+            masterView.setOnClickListener{
+                    UserSharedPreferences.setCoachMarkExit(this,true)
+                    dialog.dismiss()
+            }
+            dialog.show()
     }
-
+//ViewModel로 다시 받아오기
+    // 그냥 boolean ture, false
+    // 기록해서 User myPage에서 같이 쓰이는 것!!
+    // ViewModel를 참고해서 같이 만들기 !!
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -160,9 +154,6 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
             add(R.id.nav_main_container, settingFragment).hide(settingFragment)
-//            add(R.id.nav_main_container,walkTimeFragment).hide(walkTimeFragment)
-//            add(R.id.nav_main_container,courseClearFragment).hide(courseClearFragment)
-//            add(R.id.nav_main_container,caloriesFragment).hide(caloriesFragment)
         }.commit()
         activeFragment = homeFragment
         val tbm = supportActionBar
@@ -191,7 +182,8 @@ class MainActivity : AppCompatActivity() {
                             val backStackTag = MYPAGE_TAG
                             tbm.setDisplayHomeAsUpEnabled(true)
                             tb.setNavigationOnClickListener {
-                                fm.popBackStack(backStackTag, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                                fm.popBackStack(backStackTag,
+                                    FragmentManager.POP_BACK_STACK_INCLUSIVE)
                                 tbm.title = "마이페이지"
                             }
                         }
@@ -280,7 +272,6 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.popBackStackImmediate()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
-        supportFragmentManager.popBackStackImmediate()
         activeFragment = fragment
         changeToolBar(fragment)
     }

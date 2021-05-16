@@ -312,13 +312,7 @@
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_info" />
 
-
             </RelativeLayout>
-
-
         </LinearLayout>
-
     </RelativeLayout>
-
-
 </ScrollView>

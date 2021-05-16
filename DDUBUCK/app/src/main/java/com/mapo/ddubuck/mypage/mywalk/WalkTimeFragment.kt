@@ -303,8 +303,8 @@ class WalkTimeFragment : Fragment() {
                     object : SimpleScreenCapturingListener() {
                         @RequiresApi(Build.VERSION_CODES.Q)
                         override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: ScrollView =
-                                requireView().findViewById(R.id.walktime) as ScrollView
+                            val capture: FrameLayout =
+                                requireView().findViewById(R.id.walktime) as FrameLayout
                             val shareButtonView: View = rootView.findViewById(R.id.time_share_button)
                             shareButtonView.visibility = View.GONE
                             capture.buildDrawingCache()

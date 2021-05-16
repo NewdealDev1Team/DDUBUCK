@@ -66,3 +66,4 @@ class HomeMapViewModel : ViewModel() {
     //dp대응
     val bottomSheetHeight = MutableLiveData<Int>()
 }
+//HomeMapViewModel 밑에 나와 대응시키는 거

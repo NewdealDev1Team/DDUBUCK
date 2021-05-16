@@ -42,16 +42,19 @@
 <!--        <item name="android:textColor">@color/black</item>-->
 <!--    </style>-->
 
-    <!-- 코치마크 테마 변경    -->
+    <!-- 코치마크 테마 변경    WalkthroughTheme-->
     <style name="WalkthroughTheme" parent="Theme.AppCompat">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
+<!--        <item name="android:theme="@android:style/Theme.Translucent"></item>-->
 
-<!--  창 제목 없    -->
-<!--  배경 흐르게 활성화     -->
     </style>
 
+<!--    <style name="Theme.Translucent.NoTitleBar">-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="windowContentOverlay">@null</item>-->
+<!--    </style>-->
 </resources>

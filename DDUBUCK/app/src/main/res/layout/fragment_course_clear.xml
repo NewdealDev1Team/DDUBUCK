@@ -147,7 +147,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="205dp"
                 android:background="@color/white">
 
                 <TextView
@@ -176,5 +175,10 @@
                     android:textSize="12dp" />
             </LinearLayout>
         </LinearLayout>
+
+<!--        <View-->
+<!--            android:layout_width="match_parentm"-->
+<!--            android:layout_height="match_parent"/>-->
+
     </RelativeLayout>
 </ScrollView>
