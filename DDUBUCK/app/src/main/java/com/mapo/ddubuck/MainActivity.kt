@@ -146,9 +146,6 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
             add(R.id.nav_main_container, settingFragment).hide(settingFragment)
-//            add(R.id.nav_main_container,walkTimeFragment).hide(walkTimeFragment)
-//            add(R.id.nav_main_container,courseClearFragment).hide(courseClearFragment)
-//            add(R.id.nav_main_container,caloriesFragment).hide(caloriesFragment)
         }.commit()
         activeFragment = homeFragment
         val tbm = supportActionBar

@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.*
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -15,6 +16,8 @@ import androidx.annotation.UiThread
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationRequest
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitClient
@@ -46,11 +49,7 @@ import kotlin.concurrent.timer
 class HomeMapFragment(private val fm: FragmentManager, private val owner: Activity) : Fragment(),
         OnMapReadyCallback, SensorEventListener {
 
-    //TODO memory issue
-
-
     //산책 시작 여부
-    //TODO background operation
     private var allowRecording = false
     private var isRestarted = false
     private var isCourseSelected = false
@@ -58,7 +57,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     private var walkTag = WALK_FREE
 
-    //TODO STATE로 운용할 것
     companion object {
         const val LOCATION_PERMISSION_REQUEST_CODE = 1000
         const val WALK_WAITING = 200 //산책대기중
@@ -78,6 +76,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private lateinit var map: NaverMap
     private lateinit var timer: Timer
     private lateinit var locationSource: FusedLocationSource
+    private val locationThread = BackgroundLocationThread("Background_Location","1")
     private val sensorManager by lazy {
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
@@ -296,7 +295,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             })
     }
 
-    //버튼 텍스트 바꾸고 산책시작
+    /**버튼 텍스트 바꾸고 산책시작**/
     private fun startRecording() {
         timer = timer(period = 1000) {
             model.recordTime(walkTime)
@@ -304,7 +303,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         }
     }
 
-    //산책을 일시정지 합니다
+    /**산책을 일시정지 합니다**/
     private fun pauseRecording() {
         timer.cancel()
     }
@@ -316,7 +315,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         }
     }
 
-    //산책을 종료하고 기록을 반환합니다
+    /**산책을 종료하고 기록을 반환합니다**/
     private fun stopRecording() {
         userPath.map = null
         timer.cancel()
@@ -327,7 +326,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         val walkRecord = getWalkResult()
 
-        RetrofitService().createRecord(userKey, walkRecord, walkTag)
+        //RetrofitService().createRecord(userKey, walkRecord, walkTag)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
@@ -344,11 +343,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         timePoint = 0
         walkTime = 0
         burnedCalorie = 0.0
-
-        //TODO 후처리 코드 넣기
     }
 
-    //산책기록을 반환합니다
+    /**산책기록을 반환합니다**/
     private fun getWalkResult(): WalkRecord {
         return WalkRecord(
                 userPath.coords,
@@ -413,7 +410,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             map.setContentPadding(0,0,0,contentPaddingBottom)
         })
 
-        //courseMarker.iconTintColor = Color.parseColor("#2798E7")
         courseMarker.icon = MarkerIcons.BLUE
 
         model.coursePath.observe(viewLifecycleOwner, { v->
@@ -423,71 +419,74 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         map.addOnLocationChangeListener {
             locationSource.lastLocation?.let {
-                val lat = it.latitude
-                val lng = it.longitude
-                val point = LatLng(lat, lng)
-                val speed = it.speed
-                val alt = it.altitude
-                if(!isLocationDataInitialized) {
-                    model.recordPosition(point)
-                    initPublicData(lat,lng)
-                    initialPosition = point
-                    isLocationDataInitialized=true
-                }
-
-                if (allowRecording) {
-                    if (isRestarted) {
-                        //초기 점이 비어있을 때
-                        initUserPath(point)
-                        isRestarted = false
-                    }
-                    if (userPath.coords.isNotEmpty() && userPath.map != null) {
-                        val lastPoint = userPath.coords.last()
-                        if (!isUserReachedToTarget(point, lastPoint)) {
-                            addUserPath(point, lastPoint, userPath.coords, speed, alt.toFloat())
-                        }
-                        if (isCourseSelected) {
-                            walkTag = WALK_COURSE
-                            if(isCourseInitialized) {
-                                //TODO 다음 경로 위치 알 수 있는 방법 고민 할 것
-                                if (course.map != null) {
-                                    checkCoursePointArrival(point, course.coords)
-                                } else {
-                                    course.map = this.map
-                                }
-                            } else {
-                                val v = course.coords.toMutableList()
-                                //last 가 맞는지 확인 할 것
-                                v.add(v.last())
-                                v.add(v.last())
-                                course.coords=v
-                                courseMarker.position = v.first()
-                                courseMarker.map = this.map
-                                isCourseInitialized=true
-                            }
-                        }
-                    } else {
-                        //초기 점이 비어있을 때
-                        initUserPath(point)
-                    }
-                }
+                onLocationChangedListener(it)
             }
         }
     }
 
-    //유저 경로 초기화
+    private fun onLocationChangedListener (location:Location) {
+        val lat = location.latitude
+        val lng = location.longitude
+        val point = LatLng(lat, lng)
+        val speed = location.speed
+        val alt = location.altitude
+        if(!isLocationDataInitialized) {
+            model.recordPosition(point)
+            initPublicData(lat,lng)
+            initialPosition = point
+            isLocationDataInitialized=true
+        }
+
+        if (allowRecording) {
+            if (isRestarted) {
+                //초기 점이 비어있을 때
+                initUserPath(point)
+                isRestarted = false
+            }
+            if (userPath.coords.isNotEmpty() && userPath.map != null) {
+                val lastPoint = userPath.coords.last()
+                if (!isUserReachedToTarget(point, lastPoint)) {
+                    addUserPath(point, lastPoint, userPath.coords, speed, alt.toFloat())
+                }
+                if (isCourseSelected) {
+                    walkTag = WALK_COURSE
+                    if(isCourseInitialized) {
+                        if (course.map != null) {
+                            checkCoursePointArrival(point, course.coords)
+                        } else {
+                            course.map = this.map
+                        }
+                    } else {
+                        val v = course.coords.toMutableList()
+                        //last 가 맞는지 확인 할 것
+                        v.add(v.last())
+                        v.add(v.last())
+                        course.coords=v
+                        courseMarker.position = v.first()
+                        courseMarker.map = this.map
+                        isCourseInitialized=true
+                    }
+                }
+            } else {
+                //초기 점이 비어있을 때
+                initUserPath(point)
+            }
+        }
+    }
+
+    /**유저 경로 초기화**/
     private fun initUserPath(currentPos: LatLng) {
         val initRoute = mutableListOf(currentPos, currentPos)
         userPath.coords = initRoute
         userPath.map = this.map
     }
 
-    //목표 점에 도달했는가 (근접해있는가)
+    /**목표 점에 도달했는가 (근접해있는가)**/
     private fun isUserReachedToTarget(currentPos: LatLng, lastPos: LatLng): Boolean {
         return createBound(lastPos).contains(currentPos)
     }
 
-    //유저 경로 추가하면서 생기는 활동들 총집합
+    /**유저 경로 추가하면서 생기는 활동들 총집합**/
     private fun addUserPath(
             currentPos: LatLng,
             lastPos: LatLng,
@@ -502,8 +501,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             burnedCalorie += calculateMomentCalorie(speed, walkTime)
             timePoint = walkTime
         }
-        //마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
-        //현재 점이 포함되어있다면 추가하지 않음
+        /**마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
+        현재 점이 포함되어있다면 추가하지 않음**/
         currentPath.add(currentPos)
         speeds.add(speed)
         altitudes.add(alt)
@@ -513,7 +512,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         userPath.coords = currentPath
     }
 
-    //순간 칼로리 연산
+    /**순간 칼로리 연산**/
     private fun calculateMomentCalorie(speed: Float, passedTime: Long): Double {
         val weight = 65
         val met = when (speed) {
@@ -527,13 +526,13 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         return (met * (3.5 * weight * time)) * 0.001 * 5
     }
 
-    //산책 경로 도달 시
+    /**산책 경로 도달 시**/
     private fun checkCoursePointArrival(
             currentPos: LatLng,
             course: MutableList<LatLng>
     ) {
-        //현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
-        //현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리
+        /**현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
+        현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리**/
         if (course.size > 2) {
             if (isUserReachedToTarget(currentPos, course.first())) {
                 course.removeAt(0)
@@ -551,15 +550,57 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         }
     }
 
-    //비교용 영역 만들기
+    /**비교용 영역 만들기**/
     private fun createBound(point: LatLng): LatLngBounds {
-        // 주어진 좌표에 좌측 상단 0.00007 +
-        // 우측 하단 0.00007 -
-        // 두 점으로 사각형 구역을 만들어 반환
+        /** 주어진 좌표에 좌측 상단 0.00007 +
+        우측 하단 0.00007 -
+        두 점으로 사각형 구역을 만들어 반환**/
         val radius = 0.00007
         return LatLngBounds(
                 LatLng(point.latitude - radius, point.longitude - radius),
                 LatLng(point.latitude + radius, point.longitude + radius),
         )
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (!locationThread.isAlive) { //백그라운드 Thread 가 살아 있다면
+            locationThread.start()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.e("RESUME", "RESUME")
+        if (locationThread.isAlive) { //백그라운드 Thread 가 살아 있다면
+            locationThread.interrupt()
+        }
+    }
+
+    inner class BackgroundLocationThread(threadName: String , currentProvider: String) : Thread(threadName) {
+        /**
+         * Fused Location Provider Api 에서
+         * 위치 업데이트를위한 서비스 품질등 다양한요청을
+         * 설정하는데 사용하는 객체.
+         */
+        private lateinit var mLocationRequest: LocationRequest
+        /**
+         * 현재위치정보를 나타내는 객체
+         */
+        private lateinit var mCurrentLocation: Location
+
+        /**
+         * 현재 위치제공자(Provider)와 상호작용하는 진입점
+         */
+        private lateinit var mFusedLocationClient: FusedLocationProviderClient
+
+        /**
+         * 현재 단말기에 설정된 위치 Provider
+         */
+
+        override fun run() {
+            super.run()
+
+        }
     }
 }
