@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -314,24 +315,23 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
     }
 
     override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute) {
-        val myPageAdapter = MyPageAdapter(userRoute.audit, userRoute.complete)
+        val myPageAdapter = context?.let { MyPageAdapter(userRoute.audit, userRoute.complete, it) }
 
         userRouteRecyclerView.apply {
             this.adapter = myPageAdapter
             this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
 
+            myPageAdapter?.setItemClickListener(object : MyPageAdapter.ItemClickListener {
+                @RequiresApi(Build.VERSION_CODES.Q)
+                override fun onClick(view: View, position: Int) {
+                    if (position < userRoute.audit.size) {
+                    
 
-//            myPageAdapter.setItemClickListener(object :
-//                ChallengeAdapter.ItemClickListener {
-//                @RequiresApi(Build.VERSION_CODES.Q)
-//                override fun onClick(view: View, position: Int) {
-//                    challengeDetailFragment = ChallengeDetailFragment()
-//                    toDetailPage(challengeDetailFragment,
-//                        ddubuckChallenge[position].title,
-//                        position,
-//                        1)
-//                }
-//            })
+                    } else {
+
+                    }
+                }
+            })
         }
     }
 
