@@ -36,9 +36,8 @@ class GalleryAdapter(val context: Context, uriArr: ArrayList<String>) : BaseAdap
         Glide.with(context).load(items[p]).into(imageView)
         imageView.adjustViewBounds = true
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-
         imageView.layoutParams =
-            LinearLayout.LayoutParams(display.widthPixels / 4, display.widthPixels / 4)
+            LinearLayout.LayoutParams(display.widthPixels / 5, display.widthPixels / 5)
 //        if (p == 3) {
 //            Glide.with(context).clear(imageView)
 //            imageView.setImageResource(R.drawable.ic_icon_plus)
