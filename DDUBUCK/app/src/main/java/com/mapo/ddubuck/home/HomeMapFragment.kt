@@ -1,34 +1,36 @@
 package com.mapo.ddubuck.home
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.*
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.UiThread
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.*
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitClient
-import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.data.publicdata.PublicData
 import com.mapo.ddubuck.data.publicdata.RecommendPathDTO
+import com.mapo.ddubuck.home.bottomSheet.BottomSheetCompleteFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.mapo.ddubuck.ui.CommonDialog
-import com.mapo.ddubuck.home.bottomSheet.BottomSheetCompleteFragment
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
@@ -43,7 +45,6 @@ import retrofit2.Response
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.concurrent.timer
-
 
 
 class HomeMapFragment(private val fm: FragmentManager, private val owner: Activity) : Fragment(),
@@ -76,12 +77,11 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private lateinit var map: NaverMap
     private lateinit var timer: Timer
     private lateinit var locationSource: FusedLocationSource
-    private val locationThread = BackgroundLocationThread("Background_Location","1")
     private val sensorManager by lazy {
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
-    private var markers:HashMap<String, Marker> = HashMap()
-
+    private var markers:HashMap<String, MutableList<Marker>> = HashMap()
+    private val sharedPref = UserSharedPreferences
     private var isLocationDataInitialized = false
 
     //측정 관련 변수
@@ -100,9 +100,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var courseMarker = Marker()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
         model.walkState.value = WALK_START
@@ -151,9 +151,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray,
     ) {
         if (locationSource.onRequestPermissionsResult(requestCode, permissions, grantResults)) {
             return
@@ -163,6 +163,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
 
     private fun initPublicData(x:Double, y:Double) {
+
+        markers[FilterDrawer.PUBLIC_TOILET] = mutableListOf()
+        markers[FilterDrawer.PUBLIC_REST_AREA] = mutableListOf()
+        markers[FilterDrawer.PET_RESTAURANT] = mutableListOf()
+        markers[FilterDrawer.PET_CAFE] = mutableListOf()
+        markers[FilterDrawer.CAR_FREE_ROAD]= mutableListOf()
+        markers[FilterDrawer.CAFE]= mutableListOf()
+
         RetrofitClient.publicDataInstance.getResult(x,y)
             .enqueue(object : Callback<PublicData> {
                 override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
@@ -170,11 +178,12 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         val publicData = response.body()!!
                         val markerHeightSize = 80
                         val markerWidthSize = 60
-                        //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!! - 민재
                         for (i in publicData.petCafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PET_CAFE)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.BLUE
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -187,12 +196,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["petCafe"] = marker
+                            markers[FilterDrawer.PET_CAFE]!!.add(marker)
                         }
                         for (i in publicData.carFreeRoad) {
                             val marker = Marker()
                             marker.position = LatLng(i.path[0].x, i.path[0].y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.CAR_FREE_ROAD)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.RED
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -204,12 +215,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["carFreeRoad"] = marker
+                            markers[FilterDrawer.CAR_FREE_ROAD]!!.add(marker)
                         }
                         for (i in publicData.cafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.CAFE)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.GRAY
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -221,12 +234,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["cafe"] = marker
+                            markers[FilterDrawer.CAFE]!!.add(marker)
                         }
                         for (i in publicData.petRestaurant) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PET_RESTAURANT)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.PINK
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -238,12 +253,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["petRestaurant"] = marker
+                            markers[FilterDrawer.PET_RESTAURANT]!!.add(marker)
                         }
                         for (i in publicData.publicRestArea) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PUBLIC_REST_AREA)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.GREEN
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -255,12 +272,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["publicRestArea"] = marker
+                            markers[FilterDrawer.PUBLIC_REST_AREA]!!.add(marker)
                         }
                         for (i in publicData.publicToilet) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PUBLIC_TOILET)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.YELLOW
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -272,7 +291,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["publicToilet"] = marker
+                            markers[FilterDrawer.PUBLIC_TOILET]!!.add(marker)
                         }
                         val recommendPath = mutableListOf<RecommendPathDTO>()
                         recommendPath.addAll(publicData.recommendPathMaster)
@@ -293,6 +312,66 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 }
 
             })
+
+        model.showCafe.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.CAFE]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showCarFreeRoad.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.CAR_FREE_ROAD]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPetCafe.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PET_CAFE]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPetRestaurant.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PET_RESTAURANT]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPublicRestArea.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PUBLIC_REST_AREA]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPublicToilet.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PUBLIC_TOILET]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
     }
 
     /**버튼 텍스트 바꾸고 산책시작**/
@@ -418,9 +497,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         model.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener {
-            locationSource.lastLocation?.let {
-                onLocationChangedListener(it)
-            }
+            onLocationChangedListener(it)
         }
     }
 
@@ -488,11 +565,11 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**유저 경로 추가하면서 생기는 활동들 총집합**/
     private fun addUserPath(
-            currentPos: LatLng,
-            lastPos: LatLng,
-            currentPath: MutableList<LatLng>,
-            speed: Float,
-            alt: Float
+        currentPos: LatLng,
+        lastPos: LatLng,
+        currentPath: MutableList<LatLng>,
+        speed: Float,
+        alt: Float,
     ) {
         if (timePoint != 0.toLong()) {
             burnedCalorie += calculateMomentCalorie(speed, walkTime - timePoint)
@@ -528,8 +605,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**산책 경로 도달 시**/
     private fun checkCoursePointArrival(
-            currentPos: LatLng,
-            course: MutableList<LatLng>
+        currentPos: LatLng,
+        course: MutableList<LatLng>,
     ) {
         /**현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
         현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리**/
@@ -562,45 +639,4 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         )
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (!locationThread.isAlive) { //백그라운드 Thread 가 살아 있다면
-            locationThread.start()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.e("RESUME", "RESUME")
-        if (locationThread.isAlive) { //백그라운드 Thread 가 살아 있다면
-            locationThread.interrupt()
-        }
-    }
-
-    inner class BackgroundLocationThread(threadName: String , currentProvider: String) : Thread(threadName) {
-        /**
-         * Fused Location Provider Api 에서
-         * 위치 업데이트를위한 서비스 품질등 다양한요청을
-         * 설정하는데 사용하는 객체.
-         */
-        private lateinit var mLocationRequest: LocationRequest
-        /**
-         * 현재위치정보를 나타내는 객체
-         */
-        private lateinit var mCurrentLocation: Location
-
-        /**
-         * 현재 위치제공자(Provider)와 상호작용하는 진입점
-         */
-        private lateinit var mFusedLocationClient: FusedLocationProviderClient
-
-        /**
-         * 현재 단말기에 설정된 위치 Provider
-         */
-
-        override fun run() {
-            super.run()
-
-        }
-    }
 }

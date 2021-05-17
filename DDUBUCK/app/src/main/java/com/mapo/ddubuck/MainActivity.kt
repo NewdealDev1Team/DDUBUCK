@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
 
-    private val drawerFragment = FilterDrawer()
+    private val drawerFragment = FilterDrawer(this@MainActivity)
 
     private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
@@ -227,9 +227,7 @@ class MainActivity : AppCompatActivity() {
             })
             val drawerLayout = findViewById<DrawerLayout>(R.id.main_drawerLayout)
             activityModel.showDrawer.observe(this, {v ->
-                if(v) {
-                    println("메롱")
-                } else {
+                if(!v) {
                     drawerLayout.closeDrawer(GravityCompat.END)
                 }
             })

@@ -46,4 +46,16 @@ object UserSharedPreferences {
         val prefs : SharedPreferences = context.getSharedPreferences("pet", Context.MODE_PRIVATE)
         return prefs.getString("PET","").toBoolean()
     }
+
+    fun setFilterVisible(context: Context,key:String,input: Boolean) {
+        val prefs : SharedPreferences = context.getSharedPreferences("filter", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putBoolean(key, input)
+        editor.apply()
+    }
+
+    fun getFilterVisible(context:Context, key:String): Boolean {
+        val prefs : SharedPreferences = context.getSharedPreferences("filter", Context.MODE_PRIVATE)
+        return prefs.getBoolean(key, false)
+    }
 }
