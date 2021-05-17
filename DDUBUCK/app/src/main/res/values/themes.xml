@@ -42,16 +42,26 @@
 <!--        <item name="android:textColor">@color/black</item>-->
 <!--    </style>-->
 
-    <!-- 코치마크 테마 변경    -->
-    <style name="WalkthroughTheme" parent="Theme.AppCompat">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowContentOverlay">@null</item>
+    <style name="mytheme" parent="android:style/Theme.Translucent">
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
         <item name="android:backgroundDimEnabled">true</item>
-
-<!--  창 제목 없    -->
-<!--  배경 흐르게 활성화     -->
+        <item name="android:background">@android:color/transparent</item>
     </style>
+    <!-- 코치마크 테마 변경    WalkthroughTheme-->
+<!--    <style name="WalkthroughTheme" parent="Theme.AppCompat">-->
+<!--        <item name="android:windowIsTranslucent">true</item>-->
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--        <item name="android:backgroundDimEnabled">true</item>-->
+<!--    </style>-->
+
+<!--    <style name="Theme.D1NoTitleDim" parent="android:style/Theme.Translucent">-->
+<!--        <item name="android:windowNoTitle">true</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:backgroundDimEnabled">true</item>-->
+<!--        <item name="android:background">@android:color/transparent</item>-->
+<!--    </style>-->
 
 </resources>

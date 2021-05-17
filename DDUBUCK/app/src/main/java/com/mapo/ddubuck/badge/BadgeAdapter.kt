@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_badge.view.*
 
 class BadgeAdapter(
     private val badgeList: MutableList<Badge>,
-    private val owner: BadgeFragment
+//    private val owner: BadgeFragment
 ) : RecyclerView.Adapter<BadgeAdapter.BadgeHolder>(){
 
     inner class BadgeHolder(rowRoot: View) : RecyclerView.ViewHolder(rowRoot) {

@@ -82,20 +82,16 @@
                     android:textSize="14dp" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/course_share_button_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/course_button_screenshot"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_marginLeft="350dp"
-                    android:background="@drawable/chart_share_icon"
-                    android:scaleType="centerCrop"
-                    android:textColor="@color/grey" />
-            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/course_share_button"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right"
+                android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+                android:background="@drawable/chart_share_icon"
+                android:scaleType="centerCrop"
+                android:textColor="@color/grey" />
 
             <LinearLayout
                 android:id="@+id/course_bar_chart_layout"
@@ -151,7 +147,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="205dp"
                 android:background="@color/white">
 
                 <TextView
@@ -180,5 +175,10 @@
                     android:textSize="12dp" />
             </LinearLayout>
         </LinearLayout>
+
+<!--        <View-->
+<!--            android:layout_width="match_parentm"-->
+<!--            android:layout_height="match_parent"/>-->
+
     </RelativeLayout>
 </ScrollView>

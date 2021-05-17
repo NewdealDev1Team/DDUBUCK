@@ -1,6 +1,7 @@
 package com.mapo.ddubuck.mypage.mywalk
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -52,6 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -87,6 +90,8 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
+    private val shareButtonViewImage : Boolean = false
+
     override fun onCreateView(
         //프래그먼트가 인터페이스를 처음 그릴때 사용함
         inflater: LayoutInflater,
@@ -98,7 +103,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         mainViewModel.toolbarTitle.value = "칼로리"
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
             var userKey : Int = it.toInt()
-            Log.d("userKey-----칼로리sdfadf","$userKey")
+            Log.d("userKey----","$userKey")
             RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
                 override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                     if (response.isSuccessful) {
@@ -117,7 +122,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                                 + result3!!.toInt() + result4!!.toInt() + result5!!.toInt())
 
                         var calorieTitleName: String =
-                            response.body()?.user?.get(0)?.name.toString()
+                            response.body()?.weekStat?.get(0)?.name.toString()
 
                         val listData by lazy {
                             mutableListOf(
@@ -281,29 +286,29 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                 }
             })
         }
-        val button: Button = rootView.findViewById(R.id.calorie_button_screenshot)
+        val button: Button = rootView.findViewById(R.id.calorie_share_button)
         button.setOnClickListener {
             when (requestPermissions()) {
                 true -> Instacapture.capture(this.requireActivity(),
                     object : SimpleScreenCapturingListener() {
                         override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: ScrollView =
-                                requireView().findViewById(R.id.calorie) as ScrollView
-                            val day = SimpleDateFormat("yyyyMMddHHmmss")
-                            val date = Date()
-                            //공유 버튼 제
-                            val remove: View =
-                                rootView.findViewById(R.id.calorie_button_screenshot)
-                            remove.visibility = View.GONE
+                            val capture: FrameLayout =
+                                requireView().findViewById(R.id.calorie) as FrameLayout
+                            val shareButtonView: View = rootView.findViewById(R.id.calorie_share_button)
+                            shareButtonView.visibility = View.GONE
                             capture.buildDrawingCache()
                             val captureview: Bitmap = capture.getDrawingCache()
                             val uri = saveImageExternal(captureview)
                             uri?.let {
-                                shareImageURI(uri)
+                                if(!shareImageURI(uri)){
+                                    shareButtonView.visibility = View.VISIBLE
+                                }else {
+                                    shareImageURI(uri)
+                                }
                             } ?: showError()
                         }
                     },
-                    calorie_button_screenshot)
+                    calorie_share_button)
                 else -> showError()
             }
         }
@@ -342,35 +347,43 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
     }
 
     fun saveImageExternal(image: Bitmap): Uri? {
-
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
         var uri: Uri? = null
-        try {
-            //Bitmap으로 만든 이미지는 png 파일 형태로 만들기
-            //파일을 저장할 주소 + 파일 이름
-            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                "Calories-Chart.png")
-            //이미지 파일 생성
-            val stream = FileOutputStream(file)
-            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
-            stream.close()
-            uri = FileProvider.getUriForFile(this.requireContext(),
-                this.requireActivity().packageName + ".provider",
-                file)
-        } catch (e: IOException) {
-            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
         }
-        return uri
+
+        //use application context to get contentResolver
+        val contentResolver = this.requireActivity().contentResolver
+
+        contentResolver.also { resolver ->
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = uri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(uri!!, contentValues, null, null)
+
+        return uri!!
     }
 
-
-    fun shareImageURI(uri: Uri) {
+    fun shareImageURI(uri: Uri) :Boolean {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
             type = "message/rfc822"
+            type = "image/*"
         }
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
+        return shareButtonViewImage
     }
 
     private fun setUserInfo(userName: TextView) {

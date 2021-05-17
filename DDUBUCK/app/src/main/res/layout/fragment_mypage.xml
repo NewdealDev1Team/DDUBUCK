@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:layout_marginBottom="70dp"
+            android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
 
@@ -271,7 +271,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="19dp"
                 android:layout_marginRight="16dp"
-                android:numColumns="4"></GridView>
+                android:numColumns="4" />
 
 
             <View
@@ -289,6 +289,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="16dp"
                 android:orientation="horizontal"
@@ -299,7 +300,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_marginBottom="40dp"
                     android:text="사용자 지정 경로"
                     android:textColor="@color/black"
                     android:textSize="18dp"
@@ -312,13 +312,14 @@
                     android:layout_alignParentEnd="true"
                     android:src="@drawable/ic_info" />
 
-
             </RelativeLayout>
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/user_route_recyclerview"
+                android:layout_marginBottom="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
-
     </RelativeLayout>
-
-
 </ScrollView>

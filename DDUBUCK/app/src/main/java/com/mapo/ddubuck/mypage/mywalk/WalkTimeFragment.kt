@@ -1,6 +1,7 @@
 package com.mapo.ddubuck.mypage.mywalk
 
 import android.Manifest
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -8,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -90,6 +92,8 @@ class WalkTimeFragment : Fragment() {
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
+    private val shareButtonViewImage : Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -116,7 +120,7 @@ class WalkTimeFragment : Fragment() {
                             " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
 
                         var timeTitleName: String =
-                            response.body()?.user?.get(0)?.name.toString()
+                            response.body()?.weekStat?.get(0)?.name.toString()
 
                         val listData by lazy {
                             mutableListOf(
@@ -292,29 +296,30 @@ class WalkTimeFragment : Fragment() {
             })
         }
 
-        val button: Button = rootView.findViewById(R.id.time_button_screenshot)
+        val button: Button = rootView.findViewById(R.id.time_share_button)
         button.setOnClickListener {
             when (requestPermissions()) {
                 true -> Instacapture.capture(this.requireActivity(),
                     object : SimpleScreenCapturingListener() {
+                        @RequiresApi(Build.VERSION_CODES.Q)
                         override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: ScrollView =
-                                requireView().findViewById(R.id.walktime) as ScrollView
-                            val day = SimpleDateFormat("yyyyMMddHHmmss")
-                            val date = Date()
-                            val remove: View = rootView.findViewById(R.id.time_share_button_layout)
-                            remove.visibility = View.GONE
+                            val capture: FrameLayout =
+                                requireView().findViewById(R.id.walktime) as FrameLayout
+                            val shareButtonView: View = rootView.findViewById(R.id.time_share_button)
+                            shareButtonView.visibility = View.GONE
                             capture.buildDrawingCache()
-//                            capture.removeViewInLayout(rootView.findViewById(R.id.time_share_button_layout))
                             val captureview: Bitmap = capture.getDrawingCache()
-
                             val uri = saveImageExternal(captureview)
                             uri?.let {
-                                shareImageURI(uri)
+                                if(!shareImageURI(uri)){
+                                    shareButtonView.visibility = View.VISIBLE
+                                }else {
+                                    shareImageURI(uri)
+                                }
                             } ?: showError()
                         }
                     },
-                    time_button_screenshot)
+                    time_share_button)
                 else -> showError()
             }
         }
@@ -353,35 +358,45 @@ class WalkTimeFragment : Fragment() {
         return permissions
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
-    fun saveImageExternal(image: Bitmap): Uri? {
-//        val v: LinearLayout = requireView().findViewById(R.id.walktime) as LinearLayout
+        fun saveImageExternal(image: Bitmap): Uri? {
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
         var uri: Uri? = null
-        try {
-            //저장할 폴더 setting
-            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS),
-                "Walking-Time-Chart.png")
-            val stream = FileOutputStream(file)
-            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
-            stream.close()
-            uri = FileProvider.getUriForFile(this.requireContext(),
-                this.requireActivity().packageName + ".provider",
-                file)
-        } catch (e: IOException) {
-            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
         }
-        return uri
+
+        //use application context to get contentResolver
+        val contentResolver = this.requireActivity().contentResolver
+
+        contentResolver.also { resolver ->
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = uri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(uri!!, contentValues, null, null)
+
+        return uri!!
     }
 
 
-    fun shareImageURI(uri: Uri) {
+    fun shareImageURI(uri: Uri) : Boolean {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
             type = "message/rfc822"
+            type = "image/*"
         }
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
+        return shareButtonViewImage
     }
 
     private fun setUserInfo(userName: TextView) {
