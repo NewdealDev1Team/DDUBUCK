@@ -14,8 +14,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="21dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginBottom="21dp"
         android:layout_centerVertical="true"
         android:text="망리단길 투어"
         android:textSize="16dp"
