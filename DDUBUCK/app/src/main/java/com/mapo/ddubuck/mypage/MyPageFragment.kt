@@ -216,7 +216,6 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
 
         }
 
-        }
 
         val userRouteRecyclerView: RecyclerView = myPageView.findViewById(R.id.user_route_recyclerview)
         userRouteRecyclerView.isNestedScrollingEnabled = false
