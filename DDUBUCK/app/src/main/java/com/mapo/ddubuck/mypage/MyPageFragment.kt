@@ -262,6 +262,7 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
 
+
     }
 
 
