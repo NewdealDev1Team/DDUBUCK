@@ -63,14 +63,17 @@ class HomeMapViewModel : ViewModel() {
 
     val walkState = MutableLiveData<Int>()
 
-    //dp대응
     val bottomSheetHeight = MutableLiveData<Int>()
 
+    val showCafe = MutableLiveData<Boolean>()
+    val showCarFreeRoad = MutableLiveData<Boolean>()
+    val showPetCafe = MutableLiveData<Boolean>()
+    val showPetRestaurant = MutableLiveData<Boolean>()
+    val showPublicRestArea = MutableLiveData<Boolean>()
+    val showPublicToilet = MutableLiveData<Boolean>()
 
     //마이페이지 나의 기록
     val recordMywalk = MutableLiveData<Boolean>()
-
-
 }
 //boolean observer
 //"stepCount": 210, 오늘 걸은 걸음 수

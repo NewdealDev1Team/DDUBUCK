@@ -6,6 +6,7 @@ import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.data.publicdata.PublicDataAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.mapo.ddubuck.data.home.MapAPI
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -61,7 +62,7 @@ object RetrofitClient{
 
 class RetrofitService {
 
-    fun createRecord(userKey : String, walkRecord: WalkRecord){
+    fun createRecord(userKey : String, walkRecord: WalkRecord, walkType : Int){
         val map = hashMapOf<String, Any>()
         map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
@@ -70,6 +71,16 @@ class RetrofitService {
         map["distance"] = walkRecord.distance
         map["path"] = Gson().toJson(walkRecord.pathToMap())
         map["calorie"] = walkRecord.getCalorie(65.0)
+        //walkType = FREE_WALK / COURSE_WALK
+        map["walkType"] = ""
+        if(walkType == 100) {
+            map["walkType"] = "WALK_FREE"
+        }
+
+        if(walkType == 401) {
+            map["walkType"] = "WALK_COURSE"
+        }
+
 
         RetrofitClient.mapInstance.createPost(map)
                 .enqueue(object : Callback<WalkRecord> {

@@ -13,11 +13,14 @@ import android.os.Vibrator
 import android.widget.TextView
 import android.util.Log
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
@@ -30,6 +33,7 @@ import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
 
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mapo.ddubuck.home.FilterDrawer
 import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
 
+    private val drawerFragment = FilterDrawer(this@MainActivity)
 
     private lateinit var activeFragment: Fragment
     private val mapModel: HomeMapViewModel by viewModels()
@@ -155,6 +160,7 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
             add(R.id.nav_main_container, settingFragment).hide(settingFragment)
+            add(R.id.main_drawer_frame, drawerFragment)
         }.commit()
         activeFragment = homeFragment
         val tbm = supportActionBar
@@ -228,6 +234,12 @@ class MainActivity : AppCompatActivity() {
             activityModel.toolbarTitle.observe(this, { v ->
                 tbm.title = v
             })
+            val drawerLayout = findViewById<DrawerLayout>(R.id.main_drawerLayout)
+            activityModel.showDrawer.observe(this, {v ->
+                if(!v) {
+                    drawerLayout.closeDrawer(GravityCompat.END)
+                }
+            })
         }
     }
 
@@ -250,7 +262,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_filter -> {
-
+                val drawerLayout = findViewById<DrawerLayout>(R.id.main_drawerLayout)
+                drawerLayout.openDrawer(Gravity.RIGHT)
             }
             R.id.action_bookmark -> {
 

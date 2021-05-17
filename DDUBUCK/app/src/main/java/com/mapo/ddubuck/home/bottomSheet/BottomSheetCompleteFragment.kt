@@ -21,6 +21,7 @@ import com.mapo.ddubuck.home.CourseAddDialog
 import com.mapo.ddubuck.home.HomeMapFragment
 import com.mapo.ddubuck.home.HomeMapViewModel
 import com.mapo.ddubuck.share.ShareActivity
+import com.naver.maps.geometry.LatLng
 
 
 class BottomSheetCompleteFragment(
@@ -41,10 +42,10 @@ class BottomSheetCompleteFragment(
         val rootView = inflater.inflate(R.layout.bottom_sheet_complete, container, false)
         val titleTv : TextView = rootView.findViewById(R.id.sheet_complete_titleTv)
         val formatter = BottomSheetNumberFormat()
-        if(walkType == HomeMapFragment.WALK_COURSE) {
-            titleTv.text = "코스 산책"
-        } else {
+        if(walkType == HomeMapFragment.WALK_FREE) {
             titleTv.text = "자유 산책"
+        } else {
+            titleTv.text = "코스 산책"
         }
         val walkTimeTv : TextView = rootView.findViewById(R.id.sheet_complete_walTimeTv)
         walkTimeTv.text = DateUtils.formatElapsedTime(walkRecord.walkTime)
@@ -59,6 +60,7 @@ class BottomSheetCompleteFragment(
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)
         averageAltitudeTv.text = formatter.getFormattedAltitude(walkRecord.altitude)
         val shareButton : Button = rootView.findViewById(R.id.sheet_complete_shareButton)
+        //a
         if(walkRecord.path.size > 2) {
             shareButton.setOnClickListener{
                 val intent = Intent(context, ShareActivity::class.java)
@@ -72,14 +74,14 @@ class BottomSheetCompleteFragment(
             shareButton.setTextColor(Color.GRAY)
         }
         val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
-        if(walkType == HomeMapFragment.WALK_COURSE) {
-            val buttonLayout : LinearLayout = rootView.findViewById(R.id.sheet_complete_buttonLayout)
-            buttonLayout.removeView(addToMyPathButton)
-        } else {
+        if(walkType == HomeMapFragment.WALK_FREE) {
             addToMyPathButton.setOnClickListener{
                 val dialog = CourseAddDialog(walkRecord,userKey,owner)
                 dialog.show(parentFragmentManager, MainActivity.HOME_TAG)
             }
+        } else {
+            val buttonLayout : LinearLayout = rootView.findViewById(R.id.sheet_complete_buttonLayout)
+            buttonLayout.removeView(addToMyPathButton)
         }
         return rootView
     }

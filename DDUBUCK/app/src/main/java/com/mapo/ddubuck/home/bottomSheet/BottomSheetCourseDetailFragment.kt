@@ -37,11 +37,11 @@ class BottomSheetCourseDetailFragment(private val courseItem: CourseItem) : Frag
         Glide.with(this).load(courseItem.imgFile).into(pictureIv)
         pictureIv.setBackgroundResource(R.drawable.sheet_select_item_rounded)
         pictureIv.clipToOutline = true
-        /*
-        picture?.let { v ->
-                    Glide.with(itemView).load(i.imgFile).into(v)
-                }
-         */
+        val backButton : ImageView = rootView.findViewById(R.id.sheet_course_detail_backButton)
+        backButton.setOnClickListener {
+            val fm = parentFragmentManager
+            fm.popBackStack(MainActivity.HOME_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
         val startButton : Button = rootView.findViewById(R.id.sheet_course_detail_startButton)
         startButton.setOnClickListener{
             val fm = parentFragmentManager

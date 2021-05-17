@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.databinding.DialogCourseAddBinding
 import com.mapo.ddubuck.home.bottomSheet.BottomSheetNumberFormat
@@ -62,7 +63,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
                 val description = binding.dialogCourseAddEditText.text.toString()
                 val imageUri = getRealPathFromURI(bitmapUri!!)!!
 
-                //RetrofitService().addAdditionalInfo(userKey,title,description,imageUri)
+                RetrofitService().addAdditionalInfo(userKey,title,description,imageUri)
 
                 dismiss()
             }

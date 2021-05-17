@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.data
+package com.mapo.ddubuck.data.home
 
 import com.mapo.ddubuck.data.home.WalkRecord
 import okhttp3.MultipartBody
