@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.activityViewModels
+
 import androidx.core.view.isInvisible
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -28,6 +30,8 @@ import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import com.mapo.ddubuck.data.mypagechart.RetrofitChart
 import com.mapo.ddubuck.data.mypagechart.chartData
 import com.mapo.ddubuck.databinding.FragmentMypageBinding
+import com.mapo.ddubuck.home.HomeMapFragment
+import com.mapo.ddubuck.home.HomeMapViewModel
 
 import com.mapo.ddubuck.login.UserService
 import com.mapo.ddubuck.login.UserValidationInfo
@@ -59,6 +63,9 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
+
+    //뷰모델
+    private val model: HomeMapViewModel by activityViewModels()
 
     private lateinit var activeFragment: Fragment
     private lateinit var walkTimeFramgnet: WalkTimeFragment
@@ -205,13 +212,16 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
 
             val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
             cancelButton.visibility = View.INVISIBLE
+
+
+        }
+
         }
 
         val userRouteRecyclerView: RecyclerView = myPageView.findViewById(R.id.user_route_recyclerview)
         userRouteRecyclerView.isNestedScrollingEnabled = false
 
         setUserRoute(userRouteRecyclerView)
-
         return myPageView
     }
 

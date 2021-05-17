@@ -9,25 +9,25 @@
         android:id="@+id/item_badge_image"
         android:layout_width="89dp"
         android:layout_height="89dp"
-        android:src="@drawable/ic_badge_challenge_goodjob"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="12dp"
         android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_badge_challenge_goodjob"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/item_badge_text"
         android:layout_width="89dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="첫 산책"
-        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_badge_image"
-        app:layout_constraintStart_toStartOf="@+id/item_badge_image"
-        tools:ignore="MissingConstraints"
-         />
-
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

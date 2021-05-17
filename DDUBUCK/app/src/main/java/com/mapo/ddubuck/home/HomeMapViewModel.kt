@@ -65,4 +65,16 @@ class HomeMapViewModel : ViewModel() {
 
     //dp대응
     val bottomSheetHeight = MutableLiveData<Int>()
+
+
+    //마이페이지 나의 기록
+    val recordMywalk = MutableLiveData<Boolean>()
+
+
 }
+//boolean observer
+//"stepCount": 210, 오늘 걸은 걸음 수
+//"walkTime": 12, 산책시간
+//"calorie": 50, 칼로리
+//"completedCount": 1, 완주횟수
+
