@@ -90,16 +90,18 @@ class MainActivity : AppCompatActivity() {
         if (!isCoachMarkOn) {
             onCoachMark()
         }
-        Log.d("dd","${isCoachMarkOn}")
+        Log.d("coachmark","${isCoachMarkOn}")
     }
 
 
     fun onCoachMark() {
-            val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+            val dialog : Dialog = Dialog(this,R.style.mytheme)
             //최상의 보기로 사용
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-            dialog.setContentView(R.layout.coach_mark)
+        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+       dialog.window?.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT)
+        dialog.setContentView(R.layout.coach_mark)
             dialog.setCanceledOnTouchOutside(true)
 
 
@@ -111,14 +113,11 @@ class MainActivity : AppCompatActivity() {
             }
             dialog.show()
     }
-//ViewModel로 다시 받아오기
-    // 그냥 boolean ture, false
-    // 기록해서 User myPage에서 같이 쓰이는 것!!
-    // ViewModel를 참고해서 같이 만들기 !!
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        mapModel.vibrationControl.observe(this, {
+            mapModel.vibrationControl.observe(this, {
             vibrator.vibrate(VibrationEffect.createOneShot(100, 85))
         })
     }
