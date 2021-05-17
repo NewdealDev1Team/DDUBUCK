@@ -44,10 +44,12 @@
 
     <style name="mytheme" parent="android:style/Theme.Translucent">
         <item name="android:windowNoTitle">true</item>
-        <item name="android:windowContentOverlay">@null</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+
+<!--    <item name="android:windowContentOverlay">@null</item>-->
     <!-- 코치마크 테마 변경    WalkthroughTheme-->
 <!--    <style name="WalkthroughTheme" parent="Theme.AppCompat">-->
 <!--        <item name="android:windowIsTranslucent">true</item>-->

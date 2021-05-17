@@ -10,17 +10,21 @@
             android:id="@+id/coach_marks_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:adjustViewBounds="true"
             android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:src="@drawable/coach_marks" />
+<!--        android:layout_centerInParent="true"-->
+<!--        android:scaleType="fitXY"-->
+
 
         <ImageButton
             android:id="@+id/coach_mark_exit_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="15dp"
             android:layout_gravity="bottom|right"
-            android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-            android:layout_marginVertical="@dimen/activity_vertical_margin"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
             android:background="#00000000"
             android:src="@drawable/ic_coach_mark_exit" />
 </FrameLayout>
