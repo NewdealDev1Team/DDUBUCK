@@ -22,7 +22,7 @@ import com.mapo.ddubuck.R
 
 @RequiresApi(Build.VERSION_CODES.O)
 class HomeMapService : Service() {
-
+    //
     companion object {
         const val TAG = "DDUBUCKLocationService"
         const val LOCATION_INTERVAL = 1000
