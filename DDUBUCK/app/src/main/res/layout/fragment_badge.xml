@@ -65,7 +65,7 @@
                 android:layout_height="6dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="47dp"
-                android:background="@color/grey" />
+                android:background="#10767676"  />
 
             <LinearLayout
                 android:id="@+id/layout2"
@@ -115,7 +115,7 @@
                 android:layout_height="6dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="47dp"
-                android:background="@color/grey"
+                android:background="#10767676"
                 />
 
             <LinearLayout

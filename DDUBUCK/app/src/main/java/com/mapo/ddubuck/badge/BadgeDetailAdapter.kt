@@ -10,10 +10,9 @@ import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
 import kotlinx.android.synthetic.main.item_badge.view.*
 
-class BadgeAdapter(
-    private val badgeList: MutableList<Badge>,
-//    private val owner: BadgeFragment
-) : RecyclerView.Adapter<BadgeAdapter.BadgeHolder>(){
+class BadgeDetailAdapter(
+    private val badgeList: MutableList<Badge>
+) : RecyclerView.Adapter<BadgeDetailAdapter.BadgeHolder>(){
 
     inner class BadgeHolder(rowRoot: View) : RecyclerView.ViewHolder(rowRoot) {
         val imageView : ImageView =  rowRoot.findViewById(R.id.item_badge_image)

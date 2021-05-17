@@ -1,8 +1,5 @@
 package com.mapo.ddubuck.data.badge
 
-import com.mapo.ddubuck.badge.Badge
-import com.mapo.ddubuck.badge.BadgeAdapter
-
 data class Special(
     val CherryBlossomTrees: String,
     val Spring: String

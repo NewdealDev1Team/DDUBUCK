@@ -1,12 +1,19 @@
 package com.mapo.ddubuck.challenge.detail
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -25,17 +32,23 @@ import com.mapo.ddubuck.mypage.MypageViewModel
 import com.mapo.ddubuck.mypage.UserRoute
 import com.mapo.ddubuck.mypage.UserRouteAPI
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
+import com.tarek360.instacapture.Instacapture
+import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
+import kotlinx.android.synthetic.main.fragment_walk_time.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.OutputStream
 
 class ChallengeDetailFragment : Fragment() {
     private lateinit var challengeViewModel: ChallengeViewModel
 
     private val userViewModel: MypageViewModel by activityViewModels()
 //    private val challengeDetail: MutableList<ChallengeDetail> = mutableListOf()
+private val shareButtonViewImage : Boolean = false
+
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -103,8 +116,71 @@ class ChallengeDetailFragment : Fragment() {
             }
         }
 
-
+        val challengeShareButton: Button = challengeDetailView.findViewById(R.id.challenge_screenshot)
+        challengeShareButton.setOnClickListener {
+            Instacapture.capture(
+                this.requireActivity(),
+                object : SimpleScreenCapturingListener() {
+                    @RequiresApi(Build.VERSION_CODES.Q)
+                    override fun onCaptureComplete(captureview: Bitmap) {
+                        val capture: RecyclerView = requireView().findViewById(R.id.challenge_detail_recyclerView) as RecyclerView
+                        val shareButtonView: View = challengeDetailView.findViewById(R.id.challenge_detail_recyclerView)
+                        shareButtonView.visibility = View.GONE
+                        capture.buildDrawingCache()
+                        val captureview: Bitmap = capture.getDrawingCache()
+                        val uri = saveImageExternal(captureview)
+                        uri?.let {
+                            if (!shareImageURI(uri)) {
+                                shareButtonView.visibility = View.VISIBLE
+                            } else {
+                                shareImageURI(uri)
+                            }
+                        }
+                    }
+                }
+            )
+        }
         return challengeDetailView
+    }
+    fun saveImageExternal(image: Bitmap): Uri? {
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+        var uri: Uri? = null
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
+        }
+
+        //use application context to get contentResolver
+        val contentResolver = this.requireActivity().contentResolver
+
+        contentResolver.also { resolver ->
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = uri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(uri!!, contentValues, null, null)
+
+        return uri!!
+    }
+
+
+    fun shareImageURI(uri: Uri) : Boolean {
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "message/rfc822"
+            type = "image/*"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Send to"))
+        return shareButtonViewImage
     }
 
     private fun setChallengeDetail() {

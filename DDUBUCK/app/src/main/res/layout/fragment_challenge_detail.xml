@@ -35,13 +35,15 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/challenge_screenshot"
+            android:layout_width="13dp"
+            android:layout_height="9dp"
             android:layout_below="@+id/distance_challenge_text"
-            android:layout_width="15dp"
-            android:layout_height="16dp"
             android:layout_alignParentEnd="true"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="22dp"
             android:layout_marginRight="21dp"
             android:background="@drawable/chart_share_icon"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:overScrollMode="never"
@@ -52,8 +54,9 @@
             android:layout_centerHorizontal="true"
             android:layout_marginStart="12dp"
             android:layout_marginTop="40dp"
-            android:layout_marginEnd="12dp" />
-
+            android:layout_marginEnd="12dp"
+            android:background="@color/white"/>
+<!--        android:layout_height="match_parent"-->
 
     </RelativeLayout>
 

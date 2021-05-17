@@ -1,12 +1,20 @@
 package com.mapo.ddubuck.challenge
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -23,12 +31,17 @@ import com.mapo.ddubuck.login.UserService
 import com.mapo.ddubuck.login.UserValidationInfo
 import com.mapo.ddubuck.mypage.MypageViewModel
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
+import com.tarek360.instacapture.Instacapture
+import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.fragment_challenge_detail.*
+import kotlinx.android.synthetic.main.fragment_walk_time.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.OutputStream
 
 class ChallengeFragment : Fragment() {
     private lateinit var challengeViewModel: ChallengeViewModel
@@ -36,6 +49,7 @@ class ChallengeFragment : Fragment() {
     private lateinit var challengeFragment: ChallengeFragment
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
+
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -123,9 +137,9 @@ class ChallengeFragment : Fragment() {
                 }
             })
         }
-
         return challengeView
     }
+
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun toDetailPage(detailFragment: Fragment, toolbarTitle: String, index: Int, sectionNumber: Int) {
