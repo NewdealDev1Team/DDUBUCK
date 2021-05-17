@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android" >
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/challenge_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <FrameLayout
-        android:id="@+id/challenge_fragment"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -13,44 +13,43 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             tools:context=".challenge.ChallengeFragment">
 
             <LinearLayout
                 android:id="@+id/ddubuck_challenge_textArea"
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/ddubuck_challenge_title"
-                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"
                     android:layout_marginBottom="15dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/ddubuck_challenge_text"
-                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14dp"/>
+                    android:layout_marginStart="16dp"
+                    android:textSize="14dp" />
 
 
             </LinearLayout>
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_below="@+id/ddubuck_challenge_textArea"
                 android:id="@+id/challenge_recyclerView"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"/>
+                android:layout_below="@+id/ddubuck_challenge_textArea"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp" />
 
             <View
                 android:id="@+id/challenge_divider1"
@@ -61,42 +60,42 @@
                 android:background="#10767676" />
 
             <LinearLayout
-                android:layout_marginTop="30dp"
-                android:layout_below="@id/challenge_divider1"
                 android:id="@+id/hidden_challenge_textArea"
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/challenge_divider1"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/hidden_challenge_title"
-                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"
                     android:layout_marginBottom="15dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/hidden_challenge_text"
-                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14dp"/>
+                    android:layout_marginStart="16dp"
+                    android:textSize="14dp" />
 
 
             </LinearLayout>
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_below="@+id/hidden_challenge_textArea"
                 android:id="@+id/hidden_challenge_recyclerView"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"/>
+                android:layout_below="@+id/hidden_challenge_textArea"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp" />
 
             <View
                 android:id="@+id/challenge_divider2"
@@ -107,29 +106,29 @@
                 android:background="#10767676" />
 
             <LinearLayout
-                android:layout_marginTop="30dp"
-                android:layout_below="@id/challenge_divider2"
                 android:id="@+id/pet_challenge_textArea"
-                android:orientation="vertical"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/challenge_divider2"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/pet_challenge_title"
-                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18dp"
-                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"
                     android:layout_marginBottom="15dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/pet_challenge_text"
-                    android:layout_marginStart="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14dp"/>
+                    android:layout_marginStart="16dp"
+                    android:textSize="14dp" />
 
 
             </LinearLayout>
@@ -137,18 +136,17 @@
 
             <androidx.recyclerview.widget.RecyclerView
 
-                android:layout_marginBottom="50dp"
-                android:layout_below="@+id/pet_challenge_textArea"
                 android:id="@+id/pet_challenge_recyclerView"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"/>
+                android:layout_below="@+id/pet_challenge_textArea"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="50dp" />
 
         </RelativeLayout>
 
+    </ScrollView>
+</FrameLayout>
 
-    </FrameLayout>
-
-</ScrollView>

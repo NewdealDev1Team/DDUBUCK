@@ -1,6 +1,7 @@
 package com.mapo.ddubuck.challenge
 
 data class Challenge(
-    var image: String,
-    var title: String
+    var image: Int,
+    var title: String,
+    var infoText: String
 )

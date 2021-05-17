@@ -153,7 +153,7 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
 
 
         if (dustInfo != "null" && dustInfo != "-") {
-            when (dustInfo!!.toInt()) {
+            when (dustInfo.toInt()) {
                 in 0..50 -> {
                     weatherScore += 4
                     dustString = "좋음"

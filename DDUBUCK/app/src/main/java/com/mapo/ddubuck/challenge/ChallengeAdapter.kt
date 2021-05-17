@@ -6,11 +6,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
+import com.mapo.ddubuck.badge.Badge
+import com.mapo.ddubuck.badge.BadgeFragment
 import kotlinx.android.synthetic.main.challenge_card_layout.view.*
 
-class DDUBUCKChallengeAdapter() :
-    RecyclerView.Adapter<DDUBUCKChallengeAdapter.ChallengeViewHolder>() {
+class ChallengeAdapter(private val challenge: MutableList<Challenge>) :
+    RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
 
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
@@ -22,30 +25,12 @@ class DDUBUCKChallengeAdapter() :
         this.itemClickListner = itemClickListener
     }
 
-    val ddubuckChallengeImages = intArrayOf(
-        R.drawable.ic_cumulative_distance,
-        R.drawable.ic_walking_count,
-        R.drawable.ic_course_complete,
-    )
 
-    val ddubuckChallengeTitles = arrayOf(
-        "누적거리",
-        "당일 걸음 수",
-        "코스완료"
-    )
-
-    val ddubuckChallengeText = arrayOf(
-        "내가 걸어온 만큼!",
-        "과연 오늘은 몇 보?",
-        "코스 클리어하는 재미!"
-    )
-
-
-    class ChallengeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+    inner class ChallengeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var challengeItemImage: ImageView = itemView.challenge_item_image
         var challengeItemTitle: TextView = itemView.challenge_card_title
         var challengeItemText: TextView = itemView.challenge_card_text
+        var bookmarkButton: ImageView = itemView.challenge_bookmark
 
     }
 
@@ -57,19 +42,24 @@ class DDUBUCKChallengeAdapter() :
     }
 
     override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {
-        holder.challengeItemImage.setImageResource(ddubuckChallengeImages[position])
+        Glide.with(holder.challengeItemImage)
+            .load(challenge[position].image)
+            .into(holder.challengeItemImage)
 
         holder.itemView.setOnClickListener {
             itemClickListner.onClick(it, position)
         }
 
-        holder.challengeItemTitle.text = ddubuckChallengeTitles[position]
-        holder.challengeItemText.text = ddubuckChallengeText[position]
+        holder.bookmarkButton.setOnClickListener {
+            holder.bookmarkButton.setImageResource(R.drawable.ic_bookmark_color)
+        }
+
+        holder.challengeItemTitle.text = challenge[position].title
+        holder.challengeItemText.text = challenge[position].infoText
     }
 
     override fun getItemCount(): Int {
-        return ddubuckChallengeImages.size
+        return challenge.size
     }
-
 
 }
