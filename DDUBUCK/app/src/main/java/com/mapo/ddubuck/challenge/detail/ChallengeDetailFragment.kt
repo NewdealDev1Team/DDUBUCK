@@ -22,6 +22,8 @@ import com.mapo.ddubuck.challenge.ChallengeViewModel
 import com.mapo.ddubuck.login.UserService
 import com.mapo.ddubuck.login.UserValidationInfo
 import com.mapo.ddubuck.mypage.MypageViewModel
+import com.mapo.ddubuck.mypage.UserRoute
+import com.mapo.ddubuck.mypage.UserRouteAPI
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
@@ -33,7 +35,7 @@ class ChallengeDetailFragment : Fragment() {
     private lateinit var challengeViewModel: ChallengeViewModel
 
     private val userViewModel: MypageViewModel by activityViewModels()
-
+//    private val challengeDetail: MutableList<ChallengeDetail> = mutableListOf()
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +58,14 @@ class ChallengeDetailFragment : Fragment() {
         challengeDetailRecyclerView.layoutManager = challengeLayoutManager
 
         disatnceChallengeDetailText.text = detailText
+
+        val userValidation: Retrofit = Retrofit.Builder()
+            .baseUrl("http://3.37.6.181:3000/get/User/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val challengeServer: ChallengeAPI = userValidation.create(ChallengeAPI::class.java)
+
         when (sectionNumber) {
             "1" -> {
                 distanceChallengeDetailTitle.text = ddubuckDetailTitle(userViewModel.username.value.toString())[titleIndex.toInt()]
@@ -95,6 +105,27 @@ class ChallengeDetailFragment : Fragment() {
 
 
         return challengeDetailView
+    }
+
+    private fun setChallengeDetail() {
+
+
+        // test 아이디 수정할것!!!
+//        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+//            challengeServer.getChallengeImage(it).enqueue(object : Callback<ChallengeDetail> {
+//                override fun onResponse(call: Call<ChallengeDetail>, response: Response<ChallengeDetail>) {
+//                    val userRouteResponse = response.body()
+//                    if (userRouteResponse != null) {
+//
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<ChallengeDetail>, t: Throwable) {
+//                    Log.e("Fail", "challenge 이미지 가져오기 실패")
+//                }
+//
+//            })
+//        }
     }
 
     // 수정해야 할 부분 -> Server 연동
