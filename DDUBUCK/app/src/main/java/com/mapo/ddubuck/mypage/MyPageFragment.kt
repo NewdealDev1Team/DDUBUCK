@@ -3,6 +3,7 @@ package com.mapo.ddubuck.mypage
 import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 
 import android.os.Build
 import android.os.Bundle
@@ -227,7 +228,6 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getAllPhotos(gridView: GridView) {
-
         val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
             null,
@@ -239,11 +239,11 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
             while (cursor.moveToNext()) {
                 // 사진 경로 Uri 가져오기
                 if (count == 4) break
-                val uri =
-                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
-                uriArr.add(uri)
-                count += 1
-
+                val uri = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
+                if(uri.contains(getString(R.string.app_content_path))) {
+                    uriArr.add(uri)
+                    count += 1
+                }
             }
             Log.e("이미지 경로", uriArr.toString())
 
