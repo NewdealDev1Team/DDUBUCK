@@ -63,7 +63,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
                 val description = binding.dialogCourseAddEditText.text.toString()
                 val imageUri = getRealPathFromURI(bitmapUri!!)!!
 
-                RetrofitService().addAdditionalInfo(userKey,title,description,imageUri)
+                //RetrofitService().addAdditionalInfo(userKey,title,description,imageUri)
 
                 dismiss()
             }
