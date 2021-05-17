@@ -17,8 +17,14 @@ import com.bumptech.glide.Glide
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isInvisible
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
+import com.mapo.ddubuck.challenge.ChallengeAdapter
+import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import com.mapo.ddubuck.data.mypagechart.RetrofitChart
 import com.mapo.ddubuck.data.mypagechart.chartData
 import com.mapo.ddubuck.databinding.FragmentMypageBinding
@@ -30,6 +36,10 @@ import com.mapo.ddubuck.userinfo.NextTimeDialog
 import com.mapo.ddubuck.mypage.mywalk.CaloriesFragment
 import com.mapo.ddubuck.mypage.mywalk.CourseClearFragment
 import com.mapo.ddubuck.mypage.mywalk.WalkTimeFragment
+import com.mapo.ddubuck.weather.Dust
+import com.mapo.ddubuck.weather.UVRays
+import com.mapo.ddubuck.weather.WeatherResponse
+import com.mapo.ddubuck.weather.WeatherViewModel
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
@@ -37,9 +47,15 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+interface UserRouteCallback {
+    fun onSuccessRoute(
+        userRouteRecyclerView: RecyclerView,
+        userRoute: UserRoute
+    )
+}
+
 @RequiresApi(Build.VERSION_CODES.Q)
-class MyPageFragment : Fragment() {
-    private lateinit var myPageBinding: FragmentMypageBinding
+class MyPageFragment : Fragment(),  UserRouteCallback {
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
@@ -49,7 +65,10 @@ class MyPageFragment : Fragment() {
     private lateinit var courseClearFragment: CourseClearFragment
     private lateinit var caloriesFragment: CaloriesFragment
 
-//    private lateinit var v : View
+    private val userViewModel: MypageViewModel by activityViewModels()
+    private var userRoute = UserRoute()
+
+    //    private lateinit var v : View
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -108,12 +127,12 @@ class MyPageFragment : Fragment() {
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
                         val walkingTimeButtonRecord: TextView =
                             myPageView.findViewById(R.id.walking_time_button_record)
-                        if(60 <= timeRecordt6.toInt()){
-                            val hour: Int = timeRecordt6/60
-                            val hourName : String = "시"
-                            walkingTimeButtonRecord.setText(hour.toString()+hourName)
-                        }else{
-                            val miniteName : String = "분"
+                        if (60 <= timeRecordt6.toInt()) {
+                            val hour: Int = timeRecordt6 / 60
+                            val hourName: String = "시"
+                            walkingTimeButtonRecord.setText(hour.toString() + hourName)
+                        } else {
+                            val miniteName: String = "분"
                             walkingTimeButtonRecord.setText(timeRecordt6.toString() + miniteName)
                         }
 
@@ -123,14 +142,14 @@ class MyPageFragment : Fragment() {
                         val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
                         val courseEndButtonRecord: TextView =
                             myPageView.findViewById(R.id.course_end_button_record)
-                        val countName : String = "번"
-                        courseEndButtonRecord.setText(courseRecord6.toString()+countName)
+                        val countName: String = "번"
+                        courseEndButtonRecord.setText(courseRecord6.toString() + countName)
 
                         var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
                         val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
                         val calorieButtonRecord: TextView =
                             myPageView.findViewById(R.id.calorie_button_record)
-                        val calorieName : String = "kcal"
+                        val calorieName: String = "kcal"
                         calorieButtonRecord.setText(calorieRecord6.toString() + calorieName)
                     }
                 }
@@ -146,7 +165,7 @@ class MyPageFragment : Fragment() {
             mypageFragment = MyPageFragment()
             walkTimeFramgnet = WalkTimeFragment()
             parentFragmentManager.beginTransaction()
-                .replace(R.id.scrollview_mypage,walkTimeFramgnet)
+                .replace(R.id.scrollview_mypage, walkTimeFramgnet)
                 .addToBackStack(MainActivity.MYPAGE_TAG)
                 .commit()
         }
@@ -186,10 +205,12 @@ class MyPageFragment : Fragment() {
 
             val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
             cancelButton.visibility = View.INVISIBLE
-
-
         }
 
+        val userRouteRecyclerView: RecyclerView = myPageView.findViewById(R.id.user_route_recyclerview)
+        userRouteRecyclerView.isNestedScrollingEnabled = false
+
+        setUserRoute(userRouteRecyclerView)
 
         return myPageView
     }
@@ -243,7 +264,7 @@ class MyPageFragment : Fragment() {
 
         val userValidationServer: UserService = userValidation.create(UserService::class.java)
 
-        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+        context?.let {UserSharedPreferences.getUserId(it) }?.let {
             userValidationServer.getUserInfo(it).enqueue(object : Callback<UserValidationInfo> {
                 override fun onResponse(
                     call: Call<UserValidationInfo>,
@@ -251,6 +272,9 @@ class MyPageFragment : Fragment() {
                 ) {
                     val name = response.body()?.name
                     val profileImageURL = response.body()?.picture
+
+                    userViewModel.setUserValue(name.toString())
+
                     userName.text = name.toString()
                     activity?.let { it1 ->
                         Glide.with(it1).load(profileImageURL).into(profileImage)
@@ -263,6 +287,56 @@ class MyPageFragment : Fragment() {
             })
         }
     }
+
+    private fun setUserRoute(userRouteRecyclerView: RecyclerView ) {
+        val userValidation: Retrofit = Retrofit.Builder()
+            .baseUrl("http://3.37.6.181:3000/get/User/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val userValidationServer: UserRouteAPI = userValidation.create(UserRouteAPI::class.java)
+
+        // test 아이디 수정할것!!!
+        context?.let { "1682936995"  }?.let {
+            userValidationServer.getUserRoute(it).enqueue(object : Callback<UserRoute> {
+                override fun onResponse(call: Call<UserRoute>, response: Response<UserRoute>) {
+                    val userRouteResponse = response.body()
+                    if (userRouteResponse != null) {
+                        onSuccessRoute(userRouteRecyclerView, userRouteResponse)
+                    }
+                }
+
+                override fun onFailure(call: Call<UserRoute>, t: Throwable) {
+                    Log.e("Fail", "사용자 지정 경로 가져오기 실패")
+                }
+
+            })
+        }
+    }
+
+    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute) {
+        val myPageAdapter = context?.let { MyPageAdapter(userRoute.audit, userRoute.complete, it) }
+
+        userRouteRecyclerView.apply {
+            this.adapter = myPageAdapter
+            this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
+
+            myPageAdapter?.setItemClickListener(object : MyPageAdapter.ItemClickListener {
+                @RequiresApi(Build.VERSION_CODES.Q)
+                override fun onClick(view: View, position: Int) {
+                    if (position < userRoute.audit.size) {
+                    
+
+                    } else {
+
+                    }
+                }
+            })
+        }
+    }
+
+
+
 
 }
 
