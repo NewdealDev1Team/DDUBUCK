@@ -9,6 +9,7 @@ import android.util.Log
 import android.widget.DatePicker
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.databinding.BirthdayInfoLayoutBinding
@@ -27,6 +28,7 @@ class UserInfoBirthdayActivity : AppCompatActivity() {
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         binding = BirthdayInfoLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         getDefaultBirthday()
