@@ -80,8 +80,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private val sensorManager by lazy {
         owner.getSystemService(Context.SENSOR_SERVICE) as SensorManager
     }
-    private var markers:HashMap<String, Marker> = HashMap()
-
+    private var markers:HashMap<String, MutableList<Marker>> = HashMap()
+    private val sharedPref = UserSharedPreferences
     private var isLocationDataInitialized = false
 
     //측정 관련 변수
@@ -163,6 +163,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
 
     private fun initPublicData(x:Double, y:Double) {
+
+        markers[FilterDrawer.PUBLIC_TOILET] = mutableListOf()
+        markers[FilterDrawer.PUBLIC_REST_AREA] = mutableListOf()
+        markers[FilterDrawer.PET_RESTAURANT] = mutableListOf()
+        markers[FilterDrawer.PET_CAFE] = mutableListOf()
+        markers[FilterDrawer.CAR_FREE_ROAD]= mutableListOf()
+        markers[FilterDrawer.CAFE]= mutableListOf()
+
         RetrofitClient.publicDataInstance.getResult(x,y)
             .enqueue(object : Callback<PublicData> {
                 override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
@@ -170,11 +178,12 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         val publicData = response.body()!!
                         val markerHeightSize = 80
                         val markerWidthSize = 60
-                        //코드가 더러워서 죄송합니다!!!!!!!!!!!!!!!!!! - 민재
                         for (i in publicData.petCafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PET_CAFE)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.BLUE
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -187,12 +196,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["petCafe"] = marker
+                            markers[FilterDrawer.PET_CAFE]!!.add(marker)
                         }
                         for (i in publicData.carFreeRoad) {
                             val marker = Marker()
                             marker.position = LatLng(i.path[0].x, i.path[0].y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.CAR_FREE_ROAD)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.RED
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -204,12 +215,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["carFreeRoad"] = marker
+                            markers[FilterDrawer.CAR_FREE_ROAD]!!.add(marker)
                         }
                         for (i in publicData.cafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.CAFE)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.GRAY
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -221,12 +234,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["cafe"] = marker
+                            markers[FilterDrawer.CAFE]!!.add(marker)
                         }
                         for (i in publicData.petRestaurant) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PET_RESTAURANT)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.PINK
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -238,12 +253,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["petRestaurant"] = marker
+                            markers[FilterDrawer.PET_RESTAURANT]!!.add(marker)
                         }
                         for (i in publicData.publicRestArea) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PUBLIC_REST_AREA)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.GREEN
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -255,12 +272,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["publicRestArea"] = marker
+                            markers[FilterDrawer.PUBLIC_REST_AREA]!!.add(marker)
                         }
                         for (i in publicData.publicToilet) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
-                            marker.map = map
+                            if(sharedPref.getFilterVisible(owner, FilterDrawer.PUBLIC_TOILET)) {
+                                marker.map = map
+                            }
                             marker.icon = MarkerIcons.YELLOW
                             marker.height = markerHeightSize
                             marker.width = markerWidthSize
@@ -272,7 +291,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers["publicToilet"] = marker
+                            markers[FilterDrawer.PUBLIC_TOILET]!!.add(marker)
                         }
                         val recommendPath = mutableListOf<RecommendPathDTO>()
                         recommendPath.addAll(publicData.recommendPathMaster)
@@ -293,6 +312,66 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 }
 
             })
+
+        model.showCafe.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.CAFE]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showCarFreeRoad.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.CAR_FREE_ROAD]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPetCafe.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PET_CAFE]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPetRestaurant.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PET_RESTAURANT]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPublicRestArea.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PUBLIC_REST_AREA]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
+
+        model.showPublicToilet.observe(viewLifecycleOwner, {v->
+            markers[FilterDrawer.PUBLIC_TOILET]!!.forEach { m ->
+                if(v) {
+                    m.map = map
+                } else {
+                    m.map = null
+                }
+            }
+        })
     }
 
     /**버튼 텍스트 바꾸고 산책시작**/
