@@ -6,7 +6,7 @@
     android:layout_width="286dp"
     android:layout_height="wrap_content"
     android:hardwareAccelerated="false"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="8dp">
 
     <LinearLayout
 
@@ -163,17 +163,17 @@
                 android:id="@+id/course_button_area"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="4"
                 android:orientation="horizontal">
 
                 <android.widget.Button
-                    android:layout_weight="1"
+                    android:layout_weight="3"
 
                     android:id="@+id/dialog_course_view_resultButton"
-                    android:layout_width="wrap_content"
+                    android:layout_width="162dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginRight="4dp"
                     android:background="@drawable/user_course_dialog_button_style"
                     android:text="심사 중"
                     android:textColor="#C4C4C4"
@@ -182,9 +182,10 @@
 
                 <android.widget.Button
                     android:layout_weight="1"
+                    android:layout_marginLeft="4dp"
 
                     android:id="@+id/dialog_course_delete_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:background="@drawable/user_course_dialog_delete_style"
