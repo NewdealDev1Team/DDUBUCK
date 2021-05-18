@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.*
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -15,6 +16,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -100,6 +102,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var course = PolylineOverlay()
     private var courseMarker = Marker()
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -396,6 +399,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     }
 
     /**산책을 종료하고 기록을 반환합니다**/
+    @RequiresApi(Build.VERSION_CODES.Q)
     private fun stopRecording() {
         userPath.map = null
         timer.cancel()

@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onCoachMark() {
-//            val dialog : Dialog = Dialog(this,R.style.mytheme)
+//          val dialog : Dialog = Dialog(this,R.style.mytheme)
 ////        val dialog : Dialog = Dialog(this,R.style.mytheme)
 //
 //        dialog.setContentView(R.layout.coach_mark)
