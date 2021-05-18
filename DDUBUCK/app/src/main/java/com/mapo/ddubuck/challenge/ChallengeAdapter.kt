@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
-import com.mapo.ddubuck.badge.Badge
-import com.mapo.ddubuck.badge.BadgeFragment
 import kotlinx.android.synthetic.main.challenge_card_layout.view.*
 
 class ChallengeAdapter(private val challenge: MutableList<Challenge>) :
