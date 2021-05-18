@@ -1,18 +1,21 @@
 package com.mapo.ddubuck.challenge.detail
 
+import android.app.Activity
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.github.twocoffeesoneteam.glidetovectoryou.GlideToVectorYou
 import com.mapo.ddubuck.R
-import com.mapo.ddubuck.challenge.Challenge
 import kotlinx.android.synthetic.main.challenge_detail_layout.view.*
-import kotlinx.android.synthetic.main.item_badge.view.*
+import java.io.File
 
-class ChallengeDetailAdapter(private val challengeDetail: MutableList<ChallengeDetail>) :
+class ChallengeDetailAdapter(private val title: MutableList<String>, private val image: MutableList<String>, val context: Context) :
     RecyclerView.Adapter<ChallengeDetailAdapter.ChallengeDetailViewHolder>() {
 
     class ChallengeDetailViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -34,17 +37,13 @@ class ChallengeDetailAdapter(private val challengeDetail: MutableList<ChallengeD
         holder: ChallengeDetailViewHolder,
         position: Int,
     ) {
-        holder.challengeDetailItemTitle.text = challengeDetail[position].title
+        holder.challengeDetailItemTitle.text = title[position]
 
-        Glide.with(holder.challengeDetailItemImage)
-            .load(challengeDetail[position].image)
-            .into(holder.challengeDetailItemImage)
-
-//        holder.challengeDetailItemImage.setImageResource(challengeDetail[position].image)
+        GlideToVectorYou.justLoadImage(context as Activity?, Uri.parse(image[position]), holder.challengeDetailItemImage)
     }
 
     override fun getItemCount(): Int {
-        return challengeDetail.size
+        return image.size
     }
 
 
