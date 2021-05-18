@@ -101,6 +101,7 @@ class ChallengeDetailFragment : Fragment(), ChallengeAPICallback {
 
     }
 
+
     override fun onSuccess(challengeDetailRecyclerView: RecyclerView, challengeDetail: ChallengeDetail, sectionNumber: String, titleIndex: String, challengeDetailTitle: TextView, disatnceChallengeDetailText: TextView) {
 
         when (sectionNumber) {
@@ -234,7 +235,6 @@ class ChallengeDetailFragment : Fragment(), ChallengeAPICallback {
     }
 
 
-
     private fun ddubuckDetailTitle(username: String): MutableList<String> {
         return mutableListOf(
             "도전하는 ${username}님, 정말 멋져요!\n" + "완료한 나의 챌린지를 확인하세요!",
@@ -258,7 +258,6 @@ class ChallengeDetailFragment : Fragment(), ChallengeAPICallback {
     }
 
     private val detailText = "이 미션은 한 달마다 갱신 됩니다."
-
 
 
 }
