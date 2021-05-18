@@ -1,8 +1,7 @@
 package com.mapo.ddubuck.data.badge
 
+//객체
 data class Anniversary(
-    val Earthday: String,
-    val InternationalWomensDay: String,
-    val LiberationDay: String,
-    val WorldEnvironmentDay: String
+    val image: List<String>,
+    val title: List<String>
 )

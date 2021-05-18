@@ -24,7 +24,8 @@ object RetrofitBadge{
 }
 
 interface BadgeService{
-    @GET("/get/User/BadgeData")
+//    http://3.37.6.181:3000/get/User/BadgeData?userKey=60574481
+    @GET("get/User/BadgeData")
     fun getRestsBadge(@Query("userKey") userKey : Int) : Call<BadgeImage>
 
 }

@@ -7,12 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.mapo.ddubuck.R
 import kotlinx.android.synthetic.main.item_badge.view.*
 
-class BadgeDetailAdapter(
+class BadgeAdapter(
     private val badgeList: MutableList<Badge>
-) : RecyclerView.Adapter<BadgeDetailAdapter.BadgeHolder>(){
+) : RecyclerView.Adapter<BadgeAdapter.BadgeHolder>(){
 
     inner class BadgeHolder(rowRoot: View) : RecyclerView.ViewHolder(rowRoot) {
         val imageView : ImageView =  rowRoot.findViewById(R.id.item_badge_image)
@@ -31,7 +32,8 @@ class BadgeDetailAdapter(
             Glide
                 .with(imageView)
                 .load(badgeData.image)
-                .into(imageView.item_badge_image)
+                .into(imageView)
+
             textView.text = badgeData.text
         }
     }
