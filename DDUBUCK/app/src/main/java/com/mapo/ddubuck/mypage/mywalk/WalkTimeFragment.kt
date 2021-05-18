@@ -357,6 +357,34 @@ class WalkTimeFragment : Fragment() {
             }).check()
         return permissions
     }
+//    fun saveImageExternal(image: Bitmap): Uri? {
+//        val v: FrameLayout = requireView().findViewById(R.id.walktime) as FrameLayout
+//        var uri: Uri? = null
+//        try {
+//            //저장할 폴더 setting
+//            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS),
+//                "Walking-Time-Chart.png")
+//            val stream = FileOutputStream(file)
+//            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
+//            stream.close()
+//            uri = FileProvider.getUriForFile(this.requireContext(),
+//                this.requireActivity().packageName + ".provider",
+//                file)
+//        } catch (e: IOException) {
+//            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
+//        }
+//        return uri
+//    }
+//    <!--    manifast : ScreenShot    -->
+//        <provider
+//            android:name="androidx.core.content.FileProvider"
+//            android:authorities="${applicationId}.provider"
+//            android:exported="false"
+//            android:grantUriPermissions="true">
+//            <meta-data
+//                android:name="android.support.FILE_PROVIDER_PATHS"
+//                android:resource="@xml/provider_paths" />
+//        </provider>
 
         fun saveImageExternal(image: Bitmap): Uri? {
         val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
