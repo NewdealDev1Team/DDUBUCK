@@ -103,29 +103,44 @@ class MainActivity : AppCompatActivity() {
 
 
     fun onCoachMark() {
-            val dialog : Dialog = Dialog(this,R.style.mytheme)
-//        val dialog : Dialog = Dialog(this,R.style.mytheme)
+//            val dialog : Dialog = Dialog(this,R.style.mytheme)
+////        val dialog : Dialog = Dialog(this,R.style.mytheme)
+//
+//        dialog.setContentView(R.layout.coach_mark)
+//        //검정 배경과 같은 희미 경유 기본 대화 상
+//        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+////        dialog.window.setBlurBehindRadius
+//        dialog.setCanceledOnTouchOutside(true)
+//
+//
+////        dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+////        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
+////        dialog.window?.setLayout(
+////            WindowManager.LayoutParams.MATCH_PARENT,
+////            WindowManager.LayoutParams.MATCH_PARENT
+////        )
+//            //코치마크 어디든 터치 시 창이 닫힌다.
+//            val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
+//            masterView.setOnClickListener{
+//                    UserSharedPreferences.setCoachMarkExit(this,true)
+//                    dialog.dismiss()
+//            }
+//            dialog.show()
 
+
+        val dialog : Dialog = Dialog(this,R.style.mytheme)
+//        val dialog : Dialog = Dialog(this,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
+//        val dialog : Dialog = Dialog(this,R.style.mytheme)
         dialog.setContentView(R.layout.coach_mark)
-        //검정 배경과 같은 희미 경유 기본 대화 상
-        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-//        dialog.window.setBlurBehindRadius
         dialog.setCanceledOnTouchOutside(true)
 
-
-//        dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-//        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-//        dialog.window?.setLayout(
-//            WindowManager.LayoutParams.MATCH_PARENT,
-//            WindowManager.LayoutParams.MATCH_PARENT
-//        )
-            //코치마크 어디든 터치 시 창이 닫힌다.
-            val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
-            masterView.setOnClickListener{
-                    UserSharedPreferences.setCoachMarkExit(this,true)
-                    dialog.dismiss()
-            }
-            dialog.show()
+        //코치마크 어디든 터치 시 창이 닫힌다.
+        val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
+        masterView.setOnClickListener{
+            UserSharedPreferences.setCoachMarkExit(this,true)
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

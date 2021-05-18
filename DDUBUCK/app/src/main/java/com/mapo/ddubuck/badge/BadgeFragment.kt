@@ -44,7 +44,8 @@ class BadgeFragment : Fragment() {
                         response.body()?.let {
                             Log.d("dddd","${it.challenge}")
                             Log.d("dddd","${it.anniversary}")
-                            Log.d("dddd","${it.special}")
+                            Log.d("dddd","${it.special.get(1).image}")
+                            Log.d("dddd","${it.special.get(0).title}")
 
                             recyclerview = root.findViewById(R.id.badgeChallengeRecyclerview)
                             recyclerview.isNestedScrollingEnabled = false
@@ -63,10 +64,13 @@ class BadgeFragment : Fragment() {
                                 this.layoutManager =
                                     GridLayoutManager(root.context, 3, GridLayoutManager.VERTICAL, false)
                             }
+                            Log.d("dddd","${it.special.get(0).title}")
+                            Log.d("dddd","${it.special.get(1).image}")
+
 
                             recyclerview = root.findViewById(R.id.badgeSpecialRecyclerview)
                             recyclerview.isNestedScrollingEnabled = false
-                            val limitAdapter = BadgeAdapter(BadgeSpecialData(it.special))
+                            val limitAdapter = BadgeAdapter(BadgeSpecialData(it.special.get(1).image,it.special.get(0).title))
                             root.badgeSpecialRecyclerview.apply {
                                 this.adapter = limitAdapter
                                 this.layoutManager =
@@ -86,11 +90,11 @@ class BadgeFragment : Fragment() {
         return root
     }
 
-    private fun BadgeSpecialData(bimage: List<Special>): MutableList<Badge> {
+    private fun BadgeSpecialData(bimage: List<String>, btitle: List<String>): MutableList<Badge> {
         val BadgeData = mutableListOf<Badge>()
-        BadgeData.add(Badge(bimage.get(1).image.get(0), "벚꽃길"))
-        BadgeData.add(Badge(bimage.get(1).image.get(1), "봄 맞이"))
-        Log.d("dddd","BadgeSpecialData에 스페셜 이미지 링크 Glid : ${bimage.get(1).image.get(0)}")
+        BadgeData.add(Badge(bimage.get(0), btitle.get(0)))
+        BadgeData.add(Badge(bimage.get(1), btitle.get(1)))
+        Log.d("dddd","BadgeSpecialData에 스페셜 이미지 링크 Glid : ${bimage.get(0)}")
         return BadgeData
     }
 

@@ -13,7 +13,10 @@
             android:adjustViewBounds="true"
             android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:src="@drawable/coach_marks" />
+            android:layout_centerInParent="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/coach" />
+<!--        android:src="@drawable/coach" />-->
 <!--        android:layout_centerInParent="true"-->
 <!--        android:scaleType="fitXY"-->
 
@@ -23,8 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="15dp"
             android:layout_gravity="bottom|right"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginVertical="10dp"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginVertical="5dp"
             android:background="#00000000"
             android:src="@drawable/ic_coach_mark_exit" />
 </FrameLayout>
