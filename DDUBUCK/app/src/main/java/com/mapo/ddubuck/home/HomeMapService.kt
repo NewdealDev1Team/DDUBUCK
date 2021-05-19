@@ -1,155 +1,166 @@
 package com.mapo.ddubuck.home
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
-import android.app.Service
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
 import android.os.Build
-import android.os.Bundle
-import android.os.IBinder
+import android.os.Looper
+import android.text.format.DateUtils
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.LifecycleService
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
+import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
+import com.naver.maps.geometry.LatLng
+import java.util.*
+import kotlin.concurrent.timer
 
-@RequiresApi(Build.VERSION_CODES.O)
-class HomeMapService : Service() {
-    //
+class HomeMapService : LifecycleService() {
+
+    private var isFirstRun = true
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var timer: Timer
+    private var walkTime : Long = 0
     companion object {
-        const val TAG = "DDUBUCKLocationService"
-        const val LOCATION_INTERVAL = 1000
-        const val LOCATION_DISTANCE = 10f
-        private const val NOTIFICATION_NORMAL = 1
-        private const val CHANNEL_ID = "my_channel"
-        private const val CHANNEL_NAME = "default"
-        private const val CHANNEL_DESCRIPTION = "This is default notification channel"
+        val isTracking = MutableLiveData<Boolean>()
+        const val ACTION_START_OR_RESUME_SERVICE = "ACTION_START_OR_RESUME_SERVICE"
+        const val ACTION_PAUSE_SERVICE = "ACTION_PAUSE_SERVICE"
+        const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
+        const val ACTION_SHOW_TRACKING_FRAGMENT = "ACTION_SHOW_TRACKING_FRAGMENT"
+
+        const val LOCATION_UPDATE_INTERVAL = 5000L
+        const val FASTEST_LOCATION_INTERVAL = 2000L
+
+        const val NOTIFICATION_CHANNEL_ID = "tracking_channel"
+        const val NOTIFICATION_CHANNEL_NAME = "Tracking"
+        const val NOTIFICATION_ID = 1
+        val currentLocation = MutableLiveData<Location>()
     }
 
-    private val notificationManager
-        get() = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-
-    var mLocationManager: LocationManager? = null
-
-
-
-    inner class LocationListener(provider: String) : android.location.LocationListener {
-        private var mLastLocation: Location
-        override fun onLocationChanged(location: Location) {
-            Log.e(TAG, "onLocationChanged: $location")
-            mLastLocation.set(location)
-        }
-
-        override fun onProviderDisabled(provider: String) {
-            Log.e(TAG, "onProviderDisabled: $provider")
-        }
-
-        override fun onProviderEnabled(provider: String) {
-            Log.e(TAG, "onProviderEnabled: $provider")
-        }
-
-        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-            Log.e(TAG, "onStatusChanged: $provider")
-        }
-
-        init {
-            Log.e(TAG, "LocationListener $provider")
-            mLastLocation = Location(provider)
-        }
-    }
-
-    var mLocationListeners = arrayOf(
-        LocationListener(LocationManager.PASSIVE_PROVIDER)
-    )
-
-    override fun onBind(arg0: Intent?): IBinder? {
-        return null
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.e(TAG, "onStartCommand")
-        super.onStartCommand(intent, flags, startId)
-        notificationManager.notify(NOTIFICATION_NORMAL, createCompleteNotification())
-        return START_STICKY
+    private fun postInitialValues() {
+        isTracking.postValue(false)
     }
 
     override fun onCreate() {
-        Log.e(TAG, "onCreate")
-        registerDefaultNotificationChannel()
-        initializeLocationManager()
-        try {
-            mLocationManager!!.requestLocationUpdates(
-                LocationManager.PASSIVE_PROVIDER,
-                LOCATION_INTERVAL.toLong(),
-                LOCATION_DISTANCE,
-                mLocationListeners[0]
-            )
-        } catch (ex: SecurityException) {
-            Log.i(TAG, "fail to request location update, ignore", ex)
-        } catch (ex: IllegalArgumentException) {
-            Log.d(TAG, "network provider does not exist, " + ex.message)
-        }
+        super.onCreate()
+        postInitialValues()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
 
+        isTracking.observe(this, Observer {
+            updateLocationTracking(it)
+        })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (mLocationManager != null) {
-            for (i in mLocationListeners.indices) {
-                try {
-                    if (ActivityCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        return
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        intent?.let {
+            when (it.action) {
+                ACTION_START_OR_RESUME_SERVICE -> {
+                    if(isFirstRun) {
+                        startForegroundService()
+                        isFirstRun = false
+                    } else {
+                        Log.d("HomeMapService","Resuming service...")
                     }
-                    mLocationManager!!.removeUpdates(mLocationListeners[i])
-                } catch (ex: Exception) {
-                    Log.i(TAG, "fail to remove location listener, ignore", ex)
+                    timer = timer(period = 1000) {
+                        walkTime++
+                    }
+                }
+                ACTION_PAUSE_SERVICE -> {
+                    Log.d("HomeMapService","Paused service")
+                }
+                ACTION_STOP_SERVICE -> {
+                    isTracking.postValue(false)
+                    Log.d("HomeMapService","Stopped service")
+                    timer.cancel()
+                    walkTime = 0
+                    stopSelf()
+                }
+                else -> Log.d("HomeMapService","else, $it")
+            }
+        }
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun updateLocationTracking(isTracking: Boolean) {
+        if(isTracking) {
+            if(TrackingUtility.hasLocationPermissions(this)) {
+                val request = LocationRequest.create().apply {
+                    interval = LOCATION_UPDATE_INTERVAL
+                    fastestInterval = FASTEST_LOCATION_INTERVAL
+                    priority = PRIORITY_HIGH_ACCURACY
+                }
+                fusedLocationProviderClient.requestLocationUpdates(
+                    request,
+                    locationCallback,
+                    Looper.getMainLooper()
+                )
+            }
+        } else {
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        }
+    }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(result: LocationResult?) {
+            super.onLocationResult(result)
+            if(isTracking.value!!) {
+                result?.locations?.let { locations ->
+                    for(location in locations) {
+                        currentLocation.value = location
+                    }
                 }
             }
         }
     }
 
-    private fun initializeLocationManager() {
-        Log.e(TAG, "initializeLocationManager - LOCATION_INTERVAL: $LOCATION_INTERVAL LOCATION_DISTANCE: $LOCATION_DISTANCE")
-        if (mLocationManager == null) {
-            mLocationManager =
-                applicationContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+    private fun startForegroundService() {
+        isTracking.postValue(true)
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
+                as NotificationManager
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel(notificationManager)
         }
+
+        val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setAutoCancel(false)
+            .setOngoing(true)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setContentTitle("산책 진행중")
+        startForeground(NOTIFICATION_ID, notificationBuilder.build())
     }
 
-    private fun registerDefaultNotificationChannel() {
-        notificationManager.createNotificationChannel(createDefaultNotificationChannel())
-    }
-
-    private fun createDefaultNotificationChannel() =
-        NotificationChannel(CHANNEL_ID, CHANNEL_NAME, NotificationManager.IMPORTANCE_LOW).apply {
-            description = CHANNEL_DESCRIPTION
-            this.setShowBadge(true)
-            this.lockscreenVisibility = NotificationCompat.VISIBILITY_PUBLIC
-    }
-
-    private fun createCompleteNotification() = NotificationCompat.Builder(this, CHANNEL_ID).apply {
-        setContentTitle("Download complete!")
-        setContentText("Nice 🚀")
-        setSmallIcon(R.drawable.ic_launcher_foreground)
-        setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-
-        setContentIntent(
-            PendingIntent.getActivity(
-                this@HomeMapService, 0, Intent(this@HomeMapService, MainActivity::class.java).apply {
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-                }, 0
-            )
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(notificationManager: NotificationManager) {
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            NOTIFICATION_CHANNEL_NAME,
+            IMPORTANCE_LOW
         )
-    }.build()
+        notificationManager.createNotificationChannel(channel)
+    }
+}
+
+object TrackingUtility {
+
+    fun hasLocationPermissions(context: Context) =
+        //TODO CHECK PERMISSION
+        if(context!=null) {
+            true
+        } else {
+            false
+        }
 }
