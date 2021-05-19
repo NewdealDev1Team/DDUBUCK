@@ -37,33 +37,17 @@
         <item name="android:colorForeground">#42221f1f
         </item>
     </style>
-<!--    <style name="ToolbarTitleText">-->
-<!--        <item name="android:textSize">18dp</item>-->
-<!--        <item name="android:textColor">@color/black</item>-->
-<!--    </style>-->
 
-    <style name="mytheme" parent="android:style/Theme.Translucent">
+
+    <!-- 코치마크 테마 변경    WalkthroughTheme 화면 FullScreen 포함 -->
+    <style name="WalkthroughTheme" parent="Theme.AppCompat">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-
-<!--    <item name="android:windowContentOverlay">@null</item>-->
-    <!-- 코치마크 테마 변경    WalkthroughTheme-->
-<!--    <style name="WalkthroughTheme" parent="Theme.AppCompat">-->
-<!--        <item name="android:windowIsTranslucent">true</item>-->
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:windowContentOverlay">@null</item>-->
-<!--        <item name="android:windowNoTitle">true</item>-->
-<!--        <item name="android:backgroundDimEnabled">true</item>-->
-<!--    </style>-->
-
-<!--    <style name="Theme.D1NoTitleDim" parent="android:style/Theme.Translucent">-->
-<!--        <item name="android:windowNoTitle">true</item>-->
-<!--        <item name="android:windowContentOverlay">@null</item>-->
-<!--        <item name="android:backgroundDimEnabled">true</item>-->
-<!--        <item name="android:background">@android:color/transparent</item>-->
-<!--    </style>-->
 
 </resources>

@@ -124,4 +124,8 @@ dependencies {
 //  SVG Loader
     implementation 'com.github.corouteam:GlideToVectorYou:v2.0.0'
 
+    //BlurView
+    implementation 'com.github.mmin18:realtimeblurview:1.2.1'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 }

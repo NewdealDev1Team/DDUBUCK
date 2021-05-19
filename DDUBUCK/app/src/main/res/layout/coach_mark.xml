@@ -1,69 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coach_mark_master_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-        <ImageView
-            android:id="@+id/coach_marks_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:layout_centerInParent="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/coach" />
-<!--        android:src="@drawable/coach" />-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:scaleType="fitXY"-->
+    <com.github.mmin18.widget.RealtimeBlurView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:scaleType="fitXY"
+        android:src="@drawable/coach_mark_background"
+        app:realtimeBlurRadius="10dp"
+        app:realtimeOverlayColor="#65000000" />
+    <!--        scaleType : 화면 Full Screen-->
+    <!--        realtimeBlurRadius : 블러 강도-->
+    <!--        realtimeOverlayColor : 덮혀질 색-->
 
 
-        <ImageButton
-            android:id="@+id/coach_mark_exit_button"
-            android:layout_width="wrap_content"
-            android:layout_height="15dp"
-            android:layout_gravity="bottom|right"
-            android:layout_marginHorizontal="5dp"
-            android:layout_marginVertical="5dp"
-            android:background="#00000000"
-            android:src="@drawable/ic_coach_mark_exit" />
+    <ImageView
+        android:id="@+id/coach_marks_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:gravity="center"
+        android:src="@drawable/coach_marks" />
+
+    <ImageButton
+        android:id="@+id/coach_mark_exit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_gravity="bottom|right"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="10dp"
+        android:background="#00000000"
+        android:src="@drawable/ic_coach_mark_exit" />
 </FrameLayout>
 
-<!--<LinearLayout-->
-<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:tools="http://schemas.android.com/tools"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--android:id="@+id/coach_mark_master_view"-->
-<!--    >-->
-
-<!--<FrameLayout-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent">-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/coach_marks_image"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_centerInParent="true"-->
-<!--        android:layout_gravity="center_horizontal"-->
-<!--        android:src="@drawable/coach_marks"-->
-<!--        />-->
-
-
-<!--    <ImageButton-->
-<!--        android:id="@+id/coach_mark_exit_button"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/ic_coach_mark_exit"-->
-<!--        android:layout_marginHorizontal="@dimen/activity_vertical_margin"-->
-<!--        android:layout_marginVertical="@dimen/activity_vertical_margin"-->
-<!--        android:layout_gravity="bottom|right"-->
-<!--        android:background="#00000000"/>-->
-
-<!--</FrameLayout>-->
-
-<!--</LinearLayout>-->

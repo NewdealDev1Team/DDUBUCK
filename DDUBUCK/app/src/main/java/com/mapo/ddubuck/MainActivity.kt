@@ -3,18 +3,24 @@ package com.mapo.ddubuck
 import android.Manifest
 import android.app.Dialog
 import android.content.Context
-import android.content.SharedPreferences
-import android.graphics.drawable.ColorDrawable
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
-
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.widget.TextView
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import android.view.*
-import android.widget.FrameLayout
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -24,22 +30,20 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.observe
-import com.mapo.ddubuck.sharedpref.UserSharedPreferences
-import com.mapo.ddubuck.home.bottomSheet.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mapo.ddubuck.badge.BadgeFragment
 import com.mapo.ddubuck.challenge.ChallengeFragment
+import com.mapo.ddubuck.home.FilterDrawer
 import com.mapo.ddubuck.home.HomeFragment
 import com.mapo.ddubuck.home.HomeMapViewModel
+import com.mapo.ddubuck.home.bottomSheet.*
 import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
-
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.mapo.ddubuck.home.FilterDrawer
-import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
-
 import kotlinx.android.synthetic.main.fragment_walk_time.*
+
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : AppCompatActivity() {
@@ -99,38 +103,13 @@ class MainActivity : AppCompatActivity() {
             onCoachMark()
         }
         Log.d("coachmark","${isCoachMarkOn}")
+
     }
 
 
+
     fun onCoachMark() {
-//          val dialog : Dialog = Dialog(this,R.style.mytheme)
-////        val dialog : Dialog = Dialog(this,R.style.mytheme)
-//
-//        dialog.setContentView(R.layout.coach_mark)
-//        //검정 배경과 같은 희미 경유 기본 대화 상
-//        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-////        dialog.window.setBlurBehindRadius
-//        dialog.setCanceledOnTouchOutside(true)
-//
-//
-////        dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
-////        dialog.window?.addFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND)
-////        dialog.window?.setLayout(
-////            WindowManager.LayoutParams.MATCH_PARENT,
-////            WindowManager.LayoutParams.MATCH_PARENT
-////        )
-//            //코치마크 어디든 터치 시 창이 닫힌다.
-//            val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
-//            masterView.setOnClickListener{
-//                    UserSharedPreferences.setCoachMarkExit(this,true)
-//                    dialog.dismiss()
-//            }
-//            dialog.show()
-
-
-        val dialog : Dialog = Dialog(this,R.style.mytheme)
-//        val dialog : Dialog = Dialog(this,android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-//        val dialog : Dialog = Dialog(this,R.style.mytheme)
+        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
 
@@ -353,3 +332,4 @@ class MainActivity : AppCompatActivity() {
         const val MYPAGE_TAG = "MYPAGE"
     }
 }
+

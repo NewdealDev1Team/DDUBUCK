@@ -27,6 +27,9 @@ allprojects {
         //mpandroidchart
         maven { url 'https://jitpack.io' }
 
+        //blurry
+        mavenCentral()
+
     }
 }
 
