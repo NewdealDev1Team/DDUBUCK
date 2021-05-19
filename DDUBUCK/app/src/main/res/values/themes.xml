@@ -21,8 +21,6 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-
-
     </style>
 
     <style name="SwitchStyle" parent="Theme.AppCompat.Light">
@@ -48,6 +46,5 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
-
 
 </resources>

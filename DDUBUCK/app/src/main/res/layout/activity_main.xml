@@ -47,7 +47,7 @@
             android:id="@+id/nav_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#EE88C9"
+            android:background="#fff"
             app:itemBackground="@color/cardview_light_background"
             app:itemIconSize="@dimen/activity_horizontal_margin"
             app:itemIconTint="@drawable/bottombar_check"
@@ -61,6 +61,7 @@
             app:menu="@menu/bottom_nav_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    android:background="#EE88C9"-->
 
     <FrameLayout
         android:layout_gravity="end"
