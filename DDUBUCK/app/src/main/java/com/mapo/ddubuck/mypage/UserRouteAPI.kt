@@ -15,5 +15,5 @@ interface UserRouteAPI {
     fun deleteUserRoute(
         @Field("userKey") userKey: String,
         @Field("created_at") createdAt: String
-    ): Call<UserCourseDelete>
+    ): Call<AuditForDelete>
 }
