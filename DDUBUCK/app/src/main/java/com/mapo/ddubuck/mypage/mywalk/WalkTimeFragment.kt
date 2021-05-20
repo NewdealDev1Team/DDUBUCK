@@ -41,6 +41,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.mapo.ddubuck.home.HomeMapViewModel
 import com.tarek360.instacapture.Instacapture
 import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import id.co.barchartresearch.ChartData
@@ -93,6 +94,9 @@ class WalkTimeFragment : Fragment() {
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     private val shareButtonViewImage : Boolean = false
+
+    //뷰 모델
+    private val model: HomeMapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -385,6 +389,11 @@ class WalkTimeFragment : Fragment() {
 //                android:name="android.support.FILE_PROVIDER_PATHS"
 //                android:resource="@xml/provider_paths" />
 //        </provider>
+//    provier_paths/xml
+//    <?xml version="1.0" encoding="utf-8"?>
+//    <paths xmlns:android="http://schemas.android.com/apk/res/android">
+//    <root-path name="external_files" path="." />
+//    </paths>
 
         fun saveImageExternal(image: Bitmap): Uri? {
         val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"

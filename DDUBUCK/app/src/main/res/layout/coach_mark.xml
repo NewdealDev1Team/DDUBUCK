@@ -28,7 +28,6 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_gravity="center_horizontal|top"
-        android:layout_marginBottom="46dp"
         android:gravity="center"
         android:src="@drawable/coach_marks" />
 
@@ -38,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_marginHorizontal="15dp"
-        android:layout_marginVertical="25dp"
+        android:layout_marginVertical="15dp"
         android:background="#00000000"
         android:src="@drawable/ic_coach_mark_exit" />
 </FrameLayout>
