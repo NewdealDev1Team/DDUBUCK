@@ -272,6 +272,7 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.openDrawer(Gravity.RIGHT)
             }
             R.id.action_bookmark -> {
+                supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
                     .hide(activeFragment)
                     .show(bookmarkFragment)
@@ -280,6 +281,7 @@ class MainActivity : AppCompatActivity() {
                 activityModel.toolbarTitle.value = "북마크"
             }
             R.id.action_settings -> {
+                supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
                     .hide(activeFragment)
                     .show(settingFragment)
