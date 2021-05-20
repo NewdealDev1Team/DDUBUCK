@@ -422,7 +422,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         val walkRecord = getWalkResult()
 
-        //RetrofitService().createRecord(userKey, walkRecord, walkTag)
+        RetrofitService().createRecord(userKey, walkRecord, walkTag)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
@@ -513,6 +513,17 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         })
         model.walkState.value = WALK_WAITING
 
+        map.addOnLocationChangeListener { location->
+            val lat = location.latitude
+            val lng = location.longitude
+            val point = LatLng(lat, lng)
+            if(!isLocationDataInitialized) {
+                model.recordPosition(point)
+                initPublicData(lat,lng)
+                initialPosition = point
+                isLocationDataInitialized=true
+            }
+        }
         HomeMapService.currentLocation.observe(viewLifecycleOwner, {v->
             onLocationChangedListener(v)
         })
