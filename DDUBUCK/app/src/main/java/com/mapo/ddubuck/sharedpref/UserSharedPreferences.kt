@@ -74,4 +74,17 @@ object UserSharedPreferences {
         val prefs : SharedPreferences = context.getSharedPreferences("filter", Context.MODE_PRIVATE)
         return prefs.getBoolean(key, false)
     }
+
+    fun setUserWeight(context: Context, weight: Double) {
+        val prefs : SharedPreferences = context.getSharedPreferences("userWeight", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putString("USER_WEIGHT", weight.toString())
+        editor.apply()
+    }
+
+    fun getUserWeight(context: Context): String {
+        val prefs : SharedPreferences = context.getSharedPreferences("userWeight", Context.MODE_PRIVATE)
+        return prefs.getString("USER_WEIGHT", "")!!.toString()
+    }
+
 }

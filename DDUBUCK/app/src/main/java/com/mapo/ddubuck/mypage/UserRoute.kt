@@ -21,7 +21,7 @@ class Audit {
     var walkTime: Int? = null
     var distance: Double? = null
     var stepCount: Int? = null
-    var calorie: Int? = null
+    var calorie: Double? = null
     var created_at: String? = null
 
 }
@@ -41,6 +41,6 @@ class Complete {
     var walkTime: Int? = null
     var distance: Double? = null
     var stepCount: Int? = null
-    var calorie: Int? = null
+    var calorie: Double? = null
     var created_at: String? = null
 }

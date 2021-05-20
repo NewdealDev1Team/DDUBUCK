@@ -12,6 +12,7 @@ import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.databinding.HeightWeightInfoLayoutBinding
 import com.google.firebase.database.DatabaseReference
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -99,8 +100,15 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
                     .build()
             val userMoreServer: UserInfoService = userInfo.create(UserInfoService::class.java)
 
+            if (weight == 0.0) {
+                UserSharedPreferences.setUserWeight(this, 0.0)
+            } else {
+                UserSharedPreferences.setUserWeight(this, weight)
+            }
+
             userMoreServer.saveUserBodyInfo(userKey, birthday, height, weight).enqueue(object : Callback<UserBody> {
                 override fun onResponse(call: Call<UserBody>, response: Response<UserBody>) {
+
                     Log.e("Success", response.message())
                 }
 
