@@ -46,8 +46,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface UserRouteCallback {
     fun onSuccessRoute(
         userRouteRecyclerView: RecyclerView,
-        userRoute: UserRoute,
-        inflater: LayoutInflater
+        userRoute: UserRoute
     )
 }
 
@@ -59,6 +58,8 @@ class MyPageFragment : Fragment(), UserRouteCallback {
 
     //뷰모델
     private val model: HomeMapViewModel by activityViewModels()
+
+    var userRouteAdapter: UserRouteAdapter? = null
 
     private lateinit var walkTimeFramgnet: WalkTimeFragment
     private lateinit var courseClearFragment: CourseClearFragment
@@ -289,7 +290,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                 override fun onResponse(call: Call<UserRoute>, response: Response<UserRoute>) {
                     val userRouteResponse = response.body()
                     if (userRouteResponse != null) {
-                        onSuccessRoute(userRouteRecyclerView, userRouteResponse, inflater)
+                        onSuccessRoute(userRouteRecyclerView, userRouteResponse)
                     }
                 }
 
@@ -318,11 +319,12 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     }
 
 
-    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute, inflater: LayoutInflater) {
-        val userRouteAdapter = context?.let { UserRouteAdapter(userRoute.audit, userRoute.complete, it, inflater) }
+    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute) {
+        userRouteAdapter = context?.let { UserRouteAdapter(userRoute.audit, userRoute.complete, it) }
         userRouteRecyclerView.apply {
             this.adapter = userRouteAdapter
             this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
+            this.adapter!!.notifyDataSetChanged()
         }
 
     }

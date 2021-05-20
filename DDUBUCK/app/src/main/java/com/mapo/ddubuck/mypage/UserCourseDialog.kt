@@ -3,6 +3,7 @@ package com.mapo.ddubuck.mypage
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.RecyclerView
@@ -32,10 +34,11 @@ class UserCourseDialog(
     private val height: String,
     private val result: String,
     private val created_at: String,
-    inflater: LayoutInflater,
+    val audit: MutableList<Audit>,
     owner: Activity,
 ) : Dialog(owner) {
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
