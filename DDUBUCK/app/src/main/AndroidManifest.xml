@@ -79,7 +79,6 @@
         </activity>
         <activity android:name="com.mapo.ddubuck.login.LoginActivity">
         </activity>
-        <activity android:name="com.mapo.ddubuck.SecondActivity" />
 
         <activity
             android:name="com.mapo.ddubuck.userinfo.UserInfoBirthdayActivity"
@@ -108,7 +107,8 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="lz0an3yhfn" />
 
-        <service android:name=".home.HomeMapService"/>
+        <service android:name=".home.HomeMapService"
+            tools:ignore="Instantiatable" />
 
     </application>
 </manifest>

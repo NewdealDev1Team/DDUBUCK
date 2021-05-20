@@ -119,8 +119,14 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
 
         when (weatherID) {
             in 900..909 -> weatherScore += 1
-            in 200..699 -> weatherScore += 2
-            in 800..809 -> weatherScore += 3
+            in 200..699 -> {
+                weatherScore += 2
+                if (weatherID in 500..531) weatherViewModel.setWeatherValue("rainy")
+            }
+            in 800..809 -> {
+                weatherScore += 3
+                if (id == 800) weatherViewModel.setWeatherValue("sunny")
+            }
         }
 
         if (uvRays != null && uvRays.toString() != "") {

@@ -1,9 +1,16 @@
 package com.mapo.ddubuck.mypage
 
+import com.google.gson.annotations.SerializedName
+
 class UserRoute {
     var audit = ArrayList<Audit>()
     var complete = ArrayList<Complete>()
 }
+
+class AuditForDelete {
+    var audit = ArrayList<Audit>()
+}
+
 
 class Audit {
     var title: String? = null

@@ -1,6 +1,8 @@
 package com.mapo.ddubuck.mypage
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 
@@ -26,8 +28,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
-import com.mapo.ddubuck.challenge.ChallengeAdapter
-import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import com.mapo.ddubuck.data.mypagechart.RetrofitChart
 import com.mapo.ddubuck.data.mypagechart.chartData
 import com.mapo.ddubuck.databinding.FragmentMypageBinding
@@ -42,10 +42,6 @@ import com.mapo.ddubuck.userinfo.NextTimeDialog
 import com.mapo.ddubuck.mypage.mywalk.CaloriesFragment
 import com.mapo.ddubuck.mypage.mywalk.CourseClearFragment
 import com.mapo.ddubuck.mypage.mywalk.WalkTimeFragment
-import com.mapo.ddubuck.weather.Dust
-import com.mapo.ddubuck.weather.UVRays
-import com.mapo.ddubuck.weather.WeatherResponse
-import com.mapo.ddubuck.weather.WeatherViewModel
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
@@ -61,18 +57,22 @@ interface UserRouteCallback {
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
-class MyPageFragment : Fragment(),  UserRouteCallback {
+class MyPageFragment : Fragment(), UserRouteCallback {
     private lateinit var myPageEditFragment: MyPageEditFragment
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
 
     private lateinit var activeFragment: Fragment
+    //뷰모델
+    private val model: HomeMapViewModel by activityViewModels()
+
+    var userRouteAdapter: UserRouteAdapter? = null
+
     private lateinit var walkTimeFramgnet: WalkTimeFragment
     private lateinit var courseClearFragment: CourseClearFragment
     private lateinit var caloriesFragment: CaloriesFragment
 
     private val userViewModel: MypageViewModel by activityViewModels()
-    private var userRoute = UserRoute()
 
     //뷰모델
     private val model: HomeMapViewModel by activityViewModels()
@@ -165,35 +165,20 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
 
 
         routeInfoButton.setOnClickListener {
-            val dialog = NextTimeDialog("사용자 지정 경로란?",
-                "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
-                context as Activity)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.show()
-
-            val okButton: TextView = dialog.findViewById(R.id.dialog_ok_button)
-            okButton.setOnClickListener {
-                dialog.dismiss()
-            }
-
-            val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
-            cancelButton.visibility = View.INVISIBLE
-
-
+            openUserRouteInfoDialog()
         }
 
 
-        val userRouteRecyclerView: RecyclerView = myPageView.findViewById(R.id.user_route_recyclerview)
+        val userRouteRecyclerView: RecyclerView =
+            myPageView.findViewById(R.id.user_route_recyclerview)
         userRouteRecyclerView.isNestedScrollingEnabled = false
         setUserRoute(userRouteRecyclerView)
         return myPageView
 
     }
 
-
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun getAllPhotos(gridView: GridView) {
-
         val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
             null,
@@ -207,9 +192,10 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
                 if (count == 4) break
                 val uri =
                     cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA))
-                uriArr.add(uri)
-                count += 1
-
+                if (uri.contains(getString(R.string.app_content_path))) {
+                    uriArr.add(uri)
+                    count += 1
+                }
             }
             Log.e("이미지 경로", uriArr.toString())
 
@@ -227,6 +213,7 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
             .replace(R.id.scrollview_mypage, myPageEditFragment)
             .addToBackStack(MainActivity.MYPAGE_TAG)
             .commit()
+
 
     }
 
@@ -287,7 +274,7 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
 
         val userValidationServer: UserService = userValidation.create(UserService::class.java)
 
-        context?.let {UserSharedPreferences.getUserId(it) }?.let {
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
             userValidationServer.getUserInfo(it).enqueue(object : Callback<UserValidationInfo> {
                 override fun onResponse(
                     call: Call<UserValidationInfo>,
@@ -311,7 +298,7 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
         }
     }
 
-    private fun setUserRoute(userRouteRecyclerView: RecyclerView ) {
+    private fun setUserRoute(userRouteRecyclerView: RecyclerView) {
         val userValidation: Retrofit = Retrofit.Builder()
             .baseUrl("http://3.37.6.181:3000/get/User/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -319,8 +306,7 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
 
         val userValidationServer: UserRouteAPI = userValidation.create(UserRouteAPI::class.java)
 
-        // test 아이디 수정할것!!!
-        context?.let { "1682936995"  }?.let {
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
             userValidationServer.getUserRoute(it).enqueue(object : Callback<UserRoute> {
                 override fun onResponse(call: Call<UserRoute>, response: Response<UserRoute>) {
                     val userRouteResponse = response.body()
@@ -337,29 +323,31 @@ class MyPageFragment : Fragment(),  UserRouteCallback {
         }
     }
 
-    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute) {
-        val myPageAdapter = context?.let { MyPageAdapter(userRoute.audit, userRoute.complete, it) }
+    private fun openUserRouteInfoDialog() {
+        val dialog = NextTimeDialog("사용자 지정 경로란?",
+            "내가 사용하는 경로를 다른 사용자에게 추천하고 싶을때 사용자 지정 경로를 등록해주시면 심사 후 사용자들이 사용할 수 있는 서비스로 등록해드립니다.",
+            context as Activity)
+        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.show()
 
-        userRouteRecyclerView.apply {
-            this.adapter = myPageAdapter
-            this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
-
-            myPageAdapter?.setItemClickListener(object : MyPageAdapter.ItemClickListener {
-                @RequiresApi(Build.VERSION_CODES.Q)
-                override fun onClick(view: View, position: Int) {
-                    if (position < userRoute.audit.size) {
-                    
-
-                    } else {
-
-                    }
-                }
-            })
+        val okButton: TextView = dialog.findViewById(R.id.dialog_ok_button)
+        okButton.setOnClickListener {
+            dialog.dismiss()
         }
+
+        val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
+        cancelButton.visibility = View.INVISIBLE
     }
 
 
+    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute) {
+        userRouteAdapter = context?.let { UserRouteAdapter(userRoute.audit, userRoute.complete, it) }
+        userRouteRecyclerView.apply {
+            this.adapter = userRouteAdapter
+            this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
+        }
 
+    }
 
 }
 

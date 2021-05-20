@@ -24,6 +24,7 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -40,6 +41,10 @@ import com.mapo.ddubuck.home.bottomSheet.*
 import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.mapo.ddubuck.home.FilterDrawer
+import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
+import com.mapo.ddubuck.mypage.BookmarkFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_walk_time.*
@@ -52,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
+    private val bookmarkFragment = BookmarkFragment()
 
     private val drawerFragment = FilterDrawer(this@MainActivity)
 
@@ -86,6 +92,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         Log.e("정보 ", UserSharedPreferences.getUserId(this))
 
@@ -161,6 +168,7 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
             add(R.id.nav_main_container, settingFragment).hide(settingFragment)
+            add(R.id.nav_main_container, bookmarkFragment).hide(bookmarkFragment)
             add(R.id.main_drawer_frame, drawerFragment)
         }.commit()
         activeFragment = homeFragment
@@ -261,16 +269,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
         when (item.itemId) {
             R.id.action_filter -> {
                 val drawerLayout = findViewById<DrawerLayout>(R.id.main_drawerLayout)
                 drawerLayout.openDrawer(Gravity.RIGHT)
             }
             R.id.action_bookmark -> {
+                supportFragmentManager.popBackStackImmediate()
+                fragmentTransaction
+                    .hide(activeFragment)
+                    .show(bookmarkFragment)
+                    .addToBackStack(MYPAGE_TAG).commit()
 
+                activityModel.toolbarTitle.value = "북마크"
             }
             R.id.action_settings -> {
-                val fragmentTransaction = supportFragmentManager.beginTransaction()
+                supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
                     .hide(activeFragment)
                     .show(settingFragment)

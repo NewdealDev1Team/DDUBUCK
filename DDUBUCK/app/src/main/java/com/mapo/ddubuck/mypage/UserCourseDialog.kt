@@ -3,16 +3,19 @@ package com.mapo.ddubuck.mypage
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.view.isInvisible
+import android.widget.*
+import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class UserCourseDialog(
     private val title: String,
@@ -22,9 +25,12 @@ class UserCourseDialog(
     private val distance: String,
     private val height: String,
     private val result: String,
+    private val created_at: String,
+    private val userRouteAdapter: UserRouteAdapter,
     owner: Activity,
 ) : Dialog(owner) {
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +71,33 @@ class UserCourseDialog(
 
             deleteButton.setOnClickListener {
                 // 삭제 로직
+                val userValidation: Retrofit = Retrofit.Builder()
+                    .baseUrl("http://3.37.6.181:3000/set/User/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                val userCourseServer: UserRouteAPI = userValidation.create(UserRouteAPI::class.java)
+                context.let { UserSharedPreferences.getUserId(it) }.let {
+                    userCourseServer.deleteUserRoute(it, created_at)
+                        .enqueue(object : Callback<AuditForDelete> {
+                            override fun onResponse(
+                                call: Call<AuditForDelete>,
+                                response: Response<AuditForDelete>,
+                            ) {
+                                val audit = response.body()?.audit
+                                userRouteAdapter.updateRecyclerView(audit!!)
+                                Toast.makeText(context, "$title 경로가 삭제되었습니다. ", Toast.LENGTH_SHORT).show()
+                            }
+
+                            override fun onFailure(call: Call<AuditForDelete>, t: Throwable) {
+                                Toast.makeText(context, "$title 경로가 삭제에 실패하였습니다. ", Toast.LENGTH_SHORT).show()
+                                Log.e("Error", t.message.toString())
+                            }
+                        })
+                }
+
+                dismiss()
+
             }
 
         } else if (result == "complete") {
@@ -72,7 +105,6 @@ class UserCourseDialog(
             buttonArea.removeView(deleteButton)
 
         }
-
 
 
     }

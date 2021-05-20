@@ -3,6 +3,7 @@ package com.mapo.ddubuck.home
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -27,6 +28,7 @@ import com.google.android.gms.location.*
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitClient
+import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.data.publicdata.PublicData
@@ -152,6 +154,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
         model.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
         return rootView
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Intent(owner, HomeMapService::class.java).also {
+            it.action = "ACTION_STOP_SERVICE"
+            owner.startService(it)
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -380,6 +390,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**버튼 텍스트 바꾸고 산책시작**/
     private fun startRecording() {
+        Intent(owner, HomeMapService::class.java).also {
+            it.action = "ACTION_START_OR_RESUME_SERVICE"
+            owner.startService(it)
+        }
         timer = timer(period = 1000) {
             model.recordTime(walkTime)
             walkTime++
@@ -401,6 +415,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     /**산책을 종료하고 기록을 반환합니다**/
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun stopRecording() {
+        Intent(owner, HomeMapService::class.java).also {
+            it.action = "ACTION_STOP_SERVICE"
+            owner.startService(it)
+        }
         userPath.map = null
         timer.cancel()
         course.map = null
@@ -410,7 +428,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         val walkRecord = getWalkResult()
 
-        //RetrofitService().createRecord(userKey, walkRecord, walkTag)
+        RetrofitService().createRecord(userKey, walkRecord, walkTag)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
@@ -501,9 +519,20 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         })
         model.walkState.value = WALK_WAITING
 
-        map.addOnLocationChangeListener {
-            onLocationChangedListener(it)
+        map.addOnLocationChangeListener { location->
+            val lat = location.latitude
+            val lng = location.longitude
+            val point = LatLng(lat, lng)
+            if(!isLocationDataInitialized) {
+                model.recordPosition(point)
+                initPublicData(lat,lng)
+                initialPosition = point
+                isLocationDataInitialized=true
+            }
         }
+        HomeMapService.currentLocation.observe(viewLifecycleOwner, {v->
+            onLocationChangedListener(v)
+        })
     }
 
     private fun onLocationChangedListener (location:Location) {
