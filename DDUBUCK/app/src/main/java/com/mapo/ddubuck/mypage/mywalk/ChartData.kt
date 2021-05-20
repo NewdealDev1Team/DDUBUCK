@@ -8,3 +8,7 @@ data class ChartData(
     var date: String,
     var value: Float
 )
+
+data class ChartDataList (
+    val chartData : List<ChartData>
+)
