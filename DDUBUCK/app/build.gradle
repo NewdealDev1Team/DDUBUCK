@@ -66,6 +66,8 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
+
+
     implementation 'com.google.android.material:material:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation files('libs/naveridlogin_android_sdk_4.2.6.aar')
@@ -83,6 +85,9 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
+    //for background service
+    implementation "androidx.lifecycle:lifecycle-service:2.3.1"
+
     //디자인 머테리어
     implementation 'com.google.android.material:material:1.0.0'
 

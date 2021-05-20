@@ -3,6 +3,7 @@ package com.mapo.ddubuck.home
 import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -148,6 +149,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
         model.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
         return rootView
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Intent(owner, HomeMapService::class.java).also {
+            it.action = "ACTION_STOP_SERVICE"
+            owner.startService(it)
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -376,6 +385,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**버튼 텍스트 바꾸고 산책시작**/
     private fun startRecording() {
+        Intent(owner, HomeMapService::class.java).also {
+            it.action = "ACTION_START_OR_RESUME_SERVICE"
+            owner.startService(it)
+        }
         timer = timer(period = 1000) {
             model.recordTime(walkTime)
             walkTime++
@@ -396,6 +409,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**산책을 종료하고 기록을 반환합니다**/
     private fun stopRecording() {
+        Intent(owner, HomeMapService::class.java).also {
+            it.action = "ACTION_STOP_SERVICE"
+            owner.startService(it)
+        }
         userPath.map = null
         timer.cancel()
         course.map = null
@@ -496,9 +513,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         })
         model.walkState.value = WALK_WAITING
 
-        map.addOnLocationChangeListener {
-            onLocationChangedListener(it)
-        }
+        HomeMapService.currentLocation.observe(viewLifecycleOwner, {v->
+            onLocationChangedListener(v)
+        })
     }
 
     private fun onLocationChangedListener (location:Location) {
