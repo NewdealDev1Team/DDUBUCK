@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mapo.ddubuck.MainActivityViewModel
@@ -55,6 +54,7 @@ import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
+import id.co.barchartresearch.ChartData
 
 
 //서버에 연결해서 데이터 입력
@@ -119,13 +119,13 @@ class WalkTimeFragment : Fragment() {
 
                         val listData by lazy {
                             mutableListOf(
-                                ChartData(sixDaysAgo.format(formatter).toString(), result0!!),
-                                ChartData(fiveDaysAgo.format(formatter).toString(), result1!!),
-                                ChartData(fourDaysAgo.format(formatter).toString(), result2!!),
-                                ChartData(threeDaysAgo.format(formatter).toString(), result3!!),
-                                ChartData(twoDaysAgo.format(formatter).toString(), result4!!),
-                                ChartData(oneDaysAgo.format(formatter).toString(), result5!!),
-                                ChartData(dateNow.format(formatter).toString(), result6!!)
+//                                ChartData(sixDaysAgo.format(formatter).toString(), result0!!),
+//                                ChartData(fiveDaysAgo.format(formatter).toString(), result1!!),
+//                                ChartData(fourDaysAgo.format(formatter).toString(), result2!!),
+//                                ChartData(threeDaysAgo.format(formatter).toString(), result3!!),
+//                                ChartData(twoDaysAgo.format(formatter).toString(), result4!!),
+//                                ChartData(oneDaysAgo.format(formatter).toString(), result5!!),
+//                                ChartData(dateNow.format(formatter).toString(), result6!!)
                             )
                         }
 
