@@ -304,23 +304,23 @@ class CourseClearFragment : Fragment() {
             when (requestPermissions()) {
                 true ->
                     Instacapture.capture(this.requireActivity(),
-                    object : SimpleScreenCapturingListener() {
-                        override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: ScrollView = requireView().findViewById(R.id.courseclear) as ScrollView
-                            val shareButtonView: View = rootView.findViewById(R.id.course_share_button)
-                            shareButtonView.visibility = View.GONE
-                            capture.buildDrawingCache()
-                            val captureview: Bitmap = capture.getDrawingCache()
-                            val uri = saveImageExternal(captureview)
-                            uri?.let {
-                                if(!shareImageURI(uri)){
-                                    shareButtonView.visibility = View.VISIBLE
-                                }else {
-                                    shareImageURI(uri)
-                                }
-                            } ?: showError()
-                        }
-                    }, course_share_button)
+                        object : SimpleScreenCapturingListener() {
+                            override fun onCaptureComplete(captureview: Bitmap) {
+                                val capture: ScrollView = requireView().findViewById(R.id.courseclear) as ScrollView
+                                val shareButtonView: View = rootView.findViewById(R.id.course_share_button)
+                                shareButtonView.visibility = View.GONE
+                                capture.buildDrawingCache()
+                                val captureview: Bitmap = capture.getDrawingCache()
+                                val uri = saveImageExternal(captureview)
+                                uri?.let {
+                                    if(!shareImageURI(uri)){
+                                        shareButtonView.visibility = View.VISIBLE
+                                    }else {
+                                        shareImageURI(uri)
+                                    }
+                                } ?: showError()
+                            }
+                        }, course_share_button)
                 else -> showError()
             }
         }
@@ -387,25 +387,6 @@ class CourseClearFragment : Fragment() {
         return uri!!
     }
 
-//    fun saveImageExternal(image: Bitmap): Uri? {
-//        var uri: Uri? = null
-//        try {
-//            //저장할 폴더 setting
-//            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-//                "Course-Clear-Chart.png")
-//            val stream = FileOutputStream(file)
-//            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
-//            stream.close()
-//            uri = FileProvider.getUriForFile(this.requireContext(),
-//                this.requireActivity().packageName + ".provider",
-//                file)
-//        } catch (e: IOException) {
-//            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
-//        }
-//        return uri
-//    }
-
-    //공유하기 (intent)  //uri:캡처이미
     fun shareImageURI(uri: Uri) : Boolean {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND

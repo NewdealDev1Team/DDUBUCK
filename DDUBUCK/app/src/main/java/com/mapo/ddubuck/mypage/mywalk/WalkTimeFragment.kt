@@ -41,7 +41,6 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
-import com.mapo.ddubuck.home.HomeMapViewModel
 import com.tarek360.instacapture.Instacapture
 import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import id.co.barchartresearch.ChartData
@@ -64,7 +63,6 @@ import kotlin.collections.ArrayList
 //서버에 연결해서 데이터 입력
 //마이페이지에서 화면 연결하기 //api 정리하기!!
 
-@RequiresApi(Build.VERSION_CODES.O)
 class WalkTimeFragment : Fragment() {
 
     //현재 날짜/시간 가져오기
@@ -94,9 +92,6 @@ class WalkTimeFragment : Fragment() {
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     private val shareButtonViewImage : Boolean = false
-
-    //뷰 모델
-    private val model: HomeMapViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -361,41 +356,8 @@ class WalkTimeFragment : Fragment() {
             }).check()
         return permissions
     }
-//    fun saveImageExternal(image: Bitmap): Uri? {
-//        val v: FrameLayout = requireView().findViewById(R.id.walktime) as FrameLayout
-//        var uri: Uri? = null
-//        try {
-//            //저장할 폴더 setting
-//            val file = File(activity?.getExternalFilesDir(Environment.DIRECTORY_SCREENSHOTS),
-//                "Walking-Time-Chart.png")
-//            val stream = FileOutputStream(file)
-//            image.compress(Bitmap.CompressFormat.PNG, 90, stream)
-//            stream.close()
-//            uri = FileProvider.getUriForFile(this.requireContext(),
-//                this.requireActivity().packageName + ".provider",
-//                file)
-//        } catch (e: IOException) {
-//            Log.d("INFO", "공유를 위해 파일을 쓰는 중 IOException: " + e.message)
-//        }
-//        return uri
-//    }
-//    <!--    manifast : ScreenShot    -->
-//        <provider
-//            android:name="androidx.core.content.FileProvider"
-//            android:authorities="${applicationId}.provider"
-//            android:exported="false"
-//            android:grantUriPermissions="true">
-//            <meta-data
-//                android:name="android.support.FILE_PROVIDER_PATHS"
-//                android:resource="@xml/provider_paths" />
-//        </provider>
-//    provier_paths/xml
-//    <?xml version="1.0" encoding="utf-8"?>
-//    <paths xmlns:android="http://schemas.android.com/apk/res/android">
-//    <root-path name="external_files" path="." />
-//    </paths>
 
-        fun saveImageExternal(image: Bitmap): Uri? {
+    fun saveImageExternal(image: Bitmap): Uri? {
         val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
         var fos: OutputStream? = null
         var uri: Uri? = null
@@ -461,5 +423,3 @@ class WalkTimeFragment : Fragment() {
         }
     }
 }
-
-

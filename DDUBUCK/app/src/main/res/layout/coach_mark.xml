@@ -24,12 +24,15 @@
 
     <ImageView
         android:id="@+id/coach_marks_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_gravity="center_horizontal|top"
-        android:gravity="center"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/coach_mark" />
+<!--    android:src="@drawable/coach_mark" />-->
+
 
     <ImageButton
         android:id="@+id/coach_mark_exit_button"
@@ -39,7 +42,7 @@
         android:layout_marginHorizontal="15dp"
         android:layout_marginVertical="15dp"
         android:background="#00000000"
-        android:tint="@color/white"
-        android:src="@drawable/ic_coach_mark_exit" />
+        android:src="@drawable/ic_coach_mark_exitt"
+        android:tint="@color/white" />
 </FrameLayout>
 
