@@ -88,6 +88,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var markers:HashMap<String, MutableList<Marker>> = HashMap()
     private val sharedPref = UserSharedPreferences
     private var isLocationDataInitialized = false
+    private var initialPosition : LatLng = LatLng(0.0,0.0)
 
     //측정 관련 변수
     private var userPath = PathOverlay()
@@ -98,7 +99,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var stepCount: Int = 0
     private var distance: Double = 0.0
     private var burnedCalorie: Double = 0.0
-    private var initialPosition : LatLng = LatLng(0.0,0.0)
 
     //코스
     private var course = PolylineOverlay()
@@ -530,6 +530,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 initPublicData(lat,lng, userKey)
                 initialPosition = point
                 isLocationDataInitialized=true
+            }
+            if(initialPosition.distanceTo(point)==3000.0) {
+                isLocationDataInitialized = false
             }
         }
         HomeMapService.currentLocation.observe(viewLifecycleOwner, {v->
