@@ -18,7 +18,7 @@ class BookmarkFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        //path
+
         val bookmarkViewGroup: ViewGroup = inflater.inflate(R.layout.fragment_bookmark,
             container, false) as ViewGroup
 

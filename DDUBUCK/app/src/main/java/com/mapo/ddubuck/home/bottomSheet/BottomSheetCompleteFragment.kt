@@ -21,6 +21,7 @@ import com.mapo.ddubuck.home.CourseAddDialog
 import com.mapo.ddubuck.home.HomeMapFragment
 import com.mapo.ddubuck.home.HomeMapViewModel
 import com.mapo.ddubuck.share.ShareActivity
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.naver.maps.geometry.LatLng
 
 
@@ -54,7 +55,7 @@ class BottomSheetCompleteFragment(
         val stepTv : TextView = rootView.findViewById(R.id.sheet_complete_stepTv)
         stepTv.text = walkRecord.stepCount.toString()
         val calorieTv : TextView = rootView.findViewById(R.id.sheet_complete_calorieTv)
-        calorieTv.text = formatter.getFormattedCalorie(walkRecord.getCalorie(65.0))
+        calorieTv.text = formatter.getFormattedCalorie(walkRecord.getCalorie(UserSharedPreferences.getUserWeight(owner).toDouble()))
         val averageSpeedTv : TextView = rootView.findViewById(R.id.sheet_complete_averageSpeedTv)
         averageSpeedTv.text = formatter.getFormattedSpeed(walkRecord.speed)
         val averageAltitudeTv : TextView = rootView.findViewById(R.id.sheet_complete_averageAltitudeTv)

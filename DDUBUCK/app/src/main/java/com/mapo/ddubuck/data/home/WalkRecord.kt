@@ -55,6 +55,10 @@ class WalkRecord(
 
 
     fun getCalorie(weight: Double) : Double {
+        var w = weight
+        if(w==0.0) {
+            w=65.0
+        }
         //https://github.com/IoT-Heroes/KidsCafeSolution_App/issues/2 참고해서 만들었습니다
         var met = when(speed) {
             in 0.0..0.09 -> 0.0
@@ -66,7 +70,7 @@ class WalkRecord(
         if(speed.isNaN()) {
             met=0.0
         }
-        return (met * (3.5 * weight * (walkTime /60.0))) * 0.001 * 5
+        return (met * (3.5 * w * (walkTime /60.0))) * 0.001 * 5
     }
 
     fun pathToMap() : List<HashMap<String, Any>> {

@@ -428,7 +428,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         val walkRecord = getWalkResult()
 
-        RetrofitService().createRecord(userKey, walkRecord, walkTag)
+        RetrofitService().createRecord(userKey, walkRecord, burnedCalorie,walkTag)
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
@@ -625,7 +625,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**순간 칼로리 연산**/
     private fun calculateMomentCalorie(speed: Float, passedTime: Long): Double {
-        val weight = 65
+        var weight = UserSharedPreferences.getUserWeight(owner).toDouble()
+        if(weight==0.0) {
+            weight=65.0
+        }
         val met = when (speed) {
             in 0.0..0.09 -> 0.0
             in 0.1..4.0 -> 2.0 // 느리게 걷기
