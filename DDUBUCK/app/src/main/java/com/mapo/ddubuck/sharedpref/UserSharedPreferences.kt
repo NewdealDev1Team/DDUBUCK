@@ -87,4 +87,17 @@ object UserSharedPreferences {
         return prefs.getString("USER_WEIGHT", "")!!.toString()
     }
 
+
+    fun setPushAlarm(context: Context, isOn: Boolean) {
+        val prefs : SharedPreferences = context.getSharedPreferences("pushAlarm", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putString("PUSH_ALARM", isOn.toString())
+        editor.apply()
+    }
+
+    fun getPushAlarm(context:Context): Boolean {
+        val prefs : SharedPreferences = context.getSharedPreferences("pushAlarm", Context.MODE_PRIVATE)
+        return prefs.getString("PUSH_ALARM", "").toBoolean()
+    }
+
 }
