@@ -289,6 +289,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                 override fun onResponse(call: Call<UserRoute>, response: Response<UserRoute>) {
                     val userRouteResponse = response.body()
                     if (userRouteResponse != null) {
+                        Log.e("성공", "사용자 지정 경로 가져오기 성공")
                         onSuccessRoute(userRouteRecyclerView, userRouteResponse)
                     }
                 }
