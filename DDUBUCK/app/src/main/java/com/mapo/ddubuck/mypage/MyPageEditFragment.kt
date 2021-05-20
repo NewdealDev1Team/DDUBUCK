@@ -3,6 +3,8 @@ package com.mapo.ddubuck.mypage
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -27,6 +29,7 @@ import com.mapo.ddubuck.userinfo.UserInfoService
 import com.mapo.ddubuck.weather.WeatherViewModel
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.android.material.textfield.TextInputEditText
+import com.mapo.ddubuck.userinfo.NextTimeDialog
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.fragment_edit_userinfo.*
 import okhttp3.MediaType
@@ -152,6 +155,20 @@ class MyPageEditFragment : Fragment() {
             saveHeightWeight(birthday,
                 height.text.toString().toDouble(),
                 weight.text.toString().toDouble())
+
+            val dialog = NextTimeDialog("수정 완료",
+                "내 정보가 수정되었습니다.",
+                context as Activity)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            val okButton: TextView = dialog.findViewById(R.id.dialog_ok_button)
+            okButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
+            cancelButton.visibility = View.INVISIBLE
 
             editButton.isEnabled = false
         }
