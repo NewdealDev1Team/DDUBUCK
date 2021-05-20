@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.github.mmin18.widget.RealtimeBlurView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/coach_mark_background"
-        app:realtimeBlurRadius="5dp"
-        app:realtimeOverlayColor="#65000000" />
+<!--    <com.github.mmin18.widget.RealtimeBlurView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:adjustViewBounds="true"-->
+<!--        android:scaleType="fitXY"-->
+<!--        android:src="@drawable/coach_mark_background"-->
+<!--        app:realtimeBlurRadius="5dp"-->
+<!--        app:realtimeOverlayColor="#65000000" />-->
     <!--    android:src="@drawable/coach_mark_background"-->
     <!--    android:scaleType="fitXY"-->
     <!--        scaleType : 화면 Full Screen-->
