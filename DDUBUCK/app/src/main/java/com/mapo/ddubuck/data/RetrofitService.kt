@@ -62,7 +62,7 @@ object RetrofitClient{
 
 class RetrofitService {
 
-    fun createRecord(userKey : String, walkRecord: WalkRecord, calorie:Double,walkType : Int){
+    fun createRecord(userKey : String, walkRecord: WalkRecord, calorie:Double,walkType : Int, callback: ()->Unit){
         val map = hashMapOf<String, Any>()
         map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
@@ -92,10 +92,14 @@ class RetrofitService {
                 val responseText = "Response code: ${response.code()}\n"+
                     "body: ${response.body()}\n" + response.message() + "${response.headers()}"
                 println(responseText)
+                callback()
             }
 
             override fun onFailure(call: Call<WalkRecord>, t: Throwable) {
-                Log.e("ERROR", t.localizedMessage)
+                if(t.localizedMessage!=null){
+                    Log.e("ERROR", t.localizedMessage!!)
+                }
+
             }
         })
     }

@@ -428,7 +428,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         val walkRecord = getWalkResult()
 
-        RetrofitService().createRecord(userKey, walkRecord, burnedCalorie,walkTag)
+        RetrofitService().createRecord(userKey, walkRecord, burnedCalorie,walkTag) {
+            model.recordMywalk.value = true
+        }
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
