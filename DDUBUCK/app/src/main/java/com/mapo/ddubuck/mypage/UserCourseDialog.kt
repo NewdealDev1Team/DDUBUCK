@@ -6,19 +6,11 @@ import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentTransaction
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.internal.ContextUtils.getActivity
-import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -34,7 +26,7 @@ class UserCourseDialog(
     private val height: String,
     private val result: String,
     private val created_at: String,
-    private val audit: MutableList<Audit>,
+    private val userRouteAdapter: UserRouteAdapter,
     owner: Activity,
 ) : Dialog(owner) {
 
@@ -84,20 +76,21 @@ class UserCourseDialog(
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
 
-                // 테스트 ID 수정 필요
                 val userCourseServer: UserRouteAPI = userValidation.create(UserRouteAPI::class.java)
-                context.let { "1682936995" }.let {
+                context.let { UserSharedPreferences.getUserId(it) }.let {
                     userCourseServer.deleteUserRoute(it, created_at)
-                        .enqueue(object : Callback<UserCourseDelete> {
+                        .enqueue(object : Callback<AuditForDelete> {
                             override fun onResponse(
-                                call: Call<UserCourseDelete>,
-                                response: Response<UserCourseDelete>,
+                                call: Call<AuditForDelete>,
+                                response: Response<AuditForDelete>,
                             ) {
-                                Log.e("Success", "유저 경로 삭제 성공")
-
+                                val audit = response.body()?.audit
+                                userRouteAdapter.updateRecyclerView(audit!!)
+                                Toast.makeText(context, "$title 경로가 삭제되었습니다. ", Toast.LENGTH_SHORT).show()
                             }
 
-                            override fun onFailure(call: Call<UserCourseDelete>, t: Throwable) {
+                            override fun onFailure(call: Call<AuditForDelete>, t: Throwable) {
+                                Toast.makeText(context, "$title 경로가 삭제에 실패하였습니다. ", Toast.LENGTH_SHORT).show()
                                 Log.e("Error", t.message.toString())
                             }
                         })
@@ -115,11 +108,5 @@ class UserCourseDialog(
 
 
     }
-
-//    fun updateReceiptsList(newAudit: ArrayList<Audit>) {
-//        listViewItemList.clear()
-//        listViewItemList.addAll(newlist)
-//        this.notifyDataSetChanged()
-//    }
 
 }

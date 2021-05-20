@@ -284,8 +284,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
 
         val userValidationServer: UserRouteAPI = userValidation.create(UserRouteAPI::class.java)
 
-        // test 아이디 수정할것!!!
-        context?.let { "1682936995" }?.let {
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
             userValidationServer.getUserRoute(it).enqueue(object : Callback<UserRoute> {
                 override fun onResponse(call: Call<UserRoute>, response: Response<UserRoute>) {
                     val userRouteResponse = response.body()

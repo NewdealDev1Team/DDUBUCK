@@ -1,25 +1,19 @@
 package com.mapo.ddubuck.mypage
 
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
 import kotlinx.android.synthetic.main.user_course_layout.view.*
-import org.w3c.dom.Text
+
 
 class UserRouteAdapter(
     var audit: MutableList<Audit>, private var complete: MutableList<Complete>, val context: Context
@@ -47,14 +41,13 @@ class UserRouteAdapter(
             holder.userRouteItemComplete.isInvisible = true
             holder.userRouteItemAudit.isInvisible = false
             holder.itemView.setOnClickListener {
-
                 val auditTitle = audit[position].title.toString()
                 val auditPicture = audit[position].picture!!
                 val auditDescription = audit[position].description.toString()
                 val auditWalkTime = audit[position].walkTime.toString() + "분"
                 val auditDistance = audit[position].distance?.toInt().toString() + "km"
                 val auditHeight = audit[position].altitude?.toInt().toString() + "m"
-                val auditCreatedAt = audit[position].created_at.toString()
+                    val auditCreatedAt = audit[position].created_at.toString()
 
                 val dialog = UserCourseDialog(auditTitle,
                     auditPicture,
@@ -64,7 +57,7 @@ class UserRouteAdapter(
                     auditHeight,
                     "audit",
                     auditCreatedAt,
-                    audit,
+                    this,
                     context as Activity)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 dialog.show()
@@ -93,7 +86,8 @@ class UserRouteAdapter(
                     completeDistance,
                     completeHeight,
                     "complete",
-                    completeCreatedAt,audit,
+                    completeCreatedAt,
+                    this,
                     context as Activity)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 dialog.show()
@@ -108,5 +102,10 @@ class UserRouteAdapter(
         return audit.size + complete.size
     }
 
+    fun updateRecyclerView(newAudit: ArrayList<Audit>) {
+        audit.clear()
+        audit.addAll(newAudit)
+        this.notifyDataSetChanged()
+    }
 }
 
