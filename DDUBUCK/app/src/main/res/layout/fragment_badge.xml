@@ -20,7 +20,7 @@
             <LinearLayout
                 android:id="@+id/layout1"
                 android:layout_width="match_parent"
-                android:layout_height="450dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
@@ -30,7 +30,7 @@
                     android:layout_marginTop="30dp"
                     android:text="챌린지 도전"
                     android:textColor="@color/black"
-                    android:textSize="21dp"
+                    android:textSize="18dp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
+                    android:textSize="14dp"
                     android:text="챌린지를 도전하면서 얻을 수 있는\n배지입니다. 지금 도전해볼까요?"
                     app:layout_constraintTop_toBottomOf="@+id/badge_title" />
 
@@ -71,7 +72,7 @@
             <LinearLayout
                 android:id="@+id/layout2"
                 android:layout_width="match_parent"
-                android:layout_height="530dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/layout1"
                 android:orientation="vertical">
 
@@ -82,7 +83,7 @@
                     android:layout_marginTop="30dp"
                     android:text="기념일 도전"
                     android:textColor="@color/black"
-                    android:textSize="21dp"
+                    android:textSize="18dp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -91,6 +92,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
+                    android:textSize="14dp"
                     android:text="특정 기념이 날마다 모을 수 있는 배지\n우리 이 기회를 놓치면 안되겠죠?"
                     app:layout_constraintTop_toBottomOf="@+id/badge_title" />
 
@@ -132,7 +134,7 @@
                     android:layout_marginTop="30dp"
                     android:text="특별 한정 도전"
                     android:textColor="@color/black"
-                    android:textSize="21dp"
+                    android:textSize="18dp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -141,6 +143,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
+                    android:textSize="14dp"
                     android:text="날마다 오는 배지가 아닙니다!\n특별한 날에만 모으는 나만의 소중한 배지"
                     app:layout_constraintTop_toBottomOf="@+id/badge_title" />
 

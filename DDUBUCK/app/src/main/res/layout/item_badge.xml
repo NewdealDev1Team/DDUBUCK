@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/item_badge_image"
-        android:layout_width="89dp"
-        android:layout_height="89dp"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
         android:src="@drawable/ic_badge_challenge_goodjob"
         android:layout_centerHorizontal="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,10 +24,13 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:text="첫 산책"
+        android:textColor="@color/black"
         android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/item_badge_image"
+        android:textStyle="bold"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
+
