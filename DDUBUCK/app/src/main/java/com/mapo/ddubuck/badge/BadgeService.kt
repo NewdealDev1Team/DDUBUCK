@@ -1,9 +1,4 @@
 package com.mapo.ddubuck.data.badge
-
-import com.mapo.ddubuck.data.mypagechart.chartData
-
-
-
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

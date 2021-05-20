@@ -1,5 +1,9 @@
 package com.mapo.ddubuck.data.mypagechart
 
+data class MyWalkRecordChartData(
+    val weekStat: List<WeekStat>,
+)
+
 data class WeekStat(
     val name: String,
     val calorie: Double,

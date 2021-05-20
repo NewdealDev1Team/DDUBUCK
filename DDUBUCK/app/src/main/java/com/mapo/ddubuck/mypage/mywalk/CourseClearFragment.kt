@@ -22,7 +22,6 @@ import androidx.fragment.app.activityViewModels
 import com.mapo.ddubuck.MainActivityViewModel
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.mypagechart.RetrofitChart
-import com.mapo.ddubuck.data.mypagechart.chartData
 import com.mapo.ddubuck.login.UserService
 import com.mapo.ddubuck.login.UserValidationInfo
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
@@ -41,6 +40,7 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import com.mapo.ddubuck.data.mypagechart.MyWalkRecordChartData
 import com.tarek360.instacapture.Instacapture
 import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
 import id.co.barchartresearch.ChartData
@@ -103,8 +103,8 @@ class CourseClearFragment : Fragment() {
         mainViewModel.toolbarTitle.value = "코스 완주"
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
             var userKey: Int = it.toInt()
-            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
-                override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
+            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<MyWalkRecordChartData> {
+                override fun onResponse(call: Call<MyWalkRecordChartData>, response: Response<MyWalkRecordChartData>) {
                     if (response.isSuccessful) {
                         Log.d("text", "연결성공")
                         var result0 = response.body()?.weekStat?.get(0)?.completedCount?.toFloat()
@@ -293,7 +293,7 @@ class CourseClearFragment : Fragment() {
                     }
                 }
 
-                override fun onFailure(call: Call<chartData>, t: Throwable) {
+                override fun onFailure(call: Call<MyWalkRecordChartData>, t: Throwable) {
                     Log.d("error", t.message.toString())
                 }
             })
