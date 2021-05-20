@@ -82,7 +82,6 @@
 
 
         </activity>
-        <activity android:name="com.mapo.ddubuck.SecondActivity" />
 
         <activity
             android:name="com.mapo.ddubuck.userinfo.UserInfoBirthdayActivity"
