@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.user_course_layout.view.*
 import org.w3c.dom.Text
 
 class UserRouteAdapter(
-    private var audit: MutableList<Audit>, private var complete: MutableList<Complete>, val context: Context, val inflater: LayoutInflater
+    var audit: MutableList<Audit>, private var complete: MutableList<Complete>, val context: Context
 ) : RecyclerView.Adapter<UserRouteAdapter.MyPageViewHolder>() {
 
     inner class MyPageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -64,42 +64,10 @@ class UserRouteAdapter(
                     auditHeight,
                     "audit",
                     auditCreatedAt,
-                    inflater,
+                    audit,
                     context as Activity)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 dialog.show()
-
-//                val userRouteDialogBuilder = AlertDialog.Builder(context)
-//                val userRouteDialog = inflater.inflate(R.layout.dialog_course_view, null)
-//
-//                val mUserRouteDialog = userRouteDialogBuilder.setView(userRouteDialog).show()
-//
-//                mUserRouteDialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//
-//                val userRouteDialogCloseButton  = mUserRouteDialog.findViewById<ImageView>(R.id.dialog_course_view_closeButton)
-//                val userRouteDialogTitle = mUserRouteDialog.findViewById<TextView>(R.id.dialog_course_view_title)
-//                val userRouteDialogPicture = mUserRouteDialog.findViewById<ImageView>(R.id.dialog_course_view_image_container)
-//                val userRouteDialogDescription = mUserRouteDialog.findViewById<TextView>(R.id.dialog_course_view_text)
-//                val userRouteDialogWalkTime = mUserRouteDialog.findViewById<TextView>(R.id.dialog_course_view_timeTv)
-//                val userRouteDialogDistance = mUserRouteDialog.findViewById<TextView>(R.id.dialog_course_view_distanceTv)
-//                val userRouteDialogHeight = mUserRouteDialog.findViewById<TextView>(R.id.dialog_course_view_elevationTv)
-//
-//                userRouteDialogTitle.text = auditTitle
-//
-//                Glide.with(context)
-//                    .load(auditPicture)
-//                    .placeholder(R.color.grey)
-//                    .into(userRouteDialogPicture)
-//
-//                userRouteDialogDescription.text = auditDescription
-//                userRouteDialogWalkTime.text = auditWalkTime
-//                userRouteDialogDistance.text = auditDistance
-//                userRouteDialogHeight.text = auditHeight
-//
-//                userRouteDialogCloseButton.setOnClickListener {
-//                    Log.e("ㅇㅇㅇㅇ","ㅁㅇㄹ")
-//                }
-
 
             }
 
@@ -124,8 +92,7 @@ class UserRouteAdapter(
                     completeDistance,
                     completeHeight,
                     "complete",
-                    completeCreatedAt,
-                    inflater,
+                    completeCreatedAt,audit,
                     context as Activity)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 dialog.show()
