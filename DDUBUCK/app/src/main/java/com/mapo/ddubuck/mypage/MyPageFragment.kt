@@ -295,7 +295,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                 }
 
                 override fun onFailure(call: Call<UserRoute>, t: Throwable) {
-                    Log.e("Fail", "사용자 지정 경로 가져오기 실패")
+                    Log.e("Fail", "사용자 지정 경로 가져오기 실패 ${t.message}")
                 }
 
             })
