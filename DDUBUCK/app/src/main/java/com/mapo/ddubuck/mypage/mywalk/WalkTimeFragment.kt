@@ -2,9 +2,11 @@ package com.mapo.ddubuck.mypage.mywalk
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -93,7 +95,7 @@ class WalkTimeFragment : Fragment() {
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
-    private val shareButtonViewImage: Boolean = false
+    private val shareButtonViewImage : Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -109,9 +111,7 @@ class WalkTimeFragment : Fragment() {
         time.setText(timeformatterString)
 
         val miniTitle: TextView = rootView.findViewById(R.id.time_mini_title)
-
         val titleUserName: TextView = rootView.findViewById(R.id.time_name)
-
         setOneWeekRecordInfo(miniTitle, titleUserName)
         //바 차트
         chart = rootView.findViewById(R.id.time_bar_chart)
@@ -120,9 +120,10 @@ class WalkTimeFragment : Fragment() {
         val shareButtonView: View = rootView.findViewById(R.id.time_share_button)
         val button: Button = rootView.findViewById(R.id.time_share_button)
         button.setOnClickListener { takeAndShareScreenShot(shareButtonView) }
-
         return rootView
     }
+
+
 
     // --- 캡처 후 공유 --
     private fun takeAndShareScreenShot(shareButtonView: View) {
