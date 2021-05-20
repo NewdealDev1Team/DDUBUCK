@@ -1,7 +1,10 @@
 package com.mapo.ddubuck.mypage
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +14,7 @@ import androidx.fragment.app.Fragment
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.login.LoginActivity
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
+import com.mapo.ddubuck.userinfo.NextTimeDialog
 
 class SettingFragment : Fragment() {
     override fun onCreateView(
@@ -27,7 +31,24 @@ class SettingFragment : Fragment() {
         versionView.text = context?.let { getVersion(it) }
 
         logoutButton.setOnClickListener {
-            logout()
+
+            val dialog = NextTimeDialog("로그아웃",
+                "정말 로그아웃 하시겠습니까?",
+                context as Activity)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+
+            val okButton: TextView = dialog.findViewById(R.id.dialog_ok_button)
+            okButton.setOnClickListener {
+                logout()
+                dialog.dismiss()
+            }
+
+            val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
+            cancelButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
         }
 
         return settingViewGroup
