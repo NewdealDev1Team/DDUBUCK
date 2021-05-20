@@ -25,6 +25,7 @@ import com.google.android.gms.location.*
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitClient
+import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.data.publicdata.PublicData
