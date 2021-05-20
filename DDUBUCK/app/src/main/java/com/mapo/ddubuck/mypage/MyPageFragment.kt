@@ -199,7 +199,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
             myPageView.findViewById(R.id.user_route_recyclerview)
         userRouteRecyclerView.isNestedScrollingEnabled = false
 
-        setUserRoute(userRouteRecyclerView, inflater)
+        setUserRoute(userRouteRecyclerView)
         return myPageView
     }
 
@@ -276,7 +276,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         }
     }
 
-    private fun setUserRoute(userRouteRecyclerView: RecyclerView, inflater: LayoutInflater) {
+    private fun setUserRoute(userRouteRecyclerView: RecyclerView) {
         val userValidation: Retrofit = Retrofit.Builder()
             .baseUrl("http://3.37.6.181:3000/get/User/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -324,7 +324,6 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         userRouteRecyclerView.apply {
             this.adapter = userRouteAdapter
             this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
-            this.adapter!!.notifyDataSetChanged()
         }
 
     }

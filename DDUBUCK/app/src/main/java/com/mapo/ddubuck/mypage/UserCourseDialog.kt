@@ -34,7 +34,7 @@ class UserCourseDialog(
     private val height: String,
     private val result: String,
     private val created_at: String,
-    val audit: MutableList<Audit>,
+    private val audit: MutableList<Audit>,
     owner: Activity,
 ) : Dialog(owner) {
 
@@ -115,5 +115,11 @@ class UserCourseDialog(
 
 
     }
+
+//    fun updateReceiptsList(newAudit: ArrayList<Audit>) {
+//        listViewItemList.clear()
+//        listViewItemList.addAll(newlist)
+//        this.notifyDataSetChanged()
+//    }
 
 }
