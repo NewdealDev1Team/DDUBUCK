@@ -110,7 +110,8 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="lz0an3yhfn" />
 
-        <service android:name=".home.HomeMapService"/>
+        <service android:name=".home.HomeMapService"
+            tools:ignore="Instantiatable" />
 
     </application>
 </manifest>
