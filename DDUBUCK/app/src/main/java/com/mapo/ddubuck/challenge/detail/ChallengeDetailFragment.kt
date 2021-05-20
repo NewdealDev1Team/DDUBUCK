@@ -10,12 +10,14 @@ import android.app.Activity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -79,9 +81,13 @@ private val shareButtonViewImage : Boolean = false
         val disatnceChallengeDetailText: TextView =
             challengeDetailView.findViewById(R.id.distance_challenge_text)
 
+        val challengeShareButton: Button = challengeDetailView.findViewById(R.id.challenge_screenshot)
+
         disatnceChallengeDetailText.text = detailText
 
         setChallengeDetail(challengeDetailRecyclerView, sectionNumber, titleIndex, challengeDetailTitle, disatnceChallengeDetailText)
+
+        shareChallenge(challengeShareButton, challengeDetailRecyclerView)
 
         return challengeDetailView
     }
@@ -214,7 +220,41 @@ private val shareButtonViewImage : Boolean = false
                     0 -> {
                         val petDistance = challengeDetail.petDistance
 
-        val challengeShareButton: Button = challengeDetailView.findViewById(R.id.challenge_screenshot)
+
+                        val petDistanceTitle = mutableListOf<String>()
+                        val petDistanceImage = mutableListOf<String>()
+
+                        for (i in 0 until petDistance[0].title?.size!!) {
+                            petDistanceTitle.add(petDistance[0].title!![i])
+                            petDistanceImage.add(petDistance[1].image!![i])
+                        }
+
+                        val challengeAdapter = ChallengeDetailAdapter(petDistanceTitle, petDistanceImage, context as Activity)
+                        challengeDetailRecyclerView.adapter = challengeAdapter
+
+                    }
+                    1 -> {
+                        val petCourse = challengeDetail.petCourse
+
+                        val petCourseTitle = mutableListOf<String>()
+                        val petCourseImage = mutableListOf<String>()
+
+                        for (i in 0 until petCourse[0].title?.size!!) {
+                            petCourseTitle.add(petCourse[0].title!![i])
+                            petCourseImage.add(petCourse[1].image!![i])
+                        }
+
+                        val challengeAdapter = ChallengeDetailAdapter(petCourseTitle, petCourseImage, context as Activity)
+                        challengeDetailRecyclerView.adapter = challengeAdapter
+                    }
+                }
+
+            }
+        }
+    }
+
+    fun shareChallenge(challengeShareButton: Button, shareView: View) {
+
         challengeShareButton.setOnClickListener {
             Instacapture.capture(
                 this.requireActivity(),
@@ -222,14 +262,14 @@ private val shareButtonViewImage : Boolean = false
                     @RequiresApi(Build.VERSION_CODES.Q)
                     override fun onCaptureComplete(captureview: Bitmap) {
                         val capture: RecyclerView = requireView().findViewById(R.id.challenge_detail_recyclerView) as RecyclerView
-                        val shareButtonView: View = challengeDetailView.findViewById(R.id.challenge_detail_recyclerView)
-                        shareButtonView.visibility = View.GONE
+//                        val shareButtonView: View = challengeDetailView.findViewById(R.id.challenge_detail_recyclerView)
+                        shareView.visibility = View.GONE
                         capture.buildDrawingCache()
                         val captureview: Bitmap = capture.getDrawingCache()
                         val uri = saveImageExternal(captureview)
                         uri?.let {
                             if (!shareImageURI(uri)) {
-                                shareButtonView.visibility = View.VISIBLE
+                                shareView.visibility = View.VISIBLE
                             } else {
                                 shareImageURI(uri)
                             }
@@ -238,8 +278,8 @@ private val shareButtonViewImage : Boolean = false
                 }
             )
         }
-        return challengeDetailView
     }
+
     fun saveImageExternal(image: Bitmap): Uri? {
         val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
         var fos: OutputStream? = null
@@ -279,37 +319,6 @@ private val shareButtonViewImage : Boolean = false
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
         return shareButtonViewImage
-    }
-                        val petDistanceTitle = mutableListOf<String>()
-                        val petDistanceImage = mutableListOf<String>()
-
-                        for (i in 0 until petDistance[0].title?.size!!) {
-                            petDistanceTitle.add(petDistance[0].title!![i])
-                            petDistanceImage.add(petDistance[1].image!![i])
-                        }
-
-                        val challengeAdapter = ChallengeDetailAdapter(petDistanceTitle, petDistanceImage, context as Activity)
-                        challengeDetailRecyclerView.adapter = challengeAdapter
-
-                    }
-                    1 -> {
-                        val petCourse = challengeDetail.petCourse
-
-                        val petCourseTitle = mutableListOf<String>()
-                        val petCourseImage = mutableListOf<String>()
-
-                        for (i in 0 until petCourse[0].title?.size!!) {
-                            petCourseTitle.add(petCourse[0].title!![i])
-                            petCourseImage.add(petCourse[1].image!![i])
-                        }
-
-                        val challengeAdapter = ChallengeDetailAdapter(petCourseTitle, petCourseImage, context as Activity)
-                        challengeDetailRecyclerView.adapter = challengeAdapter
-                    }
-                }
-
-            }
-        }
     }
 
 

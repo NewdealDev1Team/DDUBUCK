@@ -41,9 +41,6 @@ import com.mapo.ddubuck.home.bottomSheet.*
 import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.mapo.ddubuck.home.FilterDrawer
-import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import com.mapo.ddubuck.mypage.BookmarkFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_mypage.*

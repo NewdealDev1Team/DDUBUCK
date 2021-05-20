@@ -64,7 +64,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
 
     private lateinit var activeFragment: Fragment
     //뷰모델
-    private val model: HomeMapViewModel by activityViewModels()
+    private val homemapViewModel: HomeMapViewModel by activityViewModels()
 
     var userRouteAdapter: UserRouteAdapter? = null
 
@@ -73,9 +73,6 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     private lateinit var caloriesFragment: CaloriesFragment
 
     private val userViewModel: MypageViewModel by activityViewModels()
-
-    //뷰모델
-    private val model: HomeMapViewModel by activityViewModels()
 
 
     //    private lateinit var v : View
@@ -113,7 +110,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
 
         setRecordInfo(stepCountInMypage,walkingTimeButtonRecord,courseEndButtonRecord,calorieButtonRecord)
 
-        model.recordMywalk.observe(viewLifecycleOwner,{ v ->
+        homemapViewModel.recordMywalk.observe(viewLifecycleOwner,{ v ->
             setRecordInfo(stepCountInMypage,walkingTimeButtonRecord,courseEndButtonRecord,calorieButtonRecord)
         })
 
