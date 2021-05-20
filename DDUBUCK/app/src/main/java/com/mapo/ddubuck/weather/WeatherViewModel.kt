@@ -50,4 +50,9 @@ class WeatherViewModel : ViewModel() {
         isSuccessfulResponse.value = value
 
     }
+
+    val weatherKeyword = MutableLiveData<String>()
+    fun setWeatherValue(value: String) {
+        weatherKeyword.value = value
+    }
 }

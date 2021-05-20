@@ -3,16 +3,27 @@ package com.mapo.ddubuck.mypage
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.isInvisible
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.internal.ContextUtils.getActivity
+import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class UserCourseDialog(
     private val title: String,
@@ -22,9 +33,12 @@ class UserCourseDialog(
     private val distance: String,
     private val height: String,
     private val result: String,
+    private val created_at: String,
+    private val audit: MutableList<Audit>,
     owner: Activity,
 ) : Dialog(owner) {
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +79,32 @@ class UserCourseDialog(
 
             deleteButton.setOnClickListener {
                 // 삭제 로직
+                val userValidation: Retrofit = Retrofit.Builder()
+                    .baseUrl("http://3.37.6.181:3000/set/User/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
+
+                // 테스트 ID 수정 필요
+                val userCourseServer: UserRouteAPI = userValidation.create(UserRouteAPI::class.java)
+                context.let { "1682936995" }.let {
+                    userCourseServer.deleteUserRoute(it, created_at)
+                        .enqueue(object : Callback<UserCourseDelete> {
+                            override fun onResponse(
+                                call: Call<UserCourseDelete>,
+                                response: Response<UserCourseDelete>,
+                            ) {
+                                Log.e("Success", "유저 경로 삭제 성공")
+
+                            }
+
+                            override fun onFailure(call: Call<UserCourseDelete>, t: Throwable) {
+                                Log.e("Error", t.message.toString())
+                            }
+                        })
+                }
+
+                dismiss()
+
             }
 
         } else if (result == "complete") {
@@ -74,7 +114,12 @@ class UserCourseDialog(
         }
 
 
-
     }
+
+//    fun updateReceiptsList(newAudit: ArrayList<Audit>) {
+//        listViewItemList.clear()
+//        listViewItemList.addAll(newlist)
+//        this.notifyDataSetChanged()
+//    }
 
 }

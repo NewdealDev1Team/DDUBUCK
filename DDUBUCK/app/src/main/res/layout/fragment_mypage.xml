@@ -1,325 +1,331 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/scrollview_mypage"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <RelativeLayout
-        android:id="@+id/scrollview_mypage"
-        android:layout_width="wrap_content"
+    <ScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical">
-
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/mypage_profile_area"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="38dp"
-                android:orientation="horizontal"
-                tools:ignore="MissingConstraints">
+                android:layout_height="match_parent"
+                android:layout_marginTop="35dp"
+                android:orientation="vertical">
 
-                <RelativeLayout
-                    android:layout_width="73dp"
-                    android:layout_height="73dp">
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/mypage_image_layout"
-                        android:padding="2dp"
-                        android:src="@drawable/ic_ddubuck_logo" />
-
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/profile_edit_button"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:background="@drawable/profile_image_edit_style"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_pencil" />
-
-                </RelativeLayout>
-
-
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="22dp"
-                    android:text="김달려"
-                    android:textColor="@color/black"
-                    android:textSize="16dp"
-                    android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/mypage_profile_area"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="38dp"
                     android:orientation="horizontal"
-                    tools:ignore="RtlHardcoded">
+                    tools:ignore="MissingConstraints">
+
+                    <RelativeLayout
+                        android:layout_width="73dp"
+                        android:layout_height="73dp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/mypage_image_layout"
+                            android:padding="2dp"
+                            android:src="@drawable/ic_ddubuck_logo" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/profile_edit_button"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/profile_image_edit_style"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_pencil" />
+
+                    </RelativeLayout>
+
 
                     <TextView
-                        android:id="@+id/step_count"
+                        android:id="@+id/user_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:text="4,300"
-                        android:textAlignment="textEnd"
-                        android:textColor="#3DAB5B"
-                        android:textSize="22dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="22dp"
+                        android:text="김달려"
+                        android:textColor="@color/black"
+                        android:textSize="16dp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/step_text"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginTop="18dp"
-                        android:text="걸음"
-                        android:textAlignment="textEnd"
-                        android:textColor="@color/black"
-                        android:textSize="14dp" />
+                        android:gravity="right"
+                        android:orientation="horizontal"
+                        tools:ignore="RtlHardcoded">
+
+                        <TextView
+                            android:id="@+id/step_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:text="4,300"
+                            android:textAlignment="textEnd"
+                            android:textColor="#3DAB5B"
+                            android:textSize="22dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/step_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="4dp"
+                            android:layout_marginTop="18dp"
+                            android:text="걸음"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/black"
+                            android:textSize="14dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
 
-
-            <View
-                android:id="@+id/mypage_divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="22dp"
-                android:layout_marginRight="16dp"
-                android:background="@color/grey"
-                app:layout_constraintTop_toBottomOf="@+id/mypage_profile_area"
-                tools:ignore="MissingConstraints" />
-
-            <TextView
-                android:id="@+id/my_walk_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="30dp"
-                android:text="나의 산책"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/mypage_divider" />
-
-            <LinearLayout
-                android:id="@+id/walking_result_area"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:gravity="center"
-                android:weightSum="3"
-                app:layout_constraintTop_toBottomOf="@+id/my_walk_title"
-                tools:ignore="MissingConstraints">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/walking_time_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_weight="1"
-                    android:background="@drawable/mypage_time_button_style"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingTop="18dp">
-
-                    <TextView
-                        android:id="@+id/walking_time_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="25dp"
-                        android:paddingRight="24dp"
-                        android:text="산책 시간"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="14dp" />
-
-                    <TextView
-                        android:id="@+id/walking_time_button_record"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginTop="4dp"
-                        android:paddingBottom="19dp"
-                        android:text="30분"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        app:layout_constraintTop_toBottomOf="@+id/walking_time_title"
-                        tools:layout_editor_absoluteX="0dp" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/course_complete_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/mypage_course_button_style"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingTop="18dp">
-
-                    <TextView
-                        android:id="@+id/course_end_button_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="25dp"
-                        android:paddingRight="24dp"
-                        android:text="코스 완주"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="14dp" />
-
-                    <TextView
-                        android:id="@+id/course_end_button_record"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:layout_marginTop="4dp"
-                        android:paddingBottom="19dp"
-                        android:text="30분"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        app:layout_constraintTop_toBottomOf="@+id/course_end_button_title" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/calorie_button"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/mypage_calorie_button_style"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:paddingTop="18dp">
-
-                    <TextView
-                        android:id="@+id/calorie_button_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="25dp"
-                        android:paddingRight="24dp"
-                        android:text="칼로리"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="14dp" />
-
-                    <TextView
-                        android:id="@+id/calorie_button_record"
-                        android:layout_width="match_parent"
-                        android:layout_height="45dp"
-                        android:paddingBottom="19dp"
-                        android:layout_marginTop="4dp"
-                        android:gravity="center"
-                        android:text="30분"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        app:layout_constraintTop_toBottomOf="@+id/calorie_button_title" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/my_gallary_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="30dp"
-                android:text="나의 갤러리"
-                android:textColor="@color/black"
-                android:textSize="18dp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/walking_result_area" />
-
-            <GridView
-                android:id="@+id/gallery_grid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="19dp"
-                android:layout_marginRight="16dp"
-                android:numColumns="4" />
-
-
-            <View
-                android:id="@+id/mypage_divider_big"
-                android:layout_width="match_parent"
-                android:layout_height="6dp"
-                android:layout_marginTop="22dp"
-                android:background="#10767676"
-                app:layout_constraintTop_toBottomOf="@+id/my_gallary_title"
-                tools:ignore="MissingConstraints" />
-
-
-            <RelativeLayout
-                android:id="@+id/user_route_title_area"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/mypage_divider_big">
+                <View
+                    android:id="@+id/mypage_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/grey"
+                    app:layout_constraintTop_toBottomOf="@+id/mypage_profile_area"
+                    tools:ignore="MissingConstraints" />
 
                 <TextView
-                    android:id="@+id/user_route_title"
+                    android:id="@+id/my_walk_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:text="사용자 지정 경로"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="30dp"
+                    android:text="나의 산책"
                     android:textColor="@color/black"
                     android:textSize="18dp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/mypage_divider" />
 
-                <ImageView
-                    android:id="@+id/user_route_info_button"
+                <LinearLayout
+                    android:id="@+id/walking_result_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="center"
+                    android:weightSum="3"
+                    app:layout_constraintTop_toBottomOf="@+id/my_walk_title"
+                    tools:ignore="MissingConstraints">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/walking_time_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_weight="1"
+                        android:background="@drawable/mypage_time_button_style"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingTop="18dp">
+
+                        <TextView
+                            android:id="@+id/walking_time_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="25dp"
+                            android:paddingRight="24dp"
+                            android:text="산책 시간"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/walking_time_button_record"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="4dp"
+                            android:paddingBottom="19dp"
+                            android:text="30분"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@+id/walking_time_title"
+                            tools:layout_editor_absoluteX="0dp" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/course_complete_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/mypage_course_button_style"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingTop="18dp">
+
+                        <TextView
+                            android:id="@+id/course_end_button_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="25dp"
+                            android:paddingRight="24dp"
+                            android:text="코스 완주"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/course_end_button_record"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:layout_marginTop="4dp"
+                            android:paddingBottom="19dp"
+                            android:text="30분"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@+id/course_end_button_title" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/calorie_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/mypage_calorie_button_style"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:paddingTop="18dp">
+
+                        <TextView
+                            android:id="@+id/calorie_button_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="25dp"
+                            android:paddingRight="24dp"
+                            android:text="칼로리"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/calorie_button_record"
+                            android:layout_width="match_parent"
+                            android:layout_height="45dp"
+                            android:paddingBottom="19dp"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center"
+                            android:text="30분"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            app:layout_constraintTop_toBottomOf="@+id/calorie_button_title" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/my_gallary_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="30dp"
+                    android:text="나의 갤러리"
+                    android:textColor="@color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toBottomOf="@id/walking_result_area" />
+
+                <GridView
+                    android:id="@+id/gallery_grid"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:src="@drawable/ic_info" />
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="19dp"
+                    android:layout_marginRight="16dp"
+                    android:numColumns="4" />
 
-            </RelativeLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/user_route_recyclerview"
-                android:layout_marginBottom="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <View
+                    android:id="@+id/mypage_divider_big"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:layout_marginTop="22dp"
+                    android:background="#10767676"
+                    app:layout_constraintTop_toBottomOf="@+id/my_gallary_title"
+                    tools:ignore="MissingConstraints" />
 
-        </LinearLayout>
-    </RelativeLayout>
-</ScrollView>
+
+                <RelativeLayout
+                    android:id="@+id/user_route_title_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/mypage_divider_big">
+
+                    <TextView
+                        android:id="@+id/user_route_area_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:text="사용자 지정 경로"
+                        android:textColor="@color/black"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/user_route_info_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/ic_info" />
+
+                </RelativeLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:clipToPadding="false"
+                    android:id="@+id/user_route_recyclerview"
+                    android:layout_marginBottom="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+
+</FrameLayout>

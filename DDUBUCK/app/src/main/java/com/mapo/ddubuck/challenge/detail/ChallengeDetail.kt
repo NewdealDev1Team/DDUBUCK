@@ -1,49 +1,52 @@
 package com.mapo.ddubuck.challenge.detail
 
-data class ChallengeDetail (
+import com.google.gson.JsonArray
+import com.google.gson.annotations.SerializedName
 
-    var title: String,
-    var image: Int
-//    var distance : ArrayList<ChallengeDistance>,
-//    var walkingCount : ArrayList<ChallengeWalkingCount>,
-//    var courseComplete : ArrayList<ChallengeCourseComplete>,
-//    var place : ArrayList<ChallengePlace>,
-//    var weather : ArrayList<ChallengeWeather>,
-//    var petDistance : ArrayList<ChallengePetDistance>,
-//    var petComplete : ArrayList<ChallengePetComplete>
-)
+class ChallengeDetail {
+    var distance = ArrayList<ChallengeDistance>()
+    var stepCount = ArrayList<ChallengeWalkingCount>()
+    var course = ArrayList<ChallengeCourseComplete>()
+    var place = ArrayList<ChallengePlace>()
+    var weather = ArrayList<ChallengeWeather>()
+    @SerializedName("pet_distance")
+    var petDistance = ArrayList<ChallengePetDistance>()
+    @SerializedName("pet_course")
+    var petCourse = ArrayList<ChallengePetComplete>()
+
+}
 
 class ChallengeDistance {
-    var title: String? = null
-    var image: Int? = null
+    var title: List<String>? = null
+    var image: List<String>? = null
 }
 
 class ChallengeWalkingCount {
-    var title: String? = null
-    var image: Int? = null
+    var title: List<String>? = null
+    var image: List<String>? = null
 }
 
 class ChallengeCourseComplete {
-    var title: String? = null
-    var image: Int? = null
+    var title: List<String>? = null
+    var image: List<String>? = null
 }
 
 class ChallengePlace {
-    var title: String? = null
-    var image: Int? = null
+    var title: List<String>? = null
+    var image: List<String>? = null
 }
 
 class ChallengeWeather {
-    var title: String? = null
-    var image: Int? = null
+    var title: List<String>? = null
+    var image: List<String>? = null
 }
 
 class ChallengePetDistance {
-    var title: String? = null
-    var image: Int? = null
+    var title: List<String>? = null
+    var image: List<String>? = null
 }
 
 class ChallengePetComplete {
-    var title: String? = null
-    var image: Int? = null
+    var title: List<String>? = null
+    var image: List<String>? = null
 }

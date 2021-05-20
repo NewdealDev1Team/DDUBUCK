@@ -1,282 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true"
-    android:id="@+id/edit_user_info"
     android:background="@color/white"
-    tools:ignore="ScrollViewCount">
+    xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <RelativeLayout
+
+    <ScrollView
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/user_basic_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="27dp"
-            android:orientation="vertical">
-
-            <RelativeLayout
-                android:layout_width="73dp"
-                android:layout_height="73dp">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_image_edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ic_ddubuck_logo"
-                    android:padding="2dp"
-                    android:background="@drawable/mypage_image_layout" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/profile_image_edit_button"
-                    android:padding="5dp"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:background="@drawable/profile_image_edit_style"
-                    android:src="@drawable/ic_pencil"/>
-
-            </RelativeLayout>
-
-            <TextView
-                android:id="@+id/edit_info_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
-                android:textAlignment="center"
-                android:textSize="19dp" />
-        </LinearLayout>
-
-
-        <TextView
-            android:id="@+id/my_info_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/user_basic_info"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="30dp"
-            android:text="내 정보"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/edit_info_area"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/my_info_title"
-            android:layout_alignParentStart="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:orientation="vertical">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:layout_weight="3"
-                >
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/year_textField"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginRight="4dp"
-                    android:layout_weight="1"
-                    >
-
-                    <AutoCompleteTextView
-                        android:textAlignment="center"
-                        android:inputType="number"
-                        android:id="@+id/year_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="10dp"
-                        android:textSize="14dp"
-                        android:hint="생년월일"
-                        android:layout_marginRight="4dp"/>
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/month_textField"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_marginRight="4dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_height="55dp"
-                    android:layout_weight="1">
-
-                    <AutoCompleteTextView
-                        android:textAlignment="center"
-                        android:id="@+id/month_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:inputType="number"
-                        android:padding="10dp"
-                        android:textSize="14dp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/day_textField"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginLeft="4dp"
-                    android:layout_weight="1">
-
-                    <AutoCompleteTextView
-                        android:textAlignment="center"
-                        android:id="@+id/day_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:padding="10dp"
-                        android:inputType="number"
-                        android:textSize="14dp" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:layout_weight="2">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/height_text_field"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginRight="8dp"
-                    android:hint="키"
-                    app:suffixText="cm"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/height_text_field_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14dp"
-                        android:inputType="phone" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/weight_text_field"
-                    android:inputType="phone"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="몸무게"
-                    app:suffixText="kg"
-                    android:textSize="14dp"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/weight_text_field_input"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="phone"
-                        />
-
-                </com.google.android.material.textfield.TextInputLayout>
-
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/mypage_edit_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:layout_marginBottom="25dp"
-                android:text="수정완료"
-                android:textSize="14dp"
-                android:paddingTop="14dp"
-                android:paddingBottom="14dp"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:background="@drawable/mypage_edit_button_activated"/>
-
-        </LinearLayout>
-
-        <View
-            android:id="@+id/after_info_divider"
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_below="@+id/edit_info_area"
-            android:layout_marginTop="15dp"
-            android:background="#10767676" />
-
-        <TextView
-            android:layout_marginLeft="16dp"
-            android:id="@+id/pet_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/after_info_divider"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="30dp"
-            android:text="반려동물 여부"
-            android:textColor="@color/black"
-            android:textSize="18dp"
-            android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:id="@+id/edit_user_info"
+        android:background="@color/white"
+        tools:ignore="ScrollViewCount">
 
         <RelativeLayout
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="30dp"
-            android:layout_below="@+id/pet_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_centerVertical="true"
-                android:layout_alignParentStart="true"
-                android:textSize="16dp"
-                android:textColor="@color/black"
-                android:text="반려동물"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <com.google.android.material.switchmaterial.SwitchMaterial
-                android:id="@+id/pet_switch"
-                app:useMaterialThemeColors="true"
-                app:theme="@style/SwitchStyle"
-                android:layout_marginRight="20dp"
-                android:layout_alignParentRight="true"
+            <LinearLayout
+                android:id="@+id/user_basic_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="27dp"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="73dp"
+                    android:layout_height="73dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image_edit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_ddubuck_logo"
+                        android:padding="2dp"
+                        android:background="@drawable/mypage_image_layout" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image_edit_button"
+                        android:padding="5dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:background="@drawable/profile_image_edit_style"
+                        android:src="@drawable/ic_pencil"/>
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/edit_info_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="11dp"
+                    android:textAlignment="center"
+                    android:textSize="19dp" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/my_info_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/user_basic_info"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="30dp"
+                android:text="내 정보"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/edit_info_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/my_info_title"
+                android:layout_alignParentStart="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="16dp"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="3"
+                    >
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/year_textField"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="1"
+                        >
+
+                        <AutoCompleteTextView
+                            android:textAlignment="center"
+                            android:inputType="number"
+                            android:id="@+id/year_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:textSize="14dp"
+                            android:hint="생년월일"
+                            android:layout_marginRight="4dp"/>
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/month_textField"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_height="55dp"
+                        android:layout_weight="1">
+
+                        <AutoCompleteTextView
+                            android:textAlignment="center"
+                            android:id="@+id/month_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="number"
+                            android:padding="10dp"
+                            android:textSize="14dp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/day_textField"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_weight="1">
+
+                        <AutoCompleteTextView
+                            android:textAlignment="center"
+                            android:id="@+id/day_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp"
+                            android:inputType="number"
+                            android:textSize="14dp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="2">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/height_text_field"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="8dp"
+                        android:hint="키"
+                        app:suffixText="cm"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/height_text_field_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14dp"
+                            android:inputType="phone" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/weight_text_field"
+                        android:inputType="phone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="몸무게"
+                        app:suffixText="kg"
+                        android:textSize="14dp"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/weight_text_field_input"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/mypage_edit_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="25dp"
+                    android:text="수정완료"
+                    android:textSize="14dp"
+                    android:paddingTop="14dp"
+                    android:paddingBottom="14dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:background="@drawable/mypage_edit_button_activated"/>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/after_info_divider"
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:layout_below="@+id/edit_info_area"
+                android:layout_marginTop="15dp"
+                android:background="#10767676" />
+
+            <TextView
+                android:layout_marginLeft="16dp"
+                android:id="@+id/pet_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/after_info_divider"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="30dp"
+                android:text="반려동물 여부"
+                android:textColor="@color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="30dp"
+                android:layout_below="@+id/pet_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentStart="true"
+                    android:textSize="16dp"
+                    android:textColor="@color/black"
+                    android:text="반려동물"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/pet_switch"
+                    app:useMaterialThemeColors="true"
+                    app:theme="@style/SwitchStyle"
+                    android:layout_marginRight="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+            </RelativeLayout>
 
 
         </RelativeLayout>
 
 
-    </RelativeLayout>
 
+    </ScrollView>
 
-
-</ScrollView>
+</FrameLayout>

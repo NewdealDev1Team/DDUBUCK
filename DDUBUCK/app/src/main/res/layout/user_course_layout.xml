@@ -5,15 +5,16 @@
     android:layout_marginBottom="5dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:elevation="5dp"
+    android:elevation="3dp"
+    android:clipToPadding="false"
     android:background="@drawable/user_route_item_style"
     android:layout_height="60dp">
 
     <TextView
-        android:id="@+id/user_route_title"
+        android:id="@+id/user_route_view_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="21dp"
+        android:layout_marginStart="21dp"
         android:layout_centerVertical="true"
         android:text="망리단길 투어"
         android:textSize="16dp"
@@ -32,7 +33,7 @@
         android:paddingRight="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:textSize="12dp"/>
 
     <TextView
@@ -49,7 +50,7 @@
         android:paddingRight="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
         android:textSize="12dp"/>
 
 </RelativeLayout>

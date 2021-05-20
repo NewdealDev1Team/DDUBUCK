@@ -108,7 +108,7 @@
         android:layout_width="match_parent"
         android:layout_height="6dp"
         android:layout_marginTop="18dp"
-        android:background="@color/grey"
+        android:background="#10767676"
         tools:ignore="MissingConstraints" />
 
     <TextView
