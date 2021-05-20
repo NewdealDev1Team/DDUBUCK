@@ -117,12 +117,12 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                 override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
                     if (response.isSuccessful) {
                         Log.d("text", "연결성공")
-                        var stepCount = response.body()?.weekStat?.get(5)?.stepCount?.toInt()
+                        var stepCount = response.body()?.weekStat?.get(6)?.stepCount?.toInt()
                         val setCountRecordText: TextView = stepCountInMypage //TextView
                         setCountRecordText.setText(stepCount.toString())
 
 
-                        var timeRecordt6 = response.body()?.weekStat?.get(5)?.walkTime?.toInt()
+                        var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
                         val walkingTimeButtonRecord: TextView =
                             myPageView.findViewById(R.id.walking_time_button_record)
@@ -137,14 +137,14 @@ class MyPageFragment : Fragment(), UserRouteCallback {
 
 
                         var courseRecord6 =
-                            response.body()?.weekStat?.get(5)?.completedCount?.toInt()
+                            response.body()?.weekStat?.get(6)?.completedCount?.toInt()
                         val courseEndButtonRecordFormat: Int = courseRecord6!!.toInt()
                         val courseEndButtonRecord: TextView =
                             myPageView.findViewById(R.id.course_end_button_record)
                         val countName: String = "번"
                         courseEndButtonRecord.setText(courseRecord6.toString() + countName)
 
-                        var calorieRecord6 = response.body()?.weekStat?.get(5)?.calorie?.toInt()
+                        var calorieRecord6 = response.body()?.weekStat?.get(6)?.calorie?.toInt()
                         val walkingtimeButtonRecordFormat: Int = calorieRecord6!!.toInt()
                         val calorieButtonRecord: TextView =
                             myPageView.findViewById(R.id.calorie_button_record)
