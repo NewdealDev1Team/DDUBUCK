@@ -13,7 +13,6 @@ import com.mapo.ddubuck.login.LoginActivity
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 
 class SettingFragment : Fragment() {
-    // ("내 정보 수정페이지에서 setting 넘어가면 앱 튕김 현상")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
