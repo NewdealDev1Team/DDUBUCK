@@ -176,7 +176,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     }
 
 
-    private fun initPublicData(x:Double, y:Double) {
+    private fun initPublicData(x:Double, y:Double, userKey:String) {
 
         markers[FilterDrawer.PUBLIC_TOILET] = mutableListOf()
         markers[FilterDrawer.PUBLIC_REST_AREA] = mutableListOf()
@@ -185,7 +185,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         markers[FilterDrawer.CAR_FREE_ROAD]= mutableListOf()
         markers[FilterDrawer.CAFE]= mutableListOf()
 
-        RetrofitClient.publicDataInstance.getResult(x,y)
+        RetrofitClient.publicDataInstance.getResult(x,y,userKey)
             .enqueue(object : Callback<PublicData> {
                 override fun onResponse(call: Call<PublicData>, response: Response<PublicData>) {
                     if(response.body() != null) {
@@ -525,17 +525,17 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             val point = LatLng(lat, lng)
             if(!isLocationDataInitialized) {
                 model.recordPosition(point)
-                initPublicData(lat,lng)
+                initPublicData(lat,lng, userKey)
                 initialPosition = point
                 isLocationDataInitialized=true
             }
         }
         HomeMapService.currentLocation.observe(viewLifecycleOwner, {v->
-            onLocationChangedListener(v)
+            onLocationChangedListener(v, userKey)
         })
     }
 
-    private fun onLocationChangedListener (location:Location) {
+    private fun onLocationChangedListener (location:Location, userKey: String) {
         val lat = location.latitude
         val lng = location.longitude
         val point = LatLng(lat, lng)
@@ -543,7 +543,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         val alt = location.altitude
         if(!isLocationDataInitialized) {
             model.recordPosition(point)
-            initPublicData(lat,lng)
+            initPublicData(lat,lng, userKey)
             initialPosition = point
             isLocationDataInitialized=true
         }
