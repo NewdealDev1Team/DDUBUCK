@@ -67,6 +67,7 @@ class RetrofitService {
         map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
         map["speed"] = walkRecord.speed
+        map["walkTime"] = walkRecord.walkTime
         map["stepCount"] = walkRecord.stepCount
         map["distance"] = walkRecord.distance
         map["path"] = Gson().toJson(walkRecord.pathToMap())
