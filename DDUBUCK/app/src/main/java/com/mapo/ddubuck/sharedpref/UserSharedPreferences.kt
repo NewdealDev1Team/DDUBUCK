@@ -82,9 +82,9 @@ object UserSharedPreferences {
         editor.apply()
     }
 
-    fun getUserWeignt(context: Context, weight: String): Double {
+    fun getUserWeight(context: Context): String {
         val prefs : SharedPreferences = context.getSharedPreferences("userWeight", Context.MODE_PRIVATE)
-        return prefs.getString("ACCOUNT_ID", weight)!!.toDouble()
+        return prefs.getString("USER_WEIGHT", "")!!.toString()
     }
 
 }

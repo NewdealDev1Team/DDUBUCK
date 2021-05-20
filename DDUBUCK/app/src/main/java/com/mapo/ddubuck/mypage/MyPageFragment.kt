@@ -260,6 +260,8 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                 ) {
                     val name = response.body()?.name
                     val profileImageURL = response.body()?.picture
+                    val weight = response.body()?.weight
+                    UserSharedPreferences.setUserWeight(context!!, weight!!)
 
                     userViewModel.setUserValue(name.toString())
 
