@@ -117,7 +117,11 @@ class BottomSheetSelectRvAdapter(
                         bookmark.setImageResource(R.drawable.ic_bookmark_color)
                         bookmark.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                     } else {
-                        bookmarkedCourse.remove(i)
+                        for(e in bookmarkedCourse) {
+                            if(i.compareTo(e)){
+                                bookmarkedCourse.remove(e)
+                            }
+                        }
                         UserSharedPreferences.setBookmarkedCourse(owner, bookmarkedCourse)
                         isBookmarked = false
                         bookmark.setImageResource(R.drawable.ic_bookmark_empty_black)
