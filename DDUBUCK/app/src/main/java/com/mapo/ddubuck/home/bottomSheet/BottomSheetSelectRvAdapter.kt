@@ -1,5 +1,7 @@
 package com.mapo.ddubuck.home.bottomSheet
 
+import android.app.Activity
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,16 +10,22 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.home.HomeFragment
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import kotlin.collections.ArrayList
 
-class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
+class BottomSheetSelectRvAdapter(
+                                 private val owner:Activity,
+                                 private val itemList: ArrayList<CourseItem>,
                                  private val fm: FragmentManager,):
     RecyclerView.Adapter<BottomSheetSelectRvAdapter.Holder>() {
+
+    val bookmarkedCourse : ArrayList<CourseItem> = UserSharedPreferences.getBookmarkedCourse(owner)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.bottom_sheet_select_item, parent, false)
@@ -61,7 +69,7 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
         private val title = itemView?.findViewById<TextView>(R.id.sheet_select_item_titleTv)
         private val body = itemView?.findViewById<TextView>(R.id.sheet_select_item_bodyTv)
         private val picture = itemView?.findViewById<ImageView>(R.id.sheet_select_item_pictureIv)
-
+        private val bookmark = itemView?.findViewById<ImageView>(R.id.sheet_select_item_bookmark)
         fun bind(i: CourseItem, fm: FragmentManager) {
             if(i.isFreeWalk) {
                 itemView.setOnClickListener{
@@ -80,6 +88,9 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                 picture?.setImageResource(R.drawable.ic_walk_free)
                 picture?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                 picture?.clipToOutline = true
+                bookmark?.setOnClickListener {
+                    Log.e("어이","누르지마쇼")
+                }
             } else {
                 itemView.setOnClickListener{selectItem(fm,i)}
                 title?.text = i.title
@@ -89,6 +100,30 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                 }
                 picture?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                 picture?.clipToOutline = true
+                var isBookmarked = false
+                for(e in bookmarkedCourse) {
+                    if(i.compareTo(e)){
+                        isBookmarked = true
+                    }
+                }
+                if(isBookmarked) {
+                    bookmark?.setImageResource(R.drawable.ic_bookmark_color)
+                    bookmark?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
+                }
+                bookmark?.setOnClickListener {
+                    if(!isBookmarked) {
+                        bookmarkedCourse.add(i)
+                        UserSharedPreferences.setBookmarkedCourse(owner, bookmarkedCourse)
+                        bookmark.setImageResource(R.drawable.ic_bookmark_color)
+                        bookmark.setBackgroundResource(R.drawable.sheet_select_item_rounded)
+                    } else {
+                        bookmarkedCourse.remove(i)
+                        UserSharedPreferences.setBookmarkedCourse(owner, bookmarkedCourse)
+                        isBookmarked = false
+                        bookmark.setImageResource(R.drawable.ic_bookmark_empty_black)
+                        bookmark.setBackgroundResource(R.drawable.sheet_select_item_rounded)
+                    }
+                }
             }
         }
 

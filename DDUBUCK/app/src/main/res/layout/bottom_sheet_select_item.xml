@@ -59,7 +59,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginHorizontal="22dp"
         android:src="@drawable/ic_bookmark_empty_black"
-
+        android:background="@drawable/common_ripple"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sheet_select_item_pictureIv" />
 

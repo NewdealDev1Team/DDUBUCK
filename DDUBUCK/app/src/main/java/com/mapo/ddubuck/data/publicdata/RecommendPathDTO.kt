@@ -33,7 +33,7 @@ data class RecommendPathDTO(
     fun toCourseItem() : CourseItem{
         return CourseItem(
             false,
-            Uri.parse(picture),
+            picture,
             title,
             description,
             this.toWalkRecord()

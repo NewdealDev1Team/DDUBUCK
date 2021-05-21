@@ -16,7 +16,6 @@ import com.mapo.ddubuck.weather.WeatherViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class HomeFragment(private val owner: Activity) : Fragment() {
-
     private val weatherViewModel: WeatherViewModel by activityViewModels()
     private val mapViewModel : HomeMapViewModel by activityViewModels()
     private lateinit var homeMapFragment: HomeMapFragment
@@ -65,7 +64,7 @@ class HomeFragment(private val owner: Activity) : Fragment() {
 
         val bottomSheetFrame = root.findViewById<ConstraintLayout>(R.id.bottom_sheet_frame)
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetFrame)
-        val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment()
+        val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment(owner)
         fm.beginTransaction().add(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
 
         /*
