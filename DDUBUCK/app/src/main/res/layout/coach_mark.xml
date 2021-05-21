@@ -6,36 +6,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<!--    <com.github.mmin18.widget.RealtimeBlurView-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:adjustViewBounds="true"-->
-<!--        android:scaleType="fitXY"-->
-<!--        android:src="@drawable/coach_mark_background"-->
-<!--        app:realtimeBlurRadius="5dp"-->
-<!--        app:realtimeOverlayColor="#65000000" />-->
+        <com.github.mmin18.widget.RealtimeBlurView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/coach_mark_background"
+            app:realtimeBlurRadius="5dp"
+            app:realtimeOverlayColor="#65000000" />
     <!--    android:src="@drawable/coach_mark_background"-->
     <!--    android:scaleType="fitXY"-->
     <!--        scaleType : 화면 Full Screen-->
     <!--        realtimeBlurRadius : 블러 강도-->
     <!--        realtimeOverlayColor : 덮혀질 색-->
 
-
-    <ImageView
-        android:id="@+id/coach_marks_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_weight="1"
-        android:layout_alignParentBottom="true"
-        android:foregroundGravity="bottom"
-        android:gravity="bottom|center_horizontal"
-        android:src="@drawable/coach_mark" />
-<!--    android:src="@drawable/coach_mark" />-->
-<!--    android:scaleType="fitCenter"-->
-<!--    android:adjustViewBounds="true"-->
-<!--    android:layout_gravity="center"-->
+        <ImageView
+            android:id="@+id/coach_marks_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="bottom|center_horizontal"
+            android:src="@drawable/coach_marks" />
 
 
     <ImageButton
