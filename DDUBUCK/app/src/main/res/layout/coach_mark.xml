@@ -13,6 +13,7 @@
             android:src="@drawable/coach_mark_background"
             app:realtimeBlurRadius="5dp"
             app:realtimeOverlayColor="#65000000" />
+
     <!--    android:src="@drawable/coach_mark_background"-->
     <!--    android:scaleType="fitXY"-->
     <!--        scaleType : 화면 Full Screen-->
@@ -21,8 +22,8 @@
 
         <ImageView
             android:id="@+id/coach_marks_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:gravity="bottom|center_horizontal"
             android:src="@drawable/coach_marks" />
