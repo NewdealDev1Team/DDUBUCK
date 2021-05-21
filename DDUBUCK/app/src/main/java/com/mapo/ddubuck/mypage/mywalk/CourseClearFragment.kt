@@ -119,7 +119,7 @@ class CourseClearFragment : Fragment() {
 
         return rootView
     }
-
+    // --- 캡처 후 공유 --
     private fun takeAndShareScreenShot(shareButtonView: View) {
         Instacapture.capture(this.requireActivity(),
             object : SimpleScreenCapturingListener() {

@@ -1,12 +1,10 @@
 package com.mapo.ddubuck.mypage.mywalk
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -50,6 +48,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 import id.co.barchartresearch.ChartData
+import kotlinx.android.synthetic.main.activity_bar_chart.view.*
 import kotlinx.android.synthetic.main.fragment_walk_time.*
 
 class WalkTimeFragment : Fragment() {
@@ -93,10 +92,15 @@ class WalkTimeFragment : Fragment() {
         )
     }
 
+    private val customMarkerView by lazy {
+        CustomMarketView(this.requireContext(), R.layout.item_marker_view)
+    }
+
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     private val shareButtonViewImage : Boolean = false
 
+    @SuppressLint("ResourceType")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -192,7 +196,9 @@ class WalkTimeFragment : Fragment() {
 
     // -- 바 차트 커스텀 --
     fun initChart(chart: BarChart) {
+//        customMarkerView.chartView = chart
         with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
+//            marker = customMarkerView
             description.isEnabled = false
             legend.isEnabled = false
             isDoubleTapToZoomEnabled = false
@@ -233,7 +239,7 @@ class WalkTimeFragment : Fragment() {
             highLightAlpha = 0
         }
 
-        //data 클릭 시 분으로 나오는 커스텀
+        //data 클릭시 분으로 나오는 커스텀
         barDataSet.valueFormatter = object : ValueFormatter() {
             private val mFormat: DecimalFormat = DecimalFormat("###")
             fun getFormattedValue(

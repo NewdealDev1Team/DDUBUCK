@@ -108,7 +108,6 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
     private val shareButtonViewImage : Boolean = false
 
     override fun onCreateView(
-        //프래그먼트가 인터페이스를 처음 그릴때 사용함
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -134,6 +133,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
         return rootView
     }
+    // --- 캡처 후 공유 --
     private fun takeAndShareScreenShot(shareButtonView: View) {
         Instacapture.capture(this.requireActivity(),
             object : SimpleScreenCapturingListener() {
@@ -154,10 +154,48 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                 }
             }, calorie_share_button)
     }
+    fun saveImageExternal(image: Bitmap): Uri? {
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+        var uri: Uri? = null
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
+        }
 
+        //use application context to get contentResolver
+        val contentResolver = this.requireActivity().contentResolver
+
+        contentResolver.also { resolver ->
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = uri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(uri!!, contentValues, null, null)
+
+        return uri!!
+    }
+
+    fun shareImageURI(uri: Uri) :Boolean {
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "message/rfc822"
+            type = "image/*"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Send to"))
+        return shareButtonViewImage
+    }
+    // -- 바 차트 커스텀 --
     fun initChart(chart: BarChart){
-        //바 차트 커스텀
-        with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
+        with(chart) {
             description.isEnabled = false
             legend.isEnabled = false
             isDoubleTapToZoomEnabled = false
@@ -182,7 +220,6 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
         val barDataSet = BarDataSet(values, "").apply {
             setDrawValues(false)
-            //차트 색상
 
             val colors = ArrayList<Int>()
             colors.add(Color.argb(55, 250, 168, 46));
@@ -196,7 +233,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
             //투명,불투명
             highLightAlpha = 0
         }
-        //data 클릭 시 분으로 나오는 커스텀??????????
+        //data 클릭 시 분으로 나오는 커스텀
         barDataSet.valueFormatter = object : ValueFormatter() {
             private val mFormat: DecimalFormat = DecimalFormat("###")
             fun getFormattedValue(
@@ -281,45 +318,6 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
             this.data = data
             invalidate()
         }
-    }
-    fun saveImageExternal(image: Bitmap): Uri? {
-        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
-        var fos: OutputStream? = null
-        var uri: Uri? = null
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            put(MediaStore.Video.Media.IS_PENDING, 1)
-        }
-
-        //use application context to get contentResolver
-        val contentResolver = this.requireActivity().contentResolver
-
-        contentResolver.also { resolver ->
-            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            fos = uri?.let { resolver.openOutputStream(it) }
-        }
-
-        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
-
-        contentValues.clear()
-        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
-        contentResolver.update(uri!!, contentValues, null, null)
-
-        return uri!!
-    }
-
-    fun shareImageURI(uri: Uri) :Boolean {
-        val shareIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
-            type = "message/rfc822"
-            type = "image/*"
-        }
-
-        startActivity(Intent.createChooser(shareIntent, "Send to"))
-        return shareButtonViewImage
     }
 
     //  -- 산책 기록 API Call --
