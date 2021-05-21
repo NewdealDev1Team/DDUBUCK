@@ -119,7 +119,7 @@ class WalkTimeFragment : Fragment() {
         setOneWeekRecordInfo(miniTitle, titleUserName)
         //바 차트
         chart = rootView.findViewById(R.id.time_bar_chart)
-        chart.setNoDataText("Loading")
+        chart.setNoDataText("")
 
         initChart(chart)
 

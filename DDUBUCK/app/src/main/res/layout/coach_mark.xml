@@ -6,27 +6,51 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-        <com.github.mmin18.widget.RealtimeBlurView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:src="@drawable/coach_mark_background"
-            app:realtimeBlurRadius="5dp"
-            app:realtimeOverlayColor="#65000000" />
+    <ImageView
+        android:id="@+id/coach_marks_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="bottom|center_horizontal"
+        android:background="#00ffffff"
+        android:src="@drawable/coach_mark_background" />
 
-    <!--    android:src="@drawable/coach_mark_background"-->
-    <!--    android:scaleType="fitXY"-->
-    <!--        scaleType : 화면 Full Screen-->
-    <!--        realtimeBlurRadius : 블러 강도-->
-    <!--        realtimeOverlayColor : 덮혀질 색-->
+    <ImageView
+        android:id="@+id/top1"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="right|top"
+        android:background="#00ffffff"
+        android:src="@drawable/coach_mark_item_top" />
 
-        <ImageView
-            android:id="@+id/coach_marks_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:gravity="bottom|center_horizontal"
-            android:src="@drawable/coach_marks" />
+    <ImageView
+        android:id="@+id/top2"
+        android:layout_width="132dp"
+        android:layout_height="32dp"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="114dp"
+        android:src="@drawable/coach_mark_item_top" />
+
+    <ImageView
+        android:id="@+id/top3"
+        android:layout_width="132dp"
+        android:layout_height="18sp"
+        android:layout_gravity="left|bottom"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="209dp"
+        android:src="@drawable/coach_mark_item_top" />
+
+
+    <ImageView
+        android:id="@+id/top4"
+        android:layout_width="132dp"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="30dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="58dp"
+        android:src="@drawable/coach_mark_item_top" />
 
 
     <ImageButton

@@ -110,7 +110,7 @@ class CourseClearFragment : Fragment() {
         setOneWeekRecordInfo(miniTitle,AllCourseCount,courseUserName)
 
         chart = rootView.findViewById(R.id.course_bar_chart)
-        chart.setNoDataText("Loading")
+        chart.setNoDataText("")
         initChart(chart)
 
         val shareButtonView: View = rootView.findViewById(R.id.course_share_button)

@@ -124,7 +124,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         setOneWeekRecordInfo(miniTitle,calorieUserName)
 
         chart = rootView.findViewById(R.id.calories_bar_chart)
-        chart.setNoDataText("Loading")
+        chart.setNoDataText("")
         initChart(chart)
 
         val button: Button = rootView.findViewById(R.id.calorie_share_button)
