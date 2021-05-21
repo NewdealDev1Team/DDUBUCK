@@ -20,11 +20,6 @@ object UserSharedPreferences {
         val prefs : SharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE)
         return prefs.getString("ACCOUNT_ID", "").toString()
     }
-//
-//    fun passUser(context: Context): String {
-//        val prefs : SharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE)
-//        return prefs.getString("ACCOUNT_ID", "").toString()
-//    }
 
     fun setAutoLogin(context: Context, autoLoginCheckBox: CheckBox) {
         val prefs : SharedPreferences = context.getSharedPreferences("autoLogin", Context.MODE_PRIVATE)
