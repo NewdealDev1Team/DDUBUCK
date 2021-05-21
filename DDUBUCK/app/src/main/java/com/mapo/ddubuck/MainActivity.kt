@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
-    private val bookmarkFragment = BookmarkFragment()
+    private val bookmarkFragment = BookmarkFragment(this@MainActivity)
 
     private val drawerFragment = FilterDrawer(this@MainActivity)
 

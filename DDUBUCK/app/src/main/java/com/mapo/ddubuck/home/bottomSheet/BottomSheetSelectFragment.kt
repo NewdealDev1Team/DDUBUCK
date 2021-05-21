@@ -13,7 +13,6 @@ import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.home.HomeMapViewModel
-import com.naver.maps.geometry.LatLng
 
 class BottomSheetSelectFragment(private val owner:Activity) : Fragment() {
     private val homeMapViewModel: HomeMapViewModel by activityViewModels()

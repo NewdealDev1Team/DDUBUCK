@@ -1,5 +1,6 @@
 package com.mapo.ddubuck.mypage
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,10 +13,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.home.bottomSheet.BookmarkCourseAdapter
 import com.mapo.ddubuck.login.LoginActivity
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 
-class BookmarkFragment: Fragment() {
+class BookmarkFragment(private val owner : Activity): Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,7 +28,7 @@ class BookmarkFragment: Fragment() {
             container, false) as ViewGroup
 
         bookmarkViewGroup.findViewById<ViewPager2>(R.id.bookmark_course_viewpager).let { v->
-            val adapter = BookmarkCourseAdapter(initArray, parentFragmentManager)
+            val adapter = BookmarkCourseAdapter(owner, initArray, parentFragmentManager)
             v.adapter = adapter
         }
 
