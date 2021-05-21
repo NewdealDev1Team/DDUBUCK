@@ -110,7 +110,7 @@ class CourseClearFragment : Fragment() {
         setOneWeekRecordInfo(miniTitle,AllCourseCount,courseUserName)
 
         chart = rootView.findViewById(R.id.course_bar_chart)
-
+        chart.setNoDataText("Loading")
         initChart(chart)
 
         val shareButtonView: View = rootView.findViewById(R.id.course_share_button)
@@ -332,7 +332,7 @@ class CourseClearFragment : Fragment() {
                         var result4 = response.body()?.weekStat?.get(4)?.completedCount?.toFloat()
                         var result5 = response.body()?.weekStat?.get(5)?.completedCount?.toFloat()
                         var result6 = response.body()?.weekStat?.get(6)?.completedCount?.toFloat()
-                        Log.d("~~0번째 time~~~",
+                        Log.d("~~0번째~~~",
                             " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
 
                         val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()

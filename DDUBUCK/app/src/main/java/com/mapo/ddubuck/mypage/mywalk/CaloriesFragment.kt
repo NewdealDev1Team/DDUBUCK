@@ -88,6 +88,21 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
     private lateinit var chart: BarChart
 
+    //일주일 산책 기록 데이터
+    var oneWeekRecord = mutableListOf<Float>()
+
+    val listData by lazy {
+        mutableListOf(
+            ChartData(sixDaysAgo.format(formatter).toString(), oneWeekRecord[0]),
+            ChartData(fiveDaysAgo.format(formatter).toString(), oneWeekRecord[1]),
+            ChartData(fourDaysAgo.format(formatter).toString(), oneWeekRecord[2]),
+            ChartData(threeDaysAgo.format(formatter).toString(), oneWeekRecord[3]),
+            ChartData(twoDaysAgo.format(formatter).toString(), oneWeekRecord[4]),
+            ChartData(oneDaysAgo.format(formatter).toString(), oneWeekRecord[5]),
+            ChartData(dateNow.format(formatter).toString(), oneWeekRecord[6])
+        )
+    }
+
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     private val shareButtonViewImage : Boolean = false
@@ -98,254 +113,175 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        mainViewModel.toolbarTitle.value = "칼로리"
         val rootView: View = inflater.inflate(R.layout.fragment_calories, container, false)
 
-        mainViewModel.toolbarTitle.value = "칼로리"
-        context?.let { UserSharedPreferences.getUserId(it) }?.let {
-            var userKey : Int = it.toInt()
-            Log.d("userKey----","$userKey")
-            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<MyWalkRecordChartData> {
-                override fun onResponse(call: Call<MyWalkRecordChartData>, response: Response<MyWalkRecordChartData>) {
-                    if (response.isSuccessful) {
-                        Log.d("text", "연결성공")
-                        var result0 = response.body()?.weekStat?.get(0)?.calorie?.toFloat()
-                        var result1 = response.body()?.weekStat?.get(1)?.calorie?.toFloat()
-                        var result2 = response.body()?.weekStat?.get(2)?.calorie?.toFloat()
-                        var result3 = response.body()?.weekStat?.get(3)?.calorie?.toFloat()
-                        var result4 = response.body()?.weekStat?.get(4)?.calorie?.toFloat()
-                        var result5 = response.body()?.weekStat?.get(5)?.calorie?.toFloat()
-                        var result6 = response.body()?.weekStat?.get(6)?.calorie?.toFloat()
-                        Log.d("~~0번째 time~~~",
-                            " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
+        val day: TextView = rootView.findViewById(R.id.calorie_bottom_title_text_day)
+        day.setText(textformatterString)
+        val time: TextView = rootView.findViewById(R.id.calorie_bottom_title_text_time)
+        time.setText(calorieformatterString)
+        val miniTitle: TextView = rootView.findViewById(R.id.calories_mini_title)
+        val calorieUserName: TextView = rootView.findViewById(R.id.calorie_name)
+        setOneWeekRecordInfo(miniTitle,calorieUserName)
 
-                        val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
-                                + result3!!.toInt() + result4!!.toInt() + result5!!.toInt())
+        chart = rootView.findViewById(R.id.calories_bar_chart)
+        chart.setNoDataText("Loading")
+        initChart(chart)
 
-                        var calorieTitleName: String =
-                            response.body()?.weekStat?.get(0)?.name.toString()
-
-                        val listData by lazy {
-                            mutableListOf(
-                                ChartData(sixDaysAgo.format(formatter).toString(), result0!!),
-                                ChartData(fiveDaysAgo.format(formatter).toString(), result1!!),
-                                ChartData(fourDaysAgo.format(formatter).toString(), result2!!),
-                                ChartData(threeDaysAgo.format(formatter).toString(), result3!!),
-                                ChartData(twoDaysAgo.format(formatter).toString(), result4!!),
-                                ChartData(oneDaysAgo.format(formatter).toString(), result5!!),
-                                ChartData(dateNow.format(formatter).toString(), result6!!)
-                            )
-                        }
-
-                        chart = rootView.findViewById(R.id.calories_bar_chart)
-
-                        //바 차트 커스텀
-                        with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
-                            description.isEnabled = false
-                            legend.isEnabled = false
-                            isDoubleTapToZoomEnabled = false
-
-                            setPinchZoom(false)
-                            setDrawBarShadow(false)
-                            setDrawValueAboveBar(false)
-                            //차트 라운들 모양 커스텀
-                            val barChartRender =
-                                CustomBarChartRender(this, animator, viewPortHandler).apply {
-                                    setRadius(20)
-                                }
-                            renderer = barChartRender
-                        }
-                        fun setData(barData: List<ChartData>) {
-                            val values = mutableListOf<BarEntry>()
-                            barData.forEachIndexed { index, chartData ->
-                                values.add(BarEntry(index.toFloat(), chartData.value))
-                            }
-
-                            val barDataSet = BarDataSet(values, "").apply {
-                                setDrawValues(false)
-                                //차트 색상
-
-                                val colors = ArrayList<Int>()
-                                colors.add(Color.argb(55, 250, 168, 46));
-                                colors.add(Color.argb(55, 250, 168, 46));
-                                colors.add(Color.argb(55, 250, 168, 46));
-                                colors.add(Color.argb(55, 250, 168, 46));
-                                colors.add(Color.argb(55, 250, 168, 46));
-                                colors.add(Color.argb(55, 250, 168, 46));
-                                colors.add(Color.argb(200, 250, 168, 46));
-                                setColors(colors)
-                                //투명,불투명
-                                highLightAlpha = 0
-                            }
-                            //data 클릭 시 분으로 나오는 커스텀??????????
-                            barDataSet.valueFormatter = object : ValueFormatter() {
-                                private val mFormat: DecimalFormat = DecimalFormat("###")
-                                fun getFormattedValue(
-                                    value: Int,
-                                    entry: Entry,
-                                    dataSetIndex: Int,
-                                    viewPortHandler: ViewPortHandler,
-                                ): String {
-                                    return mFormat.format(value) + "분"
-                                }
-                            }
-
-                            //막대 그래프 너비 설정
-                            val dataSets = mutableListOf(barDataSet)
-                            val data = BarData(dataSets as List<IBarDataSet>?).apply {
-                                barWidth = 0.3F
-                            }
-                            //애니메이션 효과 0.1초
-                            with(chart) {
-                                animateY(1000)
-                                xAxis.apply {
-                                    position = XAxis.XAxisPosition.BOTTOM
-                                    setDrawGridLines(false)
-                                    //그래프
-                                    textColor = R.color.colorBlack
-                                    //월 ~ 일
-                                    valueFormatter = object : ValueFormatter() {
-                                        override fun getFormattedValue(value: Float): String {
-                                            return barData[value.toInt()].date
-                                        }
-                                    }
-                                }
-                                //차트 왼쪽 축, Y방향 ( 수치 최소값,최대값 )
-                                axisRight.apply {
-                                    //아래,왼쪽 제목 색깔
-                                    textColor = R.color.black
-                                    setDrawAxisLine(false) //격자
-                                    //그래프 가로 축,선 (점선으로 변경)
-                                    gridColor = R.color.black
-                                    //cnr wjatjs
-                                    gridLineWidth = 0.5F
-                                    //선 길이, 조각 사이의 공간, 위상
-                                    enableGridDashedLine(5f, 5f, 5f)
-
-                                    var count = 0
-                                    barData.forEachIndexed { index, chartData ->
-                                        while (chartData.value > axisMaximum) {
-                                            count++
-                                            if (chartData.value > axisMaximum) {
-                                                axisMaximum += 300F
-                                            } else {
-                                                axisMaximum = 600F
-                                            }
-                                        }
-                                    }
-                                    granularity = 200F //200단위마다 선을 그리려고 granularity 설정을 해 주었음
-                                    axisMinimum = 0F
-                                }
-
-                                //차트 오른쪽 축, Y방향 false처리
-                                axisLeft.apply {
-                                    isEnabled = false
-                                    //그래프 가로 축,선 (점선으로 변경)
-                                    gridColor = R.color.black
-
-                                    var count = 0
-                                    barData.forEachIndexed { index, chartData ->
-                                        while (chartData.value > axisMaximum) {
-                                            count++
-                                            if (chartData.value > axisMaximum) {
-                                                axisMaximum += 300F
-                                            } else {
-                                                axisMaximum = 600F
-                                            }
-                                        }
-                                    }
-                                    granularity = 200F
-                                    //30단위마다 선을 그리려고 granularity 설정을 해 주었음
-                                    axisMinimum = 0F
-                                }
-                                notifyDataSetChanged()
-                                this.data = data
-                                invalidate()
-                            }
-                        }
-                        setData(listData)
-
-
-                        val day: TextView =
-                            rootView.findViewById(R.id.calorie_bottom_title_text_day)
-                        day.setText(textformatterString)
-                        val time: TextView =
-                            rootView.findViewById(R.id.calorie_bottom_title_text_time)
-                        time.setText(calorieformatterString)
-
-                        val miniTitleTime: Int = result6!!.toInt()
-                        val miniTitle: TextView = rootView.findViewById(R.id.calories_mini_title)
-                        miniTitle.setText(miniTitleTime.toString())
-
-                        val calorieUserName: TextView = rootView.findViewById(R.id.calorie_name)
-                        setUserInfo(calorieUserName)
-                    }
-                }
-
-                override fun onFailure(call: Call<MyWalkRecordChartData>, t: Throwable) {
-                    Log.d("error", t.message.toString())
-                }
-            })
-        }
         val button: Button = rootView.findViewById(R.id.calorie_share_button)
-        button.setOnClickListener {
-            when (requestPermissions()) {
-                true -> Instacapture.capture(this.requireActivity(),
-                    object : SimpleScreenCapturingListener() {
-                        override fun onCaptureComplete(captureview: Bitmap) {
-                            val capture: FrameLayout =
-                                requireView().findViewById(R.id.calorie) as FrameLayout
-                            val shareButtonView: View = rootView.findViewById(R.id.calorie_share_button)
-                            shareButtonView.visibility = View.GONE
-                            capture.buildDrawingCache()
-                            val captureview: Bitmap = capture.getDrawingCache()
-                            val uri = saveImageExternal(captureview)
-                            uri?.let {
-                                if(!shareImageURI(uri)){
-                                    shareButtonView.visibility = View.VISIBLE
-                                }else {
-                                    shareImageURI(uri)
-                                }
-                            } ?: showError()
-                        }
-                    },
-                    calorie_share_button)
-                else -> showError()
-            }
-        }
+        val shareButtonView: View = rootView.findViewById(R.id.calorie_share_button)
+        button.setOnClickListener { takeAndShareScreenShot(shareButtonView)}
+
         return rootView
     }
-
-    private fun showError() {
-        Toast.makeText(
-            this.activity,
-            "승인이 필요합니다.",
-            Toast.LENGTH_SHORT
-        ).show()
+    private fun takeAndShareScreenShot(shareButtonView: View) {
+        Instacapture.capture(this.requireActivity(),
+            object : SimpleScreenCapturingListener() {
+                override fun onCaptureComplete(captureview: Bitmap) {
+                    val capture: FrameLayout =
+                        requireView().findViewById(R.id.calorie) as FrameLayout
+                    shareButtonView.visibility = View.GONE
+                    capture.buildDrawingCache()
+                    val captureview: Bitmap = capture.getDrawingCache()
+                    val uri = saveImageExternal(captureview)
+                    uri?.let {
+                        if (!shareImageURI(uri)) {
+                            shareButtonView.visibility = View.VISIBLE
+                        } else {
+                            shareImageURI(uri)
+                        }
+                    }
+                }
+            }, calorie_share_button)
     }
 
-    fun requestPermissions(): Boolean {
-        var permissions = false
-        Dexter.withActivity(this.activity)
-            .withPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .withListener(object : PermissionListener {
-                override fun onPermissionGranted(response: PermissionGrantedResponse) {
-                    permissions = true
-                }
+    fun initChart(chart: BarChart){
+        //바 차트 커스텀
+        with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
+            description.isEnabled = false
+            legend.isEnabled = false
+            isDoubleTapToZoomEnabled = false
 
-                override fun onPermissionDenied(response: PermissionDeniedResponse) {
-                    permissions = false
+            setPinchZoom(false)
+            setDrawBarShadow(false)
+            setDrawValueAboveBar(false)
+            //차트 라운들 모양 커스텀
+            val barChartRender =
+                CustomBarChartRender(this, animator, viewPortHandler).apply {
+                    setRadius(20)
                 }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    permission: PermissionRequest,
-                    token: PermissionToken,
-                ) {
-                    token.continuePermissionRequest()
-                }
-            }).check()
-        return permissions
+            renderer = barChartRender
+        }
     }
 
+    fun setData(barData: List<ChartData>) {
+        val values = mutableListOf<BarEntry>()
+        barData.forEachIndexed { index, chartData ->
+            values.add(BarEntry(index.toFloat(), chartData.value))
+        }
+
+        val barDataSet = BarDataSet(values, "").apply {
+            setDrawValues(false)
+            //차트 색상
+
+            val colors = ArrayList<Int>()
+            colors.add(Color.argb(55, 250, 168, 46));
+            colors.add(Color.argb(55, 250, 168, 46));
+            colors.add(Color.argb(55, 250, 168, 46));
+            colors.add(Color.argb(55, 250, 168, 46));
+            colors.add(Color.argb(55, 250, 168, 46));
+            colors.add(Color.argb(55, 250, 168, 46));
+            colors.add(Color.argb(200, 250, 168, 46));
+            setColors(colors)
+            //투명,불투명
+            highLightAlpha = 0
+        }
+        //data 클릭 시 분으로 나오는 커스텀??????????
+        barDataSet.valueFormatter = object : ValueFormatter() {
+            private val mFormat: DecimalFormat = DecimalFormat("###")
+            fun getFormattedValue(
+                value: Int,
+                entry: Entry,
+                dataSetIndex: Int,
+                viewPortHandler: ViewPortHandler,
+            ): String {
+                return mFormat.format(value) + "분"
+            }
+        }
+
+        //막대 그래프 너비 설정
+        val dataSets = mutableListOf(barDataSet)
+        val data = BarData(dataSets as List<IBarDataSet>?).apply {
+            barWidth = 0.3F
+        }
+        //애니메이션 효과 0.1초
+        with(chart) {
+            animateY(1000)
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+                //그래프
+                textColor = R.color.colorBlack
+                //월 ~ 일
+                valueFormatter = object : ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return barData[value.toInt()].date
+                    }
+                }
+            }
+            //차트 왼쪽 축, Y방향 ( 수치 최소값,최대값 )
+            axisRight.apply {
+                //아래,왼쪽 제목 색깔
+                textColor = R.color.black
+                setDrawAxisLine(false) //격자
+                //그래프 가로 축,선 (점선으로 변경)
+                gridColor = R.color.black
+                //cnr wjatjs
+                gridLineWidth = 0.5F
+                //선 길이, 조각 사이의 공간, 위상
+                enableGridDashedLine(5f, 5f, 5f)
+
+                var count = 0
+                barData.forEachIndexed { index, chartData ->
+                    while (chartData.value > axisMaximum) {
+                        count++
+                        if (chartData.value > axisMaximum) {
+                            axisMaximum += 300F
+                        } else {
+                            axisMaximum = 600F
+                        }
+                    }
+                }
+                granularity = 200F //200단위마다 선을 그리려고 granularity 설정을 해 주었음
+                axisMinimum = 0F
+            }
+
+            //차트 오른쪽 축, Y방향 false처리
+            axisLeft.apply {
+                isEnabled = false
+                //그래프 가로 축,선 (점선으로 변경)
+                gridColor = R.color.black
+
+                var count = 0
+                barData.forEachIndexed { index, chartData ->
+                    while (chartData.value > axisMaximum) {
+                        count++
+                        if (chartData.value > axisMaximum) {
+                            axisMaximum += 300F
+                        } else {
+                            axisMaximum = 600F
+                        }
+                    }
+                }
+                granularity = 200F
+                //30단위마다 선을 그리려고 granularity 설정을 해 주었음
+                axisMinimum = 0F
+            }
+            notifyDataSetChanged()
+            this.data = data
+            invalidate()
+        }
+    }
     fun saveImageExternal(image: Bitmap): Uri? {
         val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
         var fos: OutputStream? = null
@@ -384,6 +320,51 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
         startActivity(Intent.createChooser(shareIntent, "Send to"))
         return shareButtonViewImage
+    }
+
+    //  -- 산책 기록 API Call --
+    fun setOneWeekRecordInfo(miniTitle: TextView,calorieUserName: TextView){
+        context?.let { UserSharedPreferences.getUserId(it) }?.let {
+            var userKey : Int = it.toInt()
+            Log.d("userKe","$userKey")
+            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<MyWalkRecordChartData> {
+                override fun onResponse(call: Call<MyWalkRecordChartData>, response: Response<MyWalkRecordChartData>) {
+                    if (response.isSuccessful) {
+                        Log.d("text", "연결성공")
+                        var result0 = response.body()?.weekStat?.get(0)?.calorie?.toFloat()
+                        var result1 = response.body()?.weekStat?.get(1)?.calorie?.toFloat()
+                        var result2 = response.body()?.weekStat?.get(2)?.calorie?.toFloat()
+                        var result3 = response.body()?.weekStat?.get(3)?.calorie?.toFloat()
+                        var result4 = response.body()?.weekStat?.get(4)?.calorie?.toFloat()
+                        var result5 = response.body()?.weekStat?.get(5)?.calorie?.toFloat()
+                        var result6 = response.body()?.weekStat?.get(6)?.calorie?.toFloat()
+                        Log.d("~~0번째~~~",
+                            " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
+
+                        val sum: Int = (result0!!.toInt() + result1!!.toInt() + result2!!.toInt()
+                                + result3!!.toInt() + result4!!.toInt() + result5!!.toInt())
+
+                        oneWeekRecord.add(result0!!)
+                        oneWeekRecord.add(result1!!)
+                        oneWeekRecord.add(result2!!)
+                        oneWeekRecord.add(result3!!)
+                        oneWeekRecord.add(result4!!)
+                        oneWeekRecord.add(result5!!)
+                        oneWeekRecord.add(result6!!)
+                        setData(listData)
+
+                        val miniTitleTime: Int = result6!!.toInt()
+                        miniTitle.setText(miniTitleTime.toString())
+                        setUserInfo(calorieUserName)
+                    }
+                }
+
+                override fun onFailure(call: Call<MyWalkRecordChartData>, t: Throwable) {
+                    Log.d("error", t.message.toString())
+                }
+            })
+        }
+
     }
 
     private fun setUserInfo(userName: TextView) {

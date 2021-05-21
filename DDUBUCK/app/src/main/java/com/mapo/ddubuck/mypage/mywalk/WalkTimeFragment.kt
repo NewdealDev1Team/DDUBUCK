@@ -115,6 +115,8 @@ class WalkTimeFragment : Fragment() {
         setOneWeekRecordInfo(miniTitle, titleUserName)
         //바 차트
         chart = rootView.findViewById(R.id.time_bar_chart)
+        chart.setNoDataText("Loading")
+
         initChart(chart)
 
         val shareButtonView: View = rootView.findViewById(R.id.time_share_button)
@@ -214,7 +216,6 @@ class WalkTimeFragment : Fragment() {
             values.add(BarEntry(index.toFloat(), chartData.value))
         }
 
-        //BarDataentries.add(BarEntry(iasFloat,sumOfDay))
         val barDataSet = BarDataSet(values, "").apply {
             setDrawValues(false)
             //차트색
