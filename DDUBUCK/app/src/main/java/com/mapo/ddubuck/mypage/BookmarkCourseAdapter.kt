@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.home.bottomSheet
+package com.mapo.ddubuck.mypage
 
 import android.view.LayoutInflater
 import android.view.View
@@ -13,11 +13,13 @@ import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.home.HomeFragment
+import com.mapo.ddubuck.home.bottomSheet.BottomSheetCourseDetailFragment
+import com.mapo.ddubuck.home.bottomSheet.BottomSheetFreeDetailFragment
 import kotlin.collections.ArrayList
 
-class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
-                                 private val fm: FragmentManager,):
-    RecyclerView.Adapter<BottomSheetSelectRvAdapter.Holder>() {
+class BookmarkCourseAdapter(private val itemList: ArrayList<CourseItem>,
+                            private val fm: FragmentManager,):
+    RecyclerView.Adapter<BookmarkCourseAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.bottom_sheet_select_item, parent, false)
@@ -35,14 +37,6 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
 
     fun setItems(items : List<CourseItem>) {
         itemList.clear()
-        //자유산책 추가
-        itemList.add(CourseItem(
-            true,
-            null,
-            "자유산책",
-            "자유산책입니다",
-            WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)
-        ))
         //전달받은 요소 추가
         itemList.addAll(items)
         this.notifyDataSetChanged()
@@ -77,9 +71,8 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
                 }
                 title?.text = "자유산책"
                 body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
-                picture?.setImageResource(R.drawable.ic_walk_free)
+                picture?.setImageResource(R.mipmap.ic_launcher)
                 picture?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
-                picture?.clipToOutline = true
             } else {
                 itemView.setOnClickListener{selectItem(fm,i)}
                 title?.text = i.title
@@ -93,17 +86,9 @@ class BottomSheetSelectRvAdapter(private val itemList: ArrayList<CourseItem>,
         }
 
         private fun selectItem(fm:FragmentManager, courseItem : CourseItem) {
-            if(courseItem.isFreeWalk) {
-                val frag = BottomSheetFreeDetailFragment()
-                val fmTransaction = fm.beginTransaction()
-                fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
-                fmTransaction.replace(R.id.bottom_sheet_container,frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_TAG).commit()
-            } else {
-                val frag = BottomSheetCourseDetailFragment(courseItem)
-                val fmTransaction = fm.beginTransaction()
-                fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter, R.anim.fragment_fade_exit)
-                fmTransaction.replace(R.id.bottom_sheet_container,frag, HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_TAG).commit()
-            }
+            /**
+            행동 지정하기
+            **/
         }
 
     }

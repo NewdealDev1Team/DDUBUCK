@@ -25,9 +25,7 @@ class BottomSheetSelectFragment : Fragment() {
         sheetViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(i: Int) {
                 super.onPageSelected(i)
-                if(initArray[i].isFreeWalk) {
-                    homeMapViewModel.passPathData(listOf(LatLng(37.56362279298406, 126.90926225749905),LatLng(37.56362279298406, 126.90926225749905)))
-                }else{
+                if(!initArray[i].isFreeWalk) {
                     homeMapViewModel.passPathData(initArray[i].walkRecord.path)
                 }
             }
