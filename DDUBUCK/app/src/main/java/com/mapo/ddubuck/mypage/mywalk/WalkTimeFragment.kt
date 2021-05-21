@@ -123,8 +123,6 @@ class WalkTimeFragment : Fragment() {
         return rootView
     }
 
-
-
     // --- 캡처 후 공유 --
     private fun takeAndShareScreenShot(shareButtonView: View) {
         Instacapture.capture(this.requireActivity(),
@@ -282,9 +280,9 @@ class WalkTimeFragment : Fragment() {
 
                 var count = 0
                 barData.forEachIndexed { index, chartData ->
-                    while (chartData.value > axisMaximum) {
+                    while ((chartData.value/60) > axisMaximum) {
                         count++
-                        if (chartData.value > axisMaximum) {
+                        if ((chartData.value/60) > axisMaximum) {
                             axisMaximum += 30F
                         } else {
                             axisMaximum = 90F
@@ -366,7 +364,7 @@ class WalkTimeFragment : Fragment() {
                             setData(listData)
                             //오늘의 산책시간은 ~분입니다.
                             val miniTitleTime: Int = result6!!.toInt()
-                            miniTitle.setText(miniTitleTime.toString())
+                            miniTitle.setText((miniTitleTime/60).toString())
                             //~님
                             setUserInfo(titleUserName)
                         }
