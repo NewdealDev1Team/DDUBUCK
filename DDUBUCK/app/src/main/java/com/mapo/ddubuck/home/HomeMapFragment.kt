@@ -31,6 +31,7 @@ import com.mapo.ddubuck.data.RetrofitClient
 import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.data.publicdata.HiddenChallenge
 import com.mapo.ddubuck.data.publicdata.PublicData
 import com.mapo.ddubuck.data.publicdata.RecommendPathDTO
 import com.mapo.ddubuck.home.bottomSheet.BottomSheetCompleteFragment
@@ -44,6 +45,7 @@ import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
+import kotlinx.coroutines.selects.select
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -72,6 +74,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         const val WALK_COURSE = 400 // 코스산책
         const val WALK_FREE = 100 //자유산책
         const val WALK_COURSE_COMPLETE = 401
+
+        const val courseCompleteRadius = 0.00007
+        const val hiddenCompleteRadius = 0.0001
+
     }
 
     //뷰모델
@@ -89,6 +95,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private val sharedPref = UserSharedPreferences
     private var isLocationDataInitialized = false
     private var initialPosition : LatLng = LatLng(0.0,0.0)
+    private val hiddenPlaces = mutableListOf<HiddenChallenge>()
 
     //측정 관련 변수
     private var userPath = PathOverlay()
@@ -192,6 +199,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         val publicData = response.body()!!
                         val markerHeightSize = 80
                         val markerWidthSize = 60
+                        markers[FilterDrawer.PET_CAFE]!!.clear()
                         for (i in publicData.petCafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -210,8 +218,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers[FilterDrawer.PET_CAFE]!!.add(marker)
+                            markers[FilterDrawer.CAR_FREE_ROAD]!!.add(marker)
                         }
+                        markers[FilterDrawer.PET_CAFE]!!.clear()
                         for (i in publicData.carFreeRoad) {
                             val marker = Marker()
                             marker.position = LatLng(i.path[0].x, i.path[0].y)
@@ -231,6 +240,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.CAR_FREE_ROAD]!!.add(marker)
                         }
+                        markers[FilterDrawer.CAFE]!!.clear()
                         for (i in publicData.cafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -250,6 +260,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.CAFE]!!.add(marker)
                         }
+                        markers[FilterDrawer.PET_RESTAURANT]!!.clear()
                         for (i in publicData.petRestaurant) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -269,6 +280,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.PET_RESTAURANT]!!.add(marker)
                         }
+                        markers[FilterDrawer.PUBLIC_REST_AREA]!!.clear()
                         for (i in publicData.publicRestArea) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -288,6 +300,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.PUBLIC_REST_AREA]!!.add(marker)
                         }
+                        markers[FilterDrawer.PUBLIC_TOILET]!!.clear()
                         for (i in publicData.publicToilet) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -306,6 +319,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 true
                             }
                             markers[FilterDrawer.PUBLIC_TOILET]!!.add(marker)
+                        }
+                        hiddenPlaces.clear()
+                        for(i in publicData.hiddenChallenge) {
+                            hiddenPlaces.add(i)
                         }
                         val recommendPath = mutableListOf<RecommendPathDTO>()
                         recommendPath.addAll(publicData.recommendPathMaster)
@@ -599,7 +616,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**목표 점에 도달했는가 (근접해있는가)**/
     private fun isUserReachedToTarget(currentPos: LatLng, lastPos: LatLng): Boolean {
-        return createBound(lastPos).contains(currentPos)
+        return createBound(lastPos, courseCompleteRadius).contains(currentPos)
     }
 
     /**유저 경로 추가하면서 생기는 활동들 총집합**/
@@ -617,7 +634,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             burnedCalorie += calculateMomentCalorie(speed, walkTime)
             timePoint = walkTime
         }
-        /**마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
+        /**마지막 점과 거리 비교해서 +- courseCompleteRadius(동반객체) 으로 지정된 *영역*에
         현재 점이 포함되어있다면 추가하지 않음**/
         currentPath.add(currentPos)
         speeds.add(speed)
@@ -650,7 +667,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         currentPos: LatLng,
         course: MutableList<LatLng>,
     ) {
-        /**현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
+        /**현재 점에서 마지막(다가오는) 경로 점의 +- courseCompleteRadius(동반객체) 으로 지정된 *영역*에
         현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리**/
         if (course.size > 2) {
             if (isUserReachedToTarget(currentPos, course.first())) {
@@ -669,12 +686,37 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         }
     }
 
+    /**가까운 순으로 히든플레이스를 정렬한다**/
+    private fun getSortedHiddenPlaceList(
+        currentPos: LatLng,
+        list : MutableList<HiddenChallenge>
+    ) : List<HiddenChallenge> {
+        return list.sortedBy { it.selector(currentPos) }
+    }
+
+    /**히든 플레이스 도달 시**/
+    private fun checkHiddenPlaceArrival(
+        currentPos: LatLng,
+        hiddenPlace:HiddenChallenge,
+    ) {
+        if(isUserReachedToTarget(currentPos, hiddenPlace.pos())) {
+            //TODO 달성 목록에 추가하기
+        }
+    }
+
+    /**300미터~100미터 내에 히든플레이스가 있으면 힌트를 준다**/
+    private fun hintHiddenPlace(
+        currentPos:LatLng,
+        hiddenPlace: HiddenChallenge
+    ) {
+
+    }
+
     /**비교용 영역 만들기**/
-    private fun createBound(point: LatLng): LatLngBounds {
+    private fun createBound(point: LatLng, radius:Double): LatLngBounds {
         /** 주어진 좌표에 좌측 상단 0.00007 +
         우측 하단 0.00007 -
         두 점으로 사각형 구역을 만들어 반환**/
-        val radius = 0.00007
         return LatLngBounds(
                 LatLng(point.latitude - radius, point.longitude - radius),
                 LatLng(point.latitude + radius, point.longitude + radius),
