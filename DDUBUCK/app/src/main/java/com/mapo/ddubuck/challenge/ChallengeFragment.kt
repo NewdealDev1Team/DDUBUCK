@@ -158,7 +158,7 @@ class ChallengeFragment : Fragment() {
     }
 
     private val ddubuckChallenge: MutableList<Challenge> = mutableListOf(
-        Challenge(R.drawable.ic_cumulative_distance, "누적거리", "내가 걸어온 만큼!"),
+        Challenge(R.drawable.ic_acumulative_distance, "누적거리", "내가 걸어온 만큼!"),
         Challenge(R.drawable.ic_walking_count, "당일 걸음 수", "과연 오늘은 몇 보?"),
         Challenge(R.drawable.ic_course_complete, "코스완료", "코스 클리어하는 재미!")
     )
