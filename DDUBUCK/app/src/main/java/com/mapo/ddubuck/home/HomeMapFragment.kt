@@ -565,7 +565,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             val lng = location.longitude
             val point = LatLng(lat, lng)
             if(!isLocationDataInitialized) {
-                //model.recordPosition(point)
+                model.recordPosition(point)
                 initPublicData(lat,lng, userKey)
                 initialPosition = point
                 isLocationDataInitialized=true
@@ -587,7 +587,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         val speed = location.speed
         val alt = location.altitude
         if(!isLocationDataInitialized) {
-            //model.recordPosition(point)
+            model.recordPosition(point)
             initPublicData(lat,lng, userKey)
             initialPosition = point
             isLocationDataInitialized=true
