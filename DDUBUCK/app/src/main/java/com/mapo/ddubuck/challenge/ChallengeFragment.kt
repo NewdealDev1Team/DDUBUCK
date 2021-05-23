@@ -30,6 +30,7 @@ import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import com.mapo.ddubuck.login.UserService
 import com.mapo.ddubuck.login.UserValidationInfo
 import com.mapo.ddubuck.mypage.MypageViewModel
+import com.mapo.ddubuck.sharedpref.BookmarkSharedPreferences
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.tarek360.instacapture.Instacapture
 import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
@@ -70,7 +71,7 @@ class ChallengeFragment : Fragment() {
         dduubuckChallengeTitle.text = "뚜벅뚜벅 챌린지"
         ddubuckChallengeText.text = "우리 함께 기분 좋은 산책,\n" + "시작해볼까요?"
 
-        val ddubuckChallengeAdapter = ChallengeAdapter(ddubuckChallenge)
+        val ddubuckChallengeAdapter = activity?.let { ChallengeAdapter(ddubuckChallenge, it) }
 
         val challengeRecyclerView: RecyclerView =
             challengeView.findViewById(R.id.challenge_recyclerView)
@@ -79,7 +80,7 @@ class ChallengeFragment : Fragment() {
             this.adapter = ddubuckChallengeAdapter
             this.layoutManager = GridLayoutManager(challengeView.context, 2)
 
-            ddubuckChallengeAdapter.setItemClickListener(object :
+            ddubuckChallengeAdapter?.setItemClickListener(object :
                 ChallengeAdapter.ItemClickListener {
                 @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onClick(view: View, position: Int) {
@@ -95,7 +96,7 @@ class ChallengeFragment : Fragment() {
         hiddenChallengeTitle.text = "히든 챌린지"
         hiddenChallengeText.text = "자유산책을 하면서\n" + "숨겨진 챌린지를 찾아보세요"
 
-        val hiddenChallengeAdapter = ChallengeAdapter(hiddenChallenge)
+        val hiddenChallengeAdapter = activity?.let { ChallengeAdapter(hiddenChallenge, it) }
 
         val hiddenChallengeRecyclerView: RecyclerView =
             challengeView.findViewById(R.id.hidden_challenge_recyclerView)
@@ -104,7 +105,7 @@ class ChallengeFragment : Fragment() {
             this.adapter = hiddenChallengeAdapter
             this.layoutManager = GridLayoutManager(challengeView.context, 2)
 
-            hiddenChallengeAdapter.setItemClickListener(object :
+            hiddenChallengeAdapter?.setItemClickListener(object :
                 ChallengeAdapter.ItemClickListener {
                 @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onClick(view: View, position: Int) {
@@ -120,7 +121,7 @@ class ChallengeFragment : Fragment() {
         petChallengeTitle.text = "반려동물과 함께"
         petChallengeText.text = "나의 소중한 반려동물이 있나요?\n" + "우리 함께 산책해 볼까요?"
 
-        val petChallengeAdapter = ChallengeAdapter(petChallenge)
+        val petChallengeAdapter = activity?.let { ChallengeAdapter(petChallenge, it) }
 
         val petChallengeRecyclerView: RecyclerView =
             challengeView.findViewById(R.id.pet_challenge_recyclerView)
@@ -129,7 +130,7 @@ class ChallengeFragment : Fragment() {
             this.adapter = petChallengeAdapter
             this.layoutManager = GridLayoutManager(challengeView.context, 2)
 
-            petChallengeAdapter.setItemClickListener(object : ChallengeAdapter.ItemClickListener {
+            petChallengeAdapter?.setItemClickListener(object : ChallengeAdapter.ItemClickListener {
                 @RequiresApi(Build.VERSION_CODES.Q)
                 override fun onClick(view: View, position: Int) {
                     challengeDetailFragment = ChallengeDetailFragment()
@@ -157,18 +158,18 @@ class ChallengeFragment : Fragment() {
         mainViewModel.toolbarTitle.value = toolbarTitle
     }
 
-    private val ddubuckChallenge: MutableList<Challenge> = mutableListOf(
+    private val ddubuckChallenge: ArrayList<Challenge> = arrayListOf(
         Challenge(R.drawable.ic_acumulative_distance, "누적거리", "내가 걸어온 만큼!"),
         Challenge(R.drawable.ic_walking_count, "당일 걸음 수", "과연 오늘은 몇 보?"),
         Challenge(R.drawable.ic_course_complete, "코스완료", "코스 클리어하는 재미!")
     )
 
-    private val hiddenChallenge: MutableList<Challenge> = mutableListOf(
+    private val hiddenChallenge: ArrayList<Challenge> = arrayListOf(
         Challenge(R.drawable.ic_place, "플레이스", "내가 다녀간 핫플은?"),
         Challenge(R.drawable.ic_weather, "날씨", "히든 챌린지의 묘미!")
     )
 
-    private val petChallenge: MutableList<Challenge> = mutableListOf(
+    private val petChallenge: ArrayList<Challenge> = arrayListOf(
         Challenge(R.drawable.ic_pet_distance, "누적거리", "우리함께 걸어요"),
         Challenge(R.drawable.ic_pet_course_complete, "코스완료", "함께 클리어 해요!")
     )
