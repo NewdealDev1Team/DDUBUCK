@@ -1,4 +1,4 @@
-package com.mapo.ddubuck.challenge
+package com.mapo.ddubuck.mypage
 
 import android.app.Activity
 import android.util.Log
@@ -11,16 +11,19 @@ import android.widget.ToggleButton
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
-import com.mapo.ddubuck.mypage.BookmarkChallengeAdapter
+import com.mapo.ddubuck.challenge.Challenge
+import com.mapo.ddubuck.challenge.ChallengeAdapter
 import com.mapo.ddubuck.sharedpref.BookmarkSharedPreferences
 import kotlinx.android.synthetic.main.challenge_card_layout.view.*
 
-class ChallengeAdapter(
-    private val challenge: ArrayList<Challenge>,
-    private val owner: Activity
+
+class BookmarkChallengeAdapter(
+    private val owner: Activity,
+    private val bookmarkedCourse: ArrayList<Challenge>,
 ) :
-    RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
-    private var bookmarkedCourse: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
+    RecyclerView.Adapter<BookmarkChallengeAdapter.ChallengeViewHolder>() {
+
+
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
     }
@@ -40,37 +43,34 @@ class ChallengeAdapter(
 
 
     override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {
-
         Glide.with(holder.challengeItemImage)
-            .load(challenge[position].image)
+            .load(bookmarkedCourse[position].image)
             .into(holder.challengeItemImage)
 
         holder.itemView.setOnClickListener {
             itemClickListner.onClick(it, position)
         }
-
-        if (bookmarkedCourse.contains(challenge[position])) {
-            holder.bookmarkButton.isChecked = true
-        }
+        holder.bookmarkButton.isChecked = bookmarkedCourse.contains(bookmarkedCourse[position])
 
         holder.bookmarkButton.setOnClickListener {
-
             if (holder.bookmarkButton.isChecked) {
-                if (!bookmarkedCourse.contains(challenge[position])) {
-                    bookmarkedCourse.add(challenge[position])
+                if (!bookmarkedCourse.contains(bookmarkedCourse[position])) {
+                    bookmarkedCourse.add(bookmarkedCourse[position])
                 }
                 BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedCourse)
+
             } else {
-                if (bookmarkedCourse.contains(challenge[position])) {
-                    bookmarkedCourse.remove(challenge[position])
+                if (bookmarkedCourse.contains(bookmarkedCourse[position])) {
+                    bookmarkedCourse.remove(bookmarkedCourse[position])
                 }
                 BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedCourse)
             }
-            updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
+           updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
+
         }
 
-        holder.challengeItemTitle.text = challenge[position].title
-        holder.challengeItemText.text = challenge[position].infoText
+        holder.challengeItemTitle.text = bookmarkedCourse[position].title
+        holder.challengeItemText.text = bookmarkedCourse[position].infoText
     }
 
 
@@ -83,11 +83,10 @@ class ChallengeAdapter(
 
 
     override fun getItemCount(): Int {
-        return challenge.size
+        return bookmarkedCourse.size
     }
 
-
-    private fun updateRecyclerView(bookmarkedChallenge: ArrayList<Challenge>) {
+    fun updateRecyclerView(bookmarkedChallenge: ArrayList<Challenge>) {
         bookmarkedCourse.clear()
         bookmarkedCourse.addAll(bookmarkedChallenge)
         this.notifyDataSetChanged()
