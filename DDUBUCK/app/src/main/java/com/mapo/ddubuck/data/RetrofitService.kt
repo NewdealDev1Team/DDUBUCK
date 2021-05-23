@@ -7,6 +7,7 @@ import com.mapo.ddubuck.data.publicdata.PublicDataAPI
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mapo.ddubuck.data.home.MapAPI
+import com.mapo.ddubuck.data.publicdata.HiddenChallenge
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -62,7 +63,7 @@ object RetrofitClient{
 
 class RetrofitService {
 
-    fun createRecord(userKey : String, walkRecord: WalkRecord, calorie:Double,walkType : Int, callback: ()->Unit){
+    fun createRecord(userKey : String, walkRecord: WalkRecord, calorie:Double,walkType : Int, completedHiddenChallenge: List<HiddenChallenge>,callback: ()->Unit){
         val map = hashMapOf<String, Any>()
         map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
@@ -82,6 +83,14 @@ class RetrofitService {
             map["walkType"] = "WALK_COURSE"
         }
 
+        val hiddenList = mutableListOf<String>()
+        for (i in completedHiddenChallenge) {
+            hiddenList.add(i.title)
+        }
+
+        map["hidden"] = hiddenList
+
+        Log.e("RECORD : ","$map")
 
         RetrofitClient.mapInstance.createPost(map)
                 .enqueue(object : Callback<WalkRecord> {

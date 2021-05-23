@@ -1,30 +1,29 @@
 package com.mapo.ddubuck.home
 
-import android.Manifest
 import android.app.Activity
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.*
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
-import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
-import com.google.android.gms.location.*
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitClient
@@ -38,14 +37,12 @@ import com.mapo.ddubuck.home.bottomSheet.BottomSheetCompleteFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.mapo.ddubuck.ui.CommonDialog
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
 import com.naver.maps.map.overlay.PolylineOverlay
 import com.naver.maps.map.util.FusedLocationSource
 import com.naver.maps.map.util.MarkerIcons
-import kotlinx.coroutines.selects.select
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -74,10 +71,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         const val WALK_COURSE = 400 // 코스산책
         const val WALK_FREE = 100 //자유산책
         const val WALK_COURSE_COMPLETE = 401
-
-        const val courseCompleteRadius = 0.00007
-        const val hiddenCompleteRadius = 0.0001
-
+        /**목표 지점 체크 허용거리
+         * ex : 5미터 이내일 시 경로 지점 판정 **/
+        const val courseCompareDistance = 5.0
+        const val hiddenChallengeCompareDistance = 15.0
     }
 
     //뷰모델
@@ -96,6 +93,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var isLocationDataInitialized = false
     private var initialPosition : LatLng = LatLng(0.0,0.0)
     private val hiddenPlaces = mutableListOf<HiddenChallenge>()
+    private val completedHiddenPlaces = mutableListOf<HiddenChallenge>()
 
     //측정 관련 변수
     private var userPath = PathOverlay()
@@ -106,6 +104,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var stepCount: Int = 0
     private var distance: Double = 0.0
     private var burnedCalorie: Double = 0.0
+    private lateinit var hiddenChallengeUserPos : LatLng
 
     //코스
     private var course = PolylineOverlay()
@@ -182,6 +181,21 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    /**알림 만들기 (HomeMapService 에서 작동)**/
+    private fun createNotification(title : String, content : String) {
+        /** 서비스 켜졌을 때만 작동함 **/
+        if(allowRecording) {
+            val builder = NotificationCompat.Builder(owner, HomeMapService.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            HomeMapService.notification.value = builder.build()
+        } else {
+            Log.e("HomeMap", "HomMapService를 활성화해주세요")
+        }
+
+    }
 
     private fun initPublicData(x:Double, y:Double, userKey:String) {
 
@@ -442,12 +456,20 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         courseMarker.map = null
         //기록 및 반환 코드
 
+        if(completedHiddenPlaces.size != 0) {
+            CommonDialog("히든챌린지 달성!", "멋져요! 오늘 산책에서 히든 챌린지를 달성하셨어요!", owner).let {
+                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                it.show()
+            }
+        }
+
 
         val walkRecord = getWalkResult()
-
-        RetrofitService().createRecord(userKey, walkRecord, burnedCalorie,walkTag) {
+        RetrofitService().createRecord(userKey, walkRecord, burnedCalorie,walkTag, completedHiddenPlaces) {
             model.recordMywalk.value = true
         }
+
+        completedHiddenPlaces.clear()
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
@@ -543,7 +565,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             val lng = location.longitude
             val point = LatLng(lat, lng)
             if(!isLocationDataInitialized) {
-                model.recordPosition(point)
+                //model.recordPosition(point)
                 initPublicData(lat,lng, userKey)
                 initialPosition = point
                 isLocationDataInitialized=true
@@ -557,6 +579,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         })
     }
 
+    /**사용자 위치 바뀌었을때 할 행동(리스너)**/
     private fun onLocationChangedListener (location:Location, userKey: String) {
         val lat = location.latitude
         val lng = location.longitude
@@ -564,23 +587,28 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         val speed = location.speed
         val alt = location.altitude
         if(!isLocationDataInitialized) {
-            model.recordPosition(point)
+            //model.recordPosition(point)
             initPublicData(lat,lng, userKey)
             initialPosition = point
             isLocationDataInitialized=true
         }
 
+        /**산책을 시작했을 때**/
         if (allowRecording) {
             if (isRestarted) {
                 //초기 점이 비어있을 때
                 initUserPath(point)
                 isRestarted = false
             }
+            /**사용자 경로가 초기화 되어있는지 확인함**/
             if (userPath.coords.isNotEmpty() && userPath.map != null) {
                 val lastPoint = userPath.coords.last()
-                if (!isUserReachedToTarget(point, lastPoint)) {
+                /**사용자가 마지막으로 등록한 point와 충분히 멀어졌는지 검사한다**/
+                /**현재 점과 마지막 점의 거리차이가 지정된 거리 이하로 나면 점을 추가하지 않음**/
+                if (!isUserReachedToTarget(courseCompareDistance,point, lastPoint)) {
                     addUserPath(point, lastPoint, userPath.coords, speed, alt.toFloat())
                 }
+                /**코스산책일 경우**/
                 if (isCourseSelected) {
                     walkTag = WALK_COURSE
                     if(isCourseInitialized) {
@@ -599,6 +627,18 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         courseMarker.map = this.map
                         isCourseInitialized=true
                     }
+                } else {
+                    /**히든 챌린지는 자유산책에서만 이용 가능**/
+                    /**히든 플레이스 정렬(500미터 주기)**/
+                    if(hiddenPlaces.size != 0) {
+                        if(!::hiddenChallengeUserPos.isInitialized || point.distanceTo(hiddenChallengeUserPos) >= 500) {
+                            val sorted = getSortedHiddenPlaceList(point, hiddenPlaces)
+                            hiddenPlaces.clear()
+                            hiddenPlaces.addAll(sorted)
+                            hiddenChallengeUserPos = point
+                        }
+                        checkHiddenPlaceArrival(point,hiddenPlaces.first())
+                    }
                 }
             } else {
                 //초기 점이 비어있을 때
@@ -615,8 +655,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     }
 
     /**목표 점에 도달했는가 (근접해있는가)**/
-    private fun isUserReachedToTarget(currentPos: LatLng, lastPos: LatLng): Boolean {
-        return createBound(lastPos, courseCompleteRadius).contains(currentPos)
+    private fun isUserReachedToTarget(distance:Double,currentPos: LatLng, targetPos: LatLng): Boolean {
+        return currentPos.distanceTo(targetPos) <= distance
     }
 
     /**유저 경로 추가하면서 생기는 활동들 총집합**/
@@ -634,8 +674,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             burnedCalorie += calculateMomentCalorie(speed, walkTime)
             timePoint = walkTime
         }
-        /**마지막 점과 거리 비교해서 +- courseCompleteRadius(동반객체) 으로 지정된 *영역*에
-        현재 점이 포함되어있다면 추가하지 않음**/
         currentPath.add(currentPos)
         speeds.add(speed)
         altitudes.add(alt)
@@ -667,10 +705,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         currentPos: LatLng,
         course: MutableList<LatLng>,
     ) {
-        /**현재 점에서 마지막(다가오는) 경로 점의 +- courseCompleteRadius(동반객체) 으로 지정된 *영역*에
-        현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리**/
+        /**현재 점에서 목표 경로 점과의 거리가 지정된 거리보다 적다면 목표 경로 점 삭제 및 완료처리**/
         if (course.size > 2) {
-            if (isUserReachedToTarget(currentPos, course.first())) {
+            if (isUserReachedToTarget(courseCompareDistance,currentPos, course.first())) {
                 course.removeAt(0)
                 //진동
                 model.vibrate(true)
@@ -681,7 +718,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         } else {
             //코스완료
             this.course.map = null
-            //bottom sheet pop 해서 코스선택 메뉴로 이동시키기
             walkTag = WALK_COURSE_COMPLETE
         }
     }
@@ -699,8 +735,14 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         currentPos: LatLng,
         hiddenPlace:HiddenChallenge,
     ) {
-        if(isUserReachedToTarget(currentPos, hiddenPlace.pos())) {
-            //TODO 달성 목록에 추가하기
+        if(isUserReachedToTarget(hiddenChallengeCompareDistance,currentPos, hiddenPlace.pos())) {
+            Toast.makeText(owner, "히든 챌린지 달성! : ${hiddenPlace.title}", Toast.LENGTH_LONG).show()
+            createNotification("히든 챌린지 달성!", "히든 챌린지 달성! : ${hiddenPlace.title}")
+            completedHiddenPlaces.add(hiddenPlace)
+            hiddenPlaces.removeAt(0)
+            model.vibrate(true)
+        } else {
+            hintHiddenPlace(currentPos, hiddenPlace)
         }
     }
 
@@ -709,18 +751,35 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         currentPos:LatLng,
         hiddenPlace: HiddenChallenge
     ) {
-
-    }
-
-    /**비교용 영역 만들기**/
-    private fun createBound(point: LatLng, radius:Double): LatLngBounds {
-        /** 주어진 좌표에 좌측 상단 0.00007 +
-        우측 하단 0.00007 -
-        두 점으로 사각형 구역을 만들어 반환**/
-        return LatLngBounds(
-                LatLng(point.latitude - radius, point.longitude - radius),
-                LatLng(point.latitude + radius, point.longitude + radius),
-        )
+        currentPos.distanceTo(hiddenPlace.pos()).let { dis ->
+            when (dis) {
+                in 200.1..300.0 -> {
+                    if(!hiddenPlace.firstHintShown) {
+                        Toast.makeText(owner, "히든 챌린지가 반경 300미터 내에 있습니다!", Toast.LENGTH_LONG).show()
+                        model.vibrate(true)
+                        createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 300미터 내에 있습니다!")
+                        hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].firstHintShown = true
+                    }
+                }
+                in 100.1..200.0 -> {
+                    if(!hiddenPlace.secondHintShown) {
+                        Toast.makeText(owner, "히든 챌린지가 반경 200미터 내에 있습니다!", Toast.LENGTH_LONG).show()
+                        model.vibrate(true)
+                        createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 200미터 내에 있습니다!")
+                        hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].secondHintShown = true
+                    }
+                }
+                in 16.0..100.0 -> {
+                    if(!hiddenPlace.thirdHintShown) {
+                        Toast.makeText(owner, "히든 챌린지가 반경 100미터 내에 있습니다!", Toast.LENGTH_LONG).show()
+                        model.vibrate(true)
+                        createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 100미터 내에 있습니다!")
+                        hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].thirdHintShown = true
+                    }
+                }
+                else -> return
+            }
+        }
     }
 
 }
