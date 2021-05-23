@@ -73,5 +73,6 @@ class HomeMapViewModel : ViewModel() {
     val showPublicToilet = MutableLiveData<Boolean>()
 
     val recordMywalk = MutableLiveData<Boolean>()
+    val bookmarkChanged = MutableLiveData<Boolean>()
 
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.MainActivity
@@ -24,6 +25,8 @@ class BookmarkCourseAdapter(
     private val fm: FragmentManager,):
     RecyclerView.Adapter<BookmarkCourseAdapter.Holder>() {
 
+    val isBookmarkChanged = MutableLiveData<Boolean>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.bottom_sheet_select_item, parent, false)
@@ -34,30 +37,13 @@ class BookmarkCourseAdapter(
         holder.bind(itemList[position], fm)
     }
 
-    fun addItem(courseItem: CourseItem) {
-        itemList.add(courseItem)
-        this.notifyDataSetChanged()
-    }
-
     fun setItems(items: List<CourseItem>) {
         itemList.clear()
-        //자유산책 추가
-        itemList.add(CourseItem(
-            true,
-            null,
-            "자유산책",
-            "자유산책입니다",
-            WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)
-        ))
         //전달받은 요소 추가
         itemList.addAll(items)
         this.notifyDataSetChanged()
     }
 
-    fun removeItem(position: Int) {
-        itemList.removeAt(position)
-        this.notifyDataSetChanged()
-    }
 
     override fun getItemCount(): Int {
         return itemList.size
@@ -87,9 +73,7 @@ class BookmarkCourseAdapter(
                 picture?.setImageResource(R.drawable.ic_walk_free)
                 picture?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                 picture?.clipToOutline = true
-                bookmark?.setOnClickListener {
-                    Log.e("어이", "누르지마쇼")
-                }
+                bookmark?.visibility = View.INVISIBLE
             } else {
                 itemView.setOnClickListener { selectItem(fm, i) }
                 title?.text = i.title
@@ -104,12 +88,14 @@ class BookmarkCourseAdapter(
                 bookmark?.setOnClickListener {
                     for (e in 0 until itemList.size) {
                         if (i.compareTo(itemList[e])) {
-                            removeItem(e)
+                            itemList.remove(itemList[e])
+                            break
                         }
                     }
-                    UserSharedPreferences.setBookmarkedCourse(owner, itemList)
                     bookmark.setImageResource(R.drawable.ic_bookmark_empty_black)
                     bookmark.setBackgroundResource(R.drawable.sheet_select_item_rounded)
+                    UserSharedPreferences.setBookmarkedCourse(owner, itemList)
+                    isBookmarkChanged.value = true
                 }
             }
         }

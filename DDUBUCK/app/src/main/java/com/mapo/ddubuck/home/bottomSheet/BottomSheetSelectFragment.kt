@@ -13,6 +13,7 @@ import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.home.HomeMapViewModel
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 
 class BottomSheetSelectFragment(private val owner:Activity) : Fragment() {
     private val homeMapViewModel: HomeMapViewModel by activityViewModels()
@@ -33,6 +34,14 @@ class BottomSheetSelectFragment(private val owner:Activity) : Fragment() {
 
         homeMapViewModel.recommendPath.observe(viewLifecycleOwner, {v ->
             mAdapter.setItems(v)
+        })
+
+        homeMapViewModel.bookmarkChanged.observe(viewLifecycleOwner, {
+            mAdapter.setBookmarks(UserSharedPreferences.getBookmarkedCourse(owner))
+        })
+
+        mAdapter.isBookmarkChanged.observe(viewLifecycleOwner, {
+            homeMapViewModel.bookmarkChanged.value = true
         })
 
         return rootView

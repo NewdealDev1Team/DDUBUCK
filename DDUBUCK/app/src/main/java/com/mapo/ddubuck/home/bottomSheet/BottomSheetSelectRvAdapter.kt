@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.MainActivity
@@ -18,13 +19,13 @@ import com.mapo.ddubuck.home.HomeFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import kotlin.collections.ArrayList
 
-class BottomSheetSelectRvAdapter(
-                                 private val owner:Activity,
+class BottomSheetSelectRvAdapter(private val owner:Activity,
                                  private val itemList: ArrayList<CourseItem>,
                                  private val fm: FragmentManager,):
     RecyclerView.Adapter<BottomSheetSelectRvAdapter.Holder>() {
 
     val bookmarkedCourse : ArrayList<CourseItem> = UserSharedPreferences.getBookmarkedCourse(owner)
+    val isBookmarkChanged = MutableLiveData<Boolean>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.bottom_sheet_select_item, parent, false)
@@ -33,11 +34,6 @@ class BottomSheetSelectRvAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.bind(itemList[position], fm)
-    }
-
-    fun addItem(courseItem: CourseItem) {
-        itemList.add(courseItem)
-        this.notifyDataSetChanged()
     }
 
     fun setItems(items : List<CourseItem>) {
@@ -55,8 +51,9 @@ class BottomSheetSelectRvAdapter(
         this.notifyDataSetChanged()
     }
 
-    fun removeItem(position: Int) {
-        itemList.removeAt(position)
+    fun setBookmarks(items : List<CourseItem>) {
+        bookmarkedCourse.clear()
+        bookmarkedCourse.addAll(items)
         this.notifyDataSetChanged()
     }
 
@@ -87,9 +84,7 @@ class BottomSheetSelectRvAdapter(
                 picture?.setImageResource(R.drawable.ic_walk_free)
                 picture?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                 picture?.clipToOutline = true
-                bookmark?.setOnClickListener {
-                    Log.e("어이","누르지마쇼")
-                }
+                bookmark?.visibility = View.INVISIBLE
             } else {
                 itemView.setOnClickListener{selectItem(fm,i)}
                 title?.text = i.title
@@ -108,24 +103,30 @@ class BottomSheetSelectRvAdapter(
                 if(isBookmarked) {
                     bookmark?.setImageResource(R.drawable.ic_bookmark_color)
                     bookmark?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
+                } else {
+                    bookmark?.setImageResource(R.drawable.ic_bookmark_empty_black)
+                    bookmark?.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                 }
                 bookmark?.setOnClickListener {
                     if(!isBookmarked) {
+                        /**북마크 추가**/
                         bookmarkedCourse.add(i)
-                        UserSharedPreferences.setBookmarkedCourse(owner, bookmarkedCourse)
                         bookmark.setImageResource(R.drawable.ic_bookmark_color)
                         bookmark.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                     } else {
+                        /**북마크 제거**/
                         for(e in bookmarkedCourse) {
                             if(i.compareTo(e)){
                                 bookmarkedCourse.remove(e)
+                                break
                             }
                         }
-                        UserSharedPreferences.setBookmarkedCourse(owner, bookmarkedCourse)
                         isBookmarked = false
                         bookmark.setImageResource(R.drawable.ic_bookmark_empty_black)
                         bookmark.setBackgroundResource(R.drawable.sheet_select_item_rounded)
                     }
+                    UserSharedPreferences.setBookmarkedCourse(owner, bookmarkedCourse)
+                    isBookmarkChanged.value = true
                 }
             }
         }
