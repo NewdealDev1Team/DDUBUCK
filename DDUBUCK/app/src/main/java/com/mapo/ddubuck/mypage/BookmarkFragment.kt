@@ -1,5 +1,6 @@
 package com.mapo.ddubuck.mypage
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -20,14 +21,16 @@ import com.mapo.ddubuck.R
 import com.mapo.ddubuck.challenge.Challenge
 import com.mapo.ddubuck.challenge.ChallengeAdapter
 import com.mapo.ddubuck.challenge.ChallengeFragment
+import com.mapo.ddubuck.challenge.ChallengeViewModel
 import com.mapo.ddubuck.challenge.detail.ChallengeDetailFragment
 import com.mapo.ddubuck.login.LoginActivity
 import com.mapo.ddubuck.sharedpref.BookmarkSharedPreferences
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 
-class BookmarkFragment: Fragment() {
+class BookmarkFragment(val owner: Activity) : Fragment() {
     private lateinit var challengeDetailFragment: ChallengeDetailFragment
     private val mainViewModel: MainActivityViewModel by activityViewModels()
+    private val challengeViewModel: ChallengeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,13 +39,16 @@ class BookmarkFragment: Fragment() {
     ): View? {
         val bookmarkViewGroup: ViewGroup = inflater.inflate(R.layout.fragment_bookmark,
             container, false) as ViewGroup
-        val bookmarkChallenge = context?.let { BookmarkSharedPreferences.getBookmarkedChallenge(it) }
-        val challengeAdapter  = activity?.let {
-            BookmarkChallengeAdapter(it,BookmarkSharedPreferences.getBookmarkedChallenge(it))
+        val bookmarkChallenge =
+            context?.let { BookmarkSharedPreferences.getBookmarkedChallenge(it) }
+        val bookmarkedChallenge: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
+
+        val challengeAdapter = activity?.let {
+            BookmarkChallengeAdapter(it, bookmarkedChallenge)
         }
 
-
-        val challengeRecyclerView: RecyclerView = bookmarkViewGroup.findViewById(R.id.bookmark_recyclerview)
+        val challengeRecyclerView: RecyclerView =
+            bookmarkViewGroup.findViewById(R.id.bookmark_recyclerview)
         challengeRecyclerView.isNestedScrollingEnabled = false
         challengeRecyclerView.apply {
             this.adapter = challengeAdapter
@@ -54,7 +60,12 @@ class BookmarkFragment: Fragment() {
                 override fun onClick(view: View, position: Int) {
                     challengeDetailFragment = ChallengeDetailFragment()
                     bookmarkChallenge?.get(position)
-                        ?.let { toDetailPage(challengeDetailFragment, it.title, it.position, it.section) }
+                        ?.let {
+                            toDetailPage(challengeDetailFragment,
+                                it.title,
+                                it.position,
+                                it.section)
+                        }
                 }
             })
         }
@@ -64,7 +75,12 @@ class BookmarkFragment: Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun toDetailPage(detailFragment: Fragment, toolbarTitle: String, index: Int, sectionNumber: Int) {
+    private fun toDetailPage(
+        detailFragment: Fragment,
+        toolbarTitle: String,
+        index: Int,
+        sectionNumber: Int,
+    ) {
         val bundle = Bundle()
         bundle.putString("index", index.toString())
         bundle.putString("section", sectionNumber.toString())

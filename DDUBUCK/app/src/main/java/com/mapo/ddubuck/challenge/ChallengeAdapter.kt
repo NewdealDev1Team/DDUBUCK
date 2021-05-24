@@ -17,10 +17,11 @@ import kotlinx.android.synthetic.main.challenge_card_layout.view.*
 
 class ChallengeAdapter(
     private val challenge: ArrayList<Challenge>,
-    private val owner: Activity
+    private val bookmarkedChallenge: ArrayList<Challenge>,
+    private val owner: Activity,
 ) :
     RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
-    private var bookmarkedCourse: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
+
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
     }
@@ -36,6 +37,8 @@ class ChallengeAdapter(
         var challengeItemTitle: TextView = itemView.challenge_card_title
         var challengeItemText: TextView = itemView.challenge_card_text
         var bookmarkButton: ToggleButton = itemView.challenge_bookmark
+        var bookmarkedChallenge: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
+
     }
 
 
@@ -49,24 +52,25 @@ class ChallengeAdapter(
             itemClickListner.onClick(it, position)
         }
 
-        if (bookmarkedCourse.contains(challenge[position])) {
+        if (bookmarkedChallenge.contains(challenge[position])) {
             holder.bookmarkButton.isChecked = true
         }
 
         holder.bookmarkButton.setOnClickListener {
 
             if (holder.bookmarkButton.isChecked) {
-                if (!bookmarkedCourse.contains(challenge[position])) {
-                    bookmarkedCourse.add(challenge[position])
+                if (!bookmarkedChallenge.contains(challenge[position])) {
+                    bookmarkedChallenge.add(challenge[position])
                 }
-                BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedCourse)
             } else {
-                if (bookmarkedCourse.contains(challenge[position])) {
-                    bookmarkedCourse.remove(challenge[position])
+                if (bookmarkedChallenge.contains(challenge[position])) {
+                    bookmarkedChallenge.remove(challenge[position])
                 }
-                BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedCourse)
             }
-            updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
+            BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
+//            updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
+            Log.e("챌린22", BookmarkSharedPreferences.getBookmarkedChallenge(owner).toString())
+
         }
 
         holder.challengeItemTitle.text = challenge[position].title
@@ -87,10 +91,11 @@ class ChallengeAdapter(
     }
 
 
-    private fun updateRecyclerView(bookmarkedChallenge: ArrayList<Challenge>) {
-        bookmarkedCourse.clear()
-        bookmarkedCourse.addAll(bookmarkedChallenge)
-        this.notifyDataSetChanged()
-    }
+//    fun updateRecyclerView(bookmarkChallenge: ArrayList<Challenge>) {
+//        bookmarkedChallenge.clear()
+//        bookmarkedChallenge.addAll(bookmarkChallenge)
+//        this.notifyDataSetChanged()
+//    }
+
 
 }
