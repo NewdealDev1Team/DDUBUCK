@@ -34,6 +34,7 @@ import com.mapo.ddubuck.data.publicdata.RecommendPathDTO
 import com.mapo.ddubuck.home.bottomSheet.BottomSheetCompleteFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.mapo.ddubuck.ui.CommonDialog
+import com.mapo.ddubuck.weather.WeatherViewModel
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
@@ -76,7 +77,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     }
 
     //뷰모델
-    private val model: HomeMapViewModel by activityViewModels()
+    private val mapModel: HomeMapViewModel by activityViewModels()
+    private val weatherModel : WeatherViewModel by activityViewModels()
 
     //환경설정 변수
     private val userKey : String = UserSharedPreferences.getUserId(owner)
@@ -116,7 +118,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
-        model.walkState.value = WALK_START
+        mapModel.walkState.value = WALK_START
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
                 ?: MapFragment.newInstance().also {
@@ -124,13 +126,13 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 }
         nMapFragment.getMapAsync(this)
 
-        model.isRecordStarted.observe(viewLifecycleOwner, { v ->
+        mapModel.isRecordStarted.observe(viewLifecycleOwner, { v ->
             if (v) {
                 //start
                 startRecording()
                 allowRecording = true
                 isRestarted = true
-                model.walkState.value = WALK_PROGRESS
+                mapModel.walkState.value = WALK_PROGRESS
             } else {
                 //stop
                 stopRecording()
@@ -138,26 +140,26 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 isRestarted = true
                 isCourseSelected = false
                 isCourseInitialized = false
-                model.walkState.value = WALK_WAITING
+                mapModel.walkState.value = WALK_WAITING
             }
         })
 
-        model.isRecordPaused.observe(viewLifecycleOwner, { v ->
+        mapModel.isRecordPaused.observe(viewLifecycleOwner, { v ->
             allowRecording = if (v) {
                 //start
                 pauseRecording()
-                model.walkState.value = WALK_PAUSE
+                mapModel.walkState.value = WALK_PAUSE
                 false
             } else {
                 //stop
                 resumeRecording()
-                model.walkState.value = WALK_PROGRESS
+                mapModel.walkState.value = WALK_PROGRESS
                 true
             }
         })
 
-        model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
-        model.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
+        mapModel.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
+        mapModel.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
         return rootView
     }
 
@@ -344,7 +346,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             val courseData = mutableListOf<CourseItem>()
                             for (i in recommendPath) {
                                 courseData.add(i.toCourseItem())
-                                model.recommendPath.value = courseData
+                                mapModel.recommendPath.value = courseData
                             }
                             //home에다가 보내기
                         }
@@ -357,7 +359,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
             })
 
-        model.showCafe.observe(viewLifecycleOwner, {v->
+        mapModel.showCafe.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.CAFE]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -367,7 +369,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showCarFreeRoad.observe(viewLifecycleOwner, {v->
+        mapModel.showCarFreeRoad.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.CAR_FREE_ROAD]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -377,7 +379,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPetCafe.observe(viewLifecycleOwner, {v->
+        mapModel.showPetCafe.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PET_CAFE]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -387,7 +389,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPetRestaurant.observe(viewLifecycleOwner, {v->
+        mapModel.showPetRestaurant.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PET_RESTAURANT]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -397,7 +399,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPublicRestArea.observe(viewLifecycleOwner, {v->
+        mapModel.showPublicRestArea.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PUBLIC_REST_AREA]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -407,7 +409,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPublicToilet.observe(viewLifecycleOwner, {v->
+        mapModel.showPublicToilet.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PUBLIC_TOILET]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -425,7 +427,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             owner.startService(it)
         }
         timer = timer(period = 1000) {
-            model.recordTime(walkTime)
+            mapModel.recordTime(walkTime)
             walkTime++
         }
     }
@@ -437,7 +439,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     private fun resumeRecording() {
         timer = timer(period = 1000) {
-            model.recordTime(walkTime)
+            mapModel.recordTime(walkTime)
             walkTime++
         }
     }
@@ -475,11 +477,12 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             courseTitle,
             UserSharedPreferences.getPet(owner),
             walkRecord,
+            weatherModel.weatherKeyword.value,
             burnedCalorie,
             walkTag,
             completedHiddenPlaces
         ) {
-            model.recordMywalk.value = true
+            mapModel.recordMywalk.value = true
         }
 
         completedHiddenPlaces.clear()
@@ -488,9 +491,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
                 .commit()
 
-        model.walkTime.value = 0
-        model.walkCalorie.value = 0.0
-        model.walkDistance.value = 0.0
+        mapModel.walkTime.value = 0
+        mapModel.walkCalorie.value = 0.0
+        mapModel.walkDistance.value = 0.0
 
         altitudes.clear()
         speeds.clear()
@@ -561,25 +564,25 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         var contentPaddingBottom = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 190f, resources.displayMetrics).toInt()
         map.setContentPadding(0,0,0,contentPaddingBottom)
 
-        model.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
+        mapModel.bottomSheetHeight.observe(viewLifecycleOwner, { v ->
             contentPaddingBottom += TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()
             map.setContentPadding(0,0,0,contentPaddingBottom)
         })
 
         courseMarker.icon = MarkerIcons.BLUE
 
-        model.courseData.observe(viewLifecycleOwner, { v->
+        mapModel.courseData.observe(viewLifecycleOwner, { v->
             courseData = v
             cameraToCourse(v.walkRecord.path)
         })
-        model.walkState.value = WALK_WAITING
+        mapModel.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener { location->
             val lat = location.latitude
             val lng = location.longitude
             val point = LatLng(lat, lng)
             if(!isLocationDataInitialized) {
-                model.recordPosition(point)
+                mapModel.recordPosition(point)
                 initPublicData(lat,lng, userKey)
                 initialPosition = point
                 isLocationDataInitialized=true
@@ -601,7 +604,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         val speed = location.speed
         val alt = location.altitude
         if(!isLocationDataInitialized) {
-            model.recordPosition(point)
+            mapModel.recordPosition(point)
             initPublicData(lat,lng, userKey)
             initialPosition = point
             isLocationDataInitialized=true
@@ -692,8 +695,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         speeds.add(speed)
         altitudes.add(alt)
         distance += lastPos.distanceTo(currentPos)
-        model.recordDistance(distance)
-        model.recordCalorie(burnedCalorie)
+        mapModel.recordDistance(distance)
+        mapModel.recordCalorie(burnedCalorie)
         userPath.coords = currentPath
     }
 
@@ -724,9 +727,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             if (isUserReachedToTarget(courseCompareDistance,currentPos, course.first())) {
                 course.removeAt(0)
                 //진동
-                model.vibrate(true)
+                mapModel.vibrate(true)
                 courseMarker.position = course.first()
-                model.passProgressData(course)
+                mapModel.passProgressData(course)
                 this.course.coords = course
             }
         } else {
@@ -755,7 +758,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             createNotification("히든 챌린지 달성!", "히든 챌린지 달성! : ${hiddenPlace.title}")
             completedHiddenPlaces.add(hiddenPlace)
             hiddenPlaces.removeAt(0)
-            model.vibrate(true)
+            mapModel.vibrate(true)
         } else {
             hintHiddenPlace(currentPos, hiddenPlace)
         }
@@ -771,7 +774,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 in 200.1..300.0 -> {
                     if(!hiddenPlace.firstHintShown) {
                         Toast.makeText(owner, "히든 챌린지가 반경 300미터 내에 있습니다!", Toast.LENGTH_LONG).show()
-                        model.vibrate(true)
+                        mapModel.vibrate(true)
                         createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 300미터 내에 있습니다!")
                         hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].firstHintShown = true
                     }
@@ -779,7 +782,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 in 100.1..200.0 -> {
                     if(!hiddenPlace.secondHintShown) {
                         Toast.makeText(owner, "히든 챌린지가 반경 200미터 내에 있습니다!", Toast.LENGTH_LONG).show()
-                        model.vibrate(true)
+                        mapModel.vibrate(true)
                         createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 200미터 내에 있습니다!")
                         hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].secondHintShown = true
                     }
@@ -787,7 +790,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 in 16.0..100.0 -> {
                     if(!hiddenPlace.thirdHintShown) {
                         Toast.makeText(owner, "히든 챌린지가 반경 100미터 내에 있습니다!", Toast.LENGTH_LONG).show()
-                        model.vibrate(true)
+                        mapModel.vibrate(true)
                         createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 100미터 내에 있습니다!")
                         hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].thirdHintShown = true
                     }

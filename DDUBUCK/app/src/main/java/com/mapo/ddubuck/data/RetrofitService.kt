@@ -63,7 +63,15 @@ object RetrofitClient{
 
 class RetrofitService {
 
-    fun createRecord(userKey : String, courseTitle : String?, petTogether : Boolean, walkRecord: WalkRecord, calorie:Double,walkType : Int, completedHiddenChallenge: List<HiddenChallenge>,callback: ()->Unit){
+    fun createRecord(userKey : String,
+                     courseTitle : String?,
+                     petTogether : Boolean,
+                     walkRecord: WalkRecord,
+                     weatherInfo : String?,
+                     calorie:Double,
+                     walkType : Int,
+                     completedHiddenChallenge: List<HiddenChallenge>,
+                     callback: ()->Unit){
         val map = hashMapOf<String, Any>()
         map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
@@ -86,6 +94,10 @@ class RetrofitService {
         val hiddenList = mutableListOf<String>()
         for (i in completedHiddenChallenge) {
             hiddenList.add(i.title)
+        }
+
+        if(weatherInfo != null) {
+            map["weather"] = weatherInfo
         }
 
         map["hidden"] = hiddenList
