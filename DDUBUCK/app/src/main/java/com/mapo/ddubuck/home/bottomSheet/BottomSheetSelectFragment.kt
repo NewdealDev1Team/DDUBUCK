@@ -27,7 +27,7 @@ class BottomSheetSelectFragment(private val owner:Activity) : Fragment() {
             override fun onPageSelected(i: Int) {
                 super.onPageSelected(i)
                 if(!initArray[i].isFreeWalk) {
-                    homeMapViewModel.passPathData(initArray[i].walkRecord.path)
+                    homeMapViewModel.passPathData(initArray[i])
                 }
             }
         })

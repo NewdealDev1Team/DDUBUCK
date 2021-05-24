@@ -63,7 +63,7 @@ object RetrofitClient{
 
 class RetrofitService {
 
-    fun createRecord(userKey : String, walkRecord: WalkRecord, calorie:Double,walkType : Int, completedHiddenChallenge: List<HiddenChallenge>,callback: ()->Unit){
+    fun createRecord(userKey : String, courseTitle : String?, petTogether : Boolean, walkRecord: WalkRecord, calorie:Double,walkType : Int, completedHiddenChallenge: List<HiddenChallenge>,callback: ()->Unit){
         val map = hashMapOf<String, Any>()
         map["userKey"] = userKey
         map["altitude"] = walkRecord.altitude
@@ -73,8 +73,8 @@ class RetrofitService {
         map["distance"] = walkRecord.distance
         map["path"] = Gson().toJson(walkRecord.pathToMap())
         map["calorie"] = calorie
+        map["petTogether"] = petTogether
         //walkType = FREE_WALK / COURSE_WALK
-        map["walkType"] = ""
         if(walkType == 100) {
             map["walkType"] = "WALK_FREE"
         }
@@ -89,6 +89,11 @@ class RetrofitService {
         }
 
         map["hidden"] = hiddenList
+
+        if(courseTitle!=null) {
+            map["title"] = courseTitle
+        }
+
 
         Log.e("RECORD : ","$map")
 

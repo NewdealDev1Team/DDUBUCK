@@ -28,9 +28,10 @@ class HomeMapViewModel : ViewModel() {
         courseProgressPath.value = v
     }
 
-    val coursePath = MutableLiveData<List<LatLng>>()
-    fun passPathData(v:List<LatLng>) {
-        coursePath.value = v
+
+    val courseData = MutableLiveData<CourseItem>()
+    fun passPathData(v:CourseItem) {
+        this.courseData.value = v
     }
 
 

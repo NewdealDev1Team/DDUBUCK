@@ -1,8 +1,6 @@
 package com.mapo.ddubuck.home
 
 import android.app.Activity
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -73,7 +71,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         const val WALK_COURSE_COMPLETE = 401
         /**목표 지점 체크 허용거리
          * ex : 5미터 이내일 시 경로 지점 판정 **/
-        const val courseCompareDistance = 5.0
+        const val courseCompareDistance = 15.0
         const val hiddenChallengeCompareDistance = 15.0
     }
 
@@ -107,6 +105,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private lateinit var hiddenChallengeUserPos : LatLng
 
     //코스
+    private lateinit var courseData : CourseItem
     private var course = PolylineOverlay()
     private var courseMarker = Marker()
 
@@ -465,7 +464,21 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
 
         val walkRecord = getWalkResult()
-        RetrofitService().createRecord(userKey, walkRecord, burnedCalorie,walkTag, completedHiddenPlaces) {
+        val courseTitle = if(isCourseSelected || walkTag == WALK_COURSE_COMPLETE) {
+            courseData.title
+        } else {
+            null
+        }
+
+        RetrofitService().createRecord(
+            userKey,
+            courseTitle,
+            UserSharedPreferences.getPet(owner),
+            walkRecord,
+            burnedCalorie,
+            walkTag,
+            completedHiddenPlaces
+        ) {
             model.recordMywalk.value = true
         }
 
@@ -555,8 +568,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
         courseMarker.icon = MarkerIcons.BLUE
 
-        model.coursePath.observe(viewLifecycleOwner, { v->
-            cameraToCourse(v)
+        model.courseData.observe(viewLifecycleOwner, { v->
+            courseData = v
+            cameraToCourse(v.walkRecord.path)
         })
         model.walkState.value = WALK_WAITING
 
@@ -718,6 +732,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         } else {
             //코스완료
             this.course.map = null
+            this.courseMarker.map = null
             walkTag = WALK_COURSE_COMPLETE
         }
     }
