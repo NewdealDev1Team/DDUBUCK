@@ -1,56 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coach_mark_master_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
 
     <ImageView
         android:id="@+id/coach_marks_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:gravity="bottom|center_horizontal"
+        android:alpha="100"
         android:background="#00ffffff"
+        android:gravity="bottom|center_horizontal"
         android:src="@drawable/coach_mark_background" />
 
-    <ImageView
-        android:id="@+id/top1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="right|top"
-        android:background="#00ffffff"
-        android:src="@drawable/coach_mark_item_top" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top">
+
+        <ImageView
+            android:id="@+id/top1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="112dp"
+            android:background="#00ffffff"
+            android:alpha="100"
+            android:src="@drawable/coach_mark_item_top"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="0dp" />
+
+
+        <ImageView
+            android:id="@+id/top1_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/coach_mark_item_top_line"
+            app:layout_constraintRight_toLeftOf="@+id/top1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints,NotSibling" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="산책에서 필요한 옵션을 \n 선택할 수 있습니다"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/top1_line"
+            tools:ignore="MissingConstraints"
+             />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="114dp">
 
     <ImageView
         android:id="@+id/top2"
         android:layout_width="132dp"
         android:layout_height="32dp"
-        android:layout_gravity="left|top"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="114dp"
-        android:src="@drawable/coach_mark_item_top" />
+        android:src="@drawable/coach_mark_item_banner"
+        tools:ignore="MissingConstraints"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/top3"
         android:layout_width="132dp"
-        android:layout_height="18sp"
+        android:layout_height="45sp"
         android:layout_gravity="left|bottom"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginBottom="209dp"
-        android:src="@drawable/coach_mark_item_top" />
+        android:src="@drawable/coach_mark_item_banner" />
 
 
     <ImageView
         android:id="@+id/top4"
-        android:layout_width="132dp"
-        android:layout_height="60dp"
-        android:layout_marginHorizontal="30dp"
+        android:layout_width="150dp"
+        android:layout_height="58dp"
         android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginHorizontal="30dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="58dp"
-        android:src="@drawable/coach_mark_item_top" />
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/coach_mark_item_bottom" />
 
 
     <ImageButton
@@ -63,5 +108,6 @@
         android:background="#00000000"
         android:src="@drawable/ic_coach_mark_exitt"
         android:tint="@color/white" />
-</FrameLayout>
 
+
+</FrameLayout>

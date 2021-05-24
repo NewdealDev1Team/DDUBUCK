@@ -12,7 +12,9 @@
     <color name ="green">#3DAB5B</color>
 
     <color name="a">#CFAF05</color>
-
     <color name="colorBlack">#000000</color>
     <color name="transparent">#00000000</color>
+
+    <color name="spotlight">#96000000</color>
+
 </resources>

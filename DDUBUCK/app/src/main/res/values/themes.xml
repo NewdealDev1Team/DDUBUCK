@@ -36,7 +36,6 @@
         </item>
     </style>
 
-
     <!-- 코치마크 테마 변경    WalkthroughTheme 화면 FullScreen 포함 -->
     <style name="WalkthroughTheme" parent="Theme.AppCompat">
         <item name="android:windowIsTranslucent">true</item>

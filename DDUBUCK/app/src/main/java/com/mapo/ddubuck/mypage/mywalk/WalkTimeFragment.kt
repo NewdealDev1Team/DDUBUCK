@@ -48,7 +48,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
 import id.co.barchartresearch.ChartData
-import kotlinx.android.synthetic.main.activity_bar_chart.view.*
 import kotlinx.android.synthetic.main.fragment_walk_time.*
 
 class WalkTimeFragment : Fragment() {

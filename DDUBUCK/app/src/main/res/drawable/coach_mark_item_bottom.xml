@@ -2,10 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/next_time_dialog_style">
         <shape android:shape="rectangle">
-<!--            <solid android:color="@color/white" />-->
-            <solid android:color="#00000000" />
+            <solid android:color="@color/white" />
             <corners android:radius="20dp"/>
-
         </shape>
     </item>
 </selector>

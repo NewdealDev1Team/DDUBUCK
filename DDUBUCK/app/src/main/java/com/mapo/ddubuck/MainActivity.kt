@@ -114,7 +114,6 @@ class MainActivity : AppCompatActivity() {
 
     fun onCoachMark() {
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
-//        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
 
@@ -130,7 +129,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            mapModel.vibrationControl.observe(this, {
+        mapModel.vibrationControl.observe(this, {
             vibrator.vibrate(VibrationEffect.createOneShot(100, 85))
         })
     }
