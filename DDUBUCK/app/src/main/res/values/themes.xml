@@ -48,9 +48,4 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="top1" parent="Theme.AppCompat">
-        <item name="android:background">#FF000000</item>
-    </style>
-
-
 </resources>
