@@ -3,21 +3,12 @@ package com.mapo.ddubuck
 import android.Manifest
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import android.view.*
-import android.view.animation.DecelerateInterpolator
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -29,6 +20,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.observe
+import com.coderfolk.multilamp.customView.MultiLamp
+import com.coderfolk.multilamp.model.Target
+import com.coderfolk.multilamp.shapes.Circle
+import com.coderfolk.multilamp.shapes.Rectangle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mapo.ddubuck.badge.BadgeFragment
 import com.mapo.ddubuck.challenge.ChallengeFragment
@@ -36,16 +31,15 @@ import com.mapo.ddubuck.home.FilterDrawer
 import com.mapo.ddubuck.home.HomeFragment
 import com.mapo.ddubuck.home.HomeMapViewModel
 import com.mapo.ddubuck.home.bottomSheet.*
+import com.mapo.ddubuck.mypage.BookmarkFragment
 import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
-import com.mapo.ddubuck.mypage.BookmarkFragment
-import com.takusemba.spotlight.Spotlight
-import com.takusemba.spotlight.shape.RoundedRectangle
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.coach_mark.view.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_walk_time.*
+import java.util.*
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -103,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
+
         val isCoachMarkOn : Boolean = UserSharedPreferences.getCoachMarkExit(this)
         if (!isCoachMarkOn) {
             onCoachMark()
@@ -113,6 +108,9 @@ class MainActivity : AppCompatActivity() {
 
     fun onCoachMark() {
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+//        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+
+
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
 
@@ -125,47 +123,6 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-
-
-//    fun onCoachMark() {
-//        Log.d("dddd", "spotlight")
-//
-//        val coachmarkRoot = FrameLayout(this)
-//        val coachMarkView = layoutInflater.inflate(R.layout.coach_mark, coachmarkRoot)
-//
-////        val top1 = findViewById<TextView>(R.id.sheet_select_titleTv)
-////        val top2 = findViewById<TextView>(R.id.temp_and_dust)
-////        val top1: ImageView = findViewById(R.id.top1)
-//        val top2 : TextView = findViewById(R.id.temp_and_dust)
-//
-//        val target = makeSpotlightTarget(top2, coachMarkView)
-//        val spotlight = makeSpotlight(target)
-//
-//
-//        //코치마크 어디든 터치 시 창이 닫힌다.
-//        coachMarkView.coach_mark_exit_button
-//            .setOnClickListener{ spotlight.finish()
-//                UserSharedPreferences.setCoachMarkExit(this,true)
-//            }
-//        spotlight.start()
-//    }
-//    private fun makeSpotlightTarget(targetView: TextView, coachMarkView: View): Target {
-//        return Target.Builder()
-//            .setAnchor(targetView)
-//            .setShape(RoundedRectangle(targetView.height.toFloat(), targetView.width.toFloat(), 116.toFloat()))
-//            .setOverlay(coachMarkView)
-//            .build()
-//    }
-//
-//    private fun makeSpotlight(target: Target): Spotlight {
-//
-//        return Spotlight.Builder(this)
-//            .setTargets(target)
-//            .setBackgroundColor(R.color.spotlight)
-//            .setDuration(10L)
-//            .setAnimation(DecelerateInterpolator(2f))
-//            .build()
-//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {

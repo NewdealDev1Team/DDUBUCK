@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:alpha="100"
         android:background="#00ffffff"
         android:gravity="bottom|center_horizontal"
         android:src="@drawable/coach_mark_background" />
@@ -45,7 +44,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/top1"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.44"
+            app:layout_constraintVertical_bias="0.37"
             tools:ignore="MissingConstraints,NotSibling" />
 
         <TextView
@@ -109,17 +108,17 @@
         android:layout_gravity="left|bottom"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="114dp"
-        android:layout_marginBottom="209dp">
+        android:layout_marginBottom="200dp">
 
         <ImageView
             android:id="@+id/top3"
             android:layout_width="132dp"
-            android:layout_height="45sp"
+            android:layout_height="40sp"
             android:layout_gravity="left|bottom"
             android:src="@drawable/coach_mark_item_bottom_sheet"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="1dp" />
+            />
 
         <ImageView
             android:id="@+id/top3_line"
@@ -127,7 +126,7 @@
             android:layout_height="22dp"
             android:src="@drawable/coach_mark_item_bottom_sheet_line"
             app:layout_constraintBottom_toTopOf="@+id/top3"
-            app:layout_constraintHorizontal_bias="0.35"
+            app:layout_constraintHorizontal_bias="0.29"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             tools:ignore="MissingConstraints,NotSibling" />
@@ -172,11 +171,10 @@
             android:layout_height="wrap_content"
             android:src="@drawable/coach_mark_item_bottom_line"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toLetOf="@+id/top4"
+            app:layout_constraintRight_toLeftOf="@+id/top4"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.49"
-            tools:ignore="MissingConstraints,NotSibling"
-            tools:layout_editor_absoluteX="10dp" />
+            tools:ignore="MissingConstraints"
+           />
 
         <TextView
             android:layout_width="wrap_content"

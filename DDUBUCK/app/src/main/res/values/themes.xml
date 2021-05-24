@@ -36,14 +36,21 @@
         </item>
     </style>
 
+    <!--        <item name="android:windowIsTranslucent">true</item>-->
+    <!--        <item name="android:windowContentOverlay">@null</item>-->
+    <!--        <item name="android:windowNoTitle">true</item>-->
+    <!--        <item name="android:backgroundDimEnabled">true</item>-->
+    <!--        <item name="android:background">@android:color/transparent</item>-->
+
     <!-- 코치마크 테마 변경    WalkthroughTheme 화면 FullScreen 포함 -->
-    <style name="WalkthroughTheme" parent="Theme.AppCompat">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:background">@android:color/transparent</item>
+    <style name="WalkthroughTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="top1" parent="Theme.AppCompat">
+        <item name="android:background">#FF000000</item>
+    </style>
+
 
 </resources>
