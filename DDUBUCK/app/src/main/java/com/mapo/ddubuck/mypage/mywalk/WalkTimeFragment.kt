@@ -128,75 +128,10 @@ class WalkTimeFragment : Fragment() {
         return rootView
     }
 
-    // --- 캡처 후 공유 --
-    private fun takeAndShareScreenShot(shareButtonView: View) {
-        Instacapture.capture(this.requireActivity(),
-            object : SimpleScreenCapturingListener() {
-                @RequiresApi(Build.VERSION_CODES.Q)
-                override fun onCaptureComplete(captureview: Bitmap) {
-                    val capture: FrameLayout =
-                        requireView().findViewById(R.id.walktime) as FrameLayout
-                    shareButtonView.visibility = View.GONE
-                    capture.buildDrawingCache()
-                    val captureview: Bitmap = capture.getDrawingCache()
-                    val uri = saveImageExternal(captureview)
-                    uri?.let {
-                        if (!shareImageURI(uri)) {
-                            shareButtonView.visibility = View.VISIBLE
-                        } else {
-                            shareImageURI(uri)
-                        }
-                    }
-                }
-            },
-            time_share_button)
-    }
-
-    fun saveImageExternal(image: Bitmap): Uri? {
-        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
-        var fos: OutputStream? = null
-        var uri: Uri? = null
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            put(MediaStore.Video.Media.IS_PENDING, 1)
-        }
-
-        //use application context to get contentResolver
-        val contentResolver = this.requireActivity().contentResolver
-
-        contentResolver.also { resolver ->
-            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            fos = uri?.let { resolver.openOutputStream(it) }
-        }
-
-        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
-
-        contentValues.clear()
-        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
-        contentResolver.update(uri!!, contentValues, null, null)
-
-        return uri!!
-    }
-
-
-    fun shareImageURI(uri: Uri): Boolean {
-        val shareIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
-            type = "message/rfc822"
-            type = "image/*"
-        }
-
-        startActivity(Intent.createChooser(shareIntent, "Send to"))
-        return shareButtonViewImage
-    }
-
     // -- 바 차트 커스텀 --
     fun initChart(chart: BarChart) {
 //        customMarkerView.chartView = chart
-        with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
+        with(chart) {//그래프의 마커를 터치때 해당 데이터를 보여줌
 //            marker = customMarkerView
             description.isEnabled = false
             legend.isEnabled = false
@@ -295,7 +230,7 @@ class WalkTimeFragment : Fragment() {
                         }
                     }
                 }
-                granularity = 30F//30단위마
+                granularity = 30F//30단위마다
                 axisMinimum = 0F
 
                 //y축 제목 커스텀
@@ -332,6 +267,72 @@ class WalkTimeFragment : Fragment() {
             this.data = data
             invalidate()
         }
+    }
+
+
+    // --- 캡처 후 공유 --
+    private fun takeAndShareScreenShot(shareButtonView: View) {
+        Instacapture.capture(this.requireActivity(),
+            object : SimpleScreenCapturingListener() {
+                @RequiresApi(Build.VERSION_CODES.Q)
+                override fun onCaptureComplete(captureview: Bitmap) {
+                    val capture: FrameLayout =
+                        requireView().findViewById(R.id.walktime) as FrameLayout
+                    shareButtonView.visibility = View.GONE
+                    capture.buildDrawingCache()
+                    val captureview: Bitmap = capture.getDrawingCache()
+                    val uri = saveImageExternal(captureview)
+                    uri?.let {
+                        if (!shareImageURI(uri)) {
+                            shareButtonView.visibility = View.VISIBLE
+                        } else {
+                            shareImageURI(uri)
+                        }
+                    }
+                }
+            },
+            time_share_button)
+    }
+
+    fun saveImageExternal(image: Bitmap): Uri? {
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+        var uri: Uri? = null
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
+        }
+
+        //use application context to get contentResolver
+        val contentResolver = this.requireActivity().contentResolver
+
+        contentResolver.also { resolver ->
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = uri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(uri!!, contentValues, null, null)
+
+        return uri!!
+    }
+
+
+    fun shareImageURI(uri: Uri): Boolean {
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "message/rfc822"
+            type = "image/*"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Send to"))
+        return shareButtonViewImage
     }
 
     // -- 산책 기록 API Call --

@@ -8,13 +8,13 @@
     android:orientation="vertical">
 
 
-    <ImageView
-        android:id="@+id/coach_marks_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:gravity="bottom|center_horizontal"
-        android:src="@drawable/coach_mark_background" />
+<!--    <ImageView-->
+<!--        android:id="@+id/coach_marks_image"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_centerInParent="true"-->
+<!--        android:gravity="bottom|center_horizontal"-->
+<!--        android:src="@drawable/coach_mark_background" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/top2"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints,NotSibling" />
 
         <TextView
             android:layout_width="wrap_content"

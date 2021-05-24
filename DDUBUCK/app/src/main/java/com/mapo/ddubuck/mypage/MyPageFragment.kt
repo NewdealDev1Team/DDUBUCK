@@ -231,7 +231,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                         if (60 <= timeRecordt6.toInt()) {
                             val hour: Int = ( timeRecordt6 / 60 ) / 60
                             val minute : Int = (timeRecordt6 / 60) % 60
-                            val hourName: String = "시"
+                            val hourName: String = "시간"
                             val miniteName: String = "분"
                             walkingTimeButtonRecord.setText(hour.toString() + hourName +
                                     minute.toString() + miniteName)
