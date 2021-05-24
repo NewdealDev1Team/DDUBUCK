@@ -17,10 +17,8 @@ import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import android.view.*
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.view.animation.DecelerateInterpolator
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -42,7 +40,10 @@ import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.mapo.ddubuck.mypage.BookmarkFragment
+import com.takusemba.spotlight.Spotlight
+import com.takusemba.spotlight.shape.RoundedRectangle
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.coach_mark.view.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_walk_time.*
 
@@ -110,8 +111,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     fun onCoachMark() {
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
         dialog.setContentView(R.layout.coach_mark)
@@ -125,6 +124,48 @@ class MainActivity : AppCompatActivity() {
         }
         dialog.show()
     }
+
+
+
+//    fun onCoachMark() {
+//        Log.d("dddd", "spotlight")
+//
+//        val coachmarkRoot = FrameLayout(this)
+//        val coachMarkView = layoutInflater.inflate(R.layout.coach_mark, coachmarkRoot)
+//
+////        val top1 = findViewById<TextView>(R.id.sheet_select_titleTv)
+////        val top2 = findViewById<TextView>(R.id.temp_and_dust)
+////        val top1: ImageView = findViewById(R.id.top1)
+//        val top2 : TextView = findViewById(R.id.temp_and_dust)
+//
+//        val target = makeSpotlightTarget(top2, coachMarkView)
+//        val spotlight = makeSpotlight(target)
+//
+//
+//        //코치마크 어디든 터치 시 창이 닫힌다.
+//        coachMarkView.coach_mark_exit_button
+//            .setOnClickListener{ spotlight.finish()
+//                UserSharedPreferences.setCoachMarkExit(this,true)
+//            }
+//        spotlight.start()
+//    }
+//    private fun makeSpotlightTarget(targetView: TextView, coachMarkView: View): Target {
+//        return Target.Builder()
+//            .setAnchor(targetView)
+//            .setShape(RoundedRectangle(targetView.height.toFloat(), targetView.width.toFloat(), 116.toFloat()))
+//            .setOverlay(coachMarkView)
+//            .build()
+//    }
+//
+//    private fun makeSpotlight(target: Target): Spotlight {
+//
+//        return Spotlight.Builder(this)
+//            .setTargets(target)
+//            .setBackgroundColor(R.color.spotlight)
+//            .setDuration(10L)
+//            .setAnimation(DecelerateInterpolator(2f))
+//            .build()
+//    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {

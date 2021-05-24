@@ -29,8 +29,8 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="112dp"
-            android:background="#00ffffff"
             android:alpha="100"
+            android:background="#00ffffff"
             android:src="@drawable/coach_mark_item_top"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints"
@@ -42,9 +42,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/coach_mark_item_top_line"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/top1"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.44"
             tools:ignore="MissingConstraints,NotSibling" />
 
         <TextView
@@ -54,9 +55,10 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:lineSpacingExtra ="7dp"
+            android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/top1_line"
-            tools:ignore="MissingConstraints"
-             />
+            tools:ignore="MissingConstraints" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -68,34 +70,126 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="114dp">
 
-    <ImageView
-        android:id="@+id/top2"
-        android:layout_width="132dp"
-        android:layout_height="32dp"
-        android:src="@drawable/coach_mark_item_banner"
-        tools:ignore="MissingConstraints"/>
+        <ImageView
+            android:id="@+id/top2"
+            android:layout_width="132dp"
+            android:layout_height="32dp"
+            android:src="@drawable/coach_mark_item_banner"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/top2_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/coach_mark_item_banner_line"
+            app:layout_constraintHorizontal_bias="0.12"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/top2"
+            tools:ignore="MissingConstraints,NotSibling" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:lineSpacingExtra="7dp"
+            android:text="날씨,온도,미세먼지의 정보를 토대로\n 산책하기 좋은 산책지수를 표시해줍니다."
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toRightOf="@+id/top2_line"
+            app:layout_constraintTop_toBottomOf="@+id/top2"
+            tools:ignore="MissingConstraints" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/top3"
-        android:layout_width="132dp"
-        android:layout_height="45sp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="left|bottom"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="209dp"
-        android:src="@drawable/coach_mark_item_banner" />
+        android:layout_marginTop="114dp"
+        android:layout_marginBottom="209dp">
+
+        <ImageView
+            android:id="@+id/top3"
+            android:layout_width="132dp"
+            android:layout_height="45sp"
+            android:layout_gravity="left|bottom"
+            android:src="@drawable/coach_mark_item_bottom_sheet"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="1dp" />
+
+        <ImageView
+            android:id="@+id/top3_line"
+            android:layout_width="29dp"
+            android:layout_height="22dp"
+            android:src="@drawable/coach_mark_item_bottom_sheet_line"
+            app:layout_constraintBottom_toTopOf="@+id/top3"
+            app:layout_constraintHorizontal_bias="0.35"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="MissingConstraints,NotSibling" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 좌우로 스크롤 하여
+            \n 자유 산책을 선택하거나
+            \n 주변의 산책 코스를 추천 받아
+            \n 즐거운 산책을 시작해보세요!"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:lineSpacingExtra ="7dp"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toRightOf="@+id/top3_line"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteY="0dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <ImageView
-        android:id="@+id/top4"
-        android:layout_width="150dp"
-        android:layout_height="58dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginTop="58dp"
-        android:layout_marginBottom="5dp"
-        android:src="@drawable/coach_mark_item_bottom" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom">
+
+        <ImageView
+            android:id="@+id/top4"
+            android:layout_width="150dp"
+            android:layout_height="58dp"
+            android:layout_marginBottom="5dp"
+            android:src="@drawable/coach_mark_item_bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:ignore="MissingConstraints" />
+
+        <ImageView
+            android:id="@+id/top4_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/coach_mark_item_bottom_line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLetOf="@+id/top4"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.49"
+            tools:ignore="MissingConstraints,NotSibling"
+            tools:layout_editor_absoluteX="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 챌린지와 배지를 통해 \n 더욱 즐거운 산책을 즐겨보세요!"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:lineSpacingExtra ="7dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/top4_line"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <ImageButton

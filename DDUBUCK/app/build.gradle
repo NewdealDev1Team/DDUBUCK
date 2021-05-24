@@ -90,7 +90,7 @@ dependencies {
     //for background service
     implementation "androidx.lifecycle:lifecycle-service:2.3.1"
 
-    //디자인 머테리어
+    //design material
     implementation 'com.google.android.material:material:1.0.0'
 
     //mpAndroidChart 그래프
