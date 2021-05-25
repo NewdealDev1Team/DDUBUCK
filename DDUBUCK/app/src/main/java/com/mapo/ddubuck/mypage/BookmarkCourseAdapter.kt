@@ -24,7 +24,7 @@ import kotlin.collections.ArrayList
 class BookmarkCourseAdapter(
     private val owner:Activity,
     private val itemList: ArrayList<CourseItem>,
-    private val fm: FragmentManager,):
+    private val fm: FragmentManager):
     RecyclerView.Adapter<BookmarkCourseAdapter.Holder>() {
 
     val isBookmarkChanged = MutableLiveData<Boolean>()

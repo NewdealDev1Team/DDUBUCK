@@ -42,7 +42,10 @@ class BookmarkFragment(private val owner : Activity): Fragment() {
             }
         }
 
-        val mAdapter = BookmarkCourseAdapter(owner, initArray, parentFragmentManager)
+        val mAdapter = BookmarkCourseAdapter(
+            owner,
+            initArray,
+            parentFragmentManager)
         bookmarkViewGroup.findViewById<ViewPager2>(R.id.bookmark_course_viewpager).let { v->
             v.adapter = mAdapter
         }
