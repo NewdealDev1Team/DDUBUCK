@@ -67,8 +67,6 @@ class ChallengeAdapter(
                 }
             }
             BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
-//            updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
-            Log.e("챌린22", BookmarkSharedPreferences.getBookmarkedChallenge(owner).toString())
             isBookmarkChanged.value = true
         }
 

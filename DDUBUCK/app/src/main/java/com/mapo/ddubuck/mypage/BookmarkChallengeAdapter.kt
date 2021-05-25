@@ -71,9 +71,7 @@ class BookmarkChallengeAdapter(
                 }
                 BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
             }
-//            updateRecyclerView(bookmarkedChallenge)
             isBookmarkChanged.value = true
-            Log.e("챌린", BookmarkSharedPreferences.getBookmarkedChallenge(owner).toString())
         }
 
 

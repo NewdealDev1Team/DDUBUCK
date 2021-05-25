@@ -44,7 +44,7 @@ class BookmarkFragment(private val owner: Activity) : Fragment() {
         val challengeAdapter = activity?.let {
             BookmarkChallengeAdapter(it, bookmarkedChallenge)
         }
-
+        val challengeHint: TextView = bookmarkViewGroup.findViewById(R.id.bookmark_challenge_hintText)
         val challengeRecyclerView: RecyclerView =
             bookmarkViewGroup.findViewById(R.id.bookmark_recyclerview)
         challengeRecyclerView.isNestedScrollingEnabled = false
@@ -70,6 +70,13 @@ class BookmarkFragment(private val owner: Activity) : Fragment() {
 
         challengeViewModel.isChanged.observe(viewLifecycleOwner, {
             challengeAdapter?.updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
+            if (BookmarkSharedPreferences.getBookmarkedChallenge(owner).size == 0) {
+                challengeRecyclerView.visibility = View.INVISIBLE
+                challengeHint.visibility = View.VISIBLE
+            } else {
+                challengeRecyclerView.visibility = View.VISIBLE
+                challengeHint.visibility = View.INVISIBLE
+            }
         })
 
         challengeAdapter?.isBookmarkChanged?.observe(viewLifecycleOwner, {
