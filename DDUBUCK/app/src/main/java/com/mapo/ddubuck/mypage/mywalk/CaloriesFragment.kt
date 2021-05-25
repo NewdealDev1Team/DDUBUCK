@@ -298,7 +298,6 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
                     }
                 }
                 granularity = 200F
-                //30단위마다 선을 그리려고 granularity 설정을 해 주었음
                 axisMinimum = 0F
             }
             notifyDataSetChanged()

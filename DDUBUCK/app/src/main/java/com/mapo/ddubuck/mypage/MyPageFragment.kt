@@ -233,11 +233,10 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                             val minute : Int = (timeRecordt6 / 60) % 60
                             val hourName: String = "시간"
                             val miniteName: String = "분"
-                            walkingTimeButtonRecord.setText(hour.toString() + hourName +
-                                    minute.toString() + miniteName)
+                            walkingTimeButtonRecord.setText((hour.toString() + hourName) + (minute.toString() + miniteName))
                         } else {
-                            val miniteName: String = "분"
-                            walkingTimeButtonRecord.setText(timeRecordt6.toString() + miniteName)
+                            val miniteNameNO: String = "분"
+                            walkingTimeButtonRecord.setText(timeRecordt6.toString() + miniteNameNO)
                         }
 
                         //코스 기록

@@ -85,10 +85,6 @@ class CourseClearFragment : Fragment() {
         )
     }
 
-    private val customMarkerView by lazy {
-        CustomMarketView(this.requireContext(), R.layout.item_marker_view)
-    }
-
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     private val shareButtonViewImage : Boolean = false

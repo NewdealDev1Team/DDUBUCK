@@ -52,10 +52,10 @@ import kotlinx.android.synthetic.main.fragment_walk_time.*
 
 class WalkTimeFragment : Fragment() {
 
-    //현재 날짜/시간 가져오기
+    // 현재 날짜/시간 가져오기
     val dateNow: LocalDateTime = LocalDateTime.now()
 
-    //1 ~ 5일
+    // 1 ~ 5일
     val oneDaysAgo: LocalDateTime = dateNow.minusDays(1)
     val twoDaysAgo: LocalDateTime = dateNow.minusDays(2)
     val threeDaysAgo: LocalDateTime = dateNow.minusDays(3)
@@ -64,7 +64,7 @@ class WalkTimeFragment : Fragment() {
     val sixDaysAgo: LocalDateTime = dateNow.minusDays(6)
 
 
-    //LocalDate 문자열로 포맷
+    // LocalDate 문자열로 포맷
     val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("E")
     val formatterString: String = dateNow.format(formatter)
 
@@ -91,9 +91,6 @@ class WalkTimeFragment : Fragment() {
         )
     }
 
-    private val customMarkerView by lazy {
-        CustomMarketView(this.requireContext(), R.layout.item_marker_view)
-    }
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
@@ -131,9 +128,7 @@ class WalkTimeFragment : Fragment() {
     // -- 바 차트 커스텀 --
     fun initChart(chart: BarChart) {
         //그래프의 마커를 터치할때 해당 데이터를 보여줌
-//        customMarkerView.chartView = chart
         with(chart) {
-//            marker = customMarkerView
             description.isEnabled = false
             legend.isEnabled = false
             isDoubleTapToZoomEnabled = false
@@ -152,7 +147,6 @@ class WalkTimeFragment : Fragment() {
 
     fun setData(barData: List<ChartData>) {
         val values = mutableListOf<BarEntry>()
-        //Entry에값을추가
         barData.forEachIndexed { index, chartData ->
             values.add(BarEntry(index.toFloat(), chartData.value))
         }
@@ -204,10 +198,11 @@ class WalkTimeFragment : Fragment() {
                 //월~일
                 valueFormatter = object : ValueFormatter() {
                     override fun getFormattedValue(value: Float): String {
-                        return barData[value.toInt()].date.toString()
+                        return barData[value.toInt()].date
                     }
                 }
             }
+
             //차트 왼쪽 축,Y방향 ( 수치 최소값, 최대값 )
             axisRight.apply {
                 //아래,왼쪽제목색깔
@@ -222,7 +217,7 @@ class WalkTimeFragment : Fragment() {
 
                 var count = 0
                 barData.forEachIndexed { index, chartData ->
-                    while ((chartData.value/60) > axisMaximum) {
+                    while ((chartData.value/60)> axisMaximum) {
                         count++
                         if ((chartData.value/60) > axisMaximum) {
                             axisMaximum += 30F
@@ -231,9 +226,8 @@ class WalkTimeFragment : Fragment() {
                         }
                     }
                 }
-                axisMaximum + 0F
+
                 granularity = 30F//30단위마
-                axisMaximum -= 30F
                 axisMinimum = 0F
 
                 //y축 제목 커스텀
@@ -261,12 +255,10 @@ class WalkTimeFragment : Fragment() {
                         }
                     }
                 }
-                axisMaximum + 30F
                 granularity = 30F
                 axisMinimum = 0F
-                //axisMaximum=90F
             }
-            //notifyDataSetChanged()
+            notifyDataSetChanged()
             this.data = data
             invalidate()
         }
