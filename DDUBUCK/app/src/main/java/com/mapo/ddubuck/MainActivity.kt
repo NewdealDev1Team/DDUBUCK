@@ -1,6 +1,5 @@
 package com.mapo.ddubuck
 
-import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.os.Build
@@ -14,7 +13,6 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -50,6 +48,7 @@ class MainActivity : AppCompatActivity() {
     private val drawerFragment = FilterDrawer(this@MainActivity)
 
     private lateinit var activeFragment: Fragment
+    private var isMyPageFragmentShown : Boolean = false
     private val mapModel: HomeMapViewModel by viewModels()
     private val activityModel: MainActivityViewModel by viewModels()
 
@@ -136,8 +135,6 @@ class MainActivity : AppCompatActivity() {
             add(R.id.nav_main_container, challengeFragment).hide(challengeFragment)
             add(R.id.nav_main_container, badgeFragment).hide(badgeFragment)
             add(R.id.nav_main_container, myPageFragment).hide(myPageFragment)
-            add(R.id.nav_main_container, settingFragment).hide(settingFragment)
-            add(R.id.nav_main_container, bookmarkFragment).hide(bookmarkFragment)
             add(R.id.main_drawer_frame, drawerFragment)
         }.commit()
         activeFragment = homeFragment
@@ -170,6 +167,8 @@ class MainActivity : AppCompatActivity() {
                                 fm.popBackStack(backStackTag,
                                     FragmentManager.POP_BACK_STACK_INCLUSIVE)
                                 tbm.title = "마이페이지"
+                                isMyPageFragmentShown = false
+                                invalidateOptionsMenu()
                             }
                         }
                         else -> {
@@ -232,7 +231,11 @@ class MainActivity : AppCompatActivity() {
                 menuInflater.inflate(R.menu.toolbar_menu_home, menu)
             }
             myPageFragment -> {
-                menuInflater.inflate(R.menu.toolbar_menu_mypage, menu)
+                if(isMyPageFragmentShown) {
+                    menuInflater.inflate(R.menu.toolbar_menu_empty, menu)
+                } else {
+                    menuInflater.inflate(R.menu.toolbar_menu_mypage, menu)
+                }
             }
             else -> {
 
@@ -251,22 +254,20 @@ class MainActivity : AppCompatActivity() {
             R.id.action_bookmark -> {
                 supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
-                    .hide(activeFragment)
-                    .detach(activeFragment)
-                    .attach(bookmarkFragment)
-                    .show(bookmarkFragment)
+                    .replace(R.id.nav_main_container, bookmarkFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
-
+                isMyPageFragmentShown = true
                 activityModel.toolbarTitle.value = "북마크"
+                invalidateOptionsMenu()
             }
             R.id.action_settings -> {
                 supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
-                    .hide(activeFragment)
-                    .show(settingFragment)
+                    .replace(R.id.nav_main_container, settingFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
-
+                isMyPageFragmentShown = true
                 activityModel.toolbarTitle.value = "설정"
+                invalidateOptionsMenu()
             }
         }
         return super.onOptionsItemSelected(item)
