@@ -20,10 +20,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.observe
-//import com.coderfolk.multilamp.customView.MultiLamp
-//import com.coderfolk.multilamp.model.Target
-//import com.coderfolk.multilamp.shapes.Circle
-//import com.coderfolk.multilamp.shapes.Rectangle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mapo.ddubuck.badge.BadgeFragment
 import com.mapo.ddubuck.challenge.ChallengeFragment
@@ -102,20 +98,19 @@ class MainActivity : AppCompatActivity() {
         if (!isCoachMarkOn) {
             onCoachMark()
         }
-        Log.d("coachmark","${isCoachMarkOn}")
+        Log.d("coachmark","$isCoachMarkOn")
 
     }
 
-    fun onCoachMark() {
+    private fun onCoachMark(){
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
-//        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
 
 
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
 
         //코치마크 어디든 터치 시 창이 닫힌다.
-        val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
+        val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)
         masterView.setOnClickListener{
             UserSharedPreferences.setCoachMarkExit(this,true)
             dialog.dismiss()
