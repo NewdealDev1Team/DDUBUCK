@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
         initToolBar()
         initFragmentManager()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             initVibrator()
         }
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -96,8 +96,6 @@ class MainActivity : AppCompatActivity() {
         if (!isCoachMarkOn) {
             onCoachMark()
         }
-        Log.d("coachmark","$isCoachMarkOn")
-
     }
 
     private fun onCoachMark(){
@@ -275,15 +273,17 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.popBackStackImmediate()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
+        supportFragmentManager.popBackStackImmediate()
         activeFragment = fragment
+        isMyPageFragmentShown = false
         changeToolBar(fragment)
     }
 
     private fun changeToolBar(fragment: Fragment) {
         val toolbarTextView: TextView = findViewById(R.id.main_toolbar_text)
+        val drawerLayout : DrawerLayout = findViewById(R.id.main_drawerLayout)
         val tbm = supportActionBar
         if (tbm != null) {
             when (fragment) {
@@ -292,23 +292,27 @@ class MainActivity : AppCompatActivity() {
                     tbm.title = "챌린지"
                     toolbarTextView.text = ""
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 badgeFragment -> {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "뱃지"
                     toolbarTextView.text = ""
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 myPageFragment -> {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "마이페이지"
                     toolbarTextView.text = ""
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 else -> {
                     tbm.setDisplayShowTitleEnabled(false)
                     toolbarTextView.text = "뚜벅뚜벅"
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 }
             }
             tbm.setDisplayHomeAsUpEnabled(false)
