@@ -76,9 +76,16 @@ class BottomSheetCompleteFragment(
         }
         val addToMyPathButton : Button = rootView.findViewById(R.id.sheet_complete_addToMyPathButton)
         if(walkType == HomeMapFragment.WALK_FREE) {
-            addToMyPathButton.setOnClickListener{
-                val dialog = CourseAddDialog(walkRecord,userKey,owner)
-                dialog.show(parentFragmentManager, MainActivity.HOME_TAG)
+            if(walkRecord.path.size > 2) {
+                addToMyPathButton.setOnClickListener{
+                    val dialog = CourseAddDialog(walkRecord,userKey,owner)
+                    dialog.show(parentFragmentManager, MainActivity.HOME_TAG)
+                }
+            } else {
+                addToMyPathButton.background =  ResourcesCompat.getDrawable(resources,
+                    R.drawable.sheet_button_deactivated,
+                    null)
+                addToMyPathButton.setTextColor(Color.GRAY)
             }
         } else {
             val buttonLayout : LinearLayout = rootView.findViewById(R.id.sheet_complete_buttonLayout)
