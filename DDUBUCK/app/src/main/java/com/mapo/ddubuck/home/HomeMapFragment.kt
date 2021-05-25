@@ -186,12 +186,16 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private fun createNotification(title : String, content : String) {
         /** 서비스 켜졌을 때만 작동함 **/
         if(allowRecording) {
-            val builder = NotificationCompat.Builder(owner, HomeMapService.NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle(title)
-                .setContentText(content)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            HomeMapService.notification.value = builder.build()
+            if(UserSharedPreferences.getPushAlarm(owner)) {
+                val builder = NotificationCompat.Builder(owner, HomeMapService.NOTIFICATION_CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setContentTitle(title)
+                    .setContentText(content)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                HomeMapService.notification.value = builder.build()
+                mapModel.vibrate(true)
+            }
+
         } else {
             Log.e("HomeMap", "HomMapService를 활성화해주세요")
         }
@@ -758,7 +762,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             createNotification("히든 챌린지 달성!", "히든 챌린지 달성! : ${hiddenPlace.title}")
             completedHiddenPlaces.add(hiddenPlace)
             hiddenPlaces.removeAt(0)
-            mapModel.vibrate(true)
         } else {
             hintHiddenPlace(currentPos, hiddenPlace)
         }
@@ -774,7 +777,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 in 200.1..300.0 -> {
                     if(!hiddenPlace.firstHintShown) {
                         Toast.makeText(owner, "히든 챌린지가 반경 300미터 내에 있습니다!", Toast.LENGTH_LONG).show()
-                        mapModel.vibrate(true)
                         createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 300미터 내에 있습니다!")
                         hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].firstHintShown = true
                     }
@@ -782,7 +784,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 in 100.1..200.0 -> {
                     if(!hiddenPlace.secondHintShown) {
                         Toast.makeText(owner, "히든 챌린지가 반경 200미터 내에 있습니다!", Toast.LENGTH_LONG).show()
-                        mapModel.vibrate(true)
                         createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 200미터 내에 있습니다!")
                         hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].secondHintShown = true
                     }
@@ -790,7 +791,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 in 16.0..100.0 -> {
                     if(!hiddenPlace.thirdHintShown) {
                         Toast.makeText(owner, "히든 챌린지가 반경 100미터 내에 있습니다!", Toast.LENGTH_LONG).show()
-                        mapModel.vibrate(true)
                         createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 100미터 내에 있습니다!")
                         hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].thirdHintShown = true
                     }
