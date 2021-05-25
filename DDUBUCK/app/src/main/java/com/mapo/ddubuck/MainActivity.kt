@@ -96,16 +96,19 @@ class MainActivity : AppCompatActivity() {
         if (!isCoachMarkOn) {
             onCoachMark()
         }
+        Log.d("coachmark","$isCoachMarkOn")
+
     }
 
-    private fun onCoachMark() {
+    private fun onCoachMark(){
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+
 
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
 
         //코치마크 어디든 터치 시 창이 닫힌다.
-        val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
+        val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)
         masterView.setOnClickListener{
             UserSharedPreferences.setCoachMarkExit(this,true)
             dialog.dismiss()
