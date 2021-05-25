@@ -483,7 +483,6 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             null
         }
 
-        /*
         RetrofitService().createRecord(
             userKey,
             courseTitle,
@@ -495,7 +494,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             completedHiddenPlaces
         ) {
             mapModel.recordMywalk.value = true
-        }*/
+        }
 
         completedHiddenPlaces.clear()
         parentFragmentManager.beginTransaction()
@@ -798,6 +797,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 }
                 in 16.0..100.0 -> {
                     if(!hiddenPlace.thirdHintShown) {
+                        HiddenChallengeHintDialog(hiddenPlace.picture, owner).let {
+                            it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                            it.show()
+                        }
                         Toast.makeText(owner, "히든 챌린지가 반경 100미터 내에 있습니다!", Toast.LENGTH_LONG).show()
                         createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 100미터 내에 있습니다!")
                         hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].thirdHintShown = true

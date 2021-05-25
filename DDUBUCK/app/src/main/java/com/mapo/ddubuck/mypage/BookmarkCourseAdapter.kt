@@ -58,18 +58,6 @@ class BookmarkCourseAdapter(
         private val bookmark = itemView?.findViewById<ImageView>(R.id.sheet_select_item_bookmark)
         fun bind(i: CourseItem, fm: FragmentManager) {
             if (i.isFreeWalk) {
-                itemView.setOnClickListener {
-                    selectItem(
-                        fm,
-                        CourseItem(
-                            true,
-                            null,
-                            "자유산책",
-                            "자유산책입니다",
-                            WalkRecord(listOf(), 0.0, 0.0, 1, 1, 1.0)
-                        ),
-                    )
-                }
                 title?.text = "자유산책"
                 body?.text = "나만의 자유로운 산책,\n즐길 준비 되었나요?"
                 picture?.setImageResource(R.drawable.ic_walk_free)
@@ -77,7 +65,6 @@ class BookmarkCourseAdapter(
                 picture?.clipToOutline = true
                 bookmark?.visibility = View.INVISIBLE
             } else {
-                itemView.setOnClickListener { selectItem(fm, i) }
                 title?.text = i.title
                 body?.text = i.description
                 picture?.let { v ->
@@ -101,30 +88,6 @@ class BookmarkCourseAdapter(
                 }
             }
         }
-
-
-        private fun selectItem(fm: FragmentManager, courseItem: CourseItem) {
-            if (courseItem.isFreeWalk) {
-                val frag = BottomSheetFreeDetailFragment()
-                val fmTransaction = fm.beginTransaction()
-                fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter,
-                    R.anim.fragment_fade_exit)
-                fmTransaction.replace(R.id.bottom_sheet_container,
-                    frag,
-                    HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_TAG)
-                    .commit()
-            } else {
-                val frag = BottomSheetCourseDetailFragment(courseItem)
-                val fmTransaction = fm.beginTransaction()
-                fmTransaction.setCustomAnimations(R.anim.fragment_fade_enter,
-                    R.anim.fragment_fade_exit)
-                fmTransaction.replace(R.id.bottom_sheet_container,
-                    frag,
-                    HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_TAG)
-                    .commit()
-            }
-        }
-
     }
 }
 
