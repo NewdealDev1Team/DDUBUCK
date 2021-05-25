@@ -83,7 +83,7 @@ private val shareButtonViewImage : Boolean = false
 
         val challengeShareButton: Button = challengeDetailView.findViewById(R.id.challenge_screenshot)
 
-        disatnceChallengeDetailText.text = detailText
+        disatnceChallengeDetailText.text = detailTextMonth
 
         setChallengeDetail(challengeDetailRecyclerView, sectionNumber, titleIndex, challengeDetailTitle, disatnceChallengeDetailText)
 
@@ -125,7 +125,7 @@ private val shareButtonViewImage : Boolean = false
         when (sectionNumber) {
             "1" -> {
                 challengeDetailTitle.text = ddubuckDetailTitle(userViewModel.username.value.toString())[titleIndex.toInt()]
-                disatnceChallengeDetailText.text = detailText
+                disatnceChallengeDetailText.text = detailTextMonth
                 when (titleIndex.toInt()) {
                     0 -> {
                         val distance = challengeDetail.distance
@@ -143,6 +143,7 @@ private val shareButtonViewImage : Boolean = false
 
                     }
                     1 -> {
+                        disatnceChallengeDetailText.text = detailTextDay
                         val stepCount = challengeDetail.stepCount
 
                         val stepCountTitle = mutableListOf<String>()
@@ -214,7 +215,7 @@ private val shareButtonViewImage : Boolean = false
             "3" -> {
                 challengeDetailTitle.text =
                     petDetailTitle((userViewModel.username.value.toString()))[titleIndex.toInt()]
-                disatnceChallengeDetailText.text = detailText
+                disatnceChallengeDetailText.text = detailTextMonth
 
                 when (titleIndex.toInt()) {
                     0 -> {
@@ -344,7 +345,8 @@ private val shareButtonViewImage : Boolean = false
         )
     }
 
-    private val detailText = "이 미션은 한 달마다 갱신 됩니다."
+    private val detailTextMonth = "이 미션은 한 달마다 갱신 됩니다."
+    private val detailTextDay = "이 미션은 하루마다 갱신 됩니다."
 
 
 }
