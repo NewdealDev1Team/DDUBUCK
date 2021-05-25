@@ -10,6 +10,7 @@ class MypageViewModel: ViewModel() {
     val username = MutableLiveData<String>()
     fun setUserValue(value: String) {
         username.value = value
-
     }
+
+    val isRouteChanged = MutableLiveData<Boolean>()
 }

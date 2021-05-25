@@ -52,7 +52,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface UserRouteCallback {
     fun onSuccessRoute(
         userRouteRecyclerView: RecyclerView,
-        userRoute: UserRoute
+        userRoute: UserRoute,
+        userRouteHint: TextView
     )
 }
 
@@ -65,6 +66,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     private lateinit var activeFragment: Fragment
     //뷰모델
     private val homemapViewModel: HomeMapViewModel by activityViewModels()
+    private val myapgeViewModel: MypageViewModel by activityViewModels()
 
     var userRouteAdapter: UserRouteAdapter? = null
 
@@ -169,7 +171,13 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         val userRouteRecyclerView: RecyclerView =
             myPageView.findViewById(R.id.user_route_recyclerview)
         userRouteRecyclerView.isNestedScrollingEnabled = false
-        setUserRoute(userRouteRecyclerView)
+        val userRouteHint: TextView = myPageView.findViewById(R.id.user_route_hint)
+        setUserRoute(userRouteRecyclerView, userRouteHint)
+
+        myapgeViewModel.isRouteChanged.observe(viewLifecycleOwner, {
+            setUserRoute(userRouteRecyclerView, userRouteHint)
+        })
+
         return myPageView
 
     }
@@ -194,6 +202,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                     count += 1
                 }
             }
+
             Log.e("이미지 경로", uriArr.toString())
 
             cursor.close()
@@ -300,7 +309,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         }
     }
 
-    private fun setUserRoute(userRouteRecyclerView: RecyclerView) {
+    private fun setUserRoute(userRouteRecyclerView: RecyclerView, userRouteHint: TextView) {
         val userValidation: Retrofit = Retrofit.Builder()
             .baseUrl("http://3.37.6.181:3000/get/User/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -314,7 +323,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                     val userRouteResponse = response.body()
                     if (userRouteResponse != null) {
                         Log.e("성공", "사용자 지정 경로 가져오기 성공")
-                        onSuccessRoute(userRouteRecyclerView, userRouteResponse)
+                        onSuccessRoute(userRouteRecyclerView, userRouteResponse, userRouteHint)
                     }
                 }
 
@@ -343,13 +352,20 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     }
 
 
-    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute) {
-        userRouteAdapter = context?.let { UserRouteAdapter(userRoute.audit, userRoute.complete, it) }
+    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute, userRouteHint: TextView) {
+        userRouteAdapter = context?.let { UserRouteAdapter(userRoute.audit, userRoute.complete,userViewModel, it) }
         userRouteRecyclerView.apply {
             this.adapter = userRouteAdapter
             this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
         }
 
+        if (userRoute.audit.isEmpty() && userRoute.complete.isEmpty()) {
+            userRouteRecyclerView.visibility = View.INVISIBLE
+            userRouteHint.visibility = View.VISIBLE
+        } else {
+            userRouteRecyclerView.visibility = View.VISIBLE
+            userRouteHint.visibility = View.INVISIBLE
+        }
     }
 
 }

@@ -10,15 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isInvisible
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.mapo.ddubuck.R
 import kotlinx.android.synthetic.main.user_course_layout.view.*
 
 
 class UserRouteAdapter(
-    var audit: MutableList<Audit>, private var complete: MutableList<Complete>, val context: Context
+    var audit: MutableList<Audit>, private var complete: MutableList<Complete>,
+    val myapgeViewModel: MypageViewModel, val context: Context
 ) : RecyclerView.Adapter<UserRouteAdapter.MyPageViewHolder>() {
-
     inner class MyPageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var userRouteItemTitle: TextView = itemView.user_route_view_title
@@ -58,6 +59,7 @@ class UserRouteAdapter(
                     "audit",
                     auditCreatedAt,
                     this,
+                    myapgeViewModel,
                     context as Activity)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 dialog.show()
@@ -88,6 +90,7 @@ class UserRouteAdapter(
                     "complete",
                     completeCreatedAt,
                     this,
+                    myapgeViewModel,
                     context as Activity)
                 dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 dialog.show()
