@@ -48,6 +48,7 @@ class BookmarkFragment(private val owner: Activity) : Fragment() {
         val challengeRecyclerView: RecyclerView =
             bookmarkViewGroup.findViewById(R.id.bookmark_recyclerview)
         challengeRecyclerView.isNestedScrollingEnabled = false
+        challengeRecyclerView.isNestedScrollingEnabled = false
         challengeRecyclerView.apply {
             this.adapter = challengeAdapter
             this.layoutManager = GridLayoutManager(bookmarkViewGroup.context, 2)
