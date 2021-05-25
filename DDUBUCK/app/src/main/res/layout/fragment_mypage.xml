@@ -277,9 +277,10 @@
                         android:numColumns="4" />
 
                     <TextView
+
                         android:id="@+id/user_gallery_hint"
                         android:gravity="center"
-                        android:text="나의 갤러리에 사진이 아직 없어요!"
+                        android:text="아직 나의 갤러리에 사진이 없어요!"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"/>
 
@@ -290,7 +291,7 @@
                     android:id="@+id/mypage_divider_big"
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
-                    android:layout_marginTop="22dp"
+                    android:layout_marginTop="19dp"
                     android:background="#10767676"
                     app:layout_constraintTop_toBottomOf="@+id/my_gallary_title"
                     tools:ignore="MissingConstraints" />

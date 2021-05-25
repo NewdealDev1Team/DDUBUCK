@@ -94,7 +94,8 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         val stepCountInMypage: TextView = myPageView.findViewById(R.id.step_count)
 
         val galleryGrid: GridView = myPageView.findViewById(R.id.gallery_grid)
-        getAllPhotos(galleryGrid)
+        val galleryHint: TextView = myPageView.findViewById(R.id.user_gallery_hint)
+        getAllPhotos(galleryGrid, galleryHint)
 
         val walkingTimeButton: ConstraintLayout = myPageView.findViewById(R.id.walking_time_button)
         val courseClearButton: ConstraintLayout =
@@ -183,7 +184,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun getAllPhotos(gridView: GridView) {
+    private fun getAllPhotos(gridView: GridView, hint: TextView) {
         val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
             null,
@@ -202,10 +203,15 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                     count += 1
                 }
             }
-
-            Log.e("이미지 경로", uriArr.toString())
-
             cursor.close()
+        }
+
+        if (uriArr.isEmpty()) {
+            gridView.visibility = View.INVISIBLE
+            hint.visibility = View.VISIBLE
+        } else {
+            gridView.visibility = View.VISIBLE
+            hint.visibility = View.INVISIBLE
         }
 
         val adapter = context?.let { GalleryAdapter(it, uriArr) }
