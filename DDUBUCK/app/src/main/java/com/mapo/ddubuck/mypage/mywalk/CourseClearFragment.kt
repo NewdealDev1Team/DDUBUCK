@@ -87,6 +87,10 @@ class CourseClearFragment : Fragment() {
         )
     }
 
+    private val customMarkerView by lazy {
+        CustomMarketView(this.requireContext(), R.layout.item_marker_view)
+    }
+
     private val mainViewModel: MainActivityViewModel by activityViewModels()
 
     private val shareButtonViewImage : Boolean = false
@@ -119,72 +123,11 @@ class CourseClearFragment : Fragment() {
 
         return rootView
     }
-    // --- 캡처 후 공유 --
-    private fun takeAndShareScreenShot(shareButtonView: View) {
-        Instacapture.capture(this.requireActivity(),
-            object : SimpleScreenCapturingListener() {
-                override fun onCaptureComplete(captureview: Bitmap) {
-                    val capture: ScrollView =
-                        requireView().findViewById(R.id.courseclear) as ScrollView
-                    shareButtonView.visibility = View.GONE
-                    capture.buildDrawingCache()
-                    val captureview: Bitmap = capture.getDrawingCache()
-                    val uri = saveImageExternal(captureview)
-                    uri?.let {
-                        if (!shareImageURI(uri)) {
-                            shareButtonView.visibility = View.VISIBLE
-                        } else {
-                            shareImageURI(uri)
-                        }
-                    }
-                }
-            }, course_share_button)
-    }
-
-    fun saveImageExternal(image: Bitmap): Uri? {
-        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
-        var fos: OutputStream? = null
-        var uri: Uri? = null
-        val contentValues = ContentValues().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
-            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
-            put(MediaStore.Video.Media.IS_PENDING, 1)
-        }
-
-        //use application context to get contentResolver
-        val contentResolver = this.requireActivity().contentResolver
-
-        contentResolver.also { resolver ->
-            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            fos = uri?.let { resolver.openOutputStream(it) }
-        }
-
-        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
-
-        contentValues.clear()
-        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
-        contentResolver.update(uri!!, contentValues, null, null)
-
-        return uri!!
-    }
-
-    fun shareImageURI(uri: Uri) : Boolean {
-        val shareIntent: Intent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(Intent.EXTRA_STREAM, uri)
-            type = "message/rfc822"
-            type = "image/*"
-        }
-
-        startActivity(Intent.createChooser(shareIntent, "Send to"))
-        return shareButtonViewImage
-    }
-
     // -- 바 차트 커스텀 --
     fun initChart(chart: BarChart){
-
+//        customMarkerView.chartView = chart
         with(chart) {//그래프의 마커를 터치히라 때 해당 데이터를 보여줌
+//            marker = customMarkerView
             description.isEnabled = false
             legend.isEnabled = false
             isDoubleTapToZoomEnabled = false
@@ -223,6 +166,7 @@ class CourseClearFragment : Fragment() {
             //투명,불투명
             highLightAlpha = 0
         }
+
         //data 클릭 시 분으로 나오는 커스텀
         barDataSet.valueFormatter = object : ValueFormatter() {
             private val mFormat: DecimalFormat = DecimalFormat("###")
@@ -315,6 +259,68 @@ class CourseClearFragment : Fragment() {
             this.data = data
             invalidate()
         }
+    }
+
+    // --- 캡처 후 공유 --
+    private fun takeAndShareScreenShot(shareButtonView: View) {
+        Instacapture.capture(this.requireActivity(),
+            object : SimpleScreenCapturingListener() {
+                override fun onCaptureComplete(captureview: Bitmap) {
+                    val capture: ScrollView =
+                        requireView().findViewById(R.id.courseclear) as ScrollView
+                    shareButtonView.visibility = View.GONE
+                    capture.buildDrawingCache()
+                    val captureview: Bitmap = capture.getDrawingCache()
+                    val uri = saveImageExternal(captureview)
+                    uri?.let {
+                        if (!shareImageURI(uri)) {
+                            shareButtonView.visibility = View.VISIBLE
+                        } else {
+                            shareImageURI(uri)
+                        }
+                    }
+                }
+            }, course_share_button)
+    }
+
+    fun saveImageExternal(image: Bitmap): Uri? {
+        val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
+        var fos: OutputStream? = null
+        var uri: Uri? = null
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.Video.Media.IS_PENDING, 1)
+        }
+
+        //use application context to get contentResolver
+        val contentResolver = this.requireActivity().contentResolver
+
+        contentResolver.also { resolver ->
+            uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            fos = uri?.let { resolver.openOutputStream(it) }
+        }
+
+        fos?.use { image.compress(Bitmap.CompressFormat.JPEG, 70, it) }
+
+        contentValues.clear()
+        contentValues.put(MediaStore.Video.Media.IS_PENDING, 0)
+        contentResolver.update(uri!!, contentValues, null, null)
+
+        return uri!!
+    }
+
+    fun shareImageURI(uri: Uri) : Boolean {
+        val shareIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "message/rfc822"
+            type = "image/*"
+        }
+
+        startActivity(Intent.createChooser(shareIntent, "Send to"))
+        return shareButtonViewImage
     }
 
     //  -- 산책 기록 API Call --

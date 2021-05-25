@@ -130,8 +130,9 @@ class WalkTimeFragment : Fragment() {
 
     // -- 바 차트 커스텀 --
     fun initChart(chart: BarChart) {
+        //그래프의 마커를 터치할때 해당 데이터를 보여줌
 //        customMarkerView.chartView = chart
-        with(chart) {//그래프의 마커를 터치때 해당 데이터를 보여줌
+        with(chart) {
 //            marker = customMarkerView
             description.isEnabled = false
             legend.isEnabled = false
@@ -230,7 +231,9 @@ class WalkTimeFragment : Fragment() {
                         }
                     }
                 }
-                granularity = 30F//30단위마다
+                axisMaximum + 0F
+                granularity = 30F//30단위마
+                axisMaximum -= 30F
                 axisMinimum = 0F
 
                 //y축 제목 커스텀

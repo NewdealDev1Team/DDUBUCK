@@ -37,7 +37,7 @@
     </style>
 
 
-    <!-- 코치마크 테마 변경    WalkthroughTheme 화면 FullScreen 포함 -->
+    <!-- coachMark Theme change    WalkthroughTheme window FullScreen  -->
     <style name="WalkthroughTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>

@@ -134,9 +134,4 @@ dependencies {
     //LocalDataTime
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
 
-    // spotlight
-//    implementation 'com.github.takusemba:spotlight:2.0.1'
-
-    implementation 'com.github.ujwalthote:MultiLamp:2.0'
-
 }
