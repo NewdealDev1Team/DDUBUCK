@@ -243,7 +243,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                         //시간 기록
                         var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
-                        if (60 <= timeRecordt6.toInt()) {
+                        if (60 <= (timeRecordt6.toInt())/60) {
                             val hour: Int = ( timeRecordt6 / 60 ) / 60
                             val minute : Int = (timeRecordt6 / 60) % 60
                             val hourName: String = "시간"
@@ -251,7 +251,8 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                             walkingTimeButtonRecord.setText((hour.toString() + hourName) + (minute.toString() + miniteName))
                         } else {
                             val miniteNameNO: String = "분"
-                            walkingTimeButtonRecord.setText(timeRecordt6.toString() + miniteNameNO)
+                            val hour: Int =  timeRecordt6 / 60
+                            walkingTimeButtonRecord.setText(hour.toString() + miniteNameNO)
                         }
 
                         //코스 기록

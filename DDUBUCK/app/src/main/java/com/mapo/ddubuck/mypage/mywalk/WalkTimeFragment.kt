@@ -226,7 +226,6 @@ class WalkTimeFragment : Fragment() {
                         }
                     }
                 }
-
                 granularity = 30F//30단위마
                 axisMinimum = 0F
 
