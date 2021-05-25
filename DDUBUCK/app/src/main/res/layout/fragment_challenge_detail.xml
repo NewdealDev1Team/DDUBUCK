@@ -51,7 +51,7 @@
                android:nestedScrollingEnabled="false"
                android:id="@+id/challenge_detail_recyclerView"
                android:background="@color/white"
-               android:layout_width="match_parent"
+               android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_below="@+id/challenge_screenshot"
                android:layout_centerHorizontal="true"
