@@ -243,6 +243,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                         //시간 기록
                         var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
+                        //분으로 되어 있으니 그것을 시간으로 바꾸기
                         if (60 <= (timeRecordt6.toInt())/60) {
                             val hour: Int = ( timeRecordt6 / 60 ) / 60
                             val minute : Int = (timeRecordt6 / 60) % 60
