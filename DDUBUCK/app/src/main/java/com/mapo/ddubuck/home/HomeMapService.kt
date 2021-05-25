@@ -84,7 +84,9 @@ class HomeMapService : LifecycleService() {
                 ACTION_STOP_SERVICE -> {
                     isTracking.postValue(false)
                     Log.d("HomeMapService","Stopped service")
-                    timer.cancel()
+                    if(::timer.isInitialized) {
+                        timer.cancel()
+                    }
                     walkTime = 0
                     stopSelf()
                 }

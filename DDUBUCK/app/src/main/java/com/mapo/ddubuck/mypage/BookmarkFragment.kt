@@ -16,7 +16,6 @@ import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.home.HomeMapViewModel
-import com.mapo.ddubuck.home.bottomSheet.BookmarkCourseAdapter
 import com.mapo.ddubuck.login.LoginActivity
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 

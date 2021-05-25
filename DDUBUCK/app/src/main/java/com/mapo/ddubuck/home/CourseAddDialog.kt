@@ -36,7 +36,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogCourseAddBinding.inflate(inflater)
         val numberFormatter = BottomSheetNumberFormat()
         var bitmapUri : Uri? = null
