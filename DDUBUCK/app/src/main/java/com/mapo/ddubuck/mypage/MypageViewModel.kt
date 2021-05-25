@@ -12,5 +12,6 @@ class MypageViewModel: ViewModel() {
         username.value = value
     }
 
+    val isImageUpdate = MutableLiveData<Boolean>()
     val isRouteChanged = MutableLiveData<Boolean>()
 }
