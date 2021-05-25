@@ -22,6 +22,7 @@ import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.databinding.DialogCourseAddBinding
 import com.mapo.ddubuck.home.bottomSheet.BottomSheetNumberFormat
+import com.mapo.ddubuck.mypage.MypageViewModel
 import com.mapo.ddubuck.share.ImageProviderSelectDialog
 import com.mapo.ddubuck.share.ImageProviderSheetViewModel
 import java.lang.IllegalArgumentException
@@ -31,6 +32,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
                       private val owner: Activity) : DialogFragment() {
     private lateinit var binding : DialogCourseAddBinding
     private val imageProviderSheetViewModel : ImageProviderSheetViewModel by activityViewModels()
+    private val mypageViewModel : MypageViewModel by activityViewModels()
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +68,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
                 val imageUri = getRealPathFromURI(bitmapUri!!)!!
 
                 RetrofitService().addAdditionalInfo(userKey,title,description,imageUri)
-
+                mypageViewModel.isRouteChanged.value = true
                 dismiss()
             }
 
