@@ -112,6 +112,7 @@ object UserSharedPreferences {
             }
         }
         return list
+    }
 
     fun setPushAlarm(context: Context, isOn: Boolean) {
         val prefs : SharedPreferences = context.getSharedPreferences("pushAlarm", Context.MODE_PRIVATE)

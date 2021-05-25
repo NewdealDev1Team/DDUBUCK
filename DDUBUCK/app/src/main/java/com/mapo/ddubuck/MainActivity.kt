@@ -98,14 +98,10 @@ class MainActivity : AppCompatActivity() {
         if (!isCoachMarkOn) {
             onCoachMark()
         }
-        Log.d("coachmark","${isCoachMarkOn}")
-
     }
 
-    fun onCoachMark() {
+    private fun onCoachMark() {
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
-//        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
-
 
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
