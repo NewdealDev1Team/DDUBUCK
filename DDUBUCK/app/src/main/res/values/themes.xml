@@ -10,7 +10,7 @@
         <!-- 상단바 제목   -->
         <item name="android:textColorPrimary">@color/black</item>
         <!--  기본 상태바 색     -->
-<!--        <item name="android:textColor">@color/black</item>-->
+        <!--        <item name="android:textColor">@color/black</item>-->
         <!--  상태바   -->
         <item name="colorPrimaryVariant">@color/grey</item>
         <!--  타이틀바 이름 -->
@@ -37,14 +37,14 @@
     </style>
 
 
-    <!-- 코치마크 테마 변경    WalkthroughTheme 화면 FullScreen 포함 -->
-    <style name="WalkthroughTheme" parent="Theme.AppCompat">
+    <!-- coachMark Theme change    WalkthroughTheme window FullScreen  -->
+    <style name="WalkthroughTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:background">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
 </resources>

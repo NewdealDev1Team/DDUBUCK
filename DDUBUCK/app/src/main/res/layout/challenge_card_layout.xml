@@ -61,15 +61,19 @@
         </FrameLayout>
 
 
-        <ImageView
+        <ToggleButton
+            android:textOn=""
+            android:textOff=""
             android:id="@+id/challenge_bookmark"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="20dp"
             android:layout_marginRight="8dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_bookmark_empty" />
+            android:background="@drawable/bookmark_toggle" />
 
 
 

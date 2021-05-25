@@ -3,24 +3,13 @@ package com.mapo.ddubuck
 import android.Manifest
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.renderscript.Allocation
-import android.renderscript.Element
-import android.renderscript.RenderScript
-import android.renderscript.ScriptIntrinsicBlur
 import android.util.Log
 import android.view.*
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -38,19 +27,21 @@ import com.mapo.ddubuck.home.FilterDrawer
 import com.mapo.ddubuck.home.HomeFragment
 import com.mapo.ddubuck.home.HomeMapViewModel
 import com.mapo.ddubuck.home.bottomSheet.*
+import com.mapo.ddubuck.mypage.BookmarkFragment
 import com.mapo.ddubuck.mypage.MyPageFragment
 import com.mapo.ddubuck.mypage.SettingFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
-import com.mapo.ddubuck.mypage.BookmarkFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.coach_mark.view.*
 import kotlinx.android.synthetic.main.fragment_mypage.*
 import kotlinx.android.synthetic.main.fragment_walk_time.*
+import java.util.*
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
-    private val challengeFragment = ChallengeFragment()
+    private val challengeFragment = ChallengeFragment(this)
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
@@ -102,6 +93,7 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
+
         val isCoachMarkOn : Boolean = UserSharedPreferences.getCoachMarkExit(this)
         if (!isCoachMarkOn) {
             onCoachMark()
@@ -110,10 +102,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
-
     fun onCoachMark() {
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+//        val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+
+
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
 
@@ -126,10 +119,13 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun initVibrator() {
         val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            mapModel.vibrationControl.observe(this, {
+        mapModel.vibrationControl.observe(this, {
             vibrator.vibrate(VibrationEffect.createOneShot(100, 85))
         })
     }
@@ -209,6 +205,10 @@ class MainActivity : AppCompatActivity() {
                     when (activeFragment) {
                         challengeFragment -> {
                             tbm.title = "챌린지"
+                            fm.beginTransaction()
+                                .detach(activeFragment)
+                                .attach(challengeFragment)
+                                .commit()
                         }
                         badgeFragment -> {
                             tbm.title = "뱃지"
@@ -276,6 +276,8 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
                     .hide(activeFragment)
+                    .detach(activeFragment)
+                    .attach(bookmarkFragment)
                     .show(bookmarkFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
 

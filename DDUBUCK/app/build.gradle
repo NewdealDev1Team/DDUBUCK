@@ -16,6 +16,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        //LocalDataTime
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -25,6 +27,8 @@ android {
         }
     }
     compileOptions {
+        //LocalDataTime
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -35,9 +39,7 @@ android {
     viewBinding {
         enabled = true
     }
-//    lintOptions {
-//        abortOnError false
-//    }
+
 }
 
 dependencies {
@@ -88,7 +90,7 @@ dependencies {
     //for background service
     implementation "androidx.lifecycle:lifecycle-service:2.3.1"
 
-    //디자인 머테리어
+    //design material
     implementation 'com.google.android.material:material:1.0.0'
 
     //mpAndroidChart 그래프
@@ -128,5 +130,8 @@ dependencies {
 
     // SVG Loader
     implementation 'com.github.corouteam:GlideToVectorYou:v2.0.0'
+
+    //LocalDataTime
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.0.9")
 
 }

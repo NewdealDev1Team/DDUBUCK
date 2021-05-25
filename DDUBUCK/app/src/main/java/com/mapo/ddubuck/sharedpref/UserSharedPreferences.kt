@@ -24,11 +24,6 @@ object UserSharedPreferences {
         val prefs : SharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE)
         return prefs.getString("ACCOUNT_ID", "").toString()
     }
-//
-//    fun passUser(context: Context): String {
-//        val prefs : SharedPreferences = context.getSharedPreferences("account", Context.MODE_PRIVATE)
-//        return prefs.getString("ACCOUNT_ID", "").toString()
-//    }
 
     fun setAutoLogin(context: Context, autoLoginCheckBox: CheckBox) {
         val prefs : SharedPreferences = context.getSharedPreferences("autoLogin", Context.MODE_PRIVATE)
@@ -117,6 +112,17 @@ object UserSharedPreferences {
             }
         }
         return list
+
+    fun setPushAlarm(context: Context, isOn: Boolean) {
+        val prefs : SharedPreferences = context.getSharedPreferences("pushAlarm", Context.MODE_PRIVATE)
+        val editor : SharedPreferences.Editor = prefs.edit()
+        editor.putString("PUSH_ALARM", isOn.toString())
+        editor.apply()
+    }
+
+    fun getPushAlarm(context:Context): Boolean {
+        val prefs : SharedPreferences = context.getSharedPreferences("pushAlarm", Context.MODE_PRIVATE)
+        return prefs.getString("PUSH_ALARM", "").toBoolean()
     }
 
 }

@@ -1,10 +1,12 @@
 package com.mapo.ddubuck.userinfo
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -78,7 +80,23 @@ class UserInfoHeightWeightActivity : AppCompatActivity() {
                 binding.heightTextField.error = null
             } else {
                 saveHeightWeight(binding.heightTextFieldInput.text.toString().toDouble() , binding.weightTextFieldInput.text.toString().toDouble())
-                toHomePage()
+
+
+                val dialog = NextTimeDialog("어서오세요!",
+                    "즐거운 산책을 시작해 볼까요?", this)
+                dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog.show()
+
+                val okButton: TextView = dialog.findViewById(R.id.dialog_ok_button)
+                okButton.setOnClickListener {
+                    dialog.dismiss()
+                    toHomePage()
+                }
+
+                val cancelButton: TextView = dialog.findViewById(R.id.dialog_cancel_button)
+                cancelButton.visibility = View.INVISIBLE
+
+
             }
         }
     }
