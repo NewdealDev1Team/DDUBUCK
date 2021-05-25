@@ -2,6 +2,7 @@ package com.mapo.ddubuck.home
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -66,10 +67,6 @@ class HomeFragment(private val owner: Activity) : Fragment() {
         val bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetFrame)
         val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment(owner)
         fm.beginTransaction().add(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
-
-        /*
-        TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 65f, resources.displayMetrics)
-         */
 
         mapViewModel.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
             bottomSheetFrame.layoutParams.height += TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()

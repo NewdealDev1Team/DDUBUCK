@@ -83,12 +83,15 @@ class RetrofitService {
         map["calorie"] = calorie
         map["petTogether"] = petTogether
         //walkType = FREE_WALK / COURSE_WALK
-        if(walkType == 100) {
+        if(walkType == 100||walkType==400) {
             map["walkType"] = "WALK_FREE"
         }
 
         if(walkType == 401) {
             map["walkType"] = "WALK_COURSE"
+            if(courseTitle!=null) {
+                map["title"] = courseTitle
+            }
         }
 
         val hiddenList = mutableListOf<String>()
@@ -101,11 +104,6 @@ class RetrofitService {
         }
 
         map["hidden"] = hiddenList
-
-        if(courseTitle!=null) {
-            map["title"] = courseTitle
-        }
-
 
         Log.e("RECORD : ","$map")
 

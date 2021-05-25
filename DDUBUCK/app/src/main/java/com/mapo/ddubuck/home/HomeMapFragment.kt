@@ -341,7 +341,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         }
                         hiddenPlaces.clear()
                         for(i in publicData.hiddenChallenge) {
-                            hiddenPlaces.add(i)
+                            /**null 들어옵니다 지우지마세요...**/
+                            if(i != null) {
+                                hiddenPlaces.add(i)
+                            }
                         }
                         val recommendPath = mutableListOf<RecommendPathDTO>()
                         recommendPath.addAll(publicData.recommendPathMaster)
@@ -438,7 +441,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     /**산책을 일시정지 합니다**/
     private fun pauseRecording() {
-        timer.cancel()
+        if(::timer.isInitialized) {
+            timer.cancel()
+        }
     }
 
     private fun resumeRecording() {
@@ -456,7 +461,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             owner.startService(it)
         }
         userPath.map = null
-        timer.cancel()
+        if(::timer.isInitialized) {
+            timer.cancel()
+        }
         course.map = null
         courseMarker.map = null
         //기록 및 반환 코드
