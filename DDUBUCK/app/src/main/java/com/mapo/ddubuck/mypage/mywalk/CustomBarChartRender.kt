@@ -22,11 +22,6 @@ class CustomBarChartRender(
         this.barRadius = mRadius
     }
 
-    /**
-     * SOME HUNGARIAN NOTATION COME FROM LIBRARY (BAR CHART RENDERER)
-     * 일부 헝가리어 표기법은 라이브러리 (바 차트 렌더링(표현) 기)에서 제공됩니다.
-     */
-
     override fun drawDataSet(canvas: Canvas, dataSet: IBarDataSet, index: Int) {
         val trans = mChart.getTransformer(dataSet.axisDependency)
 
@@ -80,7 +75,6 @@ class CustomBarChartRender(
                 i++
             }
         }
-        // initialize the buffer
         val barBuffer = mBarBuffers[index].apply {
             setPhases(phaseX, phaseY)
             setDataSet(index)
@@ -102,7 +96,7 @@ class CustomBarChartRender(
             }
             if (mViewPortHandler.isInBoundsRight(barBuffer.buffer[j]).not()) break
 
-            if (isSingleColor.not()) { // Set the color for the currently drawn value. If the index | is out of bounds, reuse colors.
+            if (isSingleColor.not()) { //현재 그려진 값의 색상을 설정함 인덱스 | 범위를 벗어난 경우 색상을 재사용함.
                 mRenderPaint.color = dataSet.getColor(j / 4)
             }
 
@@ -219,7 +213,7 @@ class CustomBarChartRender(
             }
             rLineTo(DEFAULT_VALUE, -heightMinusCorners)
 
-            close() //Given close, last lineto can be removed.
+            close() //가까워지면 마지막 lineto(차트 위)를 제거 할 수 있다.
         }
     }
 

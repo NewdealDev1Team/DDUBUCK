@@ -28,8 +28,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
+import com.mapo.ddubuck.data.mypagechart.MyWalkRecordChartData
 import com.mapo.ddubuck.data.mypagechart.RetrofitChart
-import com.mapo.ddubuck.data.mypagechart.chartData
 import com.mapo.ddubuck.databinding.FragmentMypageBinding
 import com.mapo.ddubuck.home.FilterDrawer
 import com.mapo.ddubuck.home.HomeMapFragment
@@ -218,8 +218,8 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         //나의 산책 기록
         context?.let { UserSharedPreferences.getUserId(it) }?.let {
             val userKey: Int = it.toInt()
-            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<chartData> {
-                override fun onResponse(call: Call<chartData>, response: Response<chartData>) {
+            RetrofitChart.instance.getRestsMypage(userKey).enqueue(object : Callback<MyWalkRecordChartData> {
+                override fun onResponse(call: Call<MyWalkRecordChartData>, response: Response<MyWalkRecordChartData>) {
                     if (response.isSuccessful) {
                         Log.d("text", "연결성공")
                         var stepCount = response.body()?.weekStat?.get(6)?.stepCount?.toInt()
@@ -229,9 +229,12 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                         var timeRecordt6 = response.body()?.weekStat?.get(6)?.walkTime?.toInt()
                         val walkingTimeButtonRecordFormat: Int = timeRecordt6!!.toInt()
                         if (60 <= timeRecordt6.toInt()) {
-                            val hour: Int = timeRecordt6 / 60
-                            val hourName: String = "시"
-                            walkingTimeButtonRecord.setText(hour.toString() + hourName)
+                            val hour: Int = ( timeRecordt6 / 60 ) / 60
+                            val minute : Int = (timeRecordt6 / 60) % 60
+                            val hourName: String = "시간"
+                            val miniteName: String = "분"
+                            walkingTimeButtonRecord.setText(hour.toString() + hourName +
+                                    minute.toString() + miniteName)
                         } else {
                             val miniteName: String = "분"
                             walkingTimeButtonRecord.setText(timeRecordt6.toString() + miniteName)
@@ -253,7 +256,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                     }
                 }
 
-                override fun onFailure(call: Call<chartData>, t: Throwable) {
+                override fun onFailure(call: Call<MyWalkRecordChartData>, t: Throwable) {
                     Log.d("error", t.message.toString())
                 }
             })

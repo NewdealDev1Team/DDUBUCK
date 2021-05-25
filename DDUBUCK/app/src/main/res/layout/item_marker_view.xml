@@ -12,4 +12,5 @@
         tools:text="ASD ASD"
         android:id="@+id/tv_chart_marker"
         android:layout_height="wrap_content" />
+
 </LinearLayout>
