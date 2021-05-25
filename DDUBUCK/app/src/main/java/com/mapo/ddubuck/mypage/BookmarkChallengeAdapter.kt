@@ -1,6 +1,7 @@
-package com.mapo.ddubuck.challenge
+package com.mapo.ddubuck.mypage
 
 import android.app.Activity
+import android.content.SharedPreferences
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,27 +13,29 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
-import com.mapo.ddubuck.mypage.BookmarkChallengeAdapter
+import com.mapo.ddubuck.challenge.Challenge
+import com.mapo.ddubuck.challenge.ChallengeAdapter
+import com.mapo.ddubuck.challenge.ChallengeViewModel
 import com.mapo.ddubuck.sharedpref.BookmarkSharedPreferences
 import kotlinx.android.synthetic.main.challenge_card_layout.view.*
 
-class ChallengeAdapter(
-    private val challenge: ArrayList<Challenge>,
-    private val bookmarkedChallenge: ArrayList<Challenge>,
-    private val owner: Activity,
-) :
-    RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
 
+class BookmarkChallengeAdapter(
+    private val owner: Activity,
+    private val challenge: ArrayList<Challenge>
+) :
+    RecyclerView.Adapter<BookmarkChallengeAdapter.ChallengeViewHolder>() {
+    var bookmarkedChallenge: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
     val isBookmarkChanged = MutableLiveData<Boolean>()
 
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
     }
 
-    private lateinit var itemClickListner: ItemClickListener
+    private lateinit var itemClickListener: ItemClickListener
 
     fun setItemClickListener(itemClickListener: ItemClickListener) {
-        this.itemClickListner = itemClickListener
+        this.itemClickListener = itemClickListener
     }
 
     inner class ChallengeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -40,17 +43,17 @@ class ChallengeAdapter(
         var challengeItemTitle: TextView = itemView.challenge_card_title
         var challengeItemText: TextView = itemView.challenge_card_text
         var bookmarkButton: ToggleButton = itemView.challenge_bookmark
+
     }
 
 
     override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {
-
         Glide.with(holder.challengeItemImage)
             .load(challenge[position].image)
             .into(holder.challengeItemImage)
 
         holder.itemView.setOnClickListener {
-            itemClickListner.onClick(it, position)
+            itemClickListener.onClick(it, position)
         }
 
         holder.bookmarkButton.isChecked = bookmarkedChallenge.contains(challenge[position])
@@ -61,16 +64,18 @@ class ChallengeAdapter(
                 if (!bookmarkedChallenge.contains(challenge[position])) {
                     bookmarkedChallenge.add(challenge[position])
                 }
+                BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
             } else {
                 if (bookmarkedChallenge.contains(challenge[position])) {
                     bookmarkedChallenge.remove(challenge[position])
                 }
+                BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
             }
-            BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
-//            updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
-            Log.e("챌린22", BookmarkSharedPreferences.getBookmarkedChallenge(owner).toString())
+//            updateRecyclerView(bookmarkedChallenge)
             isBookmarkChanged.value = true
+            Log.e("챌린", BookmarkSharedPreferences.getBookmarkedChallenge(owner).toString())
         }
+
 
         holder.challengeItemTitle.text = challenge[position].title
         holder.challengeItemText.text = challenge[position].infoText
@@ -89,12 +94,9 @@ class ChallengeAdapter(
         return challenge.size
     }
 
-
-    fun updateRecyclerView(newBookmarkedChallenge: ArrayList<Challenge>) {
-        bookmarkedChallenge.clear()
-        bookmarkedChallenge.addAll(newBookmarkedChallenge)
+    fun updateRecyclerView(bookmarkChallenge: ArrayList<Challenge>) {
+        challenge.clear()
+        challenge.addAll(bookmarkChallenge)
         this.notifyDataSetChanged()
     }
-
-
 }

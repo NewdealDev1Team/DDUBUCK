@@ -1,6 +1,7 @@
 package com.mapo.ddubuck.home
 
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
@@ -46,6 +47,7 @@ class HomeMapService : LifecycleService() {
         const val NOTIFICATION_CHANNEL_NAME = "Tracking"
         const val NOTIFICATION_ID = 1
         val currentLocation = MutableLiveData<Location>()
+        val notification = MutableLiveData<Notification>()
     }
 
     private fun postInitialValues() {
@@ -82,7 +84,9 @@ class HomeMapService : LifecycleService() {
                 ACTION_STOP_SERVICE -> {
                     isTracking.postValue(false)
                     Log.d("HomeMapService","Stopped service")
-                    timer.cancel()
+                    if(::timer.isInitialized) {
+                        timer.cancel()
+                    }
                     walkTime = 0
                     stopSelf()
                 }
@@ -141,6 +145,9 @@ class HomeMapService : LifecycleService() {
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle("산책 진행중")
         startForeground(NOTIFICATION_ID, notificationBuilder.build())
+        notification.observe(this, {
+            startForeground(NOTIFICATION_ID, it)
+        })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

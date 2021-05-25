@@ -1,43 +1,41 @@
 package com.mapo.ddubuck.home
 
-import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.hardware.*
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.annotation.UiThread
-import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
-import com.google.android.gms.location.*
 import com.mapo.ddubuck.MainActivity
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitClient
 import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.data.publicdata.HiddenChallenge
 import com.mapo.ddubuck.data.publicdata.PublicData
 import com.mapo.ddubuck.data.publicdata.RecommendPathDTO
 import com.mapo.ddubuck.home.bottomSheet.BottomSheetCompleteFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.mapo.ddubuck.ui.CommonDialog
+import com.mapo.ddubuck.weather.WeatherViewModel
 import com.naver.maps.geometry.LatLng
-import com.naver.maps.geometry.LatLngBounds
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.overlay.PathOverlay
@@ -72,10 +70,15 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         const val WALK_COURSE = 400 // 코스산책
         const val WALK_FREE = 100 //자유산책
         const val WALK_COURSE_COMPLETE = 401
+        /**목표 지점 체크 허용거리
+         * ex : 5미터 이내일 시 경로 지점 판정 **/
+        const val courseCompareDistance = 15.0
+        const val hiddenChallengeCompareDistance = 15.0
     }
 
     //뷰모델
-    private val model: HomeMapViewModel by activityViewModels()
+    private val mapModel: HomeMapViewModel by activityViewModels()
+    private val weatherModel : WeatherViewModel by activityViewModels()
 
     //환경설정 변수
     private val userKey : String = UserSharedPreferences.getUserId(owner)
@@ -88,6 +91,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var markers:HashMap<String, MutableList<Marker>> = HashMap()
     private val sharedPref = UserSharedPreferences
     private var isLocationDataInitialized = false
+    private var initialPosition : LatLng = LatLng(0.0,0.0)
+    private val hiddenPlaces = mutableListOf<HiddenChallenge>()
+    private val completedHiddenPlaces = mutableListOf<HiddenChallenge>()
 
     //측정 관련 변수
     private var userPath = PathOverlay()
@@ -98,9 +104,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     private var stepCount: Int = 0
     private var distance: Double = 0.0
     private var burnedCalorie: Double = 0.0
-    private var initialPosition : LatLng = LatLng(0.0,0.0)
+    private lateinit var hiddenChallengeUserPos : LatLng
 
     //코스
+    private lateinit var courseData : CourseItem
     private var course = PolylineOverlay()
     private var courseMarker = Marker()
 
@@ -111,7 +118,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         savedInstanceState: Bundle?,
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_map, container, false)
-        model.walkState.value = WALK_START
+        mapModel.walkState.value = WALK_START
         locationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
         val nMapFragment = fm.findFragmentById(R.id.map) as MapFragment?
                 ?: MapFragment.newInstance().also {
@@ -119,13 +126,13 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 }
         nMapFragment.getMapAsync(this)
 
-        model.isRecordStarted.observe(viewLifecycleOwner, { v ->
+        mapModel.isRecordStarted.observe(viewLifecycleOwner, { v ->
             if (v) {
                 //start
                 startRecording()
                 allowRecording = true
                 isRestarted = true
-                model.walkState.value = WALK_PROGRESS
+                mapModel.walkState.value = WALK_PROGRESS
             } else {
                 //stop
                 stopRecording()
@@ -133,26 +140,26 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 isRestarted = true
                 isCourseSelected = false
                 isCourseInitialized = false
-                model.walkState.value = WALK_WAITING
+                mapModel.walkState.value = WALK_WAITING
             }
         })
 
-        model.isRecordPaused.observe(viewLifecycleOwner, { v ->
+        mapModel.isRecordPaused.observe(viewLifecycleOwner, { v ->
             allowRecording = if (v) {
                 //start
                 pauseRecording()
-                model.walkState.value = WALK_PAUSE
+                mapModel.walkState.value = WALK_PAUSE
                 false
             } else {
                 //stop
                 resumeRecording()
-                model.walkState.value = WALK_PROGRESS
+                mapModel.walkState.value = WALK_PROGRESS
                 true
             }
         })
 
-        model.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
-        model.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
+        mapModel.isCourseWalk.observe(viewLifecycleOwner, { v -> isCourseSelected = v})
+        mapModel.courseProgressPath.observe(viewLifecycleOwner, { v -> course.coords = v.toMutableList() })
         return rootView
     }
 
@@ -175,6 +182,21 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    /**알림 만들기 (HomeMapService 에서 작동)**/
+    private fun createNotification(title : String, content : String) {
+        /** 서비스 켜졌을 때만 작동함 **/
+        if(allowRecording) {
+            val builder = NotificationCompat.Builder(owner, HomeMapService.NOTIFICATION_CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            HomeMapService.notification.value = builder.build()
+        } else {
+            Log.e("HomeMap", "HomMapService를 활성화해주세요")
+        }
+
+    }
 
     private fun initPublicData(x:Double, y:Double, userKey:String) {
 
@@ -192,6 +214,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         val publicData = response.body()!!
                         val markerHeightSize = 80
                         val markerWidthSize = 60
+                        markers[FilterDrawer.PET_CAFE]!!.clear()
                         for (i in publicData.petCafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -210,8 +233,9 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                                 }
                                 true
                             }
-                            markers[FilterDrawer.PET_CAFE]!!.add(marker)
+                            markers[FilterDrawer.CAR_FREE_ROAD]!!.add(marker)
                         }
+                        markers[FilterDrawer.PET_CAFE]!!.clear()
                         for (i in publicData.carFreeRoad) {
                             val marker = Marker()
                             marker.position = LatLng(i.path[0].x, i.path[0].y)
@@ -231,6 +255,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.CAR_FREE_ROAD]!!.add(marker)
                         }
+                        markers[FilterDrawer.CAFE]!!.clear()
                         for (i in publicData.cafe) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -250,6 +275,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.CAFE]!!.add(marker)
                         }
+                        markers[FilterDrawer.PET_RESTAURANT]!!.clear()
                         for (i in publicData.petRestaurant) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -269,6 +295,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.PET_RESTAURANT]!!.add(marker)
                         }
+                        markers[FilterDrawer.PUBLIC_REST_AREA]!!.clear()
                         for (i in publicData.publicRestArea) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -288,6 +315,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.PUBLIC_REST_AREA]!!.add(marker)
                         }
+                        markers[FilterDrawer.PUBLIC_TOILET]!!.clear()
                         for (i in publicData.publicToilet) {
                             val marker = Marker()
                             marker.position = LatLng(i.x, i.y)
@@ -307,6 +335,10 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             }
                             markers[FilterDrawer.PUBLIC_TOILET]!!.add(marker)
                         }
+                        hiddenPlaces.clear()
+                        for(i in publicData.hiddenChallenge) {
+                            hiddenPlaces.add(i)
+                        }
                         val recommendPath = mutableListOf<RecommendPathDTO>()
                         recommendPath.addAll(publicData.recommendPathMaster)
                         recommendPath.addAll(publicData.recommendPathUser)
@@ -314,7 +346,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                             val courseData = mutableListOf<CourseItem>()
                             for (i in recommendPath) {
                                 courseData.add(i.toCourseItem())
-                                model.recommendPath.value = courseData
+                                mapModel.recommendPath.value = courseData
                             }
                             //home에다가 보내기
                         }
@@ -327,7 +359,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
             })
 
-        model.showCafe.observe(viewLifecycleOwner, {v->
+        mapModel.showCafe.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.CAFE]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -337,7 +369,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showCarFreeRoad.observe(viewLifecycleOwner, {v->
+        mapModel.showCarFreeRoad.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.CAR_FREE_ROAD]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -347,7 +379,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPetCafe.observe(viewLifecycleOwner, {v->
+        mapModel.showPetCafe.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PET_CAFE]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -357,7 +389,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPetRestaurant.observe(viewLifecycleOwner, {v->
+        mapModel.showPetRestaurant.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PET_RESTAURANT]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -367,7 +399,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPublicRestArea.observe(viewLifecycleOwner, {v->
+        mapModel.showPublicRestArea.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PUBLIC_REST_AREA]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -377,7 +409,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             }
         })
 
-        model.showPublicToilet.observe(viewLifecycleOwner, {v->
+        mapModel.showPublicToilet.observe(viewLifecycleOwner, { v->
             markers[FilterDrawer.PUBLIC_TOILET]!!.forEach { m ->
                 if(v) {
                     m.map = map
@@ -395,7 +427,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             owner.startService(it)
         }
         timer = timer(period = 1000) {
-            model.recordTime(walkTime)
+            mapModel.recordTime(walkTime)
             walkTime++
         }
     }
@@ -407,7 +439,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
 
     private fun resumeRecording() {
         timer = timer(period = 1000) {
-            model.recordTime(walkTime)
+            mapModel.recordTime(walkTime)
             walkTime++
         }
     }
@@ -425,18 +457,43 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         courseMarker.map = null
         //기록 및 반환 코드
 
+        if(completedHiddenPlaces.size != 0) {
+            CommonDialog("히든챌린지 달성!", "멋져요! 오늘 산책에서 히든 챌린지를 달성하셨어요!", owner).let {
+                it.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                it.show()
+            }
+        }
+
 
         val walkRecord = getWalkResult()
+        val courseTitle = if(isCourseSelected || walkTag == WALK_COURSE_COMPLETE) {
+            courseData.title
+        } else {
+            null
+        }
 
-        RetrofitService().createRecord(userKey, walkRecord, burnedCalorie,walkTag)
+        RetrofitService().createRecord(
+            userKey,
+            courseTitle,
+            UserSharedPreferences.getPet(owner),
+            walkRecord,
+            weatherModel.weatherKeyword.value,
+            burnedCalorie,
+            walkTag,
+            completedHiddenPlaces
+        ) {
+            mapModel.recordMywalk.value = true
+        }
+
+        completedHiddenPlaces.clear()
         parentFragmentManager.beginTransaction()
                 .replace(R.id.bottom_sheet_container, BottomSheetCompleteFragment(owner,walkRecord,userKey, walkTag),
                         HomeFragment.BOTTOM_SHEET_CONTAINER_TAG).addToBackStack(MainActivity.HOME_RESULT_TAG)
                 .commit()
 
-        model.walkTime.value = 0
-        model.walkCalorie.value = 0.0
-        model.walkDistance.value = 0.0
+        mapModel.walkTime.value = 0
+        mapModel.walkCalorie.value = 0.0
+        mapModel.walkDistance.value = 0.0
 
         altitudes.clear()
         speeds.clear()
@@ -507,27 +564,31 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         var contentPaddingBottom = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 190f, resources.displayMetrics).toInt()
         map.setContentPadding(0,0,0,contentPaddingBottom)
 
-        model.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
+        mapModel.bottomSheetHeight.observe(viewLifecycleOwner, { v ->
             contentPaddingBottom += TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()
             map.setContentPadding(0,0,0,contentPaddingBottom)
         })
 
         courseMarker.icon = MarkerIcons.BLUE
 
-        model.coursePath.observe(viewLifecycleOwner, { v->
-            cameraToCourse(v)
+        mapModel.courseData.observe(viewLifecycleOwner, { v->
+            courseData = v
+            cameraToCourse(v.walkRecord.path)
         })
-        model.walkState.value = WALK_WAITING
+        mapModel.walkState.value = WALK_WAITING
 
         map.addOnLocationChangeListener { location->
             val lat = location.latitude
             val lng = location.longitude
             val point = LatLng(lat, lng)
             if(!isLocationDataInitialized) {
-                model.recordPosition(point)
+                mapModel.recordPosition(point)
                 initPublicData(lat,lng, userKey)
                 initialPosition = point
                 isLocationDataInitialized=true
+            }
+            if(initialPosition.distanceTo(point)==3000.0) {
+                isLocationDataInitialized = false
             }
         }
         HomeMapService.currentLocation.observe(viewLifecycleOwner, {v->
@@ -535,6 +596,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         })
     }
 
+    /**사용자 위치 바뀌었을때 할 행동(리스너)**/
     private fun onLocationChangedListener (location:Location, userKey: String) {
         val lat = location.latitude
         val lng = location.longitude
@@ -542,23 +604,28 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         val speed = location.speed
         val alt = location.altitude
         if(!isLocationDataInitialized) {
-            model.recordPosition(point)
+            mapModel.recordPosition(point)
             initPublicData(lat,lng, userKey)
             initialPosition = point
             isLocationDataInitialized=true
         }
 
+        /**산책을 시작했을 때**/
         if (allowRecording) {
             if (isRestarted) {
                 //초기 점이 비어있을 때
                 initUserPath(point)
                 isRestarted = false
             }
+            /**사용자 경로가 초기화 되어있는지 확인함**/
             if (userPath.coords.isNotEmpty() && userPath.map != null) {
                 val lastPoint = userPath.coords.last()
-                if (!isUserReachedToTarget(point, lastPoint)) {
+                /**사용자가 마지막으로 등록한 point와 충분히 멀어졌는지 검사한다**/
+                /**현재 점과 마지막 점의 거리차이가 지정된 거리 이하로 나면 점을 추가하지 않음**/
+                if (!isUserReachedToTarget(courseCompareDistance,point, lastPoint)) {
                     addUserPath(point, lastPoint, userPath.coords, speed, alt.toFloat())
                 }
+                /**코스산책일 경우**/
                 if (isCourseSelected) {
                     walkTag = WALK_COURSE
                     if(isCourseInitialized) {
@@ -577,6 +644,18 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                         courseMarker.map = this.map
                         isCourseInitialized=true
                     }
+                } else {
+                    /**히든 챌린지는 자유산책에서만 이용 가능**/
+                    /**히든 플레이스 정렬(500미터 주기)**/
+                    if(hiddenPlaces.size != 0) {
+                        if(!::hiddenChallengeUserPos.isInitialized || point.distanceTo(hiddenChallengeUserPos) >= 500) {
+                            val sorted = getSortedHiddenPlaceList(point, hiddenPlaces)
+                            hiddenPlaces.clear()
+                            hiddenPlaces.addAll(sorted)
+                            hiddenChallengeUserPos = point
+                        }
+                        checkHiddenPlaceArrival(point,hiddenPlaces.first())
+                    }
                 }
             } else {
                 //초기 점이 비어있을 때
@@ -593,8 +672,8 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
     }
 
     /**목표 점에 도달했는가 (근접해있는가)**/
-    private fun isUserReachedToTarget(currentPos: LatLng, lastPos: LatLng): Boolean {
-        return createBound(lastPos).contains(currentPos)
+    private fun isUserReachedToTarget(distance:Double,currentPos: LatLng, targetPos: LatLng): Boolean {
+        return currentPos.distanceTo(targetPos) <= distance
     }
 
     /**유저 경로 추가하면서 생기는 활동들 총집합**/
@@ -612,14 +691,12 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             burnedCalorie += calculateMomentCalorie(speed, walkTime)
             timePoint = walkTime
         }
-        /**마지막 점과 거리 비교해서 +- 0.00005 으로 지정된 *영역*에
-        현재 점이 포함되어있다면 추가하지 않음**/
         currentPath.add(currentPos)
         speeds.add(speed)
         altitudes.add(alt)
         distance += lastPos.distanceTo(currentPos)
-        model.recordDistance(distance)
-        model.recordCalorie(burnedCalorie)
+        mapModel.recordDistance(distance)
+        mapModel.recordCalorie(burnedCalorie)
         userPath.coords = currentPath
     }
 
@@ -645,35 +722,82 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         currentPos: LatLng,
         course: MutableList<LatLng>,
     ) {
-        /**현재 점에서 마지막(다가오는) 경로 점의 +- 0.00005 으로 지정된 *영역*에
-        현재 점이 포함되어있다면 마지막 경로 점 삭제 및 완료처리**/
+        /**현재 점에서 목표 경로 점과의 거리가 지정된 거리보다 적다면 목표 경로 점 삭제 및 완료처리**/
         if (course.size > 2) {
-            if (isUserReachedToTarget(currentPos, course.first())) {
+            if (isUserReachedToTarget(courseCompareDistance,currentPos, course.first())) {
                 course.removeAt(0)
                 //진동
-                model.vibrate(true)
+                mapModel.vibrate(true)
                 courseMarker.position = course.first()
-                model.passProgressData(course)
+                mapModel.passProgressData(course)
                 this.course.coords = course
             }
         } else {
             //코스완료
             this.course.map = null
-            //bottom sheet pop 해서 코스선택 메뉴로 이동시키기
+            this.courseMarker.map = null
             walkTag = WALK_COURSE_COMPLETE
         }
     }
 
-    /**비교용 영역 만들기**/
-    private fun createBound(point: LatLng): LatLngBounds {
-        /** 주어진 좌표에 좌측 상단 0.00007 +
-        우측 하단 0.00007 -
-        두 점으로 사각형 구역을 만들어 반환**/
-        val radius = 0.00007
-        return LatLngBounds(
-                LatLng(point.latitude - radius, point.longitude - radius),
-                LatLng(point.latitude + radius, point.longitude + radius),
-        )
+    /**가까운 순으로 히든플레이스를 정렬한다**/
+    private fun getSortedHiddenPlaceList(
+        currentPos: LatLng,
+        list : MutableList<HiddenChallenge>
+    ) : List<HiddenChallenge> {
+        return list.sortedBy { it.selector(currentPos) }
+    }
+
+    /**히든 플레이스 도달 시**/
+    private fun checkHiddenPlaceArrival(
+        currentPos: LatLng,
+        hiddenPlace:HiddenChallenge,
+    ) {
+        if(isUserReachedToTarget(hiddenChallengeCompareDistance,currentPos, hiddenPlace.pos())) {
+            Toast.makeText(owner, "히든 챌린지 달성! : ${hiddenPlace.title}", Toast.LENGTH_LONG).show()
+            createNotification("히든 챌린지 달성!", "히든 챌린지 달성! : ${hiddenPlace.title}")
+            completedHiddenPlaces.add(hiddenPlace)
+            hiddenPlaces.removeAt(0)
+            mapModel.vibrate(true)
+        } else {
+            hintHiddenPlace(currentPos, hiddenPlace)
+        }
+    }
+
+    /**300미터~100미터 내에 히든플레이스가 있으면 힌트를 준다**/
+    private fun hintHiddenPlace(
+        currentPos:LatLng,
+        hiddenPlace: HiddenChallenge
+    ) {
+        currentPos.distanceTo(hiddenPlace.pos()).let { dis ->
+            when (dis) {
+                in 200.1..300.0 -> {
+                    if(!hiddenPlace.firstHintShown) {
+                        Toast.makeText(owner, "히든 챌린지가 반경 300미터 내에 있습니다!", Toast.LENGTH_LONG).show()
+                        mapModel.vibrate(true)
+                        createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 300미터 내에 있습니다!")
+                        hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].firstHintShown = true
+                    }
+                }
+                in 100.1..200.0 -> {
+                    if(!hiddenPlace.secondHintShown) {
+                        Toast.makeText(owner, "히든 챌린지가 반경 200미터 내에 있습니다!", Toast.LENGTH_LONG).show()
+                        mapModel.vibrate(true)
+                        createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 200미터 내에 있습니다!")
+                        hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].secondHintShown = true
+                    }
+                }
+                in 16.0..100.0 -> {
+                    if(!hiddenPlace.thirdHintShown) {
+                        Toast.makeText(owner, "히든 챌린지가 반경 100미터 내에 있습니다!", Toast.LENGTH_LONG).show()
+                        mapModel.vibrate(true)
+                        createNotification("히든 챌린지 힌트!", "히든 챌린지가 반경 100미터 내에 있습니다!")
+                        hiddenPlaces[hiddenPlaces.indexOf(hiddenPlace)].thirdHintShown = true
+                    }
+                }
+                else -> return
+            }
+        }
     }
 
 }

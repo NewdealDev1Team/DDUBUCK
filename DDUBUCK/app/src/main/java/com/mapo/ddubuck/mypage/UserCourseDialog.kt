@@ -43,6 +43,10 @@ class UserCourseDialog(
             .load(photo)
             .placeholder(R.color.grey)
             .into(photoIV)
+            .view.let { v->
+                v.setBackgroundResource(R.drawable.dialog_imageview_radius)
+                v.clipToOutline = true
+            }
 
         val mainTV = findViewById<TextView>(R.id.dialog_course_view_text)
         mainTV.text = text
