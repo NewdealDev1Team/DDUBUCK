@@ -35,6 +35,8 @@ class BookmarkFragment(private val owner: Activity) : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
 
+
+
         val bookmarkViewGroup: ViewGroup = inflater.inflate(R.layout.fragment_bookmark,
             container, false) as ViewGroup
         val bookmarkChallenge =
@@ -67,6 +69,14 @@ class BookmarkFragment(private val owner: Activity) : Fragment() {
                         }
                 }
             })
+
+            if (BookmarkSharedPreferences.getBookmarkedChallenge(owner).size == 0) {
+                challengeRecyclerView.visibility = View.INVISIBLE
+                challengeHint.visibility = View.VISIBLE
+            } else {
+                challengeRecyclerView.visibility = View.VISIBLE
+                challengeHint.visibility = View.INVISIBLE
+            }
         }
 
         challengeViewModel.isChanged.observe(viewLifecycleOwner, {
@@ -82,6 +92,13 @@ class BookmarkFragment(private val owner: Activity) : Fragment() {
 
         challengeAdapter?.isBookmarkChanged?.observe(viewLifecycleOwner, {
             challengeViewModel.isChanged.value = true
+            if (BookmarkSharedPreferences.getBookmarkedChallenge(owner).size == 0) {
+                challengeRecyclerView.visibility = View.INVISIBLE
+                challengeHint.visibility = View.VISIBLE
+            } else {
+                challengeRecyclerView.visibility = View.VISIBLE
+                challengeHint.visibility = View.INVISIBLE
+            }
         })
 
 
