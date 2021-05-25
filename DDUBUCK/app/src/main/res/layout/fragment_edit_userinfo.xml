@@ -21,13 +21,15 @@
 
             <LinearLayout
                 android:id="@+id/user_basic_info"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="27dp"
+                android:gravity="center"
+                android:background="#10767676"
                 android:orientation="vertical">
 
                 <RelativeLayout
+                    android:layout_marginTop="27dp"
                     android:layout_width="73dp"
                     android:layout_height="73dp">
 
@@ -52,10 +54,13 @@
                 </RelativeLayout>
 
                 <TextView
+                    android:layout_marginBottom="30dp"
                     android:id="@+id/edit_info_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="11dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
                     android:textAlignment="center"
                     android:textSize="19dp" />
             </LinearLayout>
