@@ -15,4 +15,5 @@ data class PublicData(
     val publicRestArea: List<PublicRestArea>,
     val recommendPathMaster : List<RecommendPathDTO>,
     val recommendPathUser : List<RecommendPathDTO>,
+    val hiddenChallenge: List<HiddenChallenge>,
 )

@@ -1,6 +1,7 @@
 package com.mapo.ddubuck.home.bottomSheet
 
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,29 +13,35 @@ import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.home.CourseItem
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.home.HomeMapViewModel
-import com.naver.maps.geometry.LatLng
+import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 
-class BottomSheetSelectFragment : Fragment() {
+class BottomSheetSelectFragment(private val owner:Activity) : Fragment() {
     private val homeMapViewModel: HomeMapViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.bottom_sheet_select,container, false)
         val sheetViewPager : ViewPager2 = rootView.findViewById(R.id.sheet_select_rv)
-        val mAdapter = BottomSheetSelectRvAdapter(initArray, parentFragmentManager)
+        val mAdapter = BottomSheetSelectRvAdapter(owner, initArray, parentFragmentManager)
         sheetViewPager.adapter = mAdapter
         sheetViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(i: Int) {
                 super.onPageSelected(i)
-                if(initArray[i].isFreeWalk) {
-                    homeMapViewModel.passPathData(listOf(LatLng(37.56362279298406, 126.90926225749905),LatLng(37.56362279298406, 126.90926225749905)))
-                }else{
-                    homeMapViewModel.passPathData(initArray[i].walkRecord.path)
+                if(!initArray[i].isFreeWalk) {
+                    homeMapViewModel.passPathData(initArray[i])
                 }
             }
         })
 
         homeMapViewModel.recommendPath.observe(viewLifecycleOwner, {v ->
             mAdapter.setItems(v)
+        })
+
+        homeMapViewModel.bookmarkChanged.observe(viewLifecycleOwner, {
+            mAdapter.setBookmarks(UserSharedPreferences.getBookmarkedCourse(owner))
+        })
+
+        mAdapter.isBookmarkChanged.observe(viewLifecycleOwner, {
+            homeMapViewModel.bookmarkChanged.value = true
         })
 
         return rootView

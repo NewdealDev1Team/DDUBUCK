@@ -13,6 +13,12 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.viewpager2.widget.ViewPager2
+import com.mapo.ddubuck.R
+import com.mapo.ddubuck.data.home.CourseItem
+import com.mapo.ddubuck.data.home.WalkRecord
+import com.mapo.ddubuck.home.HomeMapViewModel
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mapo.ddubuck.MainActivity
@@ -27,9 +33,10 @@ import com.mapo.ddubuck.login.LoginActivity
 import com.mapo.ddubuck.sharedpref.BookmarkSharedPreferences
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 
-class BookmarkFragment(val owner: Activity) : Fragment() {
+class BookmarkFragment(private val owner: Activity) : Fragment() {
     private lateinit var challengeDetailFragment: ChallengeDetailFragment
     private val mainViewModel: MainActivityViewModel by activityViewModels()
+    private val homeMapViewModel : HomeMapViewModel by activityViewModels()
     private val challengeViewModel: ChallengeViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -77,6 +84,40 @@ class BookmarkFragment(val owner: Activity) : Fragment() {
 
         challengeAdapter?.isBookmarkChanged?.observe(viewLifecycleOwner, {
             challengeViewModel.isChanged.value = true
+        })
+
+
+        val initArray = UserSharedPreferences.getBookmarkedCourse(owner)
+        bookmarkViewGroup.findViewById<TextView>(R.id.bookmark_course_hintText).let { it ->
+            if(initArray.size != 0) {
+                it.visibility = View.INVISIBLE
+            } else {
+                it.visibility = View.VISIBLE
+            }
+        }
+
+        val mAdapter = BookmarkCourseAdapter(
+            owner,
+            initArray,
+            parentFragmentManager)
+        bookmarkViewGroup.findViewById<ViewPager2>(R.id.bookmark_course_viewpager).let { v->
+            v.adapter = mAdapter
+        }
+
+        homeMapViewModel.bookmarkChanged.observe(viewLifecycleOwner, {
+            val items = UserSharedPreferences.getBookmarkedCourse(owner)
+            bookmarkViewGroup.findViewById<TextView>(R.id.bookmark_course_hintText).let { view ->
+                if(items.size != 0) {
+                    view.visibility = View.INVISIBLE
+                } else {
+                    view.visibility = View.VISIBLE
+                }
+            }
+            mAdapter.setItems(UserSharedPreferences.getBookmarkedCourse(owner))
+        })
+
+        mAdapter.isBookmarkChanged.observe(viewLifecycleOwner, {
+            homeMapViewModel.bookmarkChanged.value = true
         })
 
         return bookmarkViewGroup

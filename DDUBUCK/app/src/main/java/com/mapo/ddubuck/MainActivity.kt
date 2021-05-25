@@ -20,10 +20,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.observe
-//import com.coderfolk.multilamp.customView.MultiLamp
-//import com.coderfolk.multilamp.model.Target
-//import com.coderfolk.multilamp.shapes.Circle
-//import com.coderfolk.multilamp.shapes.Rectangle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mapo.ddubuck.badge.BadgeFragment
 import com.mapo.ddubuck.challenge.ChallengeFragment
@@ -49,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
-    private val bookmarkFragment = BookmarkFragment(this)
+    private val bookmarkFragment = BookmarkFragment(this@MainActivity)
 
     private val drawerFragment = FilterDrawer(this@MainActivity)
 

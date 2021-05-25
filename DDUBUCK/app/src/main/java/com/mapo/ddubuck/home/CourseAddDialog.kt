@@ -16,6 +16,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
+import com.bumptech.glide.Glide
+import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.databinding.DialogCourseAddBinding
@@ -34,7 +36,7 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = DialogCourseAddBinding.inflate(inflater)
         val numberFormatter = BottomSheetNumberFormat()
         var bitmapUri : Uri? = null
@@ -86,7 +88,11 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
                 decoder.isMutableRequired = true
                 decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
             }
-            binding.dialogCourseAddImageContainer.setImageBitmap(srcBmp)
+            binding.dialogCourseAddImageContainer.let { v->
+                v.setImageBitmap(srcBmp)
+                v.setBackgroundResource(R.drawable.dialog_imageview_radius)
+                v.clipToOutline = true
+            }
         })
         return binding.root
     }
