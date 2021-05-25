@@ -179,6 +179,10 @@ class MyPageFragment : Fragment(), UserRouteCallback {
             setUserRoute(userRouteRecyclerView, userRouteHint)
         })
 
+        myapgeViewModel.isImageUpdate.observe(viewLifecycleOwner, {
+
+        })
+
         return myPageView
 
     }

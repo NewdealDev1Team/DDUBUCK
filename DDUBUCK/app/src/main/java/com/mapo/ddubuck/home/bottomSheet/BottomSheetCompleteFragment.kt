@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.mapo.ddubuck.data.home.WalkRecord
 import com.mapo.ddubuck.home.CourseAddDialog
 import com.mapo.ddubuck.home.HomeMapFragment
 import com.mapo.ddubuck.home.HomeMapViewModel
+import com.mapo.ddubuck.mypage.MypageViewModel
 import com.mapo.ddubuck.share.ShareActivity
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import com.naver.maps.geometry.LatLng
@@ -33,6 +35,7 @@ class BottomSheetCompleteFragment(
 ) : Fragment() {
 
     private val homeMapViewModel : HomeMapViewModel by activityViewModels()
+    private val mypageViewModel : MypageViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,7 +69,7 @@ class BottomSheetCompleteFragment(
             shareButton.setOnClickListener{
                 val intent = Intent(context, ShareActivity::class.java)
                 intent.putExtra("walkRecord", walkRecord)
-                startActivity(intent)
+                startActivityForResult(intent, 100)
             }
         } else {
             shareButton.background = ResourcesCompat.getDrawable(resources,
@@ -92,6 +95,13 @@ class BottomSheetCompleteFragment(
             buttonLayout.removeView(addToMyPathButton)
         }
         return rootView
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 100) {
+            mypageViewModel.isImageUpdate.value = true
+        }
     }
 
 

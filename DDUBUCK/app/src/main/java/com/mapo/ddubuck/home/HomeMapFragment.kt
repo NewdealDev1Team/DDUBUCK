@@ -483,6 +483,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             null
         }
 
+        /*
         RetrofitService().createRecord(
             userKey,
             courseTitle,
@@ -494,7 +495,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             completedHiddenPlaces
         ) {
             mapModel.recordMywalk.value = true
-        }
+        }*/
 
         completedHiddenPlaces.clear()
         parentFragmentManager.beginTransaction()

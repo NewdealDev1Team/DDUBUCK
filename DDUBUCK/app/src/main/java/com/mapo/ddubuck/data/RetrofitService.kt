@@ -128,7 +128,10 @@ class RetrofitService {
         })
     }
 
-    fun addAdditionalInfo(userKey:String,title:String, description:String, imgPath: String) {
+    fun addAdditionalInfo(
+        userKey:String,
+        title:String, description:String, imgPath: String, onSuccessCallback: () -> Unit
+    ) {
         val file = File(imgPath)
         var fileName = imgPath.replace("@", "").replace(".", "")
 
@@ -153,6 +156,7 @@ class RetrofitService {
                     val responseText = "Response code: ${response.code()}\n"+
                             "body: ${response.body()}\n" + response.message() + "${response.headers()}"
                     println(responseText)
+                    onSuccessCallback
                 }
 
                 override fun onFailure(call: Call<String>, t: Throwable) {

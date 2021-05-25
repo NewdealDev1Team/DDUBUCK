@@ -16,7 +16,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
-import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
 import com.mapo.ddubuck.data.RetrofitService
 import com.mapo.ddubuck.data.home.WalkRecord
@@ -67,8 +66,9 @@ class CourseAddDialog(private val walkRecord: WalkRecord,
                 val description = binding.dialogCourseAddEditText.text.toString()
                 val imageUri = getRealPathFromURI(bitmapUri!!)!!
 
-                RetrofitService().addAdditionalInfo(userKey,title,description,imageUri)
-                mypageViewModel.isRouteChanged.value = true
+                RetrofitService().addAdditionalInfo(userKey,title,description,imageUri) {
+                    mypageViewModel.isRouteChanged.value = true
+                }
                 dismiss()
             }
 
