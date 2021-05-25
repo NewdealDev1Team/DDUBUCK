@@ -192,7 +192,6 @@ class MainActivity : AppCompatActivity() {
                                 .detach(activeFragment)
                                 .attach(myPageFragment)
                                 .commit()
-
                         }
                         else -> {
 
@@ -212,6 +211,8 @@ class MainActivity : AppCompatActivity() {
             tbm.show()
             activityModel.toolbarTitle.observe(this, { v ->
                 tbm.title = v
+                isMyPageFragmentShown = true
+                invalidateOptionsMenu()
             })
             val drawerLayout = findViewById<DrawerLayout>(R.id.main_drawerLayout)
             activityModel.showDrawer.observe(this, {v ->
