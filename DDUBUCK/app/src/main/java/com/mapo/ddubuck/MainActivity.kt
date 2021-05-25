@@ -86,7 +86,6 @@ class MainActivity : AppCompatActivity() {
 
         initToolBar()
         initFragmentManager()
-        initPermission()
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             initVibrator()
         }
@@ -124,28 +123,6 @@ class MainActivity : AppCompatActivity() {
         mapModel.vibrationControl.observe(this, {
             vibrator.vibrate(VibrationEffect.createOneShot(100, 85))
         })
-    }
-
-
-    private fun initPermission() {
-        val list = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-            listOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACTIVITY_RECOGNITION,
-                Manifest.permission.VIBRATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        } else {
-            listOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.VIBRATE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-        }
-
-        ActivityCompat.requestPermissions(this, list.toTypedArray(), 1000)
     }
 
 
