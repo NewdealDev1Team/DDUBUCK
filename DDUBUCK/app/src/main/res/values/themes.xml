@@ -38,10 +38,11 @@
 
 
     <!-- coachMark Theme change    WalkthroughTheme window FullScreen  -->
-    <style name="WalkthroughTheme" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        <item name="android:windowIsTranslucent">true</item>
+    <style name="WalkthroughTheme"  parent="Theme.AppCompat.Light">
+    <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">true</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:background">@android:color/transparent</item>

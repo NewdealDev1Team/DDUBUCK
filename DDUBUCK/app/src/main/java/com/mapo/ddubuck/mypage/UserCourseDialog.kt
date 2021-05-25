@@ -27,6 +27,7 @@ class UserCourseDialog(
     private val result: String,
     private val created_at: String,
     private val userRouteAdapter: UserRouteAdapter,
+    private val myapgeViewModel: MypageViewModel,
     owner: Activity,
 ) : Dialog(owner) {
 
@@ -90,6 +91,7 @@ class UserCourseDialog(
                             ) {
                                 val audit = response.body()?.audit
                                 userRouteAdapter.updateRecyclerView(audit!!)
+                                myapgeViewModel.isRouteChanged.value = true
                                 Toast.makeText(context, "$title 경로가 삭제되었습니다. ", Toast.LENGTH_SHORT).show()
                             }
 

@@ -52,7 +52,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface UserRouteCallback {
     fun onSuccessRoute(
         userRouteRecyclerView: RecyclerView,
-        userRoute: UserRoute
+        userRoute: UserRoute,
+        userRouteHint: TextView
     )
 }
 
@@ -65,6 +66,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     private lateinit var activeFragment: Fragment
     //뷰모델
     private val homemapViewModel: HomeMapViewModel by activityViewModels()
+    private val myapgeViewModel: MypageViewModel by activityViewModels()
 
     var userRouteAdapter: UserRouteAdapter? = null
 
@@ -92,7 +94,8 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         val stepCountInMypage: TextView = myPageView.findViewById(R.id.step_count)
 
         val galleryGrid: GridView = myPageView.findViewById(R.id.gallery_grid)
-        getAllPhotos(galleryGrid)
+        val galleryHint: TextView = myPageView.findViewById(R.id.user_gallery_hint)
+        getAllPhotos(galleryGrid, galleryHint)
 
         val walkingTimeButton: ConstraintLayout = myPageView.findViewById(R.id.walking_time_button)
         val courseClearButton: ConstraintLayout =
@@ -169,13 +172,19 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         val userRouteRecyclerView: RecyclerView =
             myPageView.findViewById(R.id.user_route_recyclerview)
         userRouteRecyclerView.isNestedScrollingEnabled = false
-        setUserRoute(userRouteRecyclerView)
+        val userRouteHint: TextView = myPageView.findViewById(R.id.user_route_hint)
+        setUserRoute(userRouteRecyclerView, userRouteHint)
+
+        myapgeViewModel.isRouteChanged.observe(viewLifecycleOwner, {
+            setUserRoute(userRouteRecyclerView, userRouteHint)
+        })
+
         return myPageView
 
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun getAllPhotos(gridView: GridView) {
+    private fun getAllPhotos(gridView: GridView, hint: TextView) {
         val cursor = activity?.contentResolver?.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
             null,
@@ -194,9 +203,15 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                     count += 1
                 }
             }
-            Log.e("이미지 경로", uriArr.toString())
-
             cursor.close()
+        }
+
+        if (uriArr.isEmpty()) {
+            gridView.visibility = View.INVISIBLE
+            hint.visibility = View.VISIBLE
+        } else {
+            gridView.visibility = View.VISIBLE
+            hint.visibility = View.INVISIBLE
         }
 
         val adapter = context?.let { GalleryAdapter(it, uriArr) }
@@ -300,7 +315,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         }
     }
 
-    private fun setUserRoute(userRouteRecyclerView: RecyclerView) {
+    private fun setUserRoute(userRouteRecyclerView: RecyclerView, userRouteHint: TextView) {
         val userValidation: Retrofit = Retrofit.Builder()
             .baseUrl("http://3.37.6.181:3000/get/User/")
             .addConverterFactory(GsonConverterFactory.create())
@@ -314,7 +329,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                     val userRouteResponse = response.body()
                     if (userRouteResponse != null) {
                         Log.e("성공", "사용자 지정 경로 가져오기 성공")
-                        onSuccessRoute(userRouteRecyclerView, userRouteResponse)
+                        onSuccessRoute(userRouteRecyclerView, userRouteResponse, userRouteHint)
                     }
                 }
 
@@ -343,13 +358,20 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     }
 
 
-    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute) {
-        userRouteAdapter = context?.let { UserRouteAdapter(userRoute.audit, userRoute.complete, it) }
+    override fun onSuccessRoute(userRouteRecyclerView: RecyclerView, userRoute: UserRoute, userRouteHint: TextView) {
+        userRouteAdapter = context?.let { UserRouteAdapter(userRoute.audit, userRoute.complete,userViewModel, it) }
         userRouteRecyclerView.apply {
             this.adapter = userRouteAdapter
             this.layoutManager = GridLayoutManager(userRouteRecyclerView.context, 1)
         }
 
+        if (userRoute.audit.isEmpty() && userRoute.complete.isEmpty()) {
+            userRouteRecyclerView.visibility = View.INVISIBLE
+            userRouteHint.visibility = View.VISIBLE
+        } else {
+            userRouteRecyclerView.visibility = View.VISIBLE
+            userRouteHint.visibility = View.INVISIBLE
+        }
     }
 
 }

@@ -51,14 +51,14 @@
                android:nestedScrollingEnabled="false"
                android:id="@+id/challenge_detail_recyclerView"
                android:background="@color/white"
-               android:layout_width="match_parent"
+               android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:layout_below="@+id/challenge_screenshot"
                android:layout_centerHorizontal="true"
                android:layout_marginBottom="50dp"
-               android:layout_marginStart="24dp"
+               android:layout_marginStart="16dp"
                android:layout_marginTop="40dp"
-               android:layout_marginEnd="24dp" />
+               android:layout_marginEnd="16dp" />
 
 
        </RelativeLayout>

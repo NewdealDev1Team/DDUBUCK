@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
         initToolBar()
         initFragmentManager()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             initVibrator()
         }
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
@@ -98,14 +98,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun onCoachMark() {
+    private fun onCoachMark(){
         val dialog : Dialog = Dialog(this,R.style.WalkthroughTheme)
+
 
         dialog.setContentView(R.layout.coach_mark)
         dialog.setCanceledOnTouchOutside(true)
 
         //코치마크 어디든 터치 시 창이 닫힌다.
-        val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)//최상의 뷰
+        val masterView : ImageButton = dialog.findViewById(R.id.coach_mark_exit_button)
         masterView.setOnClickListener{
             UserSharedPreferences.setCoachMarkExit(this,true)
             dialog.dismiss()
@@ -191,7 +192,6 @@ class MainActivity : AppCompatActivity() {
                                 .detach(activeFragment)
                                 .attach(myPageFragment)
                                 .commit()
-
                         }
                         else -> {
 
@@ -211,6 +211,8 @@ class MainActivity : AppCompatActivity() {
             tbm.show()
             activityModel.toolbarTitle.observe(this, { v ->
                 tbm.title = v
+                isMyPageFragmentShown = true
+                invalidateOptionsMenu()
             })
             val drawerLayout = findViewById<DrawerLayout>(R.id.main_drawerLayout)
             activityModel.showDrawer.observe(this, {v ->
@@ -272,15 +274,17 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.popBackStackImmediate()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.hide(activeFragment).show(fragment).commit()
+        supportFragmentManager.popBackStackImmediate()
         activeFragment = fragment
+        isMyPageFragmentShown = false
         changeToolBar(fragment)
     }
 
     private fun changeToolBar(fragment: Fragment) {
         val toolbarTextView: TextView = findViewById(R.id.main_toolbar_text)
+        val drawerLayout : DrawerLayout = findViewById(R.id.main_drawerLayout)
         val tbm = supportActionBar
         if (tbm != null) {
             when (fragment) {
@@ -289,23 +293,27 @@ class MainActivity : AppCompatActivity() {
                     tbm.title = "챌린지"
                     toolbarTextView.text = ""
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 badgeFragment -> {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "뱃지"
                     toolbarTextView.text = ""
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 myPageFragment -> {
                     tbm.setDisplayShowTitleEnabled(true)
                     tbm.title = "마이페이지"
                     toolbarTextView.text = ""
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
                 }
                 else -> {
                     tbm.setDisplayShowTitleEnabled(false)
                     toolbarTextView.text = "뚜벅뚜벅"
                     invalidateOptionsMenu()
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
                 }
             }
             tbm.setDisplayHomeAsUpEnabled(false)
