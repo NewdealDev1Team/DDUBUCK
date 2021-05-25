@@ -19,12 +19,12 @@ import com.mapo.ddubuck.home.HomeMapViewModel
 
 interface WeatherAPICallback {
     fun onSuccess(
-            weatherResponse: WeatherResponse,
-            uvRays: UVRays,
-            dust: Dust,
-            weatherText: TextView,
-            tempAndDust: TextView,
-            weatherImage: ImageView
+        weatherResponse: WeatherResponse,
+        uvRays: UVRays,
+        dust: Dust,
+        weatherText: TextView,
+        tempAndDust: TextView,
+        weatherImage: ImageView,
     )
 }
 
@@ -34,9 +34,9 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
     private val locationViewModel: HomeMapViewModel by activityViewModels()
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         val weatherView = inflater.inflate(R.layout.fragment_weather, container, false)
         val weatherText: TextView = weatherView.findViewById(R.id.weather_text)
@@ -51,18 +51,23 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
 
     // Coroutine 사용 필요
     private fun showWeatherInfo(
-            result: WeatherAPICallback,
-            weatherText: TextView,
-            tempAndDust: TextView,
-            weatherImage: ImageView
+        result: WeatherAPICallback,
+        weatherText: TextView,
+        tempAndDust: TextView,
+        weatherImage: ImageView,
     ) {
-        locationViewModel.position.observe(viewLifecycleOwner, {location ->
+        locationViewModel.position.observe(viewLifecycleOwner, { location ->
             val lat = location.latitude.toString()
             val lon = location.longitude.toString()
-            weatherViewModel.weatherInfo(lat,lon).observe(viewLifecycleOwner, { weather ->
+            weatherViewModel.weatherInfo(lat, lon).observe(viewLifecycleOwner, { weather ->
                 weatherViewModel.uvRaysInfo.observe(viewLifecycleOwner, { uvRays ->
                     weatherViewModel.dustInfo.observe(viewLifecycleOwner, { dust ->
-                        result.onSuccess(weather, uvRays, dust, weatherText, tempAndDust, weatherImage)
+                        result.onSuccess(weather,
+                            uvRays,
+                            dust,
+                            weatherText,
+                            tempAndDust,
+                            weatherImage)
                         weatherViewModel.getResponseValue(true)
                     })
                 })
@@ -73,12 +78,12 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
 
     @SuppressLint("SetTextI18n", "ResourceType")
     override fun onSuccess(
-            weatherResponse: WeatherResponse,
-            uvRays: UVRays,
-            dust: Dust,
-            weatherText: TextView,
-            tempAndDust: TextView,
-            weatherImage: ImageView
+        weatherResponse: WeatherResponse,
+        uvRays: UVRays,
+        dust: Dust,
+        weatherText: TextView,
+        tempAndDust: TextView,
+        weatherImage: ImageView,
     ) {
         var weatherScore = 0
 
@@ -98,7 +103,7 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
 
         // 불쾌 지수 공식
         val discomfortIndex =
-                (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
+            (((9 / 5) * tempNowC!!) - (0.55 * (1 - (tempHumidity!! / 100).toInt()) * (9 / 5 * tempNowC - 26)) + 32).toInt()
 
         // 자외선 지수
         val uvRays = if (uvRays.response.header.resultCode != "00") {
@@ -122,10 +127,12 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
             in 200..699 -> {
                 weatherScore += 2
                 if (weatherID in 500..531) weatherViewModel.setWeatherValue("rainy")
+                if (weatherID in 600..622) weatherViewModel.setWeatherValue("snow")
             }
             in 800..809 -> {
                 weatherScore += 3
                 if (id == 800) weatherViewModel.setWeatherValue("sunny")
+                else weatherViewModel.setWeatherValue("cloudy")
             }
         }
 
@@ -182,10 +189,10 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                 weatherText.text = "산책하기 최고의 날!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
                 spanText.setSpan(
-                        ForegroundColorSpan(Color.rgb(118, 118, 118)),
-                        11,
-                        15,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                    ForegroundColorSpan(Color.rgb(118, 118, 118)),
+                    11,
+                    15,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
 
@@ -199,16 +206,16 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
                 weatherText.text = "산책하기 좋아요!"
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
                 spanText.setSpan(
-                        ForegroundColorSpan(Color.rgb(61, 171, 91)),
-                        0,
-                        spanText.length,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                    ForegroundColorSpan(Color.rgb(61, 171, 91)),
+                    0,
+                    spanText.length,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 spanText.setSpan(
-                        ForegroundColorSpan(Color.rgb(118, 118, 118)),
-                        11,
-                        15,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                    ForegroundColorSpan(Color.rgb(118, 118, 118)),
+                    11,
+                    15,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
 
@@ -224,17 +231,17 @@ class WeatherFragment : Fragment(), WeatherAPICallback {
 
                 val spanText = SpannableString("$tempMax°C/$tempMin°C    미세 $dustString")
                 spanText.setSpan(
-                        ForegroundColorSpan(Color.rgb(255, 153, 0)),
-                        0,
-                        spanText.length,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                    ForegroundColorSpan(Color.rgb(255, 153, 0)),
+                    0,
+                    spanText.length,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
 
                 spanText.setSpan(
-                        ForegroundColorSpan(Color.rgb(118, 118, 118)),
-                        11,
-                        15,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE
+                    ForegroundColorSpan(Color.rgb(118, 118, 118)),
+                    11,
+                    15,
+                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
                 )
                 tempAndDust.text = spanText
 

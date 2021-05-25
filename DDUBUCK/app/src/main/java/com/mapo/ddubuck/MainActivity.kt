@@ -45,11 +45,11 @@ import java.util.*
 @RequiresApi(Build.VERSION_CODES.Q)
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment(this@MainActivity)
-    private val challengeFragment = ChallengeFragment()
+    private val challengeFragment = ChallengeFragment(this)
     private val badgeFragment = BadgeFragment()
     private val myPageFragment = MyPageFragment()
     private val settingFragment = SettingFragment()
-    private val bookmarkFragment = BookmarkFragment()
+    private val bookmarkFragment = BookmarkFragment(this)
 
     private val drawerFragment = FilterDrawer(this@MainActivity)
 
@@ -209,6 +209,10 @@ class MainActivity : AppCompatActivity() {
                     when (activeFragment) {
                         challengeFragment -> {
                             tbm.title = "챌린지"
+                            fm.beginTransaction()
+                                .detach(activeFragment)
+                                .attach(challengeFragment)
+                                .commit()
                         }
                         badgeFragment -> {
                             tbm.title = "뱃지"
@@ -276,6 +280,8 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
                     .hide(activeFragment)
+                    .detach(activeFragment)
+                    .attach(bookmarkFragment)
                     .show(bookmarkFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
 
