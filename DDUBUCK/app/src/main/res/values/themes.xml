@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.DDUBUCK" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!--다크모드 차단-->
+        <item name="android:forceDarkAllowed" tools:targetApi="q" >false</item>
         <!--Window ActionBar Issue-->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

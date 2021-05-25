@@ -52,6 +52,7 @@
         android:theme="@style/Theme.DDUBUCK"
         android:usesCleartextTraffic="true"
         android:largeHeap = "true"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="n">
         <activity android:name="com.mapo.ddubuck.SplashActivity">
             <intent-filter>
@@ -59,7 +60,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.mapo.ddubuck.home.option.SelectOptionActivity" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
