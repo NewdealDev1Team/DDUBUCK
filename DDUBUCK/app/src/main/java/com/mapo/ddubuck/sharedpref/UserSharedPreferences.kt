@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.ImageButton
 import com.google.gson.Gson
 import com.mapo.ddubuck.data.home.CourseItem
+import com.mapo.ddubuck.data.home.WalkRecord
 import kotlinx.android.synthetic.main.coach_mark.view.*
 
 object UserSharedPreferences {
@@ -96,7 +97,7 @@ object UserSharedPreferences {
         var string = "["
         for (i in 0 until list.size) {
             string += Gson().toJson(list[i])
-            if(i!=list.size-1) {
+            if(list[i]!=list.last()) {
                 string += ","
             }
         }

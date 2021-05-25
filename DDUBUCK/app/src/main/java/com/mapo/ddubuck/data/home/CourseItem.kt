@@ -8,6 +8,9 @@ data class CourseItem(
     val walkRecord: WalkRecord) {
 
     fun compareTo(i : CourseItem) : Boolean {
-        return title == i.title && walkRecord.path.size == i.walkRecord.path.size
+        if(isFreeWalk) {
+            return isFreeWalk == i.isFreeWalk
+        }
+        return title == i.title && walkRecord.walkTime == i.walkRecord.walkTime
     }
 }
