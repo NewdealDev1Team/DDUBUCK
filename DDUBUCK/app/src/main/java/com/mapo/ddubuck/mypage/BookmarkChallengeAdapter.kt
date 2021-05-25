@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
@@ -21,11 +22,11 @@ import kotlinx.android.synthetic.main.challenge_card_layout.view.*
 
 class BookmarkChallengeAdapter(
     private val owner: Activity,
-    private val challenge: ArrayList<Challenge>,
+    private val challenge: ArrayList<Challenge>
 ) :
     RecyclerView.Adapter<BookmarkChallengeAdapter.ChallengeViewHolder>() {
     var bookmarkedChallenge: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
-
+    val isBookmarkChanged = MutableLiveData<Boolean>()
 
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
@@ -55,9 +56,7 @@ class BookmarkChallengeAdapter(
             itemClickListener.onClick(it, position)
         }
 
-        if (bookmarkedChallenge.contains(challenge[position])) {
-            holder.bookmarkButton.isChecked = true
-        }
+        holder.bookmarkButton.isChecked = bookmarkedChallenge.contains(challenge[position])
 
         holder.bookmarkButton.setOnClickListener {
 
@@ -72,9 +71,11 @@ class BookmarkChallengeAdapter(
                 }
                 BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
             }
-            updateRecyclerView(bookmarkedChallenge)
+//            updateRecyclerView(bookmarkedChallenge)
+            isBookmarkChanged.value = true
             Log.e("챌린", BookmarkSharedPreferences.getBookmarkedChallenge(owner).toString())
         }
+
 
         holder.challengeItemTitle.text = challenge[position].title
         holder.challengeItemText.text = challenge[position].infoText
@@ -93,7 +94,7 @@ class BookmarkChallengeAdapter(
         return challenge.size
     }
 
-    private fun updateRecyclerView(bookmarkChallenge: ArrayList<Challenge>) {
+    fun updateRecyclerView(bookmarkChallenge: ArrayList<Challenge>) {
         challenge.clear()
         challenge.addAll(bookmarkChallenge)
         this.notifyDataSetChanged()

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mapo.ddubuck.R
@@ -21,6 +22,8 @@ class ChallengeAdapter(
     private val owner: Activity,
 ) :
     RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
+
+    val isBookmarkChanged = MutableLiveData<Boolean>()
 
     interface ItemClickListener {
         fun onClick(view: View, position: Int)
@@ -37,8 +40,6 @@ class ChallengeAdapter(
         var challengeItemTitle: TextView = itemView.challenge_card_title
         var challengeItemText: TextView = itemView.challenge_card_text
         var bookmarkButton: ToggleButton = itemView.challenge_bookmark
-        var bookmarkedChallenge: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
-
     }
 
 
@@ -52,9 +53,7 @@ class ChallengeAdapter(
             itemClickListner.onClick(it, position)
         }
 
-        if (bookmarkedChallenge.contains(challenge[position])) {
-            holder.bookmarkButton.isChecked = true
-        }
+        holder.bookmarkButton.isChecked = bookmarkedChallenge.contains(challenge[position])
 
         holder.bookmarkButton.setOnClickListener {
 
@@ -70,7 +69,7 @@ class ChallengeAdapter(
             BookmarkSharedPreferences.setBookmarkChallenge(owner, bookmarkedChallenge)
 //            updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
             Log.e("챌린22", BookmarkSharedPreferences.getBookmarkedChallenge(owner).toString())
-
+            isBookmarkChanged.value = true
         }
 
         holder.challengeItemTitle.text = challenge[position].title
@@ -91,11 +90,11 @@ class ChallengeAdapter(
     }
 
 
-//    fun updateRecyclerView(bookmarkChallenge: ArrayList<Challenge>) {
-//        bookmarkedChallenge.clear()
-//        bookmarkedChallenge.addAll(bookmarkChallenge)
-//        this.notifyDataSetChanged()
-//    }
+    fun updateRecyclerView(newBookmarkedChallenge: ArrayList<Challenge>) {
+        bookmarkedChallenge.clear()
+        bookmarkedChallenge.addAll(newBookmarkedChallenge)
+        this.notifyDataSetChanged()
+    }
 
 
 }

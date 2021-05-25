@@ -70,6 +70,14 @@ class BookmarkFragment(val owner: Activity) : Fragment() {
             })
         }
 
+        challengeViewModel.isChanged.observe(viewLifecycleOwner, {
+            challengeAdapter?.updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(owner))
+        })
+
+        challengeAdapter?.isBookmarkChanged?.observe(viewLifecycleOwner, {
+            challengeViewModel.isChanged.value = true
+        })
+
         return bookmarkViewGroup
 
     }

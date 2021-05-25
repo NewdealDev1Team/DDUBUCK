@@ -277,6 +277,7 @@ class MainActivity : AppCompatActivity() {
                 drawerLayout.openDrawer(Gravity.RIGHT)
             }
             R.id.action_bookmark -> {
+                supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
                     .hide(activeFragment)
                     .detach(activeFragment)

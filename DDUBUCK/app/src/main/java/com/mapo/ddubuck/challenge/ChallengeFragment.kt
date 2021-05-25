@@ -53,6 +53,7 @@ class ChallengeFragment(val owner: Activity) : Fragment() {
 
 
     private val mainViewModel: MainActivityViewModel by activityViewModels()
+    private val challengeViewModel: ChallengeViewModel by activityViewModels()
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
@@ -62,7 +63,8 @@ class ChallengeFragment(val owner: Activity) : Fragment() {
     ): View? {
         challengeFragment = ChallengeFragment(owner)
 
-        var bookmarkedChallenge: ArrayList<Challenge> = BookmarkSharedPreferences.getBookmarkedChallenge(owner)
+        var bookmarkedChallenge: ArrayList<Challenge> =
+            BookmarkSharedPreferences.getBookmarkedChallenge(owner)
         val challengeView: ViewGroup =
             inflater.inflate(R.layout.fragment_challenge, container, false) as ViewGroup
 
@@ -73,7 +75,8 @@ class ChallengeFragment(val owner: Activity) : Fragment() {
         dduubuckChallengeTitle.text = "뚜벅뚜벅 챌린지"
         ddubuckChallengeText.text = "우리 함께 기분 좋은 산책,\n" + "시작해볼까요?"
 
-        val ddubuckChallengeAdapter = activity?.let { ChallengeAdapter(ddubuckChallenge, bookmarkedChallenge,it) }
+        val ddubuckChallengeAdapter =
+            activity?.let { ChallengeAdapter(ddubuckChallenge, bookmarkedChallenge, it) }
 
         val challengeRecyclerView: RecyclerView =
             challengeView.findViewById(R.id.challenge_recyclerView)
@@ -101,7 +104,8 @@ class ChallengeFragment(val owner: Activity) : Fragment() {
         hiddenChallengeTitle.text = "히든 챌린지"
         hiddenChallengeText.text = "자유산책을 하면서\n" + "숨겨진 챌린지를 찾아보세요"
 
-        val hiddenChallengeAdapter = activity?.let { ChallengeAdapter(hiddenChallenge, bookmarkedChallenge, it) }
+        val hiddenChallengeAdapter =
+            activity?.let { ChallengeAdapter(hiddenChallenge, bookmarkedChallenge, it) }
 
 
         val hiddenChallengeRecyclerView: RecyclerView =
@@ -130,7 +134,8 @@ class ChallengeFragment(val owner: Activity) : Fragment() {
         petChallengeTitle.text = "반려동물과 함께"
         petChallengeText.text = "나의 소중한 반려동물이 있나요?\n" + "우리 함께 산책해 볼까요?"
 
-        val petChallengeAdapter = activity?.let { ChallengeAdapter(petChallenge, bookmarkedChallenge, it) }
+        val petChallengeAdapter =
+            activity?.let { ChallengeAdapter(petChallenge, bookmarkedChallenge, it) }
 
 
         val petChallengeRecyclerView: RecyclerView =
@@ -148,6 +153,38 @@ class ChallengeFragment(val owner: Activity) : Fragment() {
                 }
             })
         }
+
+        challengeViewModel.isChanged.observe(viewLifecycleOwner, {
+            ddubuckChallengeAdapter?.updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(
+                owner))
+        }
+        )
+
+        ddubuckChallengeAdapter?.isBookmarkChanged?.observe(viewLifecycleOwner, {
+            challengeViewModel.isChanged.value = true
+        })
+
+
+        challengeViewModel.isChanged.observe(viewLifecycleOwner, {
+            hiddenChallengeAdapter?.updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(
+                owner))
+        }
+        )
+
+        hiddenChallengeAdapter?.isBookmarkChanged?.observe(viewLifecycleOwner, {
+            challengeViewModel.isChanged.value = true
+        })
+
+
+        challengeViewModel.isChanged.observe(viewLifecycleOwner, {
+            petChallengeAdapter?.updateRecyclerView(BookmarkSharedPreferences.getBookmarkedChallenge(
+                owner))
+        }
+        )
+
+        petChallengeAdapter?.isBookmarkChanged?.observe(viewLifecycleOwner, {
+            challengeViewModel.isChanged.value = true
+        })
 
         return challengeView
     }
