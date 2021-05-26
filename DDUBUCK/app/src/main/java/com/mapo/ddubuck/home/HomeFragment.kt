@@ -68,7 +68,17 @@ class HomeFragment(private val owner: Activity) : Fragment() {
         val bottomSheetSelectFragmentFragment = BottomSheetSelectFragment(owner)
         fm.beginTransaction().add(R.id.bottom_sheet_container, bottomSheetSelectFragmentFragment).commit()
 
+        val bottomSheetLayoutHeight = bottomSheetFrame.height
+        val bottomSheetPeekHeight = bottomSheetBehavior.peekHeight
+
         mapViewModel.bottomSheetHeight.observe(viewLifecycleOwner, {v ->
+//            if(v==100) {
+//                bottomSheetFrame.layoutParams.height = bottomSheetLayoutHeight
+//                bottomSheetBehavior.setPeekHeight(bottomSheetFrame.layoutParams.height, false)
+//            } else {
+//                bottomSheetFrame.layoutParams.height = bottomSheetLayoutHeight
+//                bottomSheetBehavior.setPeekHeight(bottomSheetFrame.layoutParams.height, false)
+//            }
             bottomSheetFrame.layoutParams.height += TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, v.toFloat(), resources.displayMetrics).toInt()
             bottomSheetBehavior.setPeekHeight(bottomSheetFrame.layoutParams.height, false)
         })
