@@ -48,7 +48,7 @@ class UserRouteAdapter(
                 val auditTitle = audit[position].title.toString()
                 val auditPicture = audit[position].picture!!
                 val auditDescription = audit[position].description.toString()
-                val auditWalkTime = audit[position].walkTime.toString() + "분"
+                val auditWalkTime = (audit[position].walkTime?.div(60)).toString() + "분"
                 val auditDistance =  numberFormat.getFormattedDistance(audit[position].distance!!)
                 val auditHeight = numberFormat.getFormattedAltitude(audit[position].altitude!!)
                     val auditCreatedAt = audit[position].created_at.toString()
@@ -78,7 +78,7 @@ class UserRouteAdapter(
             val completeTitle = complete[position - audit.size].title.toString()
             val completePicture = complete[position - audit.size].picture!!
             val completeDescription = complete[position - audit.size].description.toString()
-            val completeWalkTime = complete[position - audit.size].walkTime.toString() + "분"
+            val completeWalkTime = (audit[position].walkTime?.div(60)).toString() + "분"
             val completeDistance = numberFormat.getFormattedDistance(complete[position - audit.size].distance!!)
             val completeHeight = numberFormat.getFormattedAltitude(complete[position - audit.size].altitude!!)
             val completeCreatedAt = complete[position - audit.size].created_at.toString()
