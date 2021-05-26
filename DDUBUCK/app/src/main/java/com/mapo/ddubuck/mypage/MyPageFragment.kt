@@ -176,6 +176,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         setUserRoute(userRouteRecyclerView, userRouteHint)
 
         myapgeViewModel.isRouteChanged.observe(viewLifecycleOwner, {
+            Log.e("갱신갱신","뷰모델받기")
             setUserRoute(userRouteRecyclerView, userRouteHint)
         })
 

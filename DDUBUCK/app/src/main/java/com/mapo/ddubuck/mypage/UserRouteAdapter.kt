@@ -13,6 +13,7 @@ import androidx.core.view.isInvisible
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.mapo.ddubuck.R
+import com.mapo.ddubuck.home.bottomSheet.BottomSheetNumberFormat
 import kotlinx.android.synthetic.main.user_course_layout.view.*
 
 
@@ -20,6 +21,8 @@ class UserRouteAdapter(
     var audit: MutableList<Audit>, private var complete: MutableList<Complete>,
     val myapgeViewModel: MypageViewModel, val context: Context
 ) : RecyclerView.Adapter<UserRouteAdapter.MyPageViewHolder>() {
+    val numberFormat = BottomSheetNumberFormat()
+
     inner class MyPageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var userRouteItemTitle: TextView = itemView.user_route_view_title
@@ -46,8 +49,8 @@ class UserRouteAdapter(
                 val auditPicture = audit[position].picture!!
                 val auditDescription = audit[position].description.toString()
                 val auditWalkTime = audit[position].walkTime.toString() + "분"
-                val auditDistance = audit[position].distance?.toInt().toString() + "km"
-                val auditHeight = audit[position].altitude?.toInt().toString() + "m"
+                val auditDistance =  numberFormat.getFormattedDistance(audit[position].distance!!)
+                val auditHeight = numberFormat.getFormattedAltitude(audit[position].altitude!!)
                     val auditCreatedAt = audit[position].created_at.toString()
 
                 val dialog = UserCourseDialog(auditTitle,
@@ -76,8 +79,8 @@ class UserRouteAdapter(
             val completePicture = complete[position - audit.size].picture!!
             val completeDescription = complete[position - audit.size].description.toString()
             val completeWalkTime = complete[position - audit.size].walkTime.toString() + "분"
-            val completeDistance = complete[position - audit.size].distance?.toInt().toString() + "km"
-            val completeHeight = complete[position - audit.size].altitude?.toInt().toString() + "m"
+            val completeDistance = numberFormat.getFormattedDistance(complete[position - audit.size].distance!!)
+            val completeHeight = numberFormat.getFormattedAltitude(complete[position - audit.size].altitude!!)
             val completeCreatedAt = complete[position - audit.size].created_at.toString()
 
             holder.itemView.setOnClickListener {
