@@ -483,6 +483,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
             null
         }
 
+
         RetrofitService().createRecord(
             userKey,
             courseTitle,
