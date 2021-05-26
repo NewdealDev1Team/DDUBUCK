@@ -47,7 +47,6 @@ import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.collections.ArrayList
-import id.co.barchartresearch.ChartData
 import kotlinx.android.synthetic.main.fragment_walk_time.*
 
 class WalkTimeFragment : Fragment() {
@@ -116,7 +115,6 @@ class WalkTimeFragment : Fragment() {
         //바 차트
         chart = rootView.findViewById(R.id.time_bar_chart)
         chart.setNoDataText("")
-
         initChart(chart)
 
         val shareButtonView: View = rootView.findViewById(R.id.time_share_button)
@@ -203,7 +201,7 @@ class WalkTimeFragment : Fragment() {
                 }
             }
 
-            //차트 왼쪽 축,Y방향 ( 수치 최소값, 최대값 )
+            //차트 오른쪽 축,Y방향 ( 수치 최소값, 최대값 )
             axisRight.apply {
                 //아래,왼쪽제목색깔
                 textColor = R.color.black
@@ -217,9 +215,9 @@ class WalkTimeFragment : Fragment() {
 
                 var count = 0
                 barData.forEachIndexed { index, chartData ->
-                    while ((chartData.value/60)> axisMaximum) {
+                    while (chartData.value> axisMaximum) {
                         count++
-                        if ((chartData.value/60) > axisMaximum) {
+                        if (chartData.value > axisMaximum) {
                             axisMaximum += 30F
                         } else {
                             axisMaximum = 90F
@@ -237,7 +235,7 @@ class WalkTimeFragment : Fragment() {
                     }
                 }
             }
-            //차트 오른쪽 축,Y방향 false 처리
+            //차트 왼 축,Y방향 false 처리
             axisLeft.apply {
                 isEnabled = false
                 //그래프가로축,선(점선으로변경)
@@ -344,12 +342,14 @@ class WalkTimeFragment : Fragment() {
                             Log.d("text", "연결성공")
 
                             var result0 = response.body()?.weekStat?.get(0)?.walkTime?.toFloat()
-                            var result1 = response.body()?.weekStat?.get(1)?.walkTime?.toFloat()
-                            var result2 = response.body()?.weekStat?.get(2)?.walkTime?.toFloat()
-                            var result3 = response.body()?.weekStat?.get(3)?.walkTime?.toFloat()
-                            var result4 = response.body()?.weekStat?.get(4)?.walkTime?.toFloat()
-                            var result5 = response.body()?.weekStat?.get(5)?.walkTime?.toFloat()
+                                ?.div(60)
+                            var result1 = response.body()?.weekStat?.get(1)?.walkTime?.toFloat()?.div(60)
+                            var result2 = response.body()?.weekStat?.get(2)?.walkTime?.toFloat()?.div(60)
+                            var result3 = response.body()?.weekStat?.get(3)?.walkTime?.toFloat()?.div(60)
+                            var result4 = response.body()?.weekStat?.get(4)?.walkTime?.toFloat()?.div(60)
+                            var result5 = response.body()?.weekStat?.get(5)?.walkTime?.toFloat()?.div(60)
                             var result6 = response.body()?.weekStat?.get(6)?.walkTime?.toFloat()
+                            var todayResult6 = response.body()?.weekStat?.get(6)?.walkTime?.toFloat()?.div(60)
                             Log.d("~~0번째 time~~~",
                                 " $result0 , $result1, $result2, $result3, $result4, $result5, $result6")
 
@@ -359,7 +359,7 @@ class WalkTimeFragment : Fragment() {
                             oneWeekRecord.add(result3!!)
                             oneWeekRecord.add(result4!!)
                             oneWeekRecord.add(result5!!)
-                            oneWeekRecord.add(result6!!)
+                            oneWeekRecord.add(todayResult6!!)
 
 
                             setData(listData)

@@ -33,7 +33,6 @@ import com.github.mikephil.charting.utils.ViewPortHandler
 import com.mapo.ddubuck.data.mypagechart.MyWalkRecordChartData
 import com.tarek360.instacapture.Instacapture
 import com.tarek360.instacapture.listener.SimpleScreenCapturingListener
-import id.co.barchartresearch.ChartData
 import id.co.barchartresearch.CustomBarChartRender
 import kotlinx.android.synthetic.main.fragment_course_clear.*
 import retrofit2.Call

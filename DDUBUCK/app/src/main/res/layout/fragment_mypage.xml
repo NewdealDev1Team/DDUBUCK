@@ -193,7 +193,7 @@
                             android:layout_height="wrap_content"
                             android:paddingLeft="25dp"
                             android:paddingRight="24dp"
-                            android:text="코스 완주"
+                            android:text="산책 완료"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="14dp" />
