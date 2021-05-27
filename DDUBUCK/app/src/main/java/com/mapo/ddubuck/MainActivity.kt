@@ -27,6 +27,7 @@ import com.mapo.ddubuck.home.HomeMapViewModel
 import com.mapo.ddubuck.home.bottomSheet.*
 import com.mapo.ddubuck.mypage.BookmarkFragment
 import com.mapo.ddubuck.mypage.MyPageFragment
+import com.mapo.ddubuck.mypage.MypageViewModel
 import com.mapo.ddubuck.mypage.SettingFragment
 import com.mapo.ddubuck.sharedpref.UserSharedPreferences
 import kotlinx.android.synthetic.main.activity_main.*
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     private var isMyPageFragmentShown : Boolean = false
     private val mapModel: HomeMapViewModel by viewModels()
     private val activityModel: MainActivityViewModel by viewModels()
+    private val myPageViewModel: MypageViewModel by viewModels()
 
     //수치
     private val mOnNavigationItemSelectedListener =
@@ -69,6 +71,8 @@ class MainActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_mypage -> {
+                    myPageViewModel.isRouteChanged.value = true
+                    myPageViewModel.isImageUpdate.value = true
                     replaceFragment(myPageFragment)
                     return@OnNavigationItemSelectedListener true
                 }
