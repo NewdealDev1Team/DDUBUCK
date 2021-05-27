@@ -61,7 +61,6 @@
             app:menu="@menu/bottom_nav_menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-<!--    android:background="#EE88C9"-->
 
     <FrameLayout
         android:layout_gravity="end"
