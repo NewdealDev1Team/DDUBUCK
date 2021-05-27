@@ -72,6 +72,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
         const val WALK_COURSE_COMPLETE = 401
         /**목표 지점 체크 허용거리
          * ex : 5미터 이내일 시 경로 지점 판정 **/
+        const val userPathAddCycle = 3.0
         const val courseCompareDistance = 15.0
         const val hiddenChallengeCompareDistance = 15.0
     }
@@ -634,7 +635,7 @@ class HomeMapFragment(private val fm: FragmentManager, private val owner: Activi
                 val lastPoint = userPath.coords.last()
                 /**사용자가 마지막으로 등록한 point와 충분히 멀어졌는지 검사한다**/
                 /**현재 점과 마지막 점의 거리차이가 지정된 거리 이하로 나면 점을 추가하지 않음**/
-                if (!isUserReachedToTarget(courseCompareDistance,point, lastPoint)) {
+                if (!isUserReachedToTarget(userPathAddCycle,point, lastPoint)) {
                     addUserPath(point, lastPoint, userPath.coords, speed, alt.toFloat())
                 }
                 /**코스산책일 경우**/
