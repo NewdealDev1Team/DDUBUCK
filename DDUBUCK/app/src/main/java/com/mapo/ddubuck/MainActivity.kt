@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_bookmark -> {
                 supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
-                    .replace(R.id.nav_main_container, bookmarkFragment)
+                    .replace(R.id.scrollview_mypage, bookmarkFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
                 isMyPageFragmentShown = true
                 activityModel.toolbarTitle.value = "북마크"
@@ -266,7 +266,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> {
                 supportFragmentManager.popBackStackImmediate()
                 fragmentTransaction
-                    .replace(R.id.nav_main_container, settingFragment)
+                    .replace(R.id.scrollview_mypage, settingFragment)
                     .addToBackStack(MYPAGE_TAG).commit()
                 isMyPageFragmentShown = true
                 activityModel.toolbarTitle.value = "설정"
