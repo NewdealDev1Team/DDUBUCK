@@ -60,7 +60,8 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     private var walkRecord : WalkRecord? = null
     private var isBlack = true
     private val numberFormatter = DecimalFormat("#.##km")
-    private val logoIcon = BitmapFactory.decodeResource(this.resources, R.drawable.icon_logo_white)
+    private val logoIconWhite = BitmapFactory.decodeResource(this.resources, R.drawable.ic_logo_w)
+    private val logoIconBlack = BitmapFactory.decodeResource(this.resources, R.drawable.ic_logo_k)
     private val logoMatrix = Matrix()
 
     fun initialize(uri: Uri, record: WalkRecord) {
@@ -146,22 +147,23 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
             //로고 그리기
             logoMatrix.setScale(0.15f,
                 0.15f,
-                (width - (logoIcon.width * 0.15f) / 2),
+                (width - (logoIconWhite.width * 0.15f) / 2),
                 height * 0.05f)
-            canvas.drawBitmap(logoIcon, logoMatrix, null)
             if(isBlack) {
                 canvas.drawPath(path, whitePathPaint)
                 canvas.drawText(
                     numberFormatter.format(walkRecord!!.distance / 1000),
                     width * 0.05f,
                     (height - pathBoundRect.height() - 100f), whiteTextPaint)
+                canvas.drawBitmap(logoIconWhite, logoMatrix, null)
+
             } else {
                 canvas.drawPath(path, blackPathPaint)
                 canvas.drawText(
                     numberFormatter.format(walkRecord!!.distance / 1000),
                     width * 0.05f,
                     (height - pathBoundRect.height() - 100f), blackTextPaint)
-
+                canvas.drawBitmap(logoIconBlack, logoMatrix, null)
             }
         }
     }
