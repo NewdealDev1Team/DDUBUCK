@@ -40,9 +40,7 @@ class GalleryAdapter(val context: Context, uriArr: ArrayList<String>) : BaseAdap
             LinearLayout.LayoutParams(display.widthPixels / 5, display.widthPixels / 5)
 
         imageView.setOnClickListener {
-            val intent =  Intent()
-            intent.action = Intent.ACTION_VIEW;
-            intent.type = "image/*";
+            val intent =  Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_GALLERY)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
             context.startActivity(intent);
         }
