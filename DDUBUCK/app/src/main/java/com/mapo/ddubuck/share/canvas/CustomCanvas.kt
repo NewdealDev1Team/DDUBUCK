@@ -60,8 +60,8 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
     private var walkRecord : WalkRecord? = null
     private var isBlack = true
     private val numberFormatter = DecimalFormat("#.##km")
-    private val logoIconWhite = BitmapFactory.decodeResource(this.resources, R.drawable.ic_logo_w)
-    private val logoIconBlack = BitmapFactory.decodeResource(this.resources, R.drawable.ic_logo_k)
+    private val logoIconWhite = BitmapFactory.decodeResource(this.resources, R.drawable.icon_logo_white)
+    //private val logoIconBlack = BitmapFactory.decodeResource(this.resources, R.drawable.ic_logo_k)
     private val logoMatrix = Matrix()
 
     fun initialize(uri: Uri, record: WalkRecord) {
@@ -149,13 +149,14 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
                 0.15f,
                 (width - (logoIconWhite.width * 0.15f) / 2),
                 height * 0.05f)
+            canvas.drawBitmap(logoIconWhite, logoMatrix, null)
             if(isBlack) {
                 canvas.drawPath(path, whitePathPaint)
                 canvas.drawText(
                     numberFormatter.format(walkRecord!!.distance / 1000),
                     width * 0.05f,
                     (height - pathBoundRect.height() - 100f), whiteTextPaint)
-                canvas.drawBitmap(logoIconWhite, logoMatrix, null)
+                //canvas.drawBitmap(logoIconWhite, logoMatrix, null)
 
             } else {
                 canvas.drawPath(path, blackPathPaint)
@@ -163,7 +164,7 @@ class CustomCanvas(context: Context, attrs: AttributeSet? = null, defStyleAttr: 
                     numberFormatter.format(walkRecord!!.distance / 1000),
                     width * 0.05f,
                     (height - pathBoundRect.height() - 100f), blackTextPaint)
-                canvas.drawBitmap(logoIconBlack, logoMatrix, null)
+                //canvas.drawBitmap(logoIconBlack, logoMatrix, null)
             }
         }
     }
