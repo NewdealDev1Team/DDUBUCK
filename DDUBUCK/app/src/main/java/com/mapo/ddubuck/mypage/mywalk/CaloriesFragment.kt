@@ -115,7 +115,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
         val button: Button = rootView.findViewById(R.id.calorie_share_button)
         val shareButtonView: View = rootView.findViewById(R.id.calorie_share_button)
-        button.setOnClickListener { takeAndShareScreenShot(shareButtonView)}
+        button.setOnClickListener { takeAndShareScreenShot(shareButtonView) }
 
         return rootView
     }
@@ -273,7 +273,7 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, getString(R.string.app_content_path))
             put(MediaStore.Video.Media.IS_PENDING, 1)
         }
 
