@@ -4,12 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bottom_sheet_select_item_rounded"
-    android:orientation="horizontal"
     android:elevation="5dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="11dp"
-    android:layout_marginBottom="11dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="11dp"
+    android:paddingHorizontal="16dp"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,36 +16,38 @@
         android:id="@+id/sheet_select_item_pictureIv"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_marginVertical="8dp"
         android:background="@drawable/sheet_select_item_rounded"
         android:scaleType="center"
-        android:layout_marginVertical="8dp"
-        android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/sheet_select_item_pictureIv"
+        app:layout_constraintEnd_toStartOf="@+id/sheet_select_item_bookmark"
         app:layout_constraintStart_toEndOf="@+id/sheet_select_item_pictureIv"
         app:layout_constraintTop_toTopOf="@+id/sheet_select_item_pictureIv">
 
         <TextView
             android:id="@+id/sheet_select_item_titleTv"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:text="Title"
             android:textColor="@color/black"
             android:textSize="16dp" />
 
         <TextView
             android:id="@+id/sheet_select_item_bodyTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginTop="4dp"
+            android:maxLines="3"
             android:text="body\nbody"
             android:textSize="12dp" />
     </LinearLayout>
@@ -55,12 +56,9 @@
         android:id="@+id/sheet_select_item_bookmark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:layout_marginTop="12dp"
-        android:layout_marginHorizontal="22dp"
-        android:src="@drawable/ic_bookmark_empty_black"
         android:background="@drawable/common_ripple"
+        android:src="@drawable/ic_bookmark_empty_black"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/sheet_select_item_pictureIv" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
