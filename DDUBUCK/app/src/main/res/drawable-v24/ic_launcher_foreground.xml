@@ -4,8 +4,8 @@
     android:viewportWidth="150"
     android:viewportHeight="150">
     <group
-        android:translateX="44"
-        android:translateY="43">
+        android:translateX="35"
+        android:translateY="35">
         <clip-path
             android:pathData="M0,0h80v81.6327h-80z"/>
         <path
