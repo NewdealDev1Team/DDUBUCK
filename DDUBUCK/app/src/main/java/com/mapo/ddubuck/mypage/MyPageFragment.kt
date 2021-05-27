@@ -63,7 +63,6 @@ class MyPageFragment : Fragment(), UserRouteCallback {
     private lateinit var mypageFragment: MyPageFragment
     private lateinit var profileImageViewModel: ProfileImageViewModel
 
-    private lateinit var activeFragment: Fragment
     //뷰모델
     private val homemapViewModel: HomeMapViewModel by activityViewModels()
     private val myapgeViewModel: MypageViewModel by activityViewModels()
@@ -176,12 +175,11 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         setUserRoute(userRouteRecyclerView, userRouteHint)
 
         myapgeViewModel.isRouteChanged.observe(viewLifecycleOwner, {
-            Log.e("갱신갱신","뷰모델받기")
             setUserRoute(userRouteRecyclerView, userRouteHint)
         })
 
         myapgeViewModel.isImageUpdate.observe(viewLifecycleOwner, {
-
+            getAllPhotos(galleryGrid, galleryHint)
         })
 
         return myPageView
@@ -194,8 +192,11 @@ class MyPageFragment : Fragment(), UserRouteCallback {
             null,
             null,
             null,
-            MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC")
+            MediaStore.Images.ImageColumns.DATE_ADDED + " DESC")
         val uriArr = ArrayList<String>()
+        val sortedUriArr = ArrayList<Long>()
+        val resultArr = ArrayList<String>()
+        var route = ""
         var count = 0
         if (cursor != null) {
             while (cursor.moveToNext()) {
@@ -208,6 +209,18 @@ class MyPageFragment : Fragment(), UserRouteCallback {
                     count += 1
                 }
             }
+
+            for (value in uriArr) {
+                val split = value.split("_")
+                route = split[0]
+                sortedUriArr.add(split[1].split(".")[0].toLong())
+            }
+
+            for (sorted in sortedUriArr.sortedDescending()) {
+                resultArr.add("${route}_$sorted.jpg")
+            }
+
+
             cursor.close()
         }
 
@@ -219,7 +232,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
             hint.visibility = View.INVISIBLE
         }
 
-        val adapter = context?.let { GalleryAdapter(it, uriArr) }
+        val adapter = context?.let { GalleryAdapter(it, resultArr) }
         gridView.numColumns = 4 // 한 줄에 4개
         gridView.adapter = adapter
     }
