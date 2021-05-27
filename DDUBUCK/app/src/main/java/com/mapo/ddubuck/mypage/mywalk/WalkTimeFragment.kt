@@ -120,6 +120,7 @@ class WalkTimeFragment : Fragment() {
         val shareButtonView: View = rootView.findViewById(R.id.time_share_button)
         val button: Button = rootView.findViewById(R.id.time_share_button)
         button.setOnClickListener { takeAndShareScreenShot(shareButtonView) }
+
         return rootView
     }
 
@@ -235,7 +236,7 @@ class WalkTimeFragment : Fragment() {
                     }
                 }
             }
-            //차트 왼 축,Y방향 false 처리
+            //차트 왼쪽 축,Y방향 false 처리
             axisLeft.apply {
                 isEnabled = false
                 //그래프가로축,선(점선으로변경)
@@ -293,11 +294,10 @@ class WalkTimeFragment : Fragment() {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, getString(R.string.app_content_path))
             put(MediaStore.Video.Media.IS_PENDING, 1)
         }
 
-        //use application context to get contentResolver
         val contentResolver = this.requireActivity().contentResolver
 
         contentResolver.also { resolver ->
