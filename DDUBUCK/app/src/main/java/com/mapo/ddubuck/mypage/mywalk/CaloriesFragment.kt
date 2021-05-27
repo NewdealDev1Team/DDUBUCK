@@ -227,9 +227,9 @@ class CaloriesFragment : Fragment() {  //현재 날짜/시간 가져오기
 
                 var count = 0
                 barData.forEachIndexed { index, chartData ->
-                    while ((chartData.value/60) > axisMaximum) {
+                    while (chartData.value > axisMaximum) {
                         count++
-                        if ((chartData.value/60) > axisMaximum) {
+                        if (chartData.value > axisMaximum) {
                             axisMaximum += 300F
                         } else {
                             axisMaximum = 600F
