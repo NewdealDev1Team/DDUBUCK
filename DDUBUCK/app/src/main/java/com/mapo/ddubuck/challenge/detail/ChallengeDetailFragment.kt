@@ -314,7 +314,6 @@ private val shareButtonViewImage : Boolean = false
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
-            type = "message/rfc822"
             type = "image/*"
         }
 

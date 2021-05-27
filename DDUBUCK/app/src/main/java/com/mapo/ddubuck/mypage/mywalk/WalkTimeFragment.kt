@@ -289,8 +289,8 @@ class WalkTimeFragment : Fragment() {
 
     fun saveImageExternal(image: Bitmap): Uri? {
         val filename = "DDUBUCK_${System.currentTimeMillis()}.jpg"
-        var fos: OutputStream? = null
-        var uri: Uri? = null
+        var fos: OutputStream?
+        var uri: Uri?
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, filename)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg")
@@ -319,7 +319,6 @@ class WalkTimeFragment : Fragment() {
         val shareIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
-            type = "message/rfc822"
             type = "image/*"
         }
 
