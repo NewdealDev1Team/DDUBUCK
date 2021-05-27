@@ -179,7 +179,7 @@ class MyPageFragment : Fragment(), UserRouteCallback {
         })
 
         myapgeViewModel.isImageUpdate.observe(viewLifecycleOwner, {
-
+            getAllPhotos(galleryGrid, galleryHint)
         })
 
         return myPageView
