@@ -6,8 +6,7 @@
     android:id="@+id/bookmark"
     android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="20dp">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
