@@ -23,6 +23,9 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+
+        <!-- 이중클릭 방지 코드 -->
+        <item name="android:splitMotionEvents">false</item>
     </style>
 
     <style name="SwitchStyle" parent="Theme.AppCompat.Light">
