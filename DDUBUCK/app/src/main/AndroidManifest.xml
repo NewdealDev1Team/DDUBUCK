@@ -43,7 +43,7 @@
         android:required="false" />
 
     <application
-        android:name="com.mapo.ddubuck.login.GlobalApplication"
+        android:name="com.mapo.ddubuck.GlobalApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
