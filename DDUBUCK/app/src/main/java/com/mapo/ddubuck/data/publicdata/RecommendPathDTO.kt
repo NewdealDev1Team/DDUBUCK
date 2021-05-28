@@ -11,7 +11,7 @@ data class RecommendPathDTO(
     val picture : String,
     val walkTime : Long,
     val distance : Double,
-    val altitudes : Double,
+    val altitude : Double,
     val path : List<PathPoint>
 ) {
     fun toWalkRecord() : WalkRecord{
@@ -21,7 +21,7 @@ data class RecommendPathDTO(
         }
         return WalkRecord(
             latLngPath,
-            altitudes,
+            altitude,
             0.0,
             walkTime,
             0,
