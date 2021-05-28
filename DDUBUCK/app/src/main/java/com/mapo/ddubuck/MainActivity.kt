@@ -168,10 +168,10 @@ class MainActivity : AppCompatActivity() {
                             tb.setNavigationOnClickListener {
                                 fm.popBackStack(backStackTag,
                                     FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                                tbm.title = "마이페이지"
-                                isMyPageFragmentShown = false
-                                invalidateOptionsMenu()
                             }
+                            tbm.title = "마이페이지"
+                            isMyPageFragmentShown = false
+                            invalidateOptionsMenu()
                         }
                         else -> {
 
